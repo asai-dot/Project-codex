@@ -1,0 +1,6 @@
+# units manifest — one processing unit id per line. Blank lines and #comments ignored.
+# Unit ids must match the "### <unit-id>" markers in the input files (default slicer).
+# Granularity (page / heading / 章) is head's decision; here a unit == one 章 for the sample.
+unit-001
+unit-002
+unit-003

@@ -1,0 +1,11 @@
+# Local config with real Box folder_id / canonical paths — never commit.
+config/gakuyo.env
+
+# Spool (state/results/logs) lives under $HOME/.alo_spool by default; if a runner
+# points SPOOL_ROOT inside the repo, keep its artifacts out of git.
+.alo_spool/
+/spool/
+*.reject
+
+# Selftest scratch
+.selftest/
