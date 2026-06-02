@@ -1,0 +1,2 @@
+{"entry": "公益", "cite": "民法33Ⅱ", "quote": "学術，技芸，慈善，祭祀，宗教その他の公益を目的とする法人", "status": "char_diff", "sim": 0.964, "diffs": [{"op": "insert", "dict": "", "egov": "し"}, {"op": "delete", "dict": "人", "egov": ""}]}
+{"entry": "不法", "cite": "刑事訴訟法378Ⅰ", "quote": "不法に管轄又は管轄違いを認めたこと", "status": "char_diff", "sim": 0.941, "diffs": [{"op": "delete", "dict": "い", "egov": ""}]}
