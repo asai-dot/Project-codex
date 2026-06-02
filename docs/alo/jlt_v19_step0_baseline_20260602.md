@@ -24,15 +24,45 @@
 
 合計: 8点 / 4,831,266 bytes。CSV(SJIS) #3 は SJIS バイト列が価値 → 後工程でも再エンコード禁止。
 
+## golden 8点（SHA-1 = Box ネイティブ digest・着地照合用）
+
+claude-code-windows が Step 1 着手時に算出（acquisition_log に append 済）。Box は landed file の digest を SHA-1 で返すため、
+源↔着地の byte-exact 判定はこの sha1 一致で十分（任意で sha256 二重確認）。
+
+| # | file | bytes | sha1 |
+|---|------|-------|------|
+| 1 | jlt_dict_v19.0.xml | 1,109,506 | `260aa7b173d44de2adbfec83e85ccd985060352c` |
+| 2 | jlt_dict_v19.0_utf8.csv | 557,638 | `a5784d7c0cfafce1d2712102a245ee5660603caa` |
+| 3 | jlt_dict_v19.0_sjis.csv | 449,610 | `e5789b861edb474e7c7ec290ffe8c946330e8ec5` |
+| 4 | jlt_dict_v19.0.pdf | 2,669,002 | `5103b9f8a4e29d2e76ccdf03be9abdf1ee5aba01` |
+| 5 | jlt_law.dtd | 13,839 | `946123bad374a5d4e53c79836d376a66275b7065` |
+| 6 | jlt_dict.dtd | 753 | `6e3d300e8c0d4a402de2cffd33a04a240e3d9a4f` |
+| 7 | _snapshot_download_page_20260526.html | 18,176 | `8ae7d7c292cfa3e722c4f799df19eef912cd7fba` |
+| 8 | _snapshot_dtd_page_20260526.html | 12,242 | `0f94020ed31bc1022f05c09208848904f1d5f837` |
+
 ## 付随（golden 8点外・参考）
 
 | file | bytes | sha256 |
 |------|-------|--------|
 | return_handoff_jlt_v19_dl_to_claudeai_20260601.md | 3,261 | `843652038a3f99de1b5d6fa35b17b717ddc495209915328e4dd99516ae09dc9c` |
 
-## 次工程（Step 1 routing 待ち）
+## Step 1 試行結果（2026-06-02）= BLOCKED（能力欠如・破損回避で正しく停止）
 
-- 本基準値の確定で Step 0 の 0-2 / 0-3 は充足。
-- 残るは 0-1（A-PC の Box 書込手段: boxsdk JWT/developer token の有無 / Box Drive 導入と同期フォルダ）。
-  これで Step 1 transport の経路（boxsdk 直 / Box Drive / 浅井さん手動 Box web UI）が確定する。
-- Step 1 は head の routing ＋ 浅井先生のゴー後にのみ実行（現時点 gate 維持、転送未着手）。
+claude-code-windows が Step 1（byte-exact 着地）に着手 → **STATUS=BLOCKED / reason=no_byte_exact_binary_upload_capability**。
+何も upload せず source 無改変。報告: Box `cc_report_jlt_v19_step1_BLOCKED_20260602.md`(file_id 2259859268401) /
+ローカル `return_jlt_v19_step1_BLOCKED_20260602.md`。standup: amendment(file_id 2259905800786, cloud 中継)。
+
+- Step -1 PASS（A-PC が正しい宛先機）。BLOCK は機違いでなく**転送能力の欠如**。
+- 当機 Box MCP は text-only（`upload_file`/`upload_file_version`）、binary 用 `get_upload_url` 未提供
+  → PDF・SJIS CSV を text upload すると確実破損 → 不実行（親 order の鉄則）。
+- Box Drive: 対象 docs/alo は `syncState=not_synced` → Drive 経路も不可。
+- cloud(head) 側 MCP も同様に text-only。**MCP 経由では誰も byte-exact バイナリ着地ができない。**
+
+### 未解決（head 決定待ち）— Step 1 着地経路の確定
+
+- 0-1 補足: A-PC の boxsdk 資格は「未確認」（credential scan 回避のため）。報告中に `C:\Users\Asai\.claude\keys` 言及あり＝鍵存在の可能性。
+- ⚠️ **着地先の訂正**: 試行報告は target を docs/alo と誤記。正典は **05＿語彙レイヤー(folder_id 370003701279)** 配下 `jlt_v19_0`（親 order §1-2）。正式 Step 1 dispatch で修正する。
+- 経路の二択（親 order §3）:
+  1. **boxsdk あり** → A-PC が python で 370003701279 へ直 upload＋sha1 照合を自走（最有力・自動）。
+  2. **無し** → 浅井先生が Box web UI で `jlt_v19_0` 作成＋8点 D&D → windows が sha1 全件照合で LANDED_VERIFIED。
+- Step 1 は head routing（正しい着地先）＋ 浅井先生のゴー後にのみ実行。現時点 gate 維持・転送未着手。
