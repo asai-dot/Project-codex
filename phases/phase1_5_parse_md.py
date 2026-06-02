@@ -51,9 +51,15 @@ _NUMBERED_SECTION_RE = re.compile(
 )
 # 3) 既知の構造見出し（目次・凡例・索引・奥付など）
 _STRUCTURAL_RE = re.compile(
-    r"(目次|凡例|索引|奥付|まえがき|序|はしがき|改訂|執筆者|凡\s*例|"
-    r"用語の選定|本書の|利用の手引|使い方)"
+    r"(目次|凡例|索引|奥付|まえがき|はしがき|改訂版について|執筆者|凡\s*例|"
+    r"用語の選定|本書の|利用の手引|使い方|^法令用語辞典$)"
 )
+# 4) 辞書内サブセクション見出し（エントリではない: 類語/用例/番号付き定義点 等）
+_SUBSECTION_LABEL_RE = re.compile(r"^(類語|用例|参考|備考|参照|例|注|注記|表)$")
+# 5) リストマーカで始まる見出し（定義内の番号点が誤って見出し化されたもの）。
+#    例: "1)", "例2)", "1) 事業要件", "2)1)の意味の…"。先頭一致で除外。
+#    ※ 後続テキストの有無に関わらず、先頭が番号+括弧なら定義点とみなす。
+_LIST_MARKER_RE = re.compile(r"^(?:例)?[（(]?[0-9０-９]+[)）]")
 
 
 def is_non_entry_heading(title: str) -> bool:
@@ -65,6 +71,10 @@ def is_non_entry_heading(title: str) -> bool:
     if _NUMBERED_SECTION_RE.match(t):
         return True
     if _STRUCTURAL_RE.search(t):
+        return True
+    if _SUBSECTION_LABEL_RE.match(t):
+        return True
+    if _LIST_MARKER_RE.match(t):
         return True
     return False
 
