@@ -3,26 +3,30 @@
 """
 cross_reference_web.py — 学陽 all_entries.jsonl × 権威あるWEBデジタルデータ 照合レイヤ
 
-目的（浅井指示「OCR辞書と権威あるWEB上のデジタルデータを突き合わせて、きれいな
-法律用語データに整える」）。生データ非改変。照合結果は corrections 別レイヤに出す。
+★訂正履歴（重要・2026-06-02）★
+  初版は review_queue.json の P2_era_concat_digits 129件を「令+3桁のOCR連結エラー」と
+  誤って性格づけし、それを直す前提でフラガを書いていた。これは誤り。実物では 129件の
+  大半（>9割）は正規の引用（地方自治法施行令167 / 昭和52年政令227号 / 総務省組織令127 …）
+  で、検出器が「令」を令和の元号略と誤認して発火しているだけ。本物の誤りは 4桁以上に潰れた
+  少数（令9921=会計令99の2の1 / 令2210=組織令22の10 / 令5710=会計令57の10 / 令991 …）。
+  → canonical 再評価: REVIEW_QUEUE_REASSESSMENT_20260602.md（Box dict_ocr_hourei）。
+  本スクリプトは「129件を直す」設計を廃し、以下に再定義する:
+    ① citation_link_candidates: 定義文中の全引用を e-Gov ノードへの【リンク候補】として抽出
+       （誤り扱いしない。修正もしない）。
+    ② collapse_suspects: 令+【4桁以上】のみを「枝番の・中黒が落ちた疑い」として advisory フラグ。
+       3桁は正規引用が大半で regex では真偽判定不能 → フラグしない（e-Gov 照合でのみ確定）。
+    ③ term_authority: 見出し語を権威用語リスト（法務省JLT等）と突合。
+  生データは一切改変しない。自動修正は一切しない（false-positive で正しい引用を壊さないため）。
 
-2系統の権威ソース:
-  (A) e-Gov 法令API (Version 1, GET->XML; https://laws.e-gov.go.jp/docs/law-data-basic/)
-      定義文中に埋め込まれた「法令名+条番号」引用を検証。
-      review_queue.json の P2_era_concat_digits（例 "令167" = 施行令167条の区切り脱落）
-      の類を、実在の法令条文構造に突き合わせて修正候補を出す。
-  (B) 法令用語日英標準対訳辞書（日本法令外国語訳DB, https://www.japaneselawtranslation.go.jp/）
-      見出し語そのものを権威ある用語リストと突合（任意・別途辞書ファイル指定）。
-
-設計:
-  - オフライン部（既定・ネット不要・テスト可）: 定義文から引用を抽出し、
-    OCR 連結エラー（元号略+3桁以上 / 施行令+3桁 等）を規則で flag。
-  - オンライン部（--verify-egov）: 抽出した法令名を e-Gov で照合し、
-    条番号の妥当性を確認（ネットワークポリシー許可時のみ）。
+権威ソース:
+  (A) e-Gov 法令API Version 2（JSON; base https://laws.e-gov.go.jp/api/2 ；事務所標準）
+      /keyword, /laws, /law_data/{id}。引用の存在確認に使う（確定は人/CCの判断）。
+  (B) 法務省 日本法令外国語訳DB「法令用語日英標準対訳辞書」(JLT) v19.0
+      ※正典 v19.0 は Box 着地待ち。--jlt-terms で権威用語リスト(jsonl/txt)を渡す。
 
 入出力:
-  python3 cross_reference_web.py all_entries.jsonl corrections_web.jsonl
-          [--verify-egov] [--jlt-terms FILE.jsonl]
+  python3 cross_reference_web.py all_entries.jsonl xref_layer.jsonl
+          [--verify-egov] [--jlt-terms FILE]
 """
 
 import argparse
@@ -30,22 +34,21 @@ import json
 import re
 import sys
 
-# 定義文中の法令引用: 「…法/令/規則 + （任意）施行令/施行規則 + 条番号」
-# 例: 地方自治法施行令167 / 会計法29の4 / 予算決算及び会計令128
+# 定義文中の法令引用（リンク候補の抽出元）。誤り判定はしない。
+# 例: 地方自治法施行令167 / 会計法29の4 / 予算決算及び会計令128 / 政令227号
 CITATION_RE = re.compile(
     r"(?P<law>[一-龥ぁ-んァ-ヴA-Za-z0-9]{2,}?"
     r"(?:法|令|規則|条例|憲法|規程))"
-    r"(?P<shikou>施行令|施行規則)?"
     r"(?P<art>\d{1,4}(?:の\d+)*)"
 )
 
-# OCR 連結が疑われるパターン（review_queue P2 系）:
-#  「令」直後に 3桁以上の数字（条番号は通常 1-3 桁 + 「の」枝番。3桁以上のベタ数字は
-#   "施行令" の "令" と政令番号/年が連結した可能性が高い）
-CONCAT_SUSPECT_RE = re.compile(r"(?<![施行])令(?P<num>\d{3,})(?!の)")
+# 「枝番の/中黒が潰れた」真の収縮エラー候補のみ: 令 直後に【4桁以上】のベタ数字。
+# 条番号・政令番号は通常 1-3 桁なので、4桁ベタ連続は収縮の強い兆候。
+# 3桁（167/227/189…）は正規引用が大半で regex では真偽不能のためフラグしない
+# （誤検知で正しい引用を壊すより、取りこぼして e-Gov 照合に委ねる方を選ぶ）。
+COLLAPSE_SUSPECT_RE = re.compile(r"令(?P<num>\d{4,})(?!の)")
 
-# 元号略 + 3桁以上（"昭和52年政令227号" の区切り脱落 → "令227" 等）
-ERA_CONCAT_RE = re.compile(r"(?:政令|勅令|省令|令)\s*(?P<num>\d{3,})\s*号?")
+EGOV_V2_BASE = "https://laws.e-gov.go.jp/api/2"
 
 
 def extract_citations(text):
@@ -53,27 +56,27 @@ def extract_citations(text):
     for m in CITATION_RE.finditer(text):
         out.append({
             "law": m.group("law"),
-            "shikou": m.group("shikou") or "",
             "article": m.group("art"),
-            "span": [m.start(), m.end()],
             "matched": m.group(0),
+            "span": [m.start(), m.end()],
         })
     return out
 
 
-def flag_ocr_concat(text):
-    flags = []
-    for m in CONCAT_SUSPECT_RE.finditer(text):
-        num = m.group("num")
-        # 例: 令167 -> 施行令16条7? or 施行令167条? どちらかは法令照合が要る。
-        flags.append({
-            "type": "citation_concat_suspect",
+def detect_collapse_suspects(text):
+    """枝番収縮の疑い（令+4桁以上）のみ。advisory。自動修正はしない。"""
+    suspects = []
+    for m in COLLAPSE_SUSPECT_RE.finditer(text):
+        suspects.append({
+            "type": "branch_collapse_suspect",
             "matched": m.group(0),
-            "num": num,
-            "hint": "区切り脱落の可能性（施行令N条 / 政令N号）。e-Gov 照合で確定。",
+            "num": m.group("num"),
+            "hint": "枝番の/中黒の脱落候補（例 令5710→会計令57の10）。"
+                    "e-Gov 照合で確定。自動修正禁止。",
             "span": [m.start(), m.end()],
+            "auto_fix": False,
         })
-    return flags
+    return suspects
 
 
 def load_jlt_terms(path):
@@ -93,62 +96,52 @@ def load_jlt_terms(path):
     return terms
 
 
-def verify_egov(law_name, timeout=15):
-    """e-Gov 法令API で法令名の実在を確認（簡易・任意）。
-    ネットワーク許可時のみ。失敗は None（不明）を返し、ハードエラーにしない。"""
+def egov_reachable(timeout=15):
+    """e-Gov 法令API v2 への到達性のみ確認（advisory）。失敗は致命にしない。"""
     try:
-        import urllib.parse
         import urllib.request
-        # 法令名一覧/取得APIのエンドポイント（仕様書 v1 参照）。
-        # ここでは法令名での存在確認に留める軽量実装。
-        url = ("https://laws.e-gov.go.jp/api/1/lawlists/1")  # 全法令一覧(区分1=全部)
-        # 実運用ではローカルにlawlistsをキャッシュして突合する。ここは到達性のみ。
-        req = urllib.request.Request(url, headers={"User-Agent": "alo-xref/0.1"})
+        req = urllib.request.Request(
+            f"{EGOV_V2_BASE}/laws?limit=1",
+            headers={"User-Agent": "alo-xref/0.2", "Accept": "application/json"},
+        )
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            ok = resp.status == 200
-        return {"reachable": ok}
-    except Exception as e:  # noqa: BLE001 - 到達不可は致命でない
-        return {"reachable": False, "error": str(e)}
+            return {"reachable": resp.status == 200, "api": "v2"}
+    except Exception as e:  # noqa: BLE001
+        return {"reachable": False, "api": "v2", "error": str(e)}
 
 
 def process(entries, jlt_terms=None, verify=False):
-    corrections = []
-    egov_checked = {}
+    layer = []
+    egov = egov_reachable() if verify else None
     for e in entries:
         d = e.get("definition", "")
         cites = extract_citations(d)
-        ocr_flags = flag_ocr_concat(d)
+        suspects = detect_collapse_suspects(d)
         rec = {
             "entry_id": e.get("entry_id"),
             "headword": e.get("headword"),
-            "citations": cites,
-            "ocr_flags": ocr_flags,
+            "citation_link_candidates": cites,   # 誤りではない・リンク用
+            "collapse_suspects": suspects,        # 4桁のみ・advisory・no auto-fix
             "term_authority": None,
         }
         if jlt_terms is not None:
             rec["term_authority"] = {
-                "in_jlt": e.get("headword") in jlt_terms,
-                "source": "jlt_standard_terms",
+                "in_authority_list": e.get("headword") in jlt_terms,
+                "source": "jlt_v19_0",
             }
-        if verify:
-            for c in cites:
-                law = c["law"]
-                if law not in egov_checked:
-                    egov_checked[law] = verify_egov(law)
-                c["egov"] = egov_checked[law]
-        # corrections は「何かしら指摘がある」エントリのみ出す（レイヤを薄く）
-        if ocr_flags or (rec["term_authority"] and not rec["term_authority"]["in_jlt"]):
-            corrections.append(rec)
-    return corrections
+        # レイヤを薄く: リンク候補/疑い/語彙照合のいずれかがある行だけ出す
+        if cites or suspects or rec["term_authority"]:
+            layer.append(rec)
+    return layer, egov
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="all_entries.jsonl × 権威WEBデータ 照合")
+    ap = argparse.ArgumentParser(description="all_entries.jsonl × 権威WEBデータ 照合レイヤ")
     ap.add_argument("input_jsonl")
     ap.add_argument("output_jsonl")
     ap.add_argument("--verify-egov", action="store_true",
-                    help="e-Gov 法令API で法令名到達性を確認（ネット許可時）")
-    ap.add_argument("--jlt-terms", help="法令用語標準対訳辞書の用語リスト(jsonl)")
+                    help="e-Gov 法令API v2 到達性を確認（ネット許可時）")
+    ap.add_argument("--jlt-terms", help="権威用語リスト(jsonl/txt)。正典JLT v19.0着地後に指定")
     args = ap.parse_args(argv)
 
     jlt = load_jlt_terms(args.jlt_terms) if args.jlt_terms else None
@@ -164,20 +157,21 @@ def main(argv=None):
         print(f"input error: {e}", file=sys.stderr)
         return 3
 
-    corrections = process(entries, jlt_terms=jlt, verify=args.verify_egov)
+    layer, egov = process(entries, jlt_terms=jlt, verify=args.verify_egov)
 
     with open(args.output_jsonl, "w", encoding="utf-8") as out:
-        for c in corrections:
-            out.write(json.dumps(c, ensure_ascii=False) + "\n")
+        for rec in layer:
+            out.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
-    n_cite = sum(len(c["citations"]) for c in corrections)
-    n_ocr = sum(len(c["ocr_flags"]) for c in corrections)
+    n_links = sum(len(r["citation_link_candidates"]) for r in layer)
+    n_susp = sum(len(r["collapse_suspects"]) for r in layer)
     print("=== cross_reference_web report ===", file=sys.stderr)
-    print(f"entries scanned       : {len(entries)}", file=sys.stderr)
-    print(f"entries w/ findings   : {len(corrections)}", file=sys.stderr)
-    print(f"citations extracted   : {n_cite}", file=sys.stderr)
-    print(f"ocr concat suspects   : {n_ocr}", file=sys.stderr)
-    print(f"egov verify           : {'on' if args.verify_egov else 'off'}", file=sys.stderr)
+    print(f"entries scanned          : {len(entries)}", file=sys.stderr)
+    print(f"rows w/ findings         : {len(layer)}", file=sys.stderr)
+    print(f"citation LINK candidates : {n_links}  (誤りではない/リンク用)", file=sys.stderr)
+    print(f"collapse suspects (4桁+) : {n_susp}  (advisory/自動修正なし)", file=sys.stderr)
+    if egov is not None:
+        print(f"e-Gov v2 reachable       : {egov}", file=sys.stderr)
     return 0
 
 

@@ -38,7 +38,7 @@ SAMPLE_MD = """<!-- page:001 -->
 
 ### きんこ
 <!-- page:189 -->
-昭和38年政令306号による。
+昭和38年政令306号による。予算決算及び会計令5710も参照。
 
 <!-- page:815 -->
 ## 渡船（とせん）
@@ -92,20 +92,24 @@ def main():
         kinko = next(e for e in entries if e["headword"] == "きんこ")
         check("きんこ definition captured", "政令306号" in kinko["definition"])
 
-        # cross-reference: should extract citations + flag the OCR concat 令306
-        corr = os.path.join(d, "corr.jsonl")
+        # cross-reference: corrected semantics — all citations are LINK candidates;
+        # only 4+digit runs are collapse suspects; 3-digit (政令306号) is NOT an error.
+        corr = os.path.join(d, "xref.jsonl")
         r2 = subprocess.run([sys.executable, XREF, out, corr],
                             capture_output=True, text=True)
         print(r2.stderr)
         check("xref exit 0", r2.returncode == 0)
         findings = [json.loads(x) for x in open(corr, encoding="utf-8") if x.strip()]
-        all_ocr = [f for c in findings for f in c["ocr_flags"]]
-        check("OCR concat suspect flagged (令306)",
-              any("306" in f["num"] for f in all_ocr))
-        # citation extraction caught 施行令167の3
-        all_cites = []
-        # re-scan all entries via xref output is filtered; just assert at least one
-        check("at least one finding emitted", len(findings) >= 1)
+        susp = [s for c in findings for s in c["collapse_suspects"]]
+        links = [l for c in findings for l in c["citation_link_candidates"]]
+        check("3-digit 令306 is NOT a collapse suspect (regression for the 129-myth)",
+              not any("306" in s["num"] for s in susp))
+        check("4-digit 令5710 IS a collapse suspect",
+              any(s["num"] == "5710" for s in susp))
+        check("citations surfaced as LINK candidates (令306/施行令167…)",
+              len(links) >= 2)
+        check("nothing is marked auto_fix",
+              all(s.get("auto_fix") is False for s in susp))
 
     print(f"\n=== test summary: {PASS} passed, {FAIL} failed ===")
     return 1 if FAIL else 0
