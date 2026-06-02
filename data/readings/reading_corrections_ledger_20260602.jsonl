@@ -35,3 +35,7 @@
 {"target": "有斐閣", "headword": "第三者のためにする契約", "field": "reading", "before": "だいさんしゃのためのにするけいやく", "after": "だいさんしゃのためにするけいやく", "diff_type": "len_diff", "basis": "jlt_authority", "confidence": "high"}
 {"target": "有斐閣", "headword": "認証", "field": "reading", "before": "しょうしょ", "after": "にんしょう", "diff_type": "substitution", "basis": "jlt_authority", "confidence": "high"}
 {"target": "有斐閣", "headword": "鑑定証人", "field": "reading", "before": "かんていしょにん", "after": "かんていしょうにん", "diff_type": "len_diff", "basis": "jlt_authority", "confidence": "high"}
+{"target": "有斐閣", "headword": "親等", "field": "reading", "before": "いっしんとう", "after": "しんとう", "diff_type": "truncation", "basis": "majority_JLT+wakaru", "confidence": "high"}
+{"target": "有斐閣", "headword": "財産分離", "field": "reading", "before": "さいさんぶんり", "after": "ざいさんぶんり", "diff_type": "dakuten", "basis": "majority_JLT+wakaru", "confidence": "high"}
+{"target": "有斐閣", "headword": "転質", "field": "reading", "before": "てんじち", "after": "てんしち", "diff_type": "dakuten", "basis": "majority_JLT+wakaru", "confidence": "high"}
+{"target": "有斐閣", "headword": "暫定予算", "field": "reading", "before": "さんていよさん", "after": "ざんていよさん", "diff_type": "dakuten", "basis": "majority_JLT+wakaru", "confidence": "high"}
