@@ -12,6 +12,8 @@
 | Step 0 報告 (v1, BLOCKED) | `cc_report_jlt_v19_step0_20260601.md` | `2258570269989` | `09b974d9e8d02bbf34abb0c3c9da5b6663174302` | 4,310 B | 2026-06-02T00:01:14Z |
 | standup amendment 013 | `_ALO_STANDUP_20260601_amendment_013_claudecode_web_jlt_v19_step0_envmismatch.md` | `2258594590828` | `7a07457190b677df3d288a8e58d7a7a44726ed21` | 866 B | 2026-06-02T00:01:19Z |
 | **dispatch v2 (機体ガード付き・windows 手渡し自己完結版, etag1)** | `cc_dispatch_jlt_v19_step0_v2_20260602.md` | `2258787836914` | `44dca0de46c0e102382c5f0b81536bf572bd6879` | 5,261 B | 2026-06-02T10:21:13Z (v2.2) |
+| Step -1 報告 (v2, HARD-STOP) | `cc_report_jlt_v19_step0_v2_20260602.md` | `2259793093449` | (Box正本) | 3,162 B | 2026-06-02T12:32:13Z |
+| standup amendment (v2 guard fired) | `_ALO_STANDUP_20260602_amendment_claudecode_web_jlt_v19_step0_v2_guard_fired.md` | `2259779795263` | (Box正本) | 1,092 B | 2026-06-02T12:32:18Z |
 
 - すべて `itemStatus: active`、作成者 `asai@asai-lo.com`。
 - Box path: `すべてのファイル / 浅井 / claude / 事務所内本棚DX化計画 / docs / alo`。
@@ -33,6 +35,11 @@
    - 報告先を Box 書込可否で2系統に分岐。**B) Box 書込手段なし（想定本命）= ローカル保存＋セッション出力に全文貼付** を追加し、
      windows が Box write を持たない場合でも報告が head に戻る経路を確保。
    - PowerShell をそのまま貼れるコードブロックで明示。
+5. **v2 を web セッションで試行 → Step -1 が機械的に即弾いた（2026-06-02）。** 「Win CC として実行せよ」と
+   web セッションに渡されたが、Step -1 が3項目全 False（Test-Path=無 / OS=Linux vm / golden 8点=FS全検索0件）で
+   HARD-STOP。Step 0 未着手・hash/size 捏造なし・不可逆操作なし。**v2 ガードが設計どおり作動した実証**
+   （報告 cc_report_jlt_v19_step0_v2_20260602.md / standup amendment guard_fired）。
+   含意: go-signal は実際に H: ドライブを持つ Windows CC セッションへ渡す必要がある。web/claude.ai に渡す限り毎回 Step -1 で即停止する。
 
 ## ゴーサイン（v2。claude-code-windows へ。これ一言だけ）
 
