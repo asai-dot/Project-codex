@@ -11,7 +11,7 @@
 | dispatch v1 (gate のみ) | `cc_dispatch_jlt_v19_step0_20260601.md` | `2257948885398` | `7b970b2fa3661e6e2b21ab075e58501abaf0a14b` | 1,920 B | 2026-06-01T15:57:17Z |
 | Step 0 報告 (v1, BLOCKED) | `cc_report_jlt_v19_step0_20260601.md` | `2258570269989` | `09b974d9e8d02bbf34abb0c3c9da5b6663174302` | 4,310 B | 2026-06-02T00:01:14Z |
 | standup amendment 013 | `_ALO_STANDUP_20260601_amendment_013_claudecode_web_jlt_v19_step0_envmismatch.md` | `2258594590828` | `7a07457190b677df3d288a8e58d7a7a44726ed21` | 866 B | 2026-06-02T00:01:19Z |
-| **dispatch v2 (機体ガード付き)** | `cc_dispatch_jlt_v19_step0_v2_20260602.md` | `2258787836914` | `6ab9826ac9def6d941f429063b73cf2bedfcb524` | 3,403 B | 2026-06-02T01:58:21Z |
+| **dispatch v2 (機体ガード付き・windows 手渡し自己完結版, etag1)** | `cc_dispatch_jlt_v19_step0_v2_20260602.md` | `2258787836914` | `44dca0de46c0e102382c5f0b81536bf572bd6879` | 5,261 B | 2026-06-02T10:21:13Z (v2.2) |
 
 - すべて `itemStatus: active`、作成者 `asai@asai-lo.com`。
 - Box path: `すべてのファイル / 浅井 / claude / 事務所内本棚DX化計画 / docs / alo`。
@@ -27,6 +27,12 @@
    先頭に `Step -1 実行機アサーション`（`Test-Path 'H:\work\jlt_v19_dl\'` / hostname / OS / golden 8点実在）を追加。
    1つでも偽なら Step 0 に入らず1行報告で即停止。Step 0 には Windows 具体コマンド
    （`Get-FileHash -Algorithm SHA256` / `(Get-Item).Length`）と acquisition_log 既記録の優先転記を明記。
+4. **v2 を windows 手渡し用に自己完結化（etag1）。** 「Claude Code Windows にそのまま渡せる」ようにするため、
+   同 file_id を版更新（version 2 / sha1 `44dca0de…6879`）。改稿点:
+   - 親 order の要点を §A に内包 → **Box を読めなくても本ファイル単体で Step 0 実行可**。
+   - 報告先を Box 書込可否で2系統に分岐。**B) Box 書込手段なし（想定本命）= ローカル保存＋セッション出力に全文貼付** を追加し、
+     windows が Box write を持たない場合でも報告が head に戻る経路を確保。
+   - PowerShell をそのまま貼れるコードブロックで明示。
 
 ## ゴーサイン（v2。claude-code-windows へ。これ一言だけ）
 
