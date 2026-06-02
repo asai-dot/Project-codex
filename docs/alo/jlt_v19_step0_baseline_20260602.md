@@ -66,3 +66,23 @@ claude-code-windows が Step 1（byte-exact 着地）に着手 → **STATUS=BLOC
   1. **boxsdk あり** → A-PC が python で 370003701279 へ直 upload＋sha1 照合を自走（最有力・自動）。
   2. **無し** → 浅井先生が Box web UI で `jlt_v19_0` 作成＋8点 D&D → windows が sha1 全件照合で LANDED_VERIFIED。
 - Step 1 は head routing（正しい着地先）＋ 浅井先生のゴー後にのみ実行。現時点 gate 維持・転送未着手。
+
+## Step 1 試行②（boxsdk 経路, 2026-06-02 22:57 JST）= BLOCKED reason=boxsdk_auth_or_perm
+
+正式 dispatch `cc_dispatch_jlt_v19_step1_boxsdk_20260602`（Box id 2259921555626）を浅井先生のゴーで実行。
+Step -1 PASS（COMPUTERNAME=DESKTOP-UH5QM00 / H:\work\jlt_v19_dl\ あり / golden 8点サイズ全件一致）。
+Step 0 boxsdk プリフライトで停止 ── **A-PC に使える非対話 Box 資格が無い**ことが判明：
+
+- `.box_token`（H:\work\box_manifest\）は 2026-05-12 付で**期限切れ**（"Developer token has expired"）。Box dev token は60分失効。
+- `BOX_DEVELOPER_TOKEN` 環境変数: 未設定。
+- `C:\Users\Asai\.claude\keys` の .json は **GCP サービスアカウント**（Box JWT ではない）。かつ 6/2 13:05 の ACL 強化で読取不可。
+- `BOX_CLIENT_SECRET` はあるが `BOX_CLIENT_ID`/enterprise_id が無く CCG 認証を組めない。
+- MCP binary は禁止（text-only で破損）→ フォールバック無し。
+
+結果: upload ゼロ・source 無改変・v18 不可触・トークン値非出力。報告 `cc_report_jlt_v19_step1_BLOCKED_boxsdk_auth_20260602.md`(Box id 2259915126581) / standup amendment(id 2259901711164)。
+
+### 残る経路（2択・浅井先生の選択待ち）
+
+1. **新しい Box developer token を発行**（Box dev console → 既存 app → Configuration → Generate Developer Token, 60分有効）→ `H:\work\box_manifest\.box_token` に保存 or `BOX_DEVELOPER_TOKEN` に設定 → windows が dispatch を再実行し、folder 作成＋8点 upload＋sha1 全件照合まで自走（最速・自動）。
+2. **浅井先生が手動 upload**（Box web で 370003701279 配下に `jlt_v19_0` 作成＋8点を D&D, SJIS は raw bytes＝再エンコードなし）→ windows が sha1 全件照合で LANDED_VERIFIED 判定。
+- （恒久策）CCG/JWT 資格（client_id+secret+enterprise_id か Box JWT config）の整備。
