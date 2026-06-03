@@ -1,4 +1,4 @@
-# 辞書クリーニング・セッション記録 — 2026-06-02（v6 全体版）
+# 辞書クリーニング・セッション記録 — 2026-06-02（v7 全体版）
 
 `DISPATCH-HEADLESS-MIGRATE-001` 起点。JLT v19.0 着地 → 学陽 Phase1.5 → 3点測量 →
 多型OCRミス検出（読み／引用／本文）→ 読み訂正適用 → ゴールデンデータ全158法令フル錨（high 5,882）、までの確定記録。
@@ -139,6 +139,30 @@ highはほぼ不変(5,882→5,874)。medium は suspect 留保・人手レビュ
 = alo_terms/alo_hubs 投入の feedstock 完成。
 
 ### 次（ローカル＝素材がある場所で）
-カード(3,063)を scheme別に alo_terms/alo_hubs へ投入（provisional→接続→canonical、汎用語は最一般＝
-会社法を primary）。paren_abbreviation(medium 9,741)の境界精緻化で錨追補。
+カード(3,063)を scheme別に投入（provisional→接続→canonical）。paren_abbreviation(medium)の境界精緻化で錨追補。
 書誌軸（NDL錨＋bencom簡易TOC）は文献レイヤ仕様に整合させて並走。
+
+---
+
+## 13. 品質ゲート＆DB provisional 投入（GPTレビュー反映）
+GPTレビュー（A−/B+）の技術指摘を実データで裏取り（high 5,874中 art:None 84・括弧不均衡68）→ **機械ゲート**
+`phases/gate_egov_anchors.py` 実装。`authority_rank=100` を `source_authority_rank`/`extraction_confidence`/
+`canonical_status`/`review_status` に分解（「e-Gov由来＝100点」の誤読防止）。フル18,099→gated16,536/quarantine1,563、
+最堅 canonical 候補＝**high&unreviewed 5,638**。三省堂→有斐閣 docstring修正。
+
+### 実DB測量（仕様≠実体）
+Supabase `nixfjmwxmgugiiuqfuym`: 仕様の `alo_terms/alo_hubs` は実在せず、**語彙の受け皿＝`biblio.terms`（空）**、
+書誌↔用語の橋＝`biblio.bib_terms`（空）。書誌軸は既に大規模（`bib_records`3,802・**`bib_toc`555,887**＝bencom）だが
+**蔵書(NDL/ISBN)未投入**（全てbencom-library）。本番は別エージェント(codex)が `control.source_snapshots→ingest_jobs→
+releases(承認)` で統治。
+
+### provisional 投入（可逆・承認待ち）
+codex作法に整合して証跡登録（snapshot/ingest_job/**release approval_status=pending**・rollback_target記録）。
+リッチカード554を `biblio.terms` へ（`source='golden_term_card_v1'`、compact provenance raw）。MCPで**パイロット8件**実投入・
+DB品質確認済。残546は決定論SQL `data/db_staging/load_biblio_terms_richcards_v1.sql`（psql -f 一発）または
+`phases/load_biblio_terms.py`（要DB url・sandbox外）。canonical昇格＝浅井が release を approved に。
+完全可逆: `DELETE FROM biblio.terms WHERE source='golden_term_card_v1'`。引き継ぎ: `docs/HANDOFF_biblio_terms_load.md`。
+
+### 次
+①残546の本投入（owner/codexでローダー実行）＋release承認 → canonical。
+②書誌軸の第一歩＝蔵書(NDL/ISBN)を `bib_records` に載せ §8 の橋(`bib_terms`)を張る（`docs/DESIGN_bibliographic_axis.md`）。
