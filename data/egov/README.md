@@ -56,18 +56,19 @@ Box e-Gov コーパスから取得・抽出して統合。**534定義 / 13法令
 ## ★ egov_statutory_definitions_ALL_high.jsonl（全法令フル再走＝錨の本番）
 ローカル alo-kg コーパス（`raw/egov_json/` の `{law_id}_current.json` 158法令）に対し
 `egov_definition_extract.py --dir` で**1コマンド全走**（手順 `docs/RUNBOOK_egov_full_extract.md`）。
-- **フル抽出 15,623定義 / 154法令**（high 5,882 / medium 9,741）。4法令は定義条項なし。
-- このリポジトリには**high のみ 5,882錨**を採用（`egov_statutory_definitions_ALL_high.jsonl`、149法令）。
-  type: paren_definition 3,903 / item_definition 1,036 / inline_toha 943。**全件 confidence=high**。
+- **フル抽出（境界精緻化v3適用）18,099定義 / 154法令**（high 5,874 / medium 12,225）。4法令は定義条項なし。
+  （初回の単純截断版は 15,623／high5,882／medium9,741。v3で medium 略称錨を **+2,484 回復・追加**）。
+- このリポジトリには**high 5,874錨**（`egov_statutory_definitions_ALL_high.jsonl`、全件high）と
+  **フル18,099**（`egov_statutory_definitions_ALL.jsonl`、medium含む）を収録。
+  high type: paren_definition 3,897 / item_definition 1,034 / inline_toha 943。
 - 定義リッチ: 租税特別措置法935・地方税法487・金融商品取引法321・保険業法237・法人税法228・所得税法159・
   会社法135・預金保険114・厚生年金114…
-- medium 9,741（paren_abbreviation・境界fuzz）は**当面 canonical に使わず suspect 留保**。フル15,623は
-  ローカル（コミット 07393be）に保全、必要時に回収。
+- medium 12,225（paren_abbreviation）は**当面 canonical に使わず suspect 留保**（境界は改善したが人手レビュー前提）。
 - **境界精緻化 v3**（`egov_definition_extract.py`）: 略称定義の被定義語を**カッコ対応の後方スキャン**で復元
   （入れ子（…）・名前内読点を跨ぎ、直前の別「以下「Y」という」句／深さ0の。」で停止）。旧の単純截断
   （在外者←「有しない者」、使用者等←「国又は地方公共団体」、所有者不明土地管理命令←「よる管理を命ずる処分」）を解消。
-  検証（民法55→72・特許法61→82、term Xは不変で錨も増加）。**high錨には不変**＝既存カード無影響、改善は medium 層のみ。
-  フル medium の反映は次のローカル再走（`--dir` 1コマンド）で。残課題: 節頭の軽微な過剰取得と長文被定義語は
-  irreducible（読点の列挙/節区切り両義性）＝medium 据え置き・人手レビュー前提。
+  全走で medium 9,741→12,225。**high はほぼ不変**（5,882→5,874、−8は同一(term,article)で略称言及が をいう定義に先行する
+  tier順序エッジ。highをmediumより優先する精緻化は将来課題・再走で回収可）。残課題: 節頭の軽微な過剰取得と
+  長文被定義語は irreducible（読点の列挙/節区切り両義性）＝medium 据え置き。
 - **これが用語カードの錨の既定ソース**（`assemble_term_card.py --gold` の既定）。scheme=jp_statutory_definition /
   authority_rank=100 のまま `alo_terms`→`alo_hubs`（provisional→canonical）へ投入できる。
