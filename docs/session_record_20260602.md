@@ -114,12 +114,19 @@ feedstock（辞書データ化・読み品質・e-Gov錨）の生成**。
 ### e-Gov 定義条項エクストラクタ（錨の量産）
 `phases/egov_definition_extract.py`。4書式（item_definition / inline_toha / paren_definition =high、
 paren_abbreviation =medium）を URI(egov:…)・scheme=jp_statutory_definition・authority_rank=100 で抽出。
-7法令で **golden 定義 203件**（会社法49・民法85・民訴31 等）。high114/medium89。全158法令フル再走で数千規模に。
+7法令で golden 定義 203件 → **定義リッチな6法令（著作権法/個人情報保護法/行政手続法/特許法/労基/
+消費者契約）を Box e-Gov コーパスから追加取得して13法令へ拡張＝534件**（high216/medium318、
+`data/egov/egov_statutory_definitions_13laws.jsonl`）。by law: 著作権114・民法85・特許77・個人情報68・
+会社49・民訴31…。item_definition は完璧な法定定義（著作物/実演/レコード/公衆送信）。
+**所見**: paren_abbreviation(medium)は定義句の前方境界がfuzzで截断ノイズ混在（特許「在外者←有しない者」等）
+＝suspect層で受ける。錨の本命は high216件。全158法令フル再走はローカル alo_statutes が効率的。
 
 ### 用語カード（語彙レイヤ Hub の最終形）
 `phases/assemble_term_card.py`。錨(e-Gov法定定義)＋有斐閣/学陽gloss＋JLT英訳・読みを綺麗なキーで join。
 6カード実証（子会社/親会社/公開会社/物/不在者/制限行為能力者＝全アンカー型）。読み全件多源一致、
 有斐閣glossが条文逐語引用＝錨↔gloss相互検証。`data/cards/`。
+新法令でも実証（著作物/著作者/実演家/個人情報/公衆送信）＝著作物・個人情報は**学陽glossが
+著作権法2条1項/個人情報保護法2条1項を逐語引用**で錨↔gloss相互検証が成立。
 
 ### 次（ローカル＝素材がある場所で）
 全158法令フル再走で錨量産 → 全用語カード自動生成 → scheme別に alo_terms/alo_hubs 投入
