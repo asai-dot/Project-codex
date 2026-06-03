@@ -1,0 +1,11 @@
+{"headword": "信義誠実の原則", "sim": 0.969, "kind": "substitution", "diffs": [{"op": "replace", "yuhikaku": "従", "egov": "行"}], "quote": "権利の行使及び義務の履行は、信義に従い誠実に従わなければならない"}
+{"headword": "表見支配人", "sim": 0.95, "kind": "substitution", "diffs": [{"op": "replace", "yuhikaku": "営", "egov": "事"}], "quote": "営業の主任者であることを示す名称を付した"}
+{"headword": "要求", "sim": 0.909, "kind": "substitution", "diffs": [{"op": "replace", "yuhikaku": "証", "egov": "係"}, {"op": "replace", "yuhikaku": "要", "egov": "請"}], "quote": "証人の出頭及び証言並びに記録の提出を要求する"}
+{"headword": "援用", "sim": 0.982, "kind": "mixed", "diffs": [{"op": "delete", "yuhikaku": "補", "egov": ""}, {"op": "insert", "yuhikaku": "", "egov": "人"}], "quote": "補助参加の訴訟行為は、補助参加を許さない裁判が確定した場合においても、当事者が援用したときは、その効力を有する"}
+{"headword": "強制捜査", "sim": 0.975, "kind": "mixed", "diffs": [{"op": "delete", "yuhikaku": "め", "egov": ""}], "quote": "強制の処分は、この法律に特別の定めのある場合でなければ、これをすることができない"}
+{"headword": "消費者団体訴訟制度", "sim": 0.972, "kind": "mixed", "diffs": [{"op": "delete", "yuhikaku": "消", "egov": ""}, {"op": "insert", "yuhikaku": "", "egov": "等"}], "quote": "消費者の財産的被害の集団的な回復のための民事の裁判手続の特例に関する法律"}
+{"headword": "domestic violence", "sim": 0.96, "kind": "mixed", "diffs": [{"op": "insert", "yuhikaku": "", "egov": "等"}, {"op": "delete", "yuhikaku": "律", "egov": ""}], "quote": "配偶者からの暴力の防止及び被害者の保護に関する法律"}
+{"headword": "地域における事務", "sim": 0.944, "kind": "mixed", "diffs": [{"op": "delete", "yuhikaku": "てい", "egov": ""}, {"op": "insert", "yuhikaku": "", "egov": "を処"}], "quote": "その他の事務で法律又はこれに基づく政令により処理することとされているもの"}
+{"headword": "約束", "sim": 0.917, "kind": "mixed", "diffs": [{"op": "replace", "yuhikaku": "賄賂", "egov": "利益"}], "quote": "賄賂を収受し、又はその要求若しくは約束をしたとき"}
+{"headword": "政令二百一号", "sim": 0.915, "kind": "mixed", "diffs": [{"op": "delete", "yuhikaku": "(つけ)", "egov": ""}, {"op": "insert", "yuhikaku": "", "egov": "(昭和二"}], "quote": "昭和二十三年七月二十二日附（つけ）内閣総理大臣宛連合国最高司令官書簡に基く臨時措置に関する政令"}
+{"headword": "ハーグ国際私法条約", "sim": 0.909, "kind": "mixed", "diffs": [{"op": "delete", "yuhikaku": "法律", "egov": ""}, {"op": "insert", "yuhikaku": "", "egov": "が日"}], "quote": "遺言の方式に関する法律の抵触に関する法律条約"}
