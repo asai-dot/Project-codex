@@ -63,5 +63,11 @@ Box e-Gov コーパスから取得・抽出して統合。**534定義 / 13法令
   会社法135・預金保険114・厚生年金114…
 - medium 9,741（paren_abbreviation・境界fuzz）は**当面 canonical に使わず suspect 留保**。フル15,623は
   ローカル（コミット 07393be）に保全、必要時に回収。
+- **境界精緻化 v3**（`egov_definition_extract.py`）: 略称定義の被定義語を**カッコ対応の後方スキャン**で復元
+  （入れ子（…）・名前内読点を跨ぎ、直前の別「以下「Y」という」句／深さ0の。」で停止）。旧の単純截断
+  （在外者←「有しない者」、使用者等←「国又は地方公共団体」、所有者不明土地管理命令←「よる管理を命ずる処分」）を解消。
+  検証（民法55→72・特許法61→82、term Xは不変で錨も増加）。**high錨には不変**＝既存カード無影響、改善は medium 層のみ。
+  フル medium の反映は次のローカル再走（`--dir` 1コマンド）で。残課題: 節頭の軽微な過剰取得と長文被定義語は
+  irreducible（読点の列挙/節区切り両義性）＝medium 据え置き・人手レビュー前提。
 - **これが用語カードの錨の既定ソース**（`assemble_term_card.py --gold` の既定）。scheme=jp_statutory_definition /
   authority_rank=100 のまま `alo_terms`→`alo_hubs`（provisional→canonical）へ投入できる。

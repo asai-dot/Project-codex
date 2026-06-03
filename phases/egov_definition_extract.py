@@ -46,8 +46,45 @@ DEF_TAIL = re.compile(r"(をいう|をいい|という)。?$")
 # 文中定義の3書式（号建てColumnは別処理）
 P_TOHA = re.compile(r"「([^「」]{1,30})」とは[、，]?(.{2,80}?(?:をいう|をいい))。")   # 「X」とは、…をいう
 P_PAREN = re.compile(r"(?<=[をはがにへとやもの、。「」）・　])([一-龥々ー]{2,15}[ぁ-ん]{0,3})（((?:[^（）]){4,90}?をいう)。")  # X（…をいう）
-P_ABBR = re.compile(r"(?:^|[、。）])([^、。「」（）]{3,60}?)（以下(?:[^「）]{0,15})?「([^」]{1,20})」という。?）")  # …（以下「X」という）
+P_ABBR = re.compile(r"(?:^|[、。）])([^、。「」（）]{3,60}?)（以下(?:[^「）]{0,15})?「([^」]{1,20})」という。?）")  # …（以下「X」という）（旧・参考）
 _LEAD = re.compile(r"^(?:又は|若しくは|及び|並びに|かつ|が|は|を|に|の|で|と|から|より|、|。|・)+")
+
+# 略称定義（…（以下「X」という。））= medium。Xは綺麗だが被定義語(フルネーム)の前方境界が曖昧。
+# カッコ対応の後方スキャンで被定義語を復元する（入れ子（…）や名前内の読点を跨ぎ、
+# 直前の別の「以下「Y」という」句／深さ0の。」で停止）。旧 P_ABBR の単純截断（在外者←有しない者）を解消。
+ABBR_DEF = re.compile(r"（以下(?:[^「）]{0,20})?「([^」]{1,25})」という。?）")
+_DEFGRP = re.compile(r"以下.{0,15}「.+?」という")   # 直前の別略称定義句＝境界
+_ABBR_LEAD = re.compile(r"^(?:又は|若しくは|及び|並びに|かつ|が|は|を|に|へ|で|と|の|から|より|、|・|当該|その|この|前項の|前条の|次の各号に掲げる|よる|により|における|に係る|に基づく|に規定する)+")
+_BREAK_LEFT = re.compile(r"(?:て|り|し|は|を|が|で|と|に|へ|む|ず|ば|より|として|により|除き|おいて|場合|ときは)$")
+
+
+def abbr_fullname(s, p):
+    """（以下「X」という。）の開始位置 p から被定義語を後方復元。"""
+    i = p - 1
+    while i >= 0:
+        c = s[i]
+        if c in "）)":                       # 直前の（…）群を1単位で扱う
+            depth, j = 1, i - 1
+            while j >= 0 and depth > 0:
+                if s[j] in "）)":
+                    depth += 1
+                elif s[j] in "（(":
+                    depth -= 1
+                j -= 1
+            grp = s[j + 1:i + 1]
+            if _DEFGRP.search(grp):           # 別の略称定義句＝境界（含めない）
+                return s[i + 1:p]
+            i = j                             # 「…をいう」等の注釈は跨いで含める
+            continue
+        if c in "。」":                        # 深さ0の文末／引用閉じ＝境界
+            return s[i + 1:p]
+        if c == "、":                          # 節区切りの読点なら停止、列挙の読点は跨ぐ
+            if _BREAK_LEFT.search(s[max(0, i - 4):i]):
+                return s[i + 1:p]
+            i -= 1
+            continue
+        i -= 1
+    return s[:p]
 
 
 def law_meta(doc):
@@ -115,8 +152,10 @@ def extract(doc, law_name_override=None):
                     add(m.group(1), m.group(2) + "。", article, None, "inline_toha", "high")
                 for m in P_PAREN.finditer(t):                      # X（…をいう）= high
                     add(m.group(1), m.group(2) + "。", article, None, "paren_definition", "high")
-                for m in P_ABBR.finditer(t):                       # …（以下「X」という）= medium（定義句境界がfuzzy）
-                    add(m.group(2), _LEAD.sub("", m.group(1)), article, None, "paren_abbreviation", "medium")
+                for m in ABBR_DEF.finditer(t):                     # …（以下「X」という）= medium（被定義語をカッコ対応復元）
+                    full = _ABBR_LEAD.sub("", abbr_fullname(t, m.start())).strip()
+                    if full:
+                        add(m.group(1), full, article, None, "paren_abbreviation", "medium")
             for c in n.get("children", []) or []:
                 walk(c, article)
         elif isinstance(n, list):
