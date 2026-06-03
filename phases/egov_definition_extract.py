@@ -14,7 +14,12 @@ ALO 法令レイヤ URI体系: egov:{law_id}:art:{article}[:item:{n}]。
 生データ非改変。出力は jsonl（term, definition, law_id, law_name, article, item, uri,
 scheme, authority_rank, source）。
 
-使い方: python3 egov_definition_extract.py OUT.jsonl LAWNAME=egov.json [LAWNAME=egov.json ...]
+使い方:
+  全158法令フォルダ一括（ローカル推奨）:
+    python3 egov_definition_extract.py OUT.jsonl --dir /path/to/egov_json --glob '*_current.json'
+  個別指定:
+    python3 egov_definition_extract.py OUT.jsonl LAWNAME=egov.json [LAWNAME=egov.json ...]
+--dir 一括は法令名を各JSONのLawTitleから自動取得し、(term,law_id,article) で全法令横断 dedup する。
 """
 import argparse
 import json
@@ -123,22 +128,56 @@ def extract(doc, law_name_override=None):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser()
+    import glob as _glob
+    import os
+    from collections import Counter
+    ap = argparse.ArgumentParser(
+        description="e-Gov法令JSONから定義条項を golden data として抽出。"
+                    "--dir でフォルダ一括（全158法令向け）、または LAWNAME=path 個別指定。")
     ap.add_argument("out")
-    ap.add_argument("sources", nargs="+", help="LAWNAME=path.json")
+    ap.add_argument("sources", nargs="*", help="LAWNAME=path.json（個別指定）")
+    ap.add_argument("--dir", help="このフォルダ内の *.json を全て一括抽出（法令名は各JSONのLawTitleから自動）")
+    ap.add_argument("--glob", default="*.json", help="--dir で拾うパターン（既定 *.json。例: *_current.json）")
     args = ap.parse_args(argv)
-    allout = []
-    print("=== e-Gov 定義条項抽出 ===", file=sys.stderr)
+
+    # 入力ファイル列を作る: (law_name_override or None, path)
+    jobs = []
+    if args.dir:
+        paths = sorted(_glob.glob(os.path.join(args.dir, args.glob)))
+        jobs += [(None, p) for p in paths]   # 名前は各JSONのLawTitleに任せる
     for spec in args.sources:
         name, path = spec.split("=", 1)
-        doc = json.loads(open(path, encoding="utf-8").read())
+        jobs.append((name, path))
+    if not jobs:
+        ap.error("入力がありません。--dir DIR か LAWNAME=path を指定してください。")
+
+    print(f"=== e-Gov 定義条項抽出（{len(jobs)}ファイル） ===", file=sys.stderr)
+    allout, seen = [], set()   # (term, law_id, article) で全法令横断 dedup
+    dup = 0
+    for name, path in jobs:
+        try:
+            doc = json.loads(open(path, encoding="utf-8").read())
+        except (OSError, json.JSONDecodeError) as e:
+            print(f"  !! skip {path}: {e}", file=sys.stderr)
+            continue
         lid, lname, defs = extract(doc, law_name_override=name)
-        allout.extend(defs)
-        print(f"  {name} ({lid}): {len(defs)} 定義", file=sys.stderr)
+        kept = 0
+        for d in defs:
+            k = (d["term"], d["law_id"], d["article"])
+            if k in seen:
+                dup += 1
+                continue
+            seen.add(k)
+            allout.append(d)
+            kept += 1
+        print(f"  {lname or name} ({lid}): {kept} 定義", file=sys.stderr)
     with open(args.out, "w", encoding="utf-8") as f:
         for d in allout:
             f.write(json.dumps(d, ensure_ascii=False) + "\n")
-    print(f"計 {len(allout)} 定義 → {args.out}", file=sys.stderr)
+    print(f"--- 計 {len(allout)} 定義 / {len(set(d['law_id'] for d in allout))} 法令"
+          f"（dup {dup} 除外）→ {args.out}", file=sys.stderr)
+    print(f"    by confidence: {dict(Counter(d['confidence'] for d in allout))}", file=sys.stderr)
+    print(f"    by type      : {dict(Counter(d['definition_type'] for d in allout))}", file=sys.stderr)
     return 0
 
 
