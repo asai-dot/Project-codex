@@ -23,3 +23,14 @@ e-Gov JSON 由来。全158法令へ拡張可（ローカル一括が効率的）
 ## gakuyo_citation_miss_candidates.jsonl（誤り検出＝低収量）
 学陽が当該法令を引くのに見出し一致条を外す95候補。**大半は正当な別条引用**（辞書が見出しと別の
 妥当な条を引くのは誤りでない）。引用クロスチェックは誤り発見器として弱い、と実証。
+
+## egov_statutory_definitions_7laws.jsonl（ゴールデンデータ＝法定定義）
+e-Gov 7法令から「定義条項（用語→法定定義）」を抽出。**89定義**（会社法49 等）。
+`phases/egov_definition_extract.py`。各定義に ALO URI（egov:{law_id}:art:{n}[:item:{n}]）・
+`scheme=jp_statutory_definition`・`authority_rank=100`・source=egov。
+= 語彙レイヤ §1.1 の最上位権威 term（用語ノードの錨）。辞書gloss(有斐閣/学陽)・JLT訳が
+これに exact/close で刺さる。
+### 被覆ムラ（要追加パターン）
+号建て定義条項（会社法2条型・Column構造）は完全抽出。一方 民法/民訴は括弧書き定義
+（「（以下「X」という。）」）でその場定義するため未抽出（民訴0/民法2）。第2パターン追加で被覆向上。
+全158法令はローカル一括（alo_statutes 既存コーパス）が効率的。
