@@ -129,39 +129,54 @@ def main(argv=None):
             o["raw"] = r["raw_full"]
             f.write(json.dumps(o, ensure_ascii=False) + "\n")
 
+    # 投入SQLはブラウザのSQL Editorに貼れるよう分割（rawと長い note=abstract は載せず軽量化。
+    # それらは上の jsonl に保持し、必要なら後でenrichment）。各 INSERT は独立・冪等。
     cols = ["bib_id", "title", "title_yomi", "subtitle", "responsibility", "edition", "publisher",
             "pub_place", "pub_year", "series", "volume", "physical", "isbn", "issn", "ncid",
-            "ndl_bib_id", "ndc", "ndlc", "language", "note", "form_type"]
-    arr = json.dumps([{**{c: r.get(c) for c in cols}, "raw": r["raw_compact"]} for r in rows],
-                     ensure_ascii=False, separators=(",", ":"))
-    assert "$j$" not in arr
-    coldef = ",".join(f"{c} {'int' if c=='pub_year' else 'text'}" for c in cols) + ",raw jsonb"
-    sql = "\n".join([
-        f"-- biblio.bib_records load: 蔵書 books.json → {len(rows)}件  source='{SOURCE}'  bib_id=alo_uri",
-        f"-- idempotent (ON CONFLICT), reversible: DELETE FROM biblio.bib_records WHERE source='{SOURCE}';",
-        "BEGIN;",
-        "INSERT INTO control.source_snapshots (source_snapshot_id,source_system,snapshot_kind,snapshot_label,storage_system,artifact_path,row_count,metadata_json)",
-        f"VALUES ('snapshot:asai-bookshelf:books-json','asai-bookshelf','normalized_export','蔵書 books.json NDL-enriched 6537','box','app/data/books.json',{len(rows)},'{{\"producer\":\"transform_books_to_bib_records.py\"}}') ON CONFLICT (source_snapshot_id) DO NOTHING;",
-        "INSERT INTO control.ingest_jobs (ingest_job_id,job_kind,target_schema,target_table,source_snapshot_id,status,triggered_by,rows_expected,metadata_json)",
-        f"VALUES ('ingest:biblio:bookshelf:20260603','append_import','biblio','bib_records','snapshot:asai-bookshelf:books-json','running','owner',{len(rows)},'{{}}') ON CONFLICT (ingest_job_id) DO NOTHING;",
-        "INSERT INTO biblio.bib_records (" + ",".join(cols) + ",source,raw,imported_at,updated_at)",
-        "SELECT " + ",".join(f"x.{c}" for c in cols) + f",'{SOURCE}',x.raw,now(),now()",
-        f"FROM jsonb_to_recordset($j${arr}$j$::jsonb) AS x({coldef})",
-        "ON CONFLICT (bib_id) DO NOTHING;",
-        "UPDATE control.ingest_jobs SET status='succeeded',finished_at=now(),",
-        f"  rows_inserted=(SELECT count(*) FROM biblio.bib_records WHERE source='{SOURCE}')",
-        "WHERE ingest_job_id='ingest:biblio:bookshelf:20260603';",
-        "COMMIT;",
-        f"SELECT count(*) AS bib_loaded FROM biblio.bib_records WHERE source='{SOURCE}';",
-        "",
-    ])
-    open("data/db_staging/bib_records_bookshelf_v1.sql", "w", encoding="utf-8").write(sql)
+            "ndl_bib_id", "ndc", "ndlc", "language", "form_type"]
+    coldef = ",".join(f"{c} {'int' if c=='pub_year' else 'text'}" for c in cols)
+    import math
+    N_FILES = 3
+    per = math.ceil(len(rows) / N_FILES)
+    sizes = []
+    for fi in range(N_FILES):
+        chunk = rows[fi * per:(fi + 1) * per]
+        if not chunk:
+            continue
+        arr = json.dumps([{c: r.get(c) for c in cols} for r in chunk], ensure_ascii=False, separators=(",", ":"))
+        assert "$j$" not in arr
+        L = [f"-- bib_records load part {fi+1}/{N_FILES}: 蔵書 source='{SOURCE}' rows={len(chunk)} (idempotent ON CONFLICT / reversible: DELETE FROM biblio.bib_records WHERE source='{SOURCE}')"]
+        if fi == 0:
+            L += [
+                "INSERT INTO control.source_snapshots (source_snapshot_id,source_system,snapshot_kind,snapshot_label,storage_system,artifact_path,row_count,metadata_json)",
+                f"VALUES ('snapshot:asai-bookshelf:books-json','asai-bookshelf','normalized_export','蔵書 books.json NDL-enriched 6537','box','app/data/books.json',{len(rows)},'{{\"producer\":\"transform_books_to_bib_records.py\"}}') ON CONFLICT (source_snapshot_id) DO NOTHING;",
+                "INSERT INTO control.ingest_jobs (ingest_job_id,job_kind,target_schema,target_table,source_snapshot_id,status,triggered_by,rows_expected,metadata_json)",
+                f"VALUES ('ingest:biblio:bookshelf:20260603','append_import','biblio','bib_records','snapshot:asai-bookshelf:books-json','running','owner',{len(rows)},'{{}}') ON CONFLICT (ingest_job_id) DO NOTHING;",
+            ]
+        L += [
+            "INSERT INTO biblio.bib_records (" + ",".join(cols) + ",source,imported_at,updated_at)",
+            "SELECT " + ",".join(f"x.{c}" for c in cols) + f",'{SOURCE}',now(),now()",
+            f"FROM jsonb_to_recordset($j${arr}$j$::jsonb) AS x({coldef})",
+            "ON CONFLICT (bib_id) DO NOTHING;",
+        ]
+        if fi == N_FILES - 1:
+            L += [
+                "UPDATE control.ingest_jobs SET status='succeeded',finished_at=now(),",
+                f"  rows_inserted=(SELECT count(*) FROM biblio.bib_records WHERE source='{SOURCE}')",
+                "WHERE ingest_job_id='ingest:biblio:bookshelf:20260603';",
+                f"SELECT count(*) AS bib_loaded FROM biblio.bib_records WHERE source='{SOURCE}';",
+            ]
+        body = "\n".join(L) + "\n"
+        fn = f"data/db_staging/bib_records_bookshelf_part{fi+1}.sql"
+        open(fn, "w", encoding="utf-8").write(body)
+        sizes.append((fn, len(body.encode("utf-8"))))
 
     print("=== transform_books_to_bib_records ===", file=sys.stderr)
     print(f"books {len(books)} → bib_records {len(rows)} (skipped {skipped}: no-title/dup-id)", file=sys.stderr)
     print(f"with isbn: {sum(1 for r in rows if r['isbn'])} / ndl_bib_id: {sum(1 for r in rows if r['ndl_bib_id'])}"
           f" / yomi: {sum(1 for r in rows if r['title_yomi'])}", file=sys.stderr)
-    print(f"SQL bytes: {len(sql.encode('utf-8')):,} (.sql) ; check it fits the paste path", file=sys.stderr)
+    for fn, sz in sizes:
+        print(f"  {fn}  {sz:,} bytes", file=sys.stderr)
     mapped = {kk for v in MAP.values() for kk in v} | set(RAW_KEEP) | {"alo_uri", "lit_id"}
     unmapped = [(k, n) for k, n in seen_keys.most_common() if k not in mapped]
     print(f"未マップキー（raw_full に保持・必要なら追加検討）: {[k for k,_ in unmapped]}", file=sys.stderr)
