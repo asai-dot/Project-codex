@@ -39,3 +39,6 @@
 {"target": "有斐閣", "headword": "財産分離", "field": "reading", "before": "さいさんぶんり", "after": "ざいさんぶんり", "diff_type": "dakuten", "basis": "majority_JLT+wakaru", "confidence": "high"}
 {"target": "有斐閣", "headword": "転質", "field": "reading", "before": "てんじち", "after": "てんしち", "diff_type": "dakuten", "basis": "majority_JLT+wakaru", "confidence": "high"}
 {"target": "有斐閣", "headword": "暫定予算", "field": "reading", "before": "さんていよさん", "after": "ざんていよさん", "diff_type": "dakuten", "basis": "majority_JLT+wakaru", "confidence": "high"}
+{"target": "学陽", "headword": "選挙権", "field": "reading", "before": "せんきよ", "after": "せんきょけん", "diff_type": "dakuten", "basis": "majority 2/3 (5源)", "confidence": "high"}
+{"target": "有斐閣", "headword": "差止め", "field": "reading", "before": "さしどめ", "after": "さしとめ", "diff_type": "dakuten", "basis": "majority 2/3 (5源)", "confidence": "high"}
+{"target": "有斐閣", "headword": "船舶", "field": "reading", "before": "せんはく", "after": "せんぱく", "diff_type": "dakuten", "basis": "majority 2/3 (5源)", "confidence": "high"}
