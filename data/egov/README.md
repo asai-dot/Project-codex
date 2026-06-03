@@ -72,3 +72,16 @@ Box e-Gov コーパスから取得・抽出して統合。**534定義 / 13法令
   長文被定義語は irreducible（読点の列挙/節区切り両義性）＝medium 据え置き。
 - **これが用語カードの錨の既定ソース**（`assemble_term_card.py --gold` の既定）。scheme=jp_statutory_definition /
   authority_rank=100 のまま `alo_terms`→`alo_hubs`（provisional→canonical）へ投入できる。
+
+## 機械ゲート（GPTレビュー 2026-06-03 反映）＝ canonical 昇格の関所
+`phases/gate_egov_anchors.py`。**「e-Gov由来＝100点」という誤読を防ぐ**ため `authority_rank` を分解し、抽出の
+構造エラーを quarantine する。生は非改変・auto_apply=false。
+- 分解: `source_authority_rank`(出所権威=100,不変) / `extraction_confidence`(抽出成功度 high|medium) /
+  `canonical_status`(candidate|quarantined) / `review_status`(unreviewed|needs_review) / `gate_reasons[]`。
+- ハード失格（quarantine）: article欠落・uriにNone（附則等で条番号未割当）・括弧/引用符不均衡・law_id欠落・
+  high型なのに末尾が定義句でない・confidence↔type不整合。ソフト（needs_review）: 定義>200字 / <6字 / term>30字。
+- フル18,099に適用 → **gated 16,536**（high 5,722 / medium 10,814、needs_review 569）/ **quarantine 1,563**
+  （括弧不均衡1,185・art_null/uri_none 386）。`data/egov/egov_anchors_gated.jsonl` / `..._quarantine.jsonl`。
+- **最も堅い canonical 候補＝high かつ unreviewed の 5,638件**。DB投入は candidate→machine-gated→provisional→canonical の順。
+- 所見: high 5,874 にも構造エラー（art:None 84・括弧不均衡）が混在＝「権威ソース由来」と「抽出全件正しい」は別。
+  リッチカード554（錨＋有斐閣gloss＋読み一致）が最初の provisional hub 投入対象として最も堅い。

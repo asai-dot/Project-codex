@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-triangulate_terms.py — 法律用語の3点測量（JLT × 学陽OCR × 三省堂…）
+triangulate_terms.py — 法律用語の3点測量（JLT × 学陽OCR × 有斐閣『法律用語辞典』）
+   ※当初指示は三省堂法律学用語辞典だが、構造化辞書の実体は有斐閣のため有斐閣で実施（docs参照）。
 
 複数の見出し語リスト（ソース）を突き合わせ、(1) 各語の在/不在マトリクス集計、
 (2) ソース間 edit-distance<=1 の近接ミス（OCR化け・表記ゆれ候補）を検出する。
