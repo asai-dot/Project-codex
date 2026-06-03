@@ -9,3 +9,5 @@ config/gakuyo.env
 
 # Selftest scratch
 .selftest/
+__pycache__/
+*.pyc

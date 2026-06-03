@@ -1,0 +1,17 @@
+{
+ "concept": "公衆送信",
+ "readings": {},
+ "reading_agreement": null,
+ "statutory_definitions": [
+  {
+   "law": "著作権法",
+   "uri": "egov:345AC0000000048:art:2:item:7_2",
+   "authority_rank": 100,
+   "definition_type": "item_definition",
+   "confidence": "high",
+   "definition": "公衆によつて直接受信されることを目的として無線通信又は有線電気通信の送信（電気通信設備で、その一の部分の設置の場所が他の部分の設置の場所と同一の構内（その構内が二以上の者の占有に属している場合には、同一の者の占有に属する区域内）にあるものによる送信（プログラムの著作物の送信を除く。）を除く。）を行うことをいう。"
+  }
+ ],
+ "glosses": {},
+ "jlt": null
+}

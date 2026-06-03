@@ -40,5 +40,17 @@ e-Gov 7法令から「定義条項（用語→法定定義）」を抽出。**89
 - `item_definition`(号建てColumn・会社法2条型) / `inline_toha`(「X」とは…をいう) / `paren_definition`(X（…をいう）) = **high**
 - `paren_abbreviation`(…（以下「X」という）) = **medium**（用語Xは綺麗・定義句の前方境界がfuzzy）
 golden 定義: **89 → 203**（民法 2→85, 民訴 0→31）。high 114 / medium 89。
-※他5法令(会社法/刑訴/地自/国公/国税)は現状 item_definition のみ。括弧書きは**全文フル再走で増える**
-（ファイルがローカルにある環境で一括）。
+
+## egov_statutory_definitions_13laws.jsonl（13法令へ拡張＝錨量産の実証）
+7法令に定義リッチな6法令（著作権法/個人情報保護法/行政手続法/特許法/労働基準法/消費者契約法）を
+Box e-Gov コーパスから取得・抽出して統合。**534定義 / 13法令**（dedup後）。
+- by type: item_definition 124 / paren_definition 64 / inline_toha 28 / paren_abbreviation 318
+- by confidence: **high 216** / medium 318
+- by law: 著作権法114・民法85・特許法77・個人情報保護法68・会社法49・民訴31・労基30・消費者契約22・
+  行政手続20・国税13・地自11・国公11・刑訴3
+高信頼の item_definition は完璧な法定定義（著作物・実演・レコード・公衆送信…会社法2条型）。
+**所見**: `paren_abbreviation`(medium) は定義句の前方境界がfuzzで截断ノイズ混在（例 特許法「在外者←有しない者」
+「拒絶理由通知←規定による通知」）。設計どおり suspect層・auto_apply=false で受ける。錨として価値が高いのは
+**high 216件**（号建て/「X」とは/X（…をいう））。paren_abbreviation の境界精緻化は次の改善点。
+※全158法令フル再走（ローカル alo_statutes コーパス）で数千規模に。本ファイルは Box から6法令を追加取得した
+クラウド側の中間成果。

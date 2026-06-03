@@ -1,0 +1,17 @@
+{
+ "concept": "実演家",
+ "readings": {},
+ "reading_agreement": null,
+ "statutory_definitions": [
+  {
+   "law": "著作権法",
+   "uri": "egov:345AC0000000048:art:2:item:4",
+   "authority_rank": 100,
+   "definition_type": "item_definition",
+   "confidence": "high",
+   "definition": "俳優、舞踊家、演奏家、歌手その他実演を行う者及び実演を指揮し、又は演出する者をいう。"
+  }
+ ],
+ "glosses": {},
+ "jlt": null
+}

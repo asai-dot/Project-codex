@@ -1,0 +1,17 @@
+{
+ "concept": "著作者",
+ "readings": {},
+ "reading_agreement": null,
+ "statutory_definitions": [
+  {
+   "law": "著作権法",
+   "uri": "egov:345AC0000000048:art:2:item:2",
+   "authority_rank": 100,
+   "definition_type": "item_definition",
+   "confidence": "high",
+   "definition": "著作物を創作する者をいう。"
+  }
+ ],
+ "glosses": {},
+ "jlt": null
+}
