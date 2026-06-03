@@ -1,7 +1,7 @@
-# 辞書クリーニング・セッション記録 — 2026-06-02（v4 全体版）
+# 辞書クリーニング・セッション記録 — 2026-06-02（v5 全体版）
 
 `DISPATCH-HEADLESS-MIGRATE-001` 起点。JLT v19.0 着地 → 学陽 Phase1.5 → 3点測量 →
-多型OCRミス検出（読み／引用／本文）→ 読み訂正適用、までの確定記録。
+多型OCRミス検出（読み／引用／本文）→ 読み訂正適用 → ゴールデンデータ全158法令フル錨（high 5,882）、までの確定記録。
 実装は repo `asai-dot/Project-codex` ブランチ `claude/gakuyo-headless-migrate-AuGAM`（PR #2）。
 **生データ非改変・訂正は台帳/提案層（auto_apply=false）**。
 
