@@ -67,6 +67,27 @@ def load_jlt(path):
     return d
 
 
+def load_jlt_jsonl(path):
+    """JLT を jsonl（{term, reading[, en]}）から読む。英訳列が無い版にも対応。"""
+    d = {}
+    if not path or not os.path.exists(path):
+        return d
+    for l in open(path, encoding="utf-8"):
+        l = l.strip()
+        if l[:1] != "{":
+            continue
+        try:
+            o = json.loads(l)
+        except json.JSONDecodeError:
+            continue
+        t = nf(o.get("term") or o.get("用語"))
+        if not t:
+            continue
+        en = o.get("en") or ([o["訳語候補"]] if o.get("訳語候補") else [])
+        d.setdefault(t, {"reading": nf(o.get("reading", "")), "en": [e for e in en if e]})
+    return d
+
+
 def build(term, gold, Y, G, J):
     t = nf(term)
     yu = Y.get(t); ga = G.get(t); jl = J.get(t)
@@ -113,19 +134,47 @@ def pretty(card):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("terms", nargs="+")
+    ap.add_argument("terms", nargs="*", help="対象見出し語（--from-gold 指定時は省略可）")
     ap.add_argument("--gold", default="data/egov/egov_statutory_definitions_ALL_high.jsonl")
     ap.add_argument("--yuhikaku")
     ap.add_argument("--gakuyo", default="data/gakuyo/gakuyo_all_entries.jsonl")
     ap.add_argument("--jlt-csv")
+    ap.add_argument("--jlt-jsonl", help="JLT を jsonl（{term,reading}）から読む")
+    ap.add_argument("--from-gold", action="store_true",
+                    help="--gold の全ユニーク term を対象にする（バッチ生成）")
+    ap.add_argument("--jsonl-out", help="全カードを1本の jsonl に書く（個別ファイルを作らない）")
     ap.add_argument("--out-dir", default="data/cards")
     args = ap.parse_args(argv)
     gold = load_gold(args.gold)
     Y = load_jsonl_map(args.yuhikaku)
     G = load_jsonl_map(args.gakuyo)
-    J = load_jlt(args.jlt_csv)
+    J = load_jlt_jsonl(args.jlt_jsonl) if args.jlt_jsonl else load_jlt(args.jlt_csv)
+
+    terms = list(args.terms)
+    if args.from_gold:
+        terms = sorted(gold.keys())
+    if not terms:
+        ap.error("対象語がありません（terms を渡すか --from-gold を指定）")
+
+    if args.jsonl_out:   # バッチ＝1本のjsonlに集約
+        n = 0
+        with open(args.jsonl_out, "w", encoding="utf-8") as f:
+            for term in terms:
+                f.write(json.dumps(build(term, gold, Y, G, J), ensure_ascii=False) + "\n")
+                n += 1
+        # 軽い統計
+        cards = [json.loads(l) for l in open(args.jsonl_out, encoding="utf-8")]
+        with_yu = sum(1 for c in cards if "有斐閣" in c["glosses"])
+        with_ga = sum(1 for c in cards if "学陽" in c["glosses"])
+        with_rd = sum(1 for c in cards if c["readings"])
+        rd_agree = sum(1 for c in cards if c["reading_agreement"])
+        print(f"=== {n} cards → {args.jsonl_out} ===", file=sys.stderr)
+        print(f"  有斐閣gloss付き: {with_yu} / 学陽gloss付き: {with_ga}", file=sys.stderr)
+        print(f"  読みあり: {with_rd}（多源一致 {rd_agree}）", file=sys.stderr)
+        return 0
+
     os.makedirs(args.out_dir, exist_ok=True)
-    for term in args.terms:
+    for term in terms:
         card = build(term, gold, Y, G, J)
         with open(f"{args.out_dir}/golden_term_card_{nf(term)}.json", "w", encoding="utf-8") as f:
             json.dump(card, f, ensure_ascii=False, indent=1)
