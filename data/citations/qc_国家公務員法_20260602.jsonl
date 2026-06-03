@@ -1,0 +1,3 @@
+{"entry": "公表", "cite": "国家公務員法24", "quote": "人事院は，毎年国会及び内閣に対し，業務の状況を報告しなければならない。内閣は，前項の報告を公表しなければならない", "status": "char_diff", "sim": 0.982, "diffs": [{"op": "delete", "dict": "人", "egov": ""}]}
+{"entry": "代表", "cite": "国家公務員法11Ⅱ", "quote": "人事院総裁は，……人事院を代表する", "status": "no_anchor", "diffs": []}
+{"entry": "地位を失う", "cite": "国家公務員法第1次改正法律附則12Ⅱ", "quote": "辞令を用いることなくその職を免ぜられるものとする", "status": "char_diff", "sim": 0.958, "diffs": [{"op": "delete", "dict": "る", "egov": ""}]}

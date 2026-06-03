@@ -1,2 +1,7 @@
-{"entry": "公益", "cite": "民法33Ⅱ", "quote": "学術，技芸，慈善，祭祀，宗教その他の公益を目的とする法人", "status": "char_diff", "sim": 0.964, "diffs": [{"op": "insert", "dict": "", "egov": "し"}, {"op": "delete", "dict": "人", "egov": ""}]}
-{"entry": "不法", "cite": "刑事訴訟法378Ⅰ", "quote": "不法に管轄又は管轄違いを認めたこと", "status": "char_diff", "sim": 0.941, "diffs": [{"op": "delete", "dict": "い", "egov": ""}]}
+{"law": "qc_民事訴訟法_20260602.jsonl", "entry": "争い(争)", "cite": "民事訴訟法245条", "sim": 0.982, "diffs": [{"op": "delete", "dict": "る", "egov": ""}]}
+{"law": "qc_国家公務員法_20260602.jsonl", "entry": "公表", "cite": "国家公務員法24", "sim": 0.982, "diffs": [{"op": "delete", "dict": "人", "egov": ""}]}
+{"law": "qc_地方自治法_20260602.jsonl", "entry": "公表", "cite": "地方自治法74Ⅱ", "sim": 0.978, "diffs": [{"op": "delete", "dict": "い", "egov": ""}]}
+{"law": "minpou_quote_check_20260602.jsonl", "entry": "公益", "cite": "民法33Ⅱ", "sim": 0.964, "diffs": [{"op": "insert", "dict": "", "egov": "し"}, {"op": "delete", "dict": "人", "egov": ""}]}
+{"law": "qc_国家公務員法_20260602.jsonl", "entry": "地位を失う", "cite": "国家公務員法第1次改正法律附則12Ⅱ", "sim": 0.958, "diffs": [{"op": "delete", "dict": "る", "egov": ""}]}
+{"law": "keiso_quote_check_20260602.jsonl", "entry": "不法", "cite": "刑事訴訟法378Ⅰ", "sim": 0.941, "diffs": [{"op": "delete", "dict": "い", "egov": ""}]}
+{"law": "qc_地方自治法_20260602.jsonl", "entry": "措置要求", "cite": "地方自治法245の5I", "sim": 0.868, "diffs": [{"op": "replace", "dict": "各大臣", "egov": "ていると認めるとき"}]}
