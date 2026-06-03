@@ -1,0 +1,27 @@
+{
+ "concept": "不在者",
+ "readings": {
+  "JLT": "ふざいしゃ",
+  "有斐閣": "ふざいしゃ"
+ },
+ "reading_agreement": true,
+ "statutory_definitions": [
+  {
+   "law": "民法",
+   "uri": "egov:129AC0000000089:art:25",
+   "authority_rank": 100,
+   "definition_type": "paren_abbreviation",
+   "confidence": "medium",
+   "definition": "従来の住所又は居所を去った者"
+  }
+ ],
+ "glosses": {
+  "有斐閣": "従来の住所又は居所を去ったまま容易に帰る見込みのない者。民法は、その財産の管理に関し、家庭裁判所が利害関係人又は検察官の請求によって管理人の選任等の処分をすることができるなどの規定（二五～二九）を置いている。また、生死が七年間"
+ },
+ "jlt": {
+  "reading": "ふざいしゃ",
+  "en": [
+   "absentee"
+  ]
+ }
+}

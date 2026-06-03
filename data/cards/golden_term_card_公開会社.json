@@ -1,0 +1,27 @@
+{
+ "concept": "公開会社",
+ "readings": {
+  "JLT": "こうかいがいしゃ",
+  "有斐閣": "こうかいがいしゃ"
+ },
+ "reading_agreement": true,
+ "statutory_definitions": [
+  {
+   "law": "会社法",
+   "uri": "egov:417AC0000000086:art:2:item:5",
+   "authority_rank": 100,
+   "definition_type": "item_definition",
+   "confidence": "high",
+   "definition": "その発行する全部又は一部の株式の内容として譲渡による当該株式の取得について株式会社の承認を要する旨の定款の定めを設けていない株式会社をいう。"
+  }
+ ],
+ "glosses": {
+  "有斐閣": "会社法においては、その発行する全部又は一部の株式の内容として譲渡による当該株式の取得について株式会社の承認を要する旨の定款の定めを設けていない株式会社をいう（会社二⑤）。従来は、株式が上場されて公開されている会社をいうことが多かった。"
+ },
+ "jlt": {
+  "reading": "こうかいがいしゃ",
+  "en": [
+   "public company"
+  ]
+ }
+}

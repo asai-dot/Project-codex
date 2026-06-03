@@ -1,0 +1,32 @@
+{
+ "concept": "制限行為能力者",
+ "readings": {
+  "JLT": "せいげんこういのうりょくしゃ"
+ },
+ "reading_agreement": true,
+ "statutory_definitions": [
+  {
+   "law": "民法",
+   "uri": "egov:129AC0000000089:art:13",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "未成年者、成年被後見人、被保佐人及び第十七条第一項の審判を受けた被補助人をいう。"
+  },
+  {
+   "law": "民法",
+   "uri": "egov:129AC0000000089:art:3",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新法第十三条第一項第十号に規定する制限行為能力者をいう。"
+  }
+ ],
+ "glosses": {},
+ "jlt": {
+  "reading": "せいげんこういのうりょくしゃ",
+  "en": [
+   "person with qualified legal capacity"
+  ]
+ }
+}
