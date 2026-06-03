@@ -39,6 +39,7 @@ MAP = {
     "pub_place": ["ndl_publication_place"],
     "physical": ["ndl_pages", "ndl_extent_raw"],
     "isbn": ["isbn"],
+    "issn": ["issn"],
     "ndl_bib_id": ["ndl_bib_id"],
     "ndc": ["ndc10", "ndc", "ndc9"],
     "ndlc": ["ndl_ndlc"],
@@ -94,7 +95,7 @@ def transform(rec):
             continue
         row[col] = as_text(first(rec, keys))
     row["pub_year"] = year_of(rec)
-    for col in ("series", "volume", "issn", "ncid", "language"):
+    for col in ("series", "volume", "ncid", "language"):
         row[col] = "ja" if col == "language" else None
     row["raw_full"] = rec
     row["raw_compact"] = {k: rec[k] for k in RAW_KEEP if k in rec and rec[k] not in (None, "", [], {})}
