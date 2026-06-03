@@ -1,9 +1,14 @@
-# ALO 今後の進め方 — ロードマップ（2026-06-03 起案 / プランモード成果）
+# ALO 今後の進め方 — ロードマップ v2（2026-06-03 / owner条件付き採用を反映）
 
-> 位置づけ: 2026-06-02〜03 のセッション（語彙軸の実データ化→DB投入、書誌軸の蔵書投入）を踏まえ、
-> **次に何を・どの順で・誰が**やるかを設計。実装は未着手。owner(浅井)の判断ポイントを明示する。
-> 参照: `docs/session_record_20260602.md`(v8) / `docs/DESIGN_bibliographic_axis.md` / 既存ALO仕様(20_architecture,
-> 30_law,32_literature,34_vocabulary,35_link,38_term_dict,DD-BOOK-001,DD-CINII-001)。
+> v1→v2: owner レビュー（80点・条件付き採用）を反映。**Phase A の前に A0「接続契約」を必須化**し、
+> 検索ベンチを前倒し、bib_terms を弱リンク化、554/5,638 を分離、B/C を reorder。A0 詳細は
+> `docs/A0_biblio_alo_crosswalk_contract.md`、ベンチ雛形は `docs/search_bench/baseline_queries.template.md`。
+
+## ★方針決定（確定・全体の前提）
+**当面 `biblio/authority/control`（codex実体）を「作業用実体」として育てるが、恒久正本は将来の
+`alo_*`（cases/statutes/alo_works/alo_terms/alo_hubs/alo_entity_links/alo_edges/fingerprints）側に置く。**
+→ `biblio.*` は ALO本体への**供給源（feedstock）であって本体ではない**。第二本体化＝二重管理を防ぐため、
+投入物はすべて crosswalk付き・出所付き・弱リンクは弱いままで入れる（A0）。
 
 ---
 
@@ -48,29 +53,37 @@ codex が作った `biblio`(書誌+terms+bib_terms+toc)／`authority`(人物)／
 
 ## 2. ロードマップ（段階・各段は measure→設計→投入→検証）
 
-### Phase A — 二軸を“繋ぐ”（次セッションの本命・小さく始める）
-**A1. §8 の橋 `biblio.bib_terms`（蔵書↔554用語）**
-- 素材: 蔵書 `ndl_subjects` / `genre` / `tags` /（あれば巻末索引）→ `biblio.terms`(554) に正規化一致で解決。
-- **まず measure**: サンプルで「蔵書のsubject/genre が554 term にどれだけ綺麗に一致するか」歩留まりを出す
-  （語彙軸の reading 鉱脈判定と同じ流儀）。一致が薄ければ、用語側を 5,638(gated) まで広げてから張る。
-- 投入は可逆・suspect→canonical（control.releases 承認）。これで「**この法律概念を扱う蔵書はどれか**」が引ける。
+### A0 — 接続契約（Phase A の前に必須）→ `docs/A0_biblio_alo_crosswalk_contract.md`
+crosswalk（暫定ID↔将来ALO URI）／bib_terms の弱リンク定義（強エッジと混ぜない）／554 canonical と 5,638
+unreviewed の分離／実装ガードレールを確定。**これを明文化してから A1 に入る**。
 
-**A2. 用語の拡充（554→5,638）**
-- 機械ゲート通過の high&unreviewed 5,638 を `biblio.terms` に昇格（カードの薄い錨単独ノードも検索/リンク用に有効）。
-- medium(paren_abbreviation 12,225) は境界レビュー後に suspect→provisional。
+### Phase A — 二軸を“繋ぐ”（A0 反映・read-only 先行）
+```
+A1  検索ベンチ50件をベースラインとして作成・現状測定（bib_terms 未投入の今しか測れない）
+A2  554 terms × 蔵書 subject/genre/tags の一致率を read-only 測定
+A3  5,638 high&unreviewed を「投入せず」候補辞書として read-only 一致率測定
+A4  554版 vs 5,638版 の差分比較（どちらで橋を張るか決定）
+A5  精度許容なら biblio.bib_term_links に suspect/provisional 投入（弱relation・根拠メタ付き）
+A6  サンプル監査/人手レビュー後、一部だけ canonical 化（control.releases 承認）
+```
+- bib_terms は**弱い主題リンク**（book_subject_matches_term 等）。`interprets/doctrine` と混ぜない。
+- 5,638 は canonical と**同列にしない**（status 必須・検索/リンク既定は canonical のみ）。
+- 読み訂正44の canonical 反映（owner手順、verify2件=図画/競売）も A 期に。
 
-**A3. 読み訂正44の canonical 反映**（owner手順、verify2件=図画/競売 確認）。
+### Phase B — 語彙enrichment＋**名寄せを前倒し**（C より前に重複解消）
+```
+B1  条見出し・見出し→条リンク(4,367/1,731)を「弱い statute_term_link」としてDB化（用語↔条文の疑似edge）
+B2  asai-bookshelf × bencom-library の重複候補を抽出（TOCチャンク化の前に）
+B3  重複に fingerprint/work_identifier 相当の crosswalk を作る（同一文献対応表）
+```
+- JLT英訳・CiNii・読みconsensus を term に付与（多言語ブリッジの種）。e-Gov錨は全158法令ローカルに18,099有り。
 
-### Phase B — 語彙軸を豊かに（enrichment）
-- **条見出し・見出し→条リンク**（4,367 / 1,731）を DB 化（用語↔条文の“疑似 alo_edges”）。これは ALO の
-  「リンクが資産」を `biblio` 上で最初に体現する部分。
-- JLT英訳・CiNii・読みconsensus を term に付与（多言語ブリッジの種＝Phase3 への布石）。
-- e-Gov 錨の全158法令フル（既にローカルに18,099）を活かし、用語ノードを数千規模へ。
-
-### Phase C — 書誌軸を深く
-- **bencom 簡易TOC → chunk**（葉TOC=1チャンク、`32_literature` の content_function 12分類）。`bib_toc` 555,887 が素材。
-- **蔵書(alo_uri) × bencom(NOBN_) の名寄せ/dedup**（`bencomId` と将来 `fingerprints(isbn/ndl_bib_id)`）。重複の解消。
-- NDL reconcile の継続（`cc_handoff_ndl_canonical_v2` の per-field provenance 運用）。
+### Phase C — 書誌の深掘り（名寄せ後）
+```
+C1  bencom 簡易TOC → chunk（葉TOC=1チャンク・content_function 12分類）。bib_toc 555,887 が素材。
+```
+- 重複(NOBN_ vs alo:book:isbn)を B2/B3 で解消してから chunk 化＝同一文献の重複チャンクで検索ベンチが濁るのを防ぐ。
+- NDL reconcile 継続（per-field provenance）。
 
 ### Phase D — 合流と“検索で効くか”の検証（価値の証明）
 - terms↔statute(条見出しリンク)↔book(bib_terms)↔(将来 case) を `alo_edges` 思想で接続。
