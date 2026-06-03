@@ -114,12 +114,14 @@ feedstock（辞書データ化・読み品質・e-Gov錨）の生成**。
 ### e-Gov 定義条項エクストラクタ（錨の量産）
 `phases/egov_definition_extract.py`。4書式（item_definition / inline_toha / paren_definition =high、
 paren_abbreviation =medium）を URI(egov:…)・scheme=jp_statutory_definition・authority_rank=100 で抽出。
-7法令で golden 定義 203件 → **定義リッチな6法令（著作権法/個人情報保護法/行政手続法/特許法/労基/
-消費者契約）を Box e-Gov コーパスから追加取得して13法令へ拡張＝534件**（high216/medium318、
-`data/egov/egov_statutory_definitions_13laws.jsonl`）。by law: 著作権114・民法85・特許77・個人情報68・
-会社49・民訴31…。item_definition は完璧な法定定義（著作物/実演/レコード/公衆送信）。
-**所見**: paren_abbreviation(medium)は定義句の前方境界がfuzzで截断ノイズ混在（特許「在外者←有しない者」等）
-＝suspect層で受ける。錨の本命は high216件。全158法令フル再走はローカル alo_statutes が効率的。
+7法令203件 → 13法令534件（Box追加取得）→ **ローカル alo-kg コーパスで全158法令フル再走（`--dir`一括、
+手順 `docs/RUNBOOK_egov_full_extract.md`）＝15,623定義/154法令**（high5,882/medium9,741、4法令は定義なし）。
+repo採用は **high のみ 5,882錨**（`data/egov/egov_statutory_definitions_ALL_high.jsonl`、149法令、全件high）。
+type: paren_definition3,903/item_definition1,036/inline_toha943。リッチ: 租特935・地方税487・金商321・
+保険237・法人税228・所得税159・会社135…。item_definition は完璧な法定定義（商法 運送人/海上運送 等）。
+**所見**: paren_abbreviation(medium9,741)は境界fuzzで截断ノイズ＝suspect留保（当面canonical不使用）。
+フル15,623はローカル(コミット07393be)に保全。錨の本命＝high5,882を `assemble_term_card --gold` 既定に採用。
+※実行分担: ツール設計・6法令実証はクラウド／フル再走はローカル(素材所在)／push は所有者ブラウザ。
 
 ### 用語カード（語彙レイヤ Hub の最終形）
 `phases/assemble_term_card.py`。錨(e-Gov法定定義)＋有斐閣/学陽gloss＋JLT英訳・読みを綺麗なキーで join。

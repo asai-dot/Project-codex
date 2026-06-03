@@ -1,25 +1,627 @@
 {
  "concept": "子会社",
- "readings": {
-  "JLT": "こがいしゃ",
-  "有斐閣": "こがいしゃ"
- },
+ "readings": {},
+ "reading_agreement": null,
  "statutory_definitions": [
+  {
+   "law": "昭和二十二年法律第五十四号（私的独占の禁止及び公正取引の確保に関する法律）",
+   "uri": "egov:322AC0000000054:art:8_3",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第二条の二第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "昭和二十二年法律第五十四号（私的独占の禁止及び公正取引の確保に関する法律）",
+   "uri": "egov:322AC0000000054:art:10",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "会社がその総株主の議決権の過半数を有する株式会社その他の当該会社がその経営を支配している会社等として公正取引委員会規則で定めるものをいう。"
+  },
+  {
+   "law": "農業協同組合法",
+   "uri": "egov:322AC0000000132:art:11_4",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第十一条の二第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "農業協同組合法",
+   "uri": "egov:322AC0000000132:art:116",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新農協法第十一条の二第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "農業協同組合法",
+   "uri": "egov:322AC0000000132:art:12",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新農協法第十一条の二第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第八十七条の三第三項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:27_11",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "会社法第二条第三号に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:27_22_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "会社法第二条第三号に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:29_4",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "会社がその総株主等の議決権の過半数を保有する他の会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:32_4",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第二十九条の四第四項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:56_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第二十九条の四第四項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:57_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第二十九条の四第四項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:63_9",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "同条第四項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:87_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第八十七条の三第三項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:87_3",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "法人がその総株主等の議決権の過半数を保有する会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:102_3",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第八十七条の三第三項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:102_23",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第八十七条の三第三項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:194_6_3",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第八十七条の三第三項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:199",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第八十七条の三第三項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:3_3",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "同条第四項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:31",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新金融商品取引法第二十九条の四第三項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:123",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "みなし免許取引所がその総株主等の議決権（新金融商品取引法第二十九条の四第二項に規定する「総株主等の議決権」をいう。"
+  },
+  {
+   "law": "金融商品取引法",
+   "uri": "egov:323AC0000000025:art:124",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "前条第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "消費生活協同組合法",
+   "uri": "egov:323AC0000000200:art:30_7",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第二十八条第五項に規定する子会社をいう。"
+  },
+  {
+   "law": "消費生活協同組合法",
+   "uri": "egov:323AC0000000200:art:27",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新協同組合法第二十八条第五項に規定する子会社をいう。"
+  },
+  {
+   "law": "水産業協同組合法",
+   "uri": "egov:323AC0000000242:art:11_10",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第十一条の八第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "水産業協同組合法",
+   "uri": "egov:323AC0000000242:art:87_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第九十二条第一項において準用する第十一条の八第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "水産業協同組合法",
+   "uri": "egov:323AC0000000242:art:87_3",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第八十七条の二第一項各号列記以外の部分に規定する子会社をいう。"
+  },
+  {
+   "law": "水産業協同組合法",
+   "uri": "egov:323AC0000000242:art:100_3",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "連合会がその総株主等の議決権の百分の五十を超える議決権を有する会社をいう。"
+  },
+  {
+   "law": "水産業協同組合法",
+   "uri": "egov:323AC0000000242:art:101",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第百条の三第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "水産業協同組合法",
+   "uri": "egov:323AC0000000242:art:105",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第百条の三第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "水産業協同組合法",
+   "uri": "egov:323AC0000000242:art:122",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "組合（漁業生産組合を除く。）がその総株主等の議決権の百分の五十を超える議決権を有する会社をいう。"
+  },
+  {
+   "law": "水産業協同組合法",
+   "uri": "egov:323AC0000000242:art:None",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "同項各号列記以外の部分に規定する子会社をいう。"
+  },
+  {
+   "law": "水産業協同組合法",
+   "uri": "egov:323AC0000000242:art:125",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新水協法第九十二条第一項又は第百条第一項において準用する新水協法第十一条の五第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "水産業協同組合法",
+   "uri": "egov:323AC0000000242:art:24",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "同条第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "放送法",
+   "uri": "egov:325AC0000000132:art:2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第百五十八条第一項に規定する子会社をいう。"
+  },
+  {
+   "law": "放送法",
+   "uri": "egov:325AC0000000132:art:20_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "協会がその総株主の議決権の過半数を有する株式会社その他の協会がその経営を支配している法人として総務省令で定めるものをいう。"
+  },
+  {
+   "law": "放送法",
+   "uri": "egov:325AC0000000132:art:22_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "会社がその総株主の議決権の過半数を有する株式会社その他の当該会社がその経営を支配している法人として総務省令で定めるものをいう。"
+  },
+  {
+   "law": "放送法",
+   "uri": "egov:325AC0000000132:art:158",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "会社がその総株主又は総出資者の議決権の百分の五十を超える議決権を保有する他の会社をいう。"
+  },
+  {
+   "law": "商品先物取引法",
+   "uri": "egov:325AC0000000239:art:2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第三条の二第三項に規定する子会社をいう。"
+  },
+  {
+   "law": "商品先物取引法",
+   "uri": "egov:325AC0000000239:art:81_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "同条第三項に規定する子会社をいう。"
+  },
+  {
+   "law": "投資信託及び投資法人に関する法律",
+   "uri": "egov:326AC0100000198:art:4",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新投信法第九条第四項に規定する子会社をいう。"
+  },
+  {
+   "law": "信用金庫法",
+   "uri": "egov:326AC1000000238:art:9_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "信用金庫法第三十二条第六項に規定する子会社その他金庫がその経営を支配している法人として内閣府令で定めるものをいう。"
+  },
+  {
+   "law": "信用金庫法",
+   "uri": "egov:326AC1000000238:art:36",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第三十二条第六項に規定する子会社をいう。"
+  },
+  {
+   "law": "信用金庫法",
+   "uri": "egov:326AC1000000238:art:108",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新信用金庫法第三十二条第五項に規定する子会社をいう。"
+  },
+  {
+   "law": "信用金庫法",
+   "uri": "egov:326AC1000000238:art:12",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新信用金庫法第三十二条第六項に規定する子会社をいう。"
+  },
+  {
+   "law": "信用金庫法",
+   "uri": "egov:326AC1000000238:art:14",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "旧信用金庫法第三十二条第六項に規定する子会社をいう。"
+  },
+  {
+   "law": "長期信用銀行法",
+   "uri": "egov:327AC0000000187:art:6",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第十三条の二第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "長期信用銀行法",
+   "uri": "egov:327AC0000000187:art:13_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "長期信用銀行法",
+   "uri": "egov:327AC0000000187:art:106",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "同項に規定する子会社をいう。"
+  },
+  {
+   "law": "労働金庫法",
+   "uri": "egov:328AC0100000227:art:10_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "労働金庫法第三十二条第五項に規定する子会社その他金庫がその経営を支配している法人として内閣府令・厚生労働省令で定めるものをいう。"
+  },
+  {
+   "law": "労働金庫法",
+   "uri": "egov:328AC0100000227:art:38",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第三十二条第五項に規定する子会社をいう。"
+  },
+  {
+   "law": "労働金庫法",
+   "uri": "egov:328AC0100000227:art:110",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新労働金庫法第三十四条第四項に規定する子会社をいう。"
+  },
+  {
+   "law": "労働金庫法",
+   "uri": "egov:328AC0100000227:art:15",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新労働金庫法第三十二条第五項に規定する子会社をいう。"
+  },
+  {
+   "law": "租税特別措置法",
+   "uri": "egov:332AC0000000026:art:59_2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "海上運送法第三十八条第一項に規定する子会社をいう。"
+  },
+  {
+   "law": "預金保険法",
+   "uri": "egov:346AC0000000034:art:2",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "預金保険機構がその総株主の議決権の百分の五十を超える議決権を保有する会社をいう。"
+  },
+  {
+   "law": "預金保険法",
+   "uri": "egov:346AC0000000034:art:102",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "銀行法第二条第八項に規定する子会社又は長期信用銀行法第十三条の二第二項に規定する子会社をいう。"
+  },
+  {
+   "law": "預金保険法",
+   "uri": "egov:346AC0000000034:art:136",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "会社法第二条第三号に規定する子会社をいう。"
+  },
+  {
+   "law": "銀行法",
+   "uri": "egov:356AC0000000059:art:2",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "会社がその総株主等の議決権の百分の五十を超える議決権を保有する他の会社をいう。"
+  },
+  {
+   "law": "銀行法",
+   "uri": "egov:356AC0000000059:art:104",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新銀行法第二条第八項に規定する子会社をいう。"
+  },
+  {
+   "law": "保険業法",
+   "uri": "egov:407AC0000000105:art:2",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "会社がその総株主等の議決権の百分の五十を超える議決権を保有する他の会社をいう。"
+  },
+  {
+   "law": "保険業法",
+   "uri": "egov:407AC0000000105:art:260",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "機構がその総株主の議決権の百分の五十を超える議決権を保有する会社をいう。"
+  },
+  {
+   "law": "保険業法",
+   "uri": "egov:407AC0000000105:art:132",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新保険業法第二条第十三項に規定する子会社をいう。"
+  },
+  {
+   "law": "保険業法",
+   "uri": "egov:407AC0000000105:art:4",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "法人がその総株主等の議決権（保険業法第二条第十一項に規定する総株主等の議決権をいう。"
+  },
+  {
+   "law": "保険業法",
+   "uri": "egov:407AC0000000105:art:17",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "保険業法第二条第十二項に規定する子会社をいう。"
+  },
+  {
+   "law": "金融機関等の更生手続の特例等に関する法律",
+   "uri": "egov:408AC0000000095:art:552",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "協同組合による金融事業に関する法律第四条第一項、信用金庫法第三十二条第六項又は労働金庫法第三十二条第五項に規定する子会社をいう。"
+  },
+  {
+   "law": "民事再生法",
+   "uri": "egov:411AC0000000225:art:59",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "会社法第二条第三号に規定する子会社をいう。"
+  },
+  {
+   "law": "農林中央金庫法",
+   "uri": "egov:413AC0000000093:art:26",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第二十四条第四項に規定する子会社をいう。"
+  },
+  {
+   "law": "農林中央金庫法",
+   "uri": "egov:413AC0000000093:art:20",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "旧農林中央金庫法第二十四条第四項に規定する子会社をいう。"
+  },
+  {
+   "law": "農林中央金庫法",
+   "uri": "egov:413AC0000000093:art:21",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "新農林中央金庫法第二十四条第四項に規定する子会社をいう。"
+  },
+  {
+   "law": "会社更生法",
+   "uri": "egov:414AC0000000154:art:77",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "会社法第二条第三号に規定する子会社をいう。"
+  },
+  {
+   "law": "破産法",
+   "uri": "egov:416AC0000000075:art:83",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "会社法第二条第三号に規定する子会社をいう。"
+  },
+  {
+   "law": "信託業法",
+   "uri": "egov:416AC0000000154:art:5",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "会社がその総株主の議決権の過半数を保有する他の会社をいう。"
+  },
+  {
+   "law": "信託業法",
+   "uri": "egov:416AC0000000154:art:20",
+   "authority_rank": 100,
+   "definition_type": "paren_definition",
+   "confidence": "high",
+   "definition": "第五条第六項に規定する子会社をいう。"
+  },
+  {
+   "law": "信託業法",
+   "uri": "egov:416AC0000000154:art:51",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "会社がその総株主又は総出資者の議決権の過半数を保有する他の会社をいう。"
+  },
   {
    "law": "会社法",
    "uri": "egov:417AC0000000086:art:2:item:3",
    "authority_rank": 100,
+   "definition_type": "item_definition",
+   "confidence": "high",
    "definition": "会社がその総株主の議決権の過半数を有する株式会社その他の当該会社がその経営を支配している法人として法務省令で定めるものをいう。"
+  },
+  {
+   "law": "株式会社商工組合中央金庫法",
+   "uri": "egov:419AC0000000074:art:23",
+   "authority_rank": 100,
+   "definition_type": "inline_toha",
+   "confidence": "high",
+   "definition": "商工組合中央金庫がその総株主等の議決権の百分の五十を超える議決権を有する会社をいう。"
   }
  ],
  "glosses": {
-  "有斐閣": "親会社に従属し、その支配を受ける会社。会社法は、「会社がその総株主の議決権の過半数を有する株式会社その他の当該会社がその経営を支配している法人",
   "学陽": "「親会社」"
  },
- "jlt": {
-  "reading": "こがいしゃ",
-  "en": [
-   "subsidiary company"
-  ]
- }
+ "jlt": null
 }

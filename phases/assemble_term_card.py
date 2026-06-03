@@ -114,7 +114,7 @@ def pretty(card):
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("terms", nargs="+")
-    ap.add_argument("--gold", default="data/egov/egov_statutory_definitions_13laws.jsonl")
+    ap.add_argument("--gold", default="data/egov/egov_statutory_definitions_ALL_high.jsonl")
     ap.add_argument("--yuhikaku")
     ap.add_argument("--gakuyo", default="data/gakuyo/gakuyo_all_entries.jsonl")
     ap.add_argument("--jlt-csv")

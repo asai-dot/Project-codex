@@ -1,0 +1,17 @@
+{
+ "concept": "運送人",
+ "readings": {},
+ "reading_agreement": null,
+ "statutory_definitions": [
+  {
+   "law": "商法",
+   "uri": "egov:132AC0000000048:art:569:item:1",
+   "authority_rank": 100,
+   "definition_type": "item_definition",
+   "confidence": "high",
+   "definition": "陸上運送、海上運送又は航空運送の引受けをすることを業とする者をいう。"
+  }
+ ],
+ "glosses": {},
+ "jlt": null
+}

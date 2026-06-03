@@ -52,5 +52,16 @@ Box e-Gov コーパスから取得・抽出して統合。**534定義 / 13法令
 **所見**: `paren_abbreviation`(medium) は定義句の前方境界がfuzzで截断ノイズ混在（例 特許法「在外者←有しない者」
 「拒絶理由通知←規定による通知」）。設計どおり suspect層・auto_apply=false で受ける。錨として価値が高いのは
 **high 216件**（号建て/「X」とは/X（…をいう））。paren_abbreviation の境界精緻化は次の改善点。
-※全158法令フル再走（ローカル alo_statutes コーパス）で数千規模に。本ファイルは Box から6法令を追加取得した
-クラウド側の中間成果。
+
+## ★ egov_statutory_definitions_ALL_high.jsonl（全法令フル再走＝錨の本番）
+ローカル alo-kg コーパス（`raw/egov_json/` の `{law_id}_current.json` 158法令）に対し
+`egov_definition_extract.py --dir` で**1コマンド全走**（手順 `docs/RUNBOOK_egov_full_extract.md`）。
+- **フル抽出 15,623定義 / 154法令**（high 5,882 / medium 9,741）。4法令は定義条項なし。
+- このリポジトリには**high のみ 5,882錨**を採用（`egov_statutory_definitions_ALL_high.jsonl`、149法令）。
+  type: paren_definition 3,903 / item_definition 1,036 / inline_toha 943。**全件 confidence=high**。
+- 定義リッチ: 租税特別措置法935・地方税法487・金融商品取引法321・保険業法237・法人税法228・所得税法159・
+  会社法135・預金保険114・厚生年金114…
+- medium 9,741（paren_abbreviation・境界fuzz）は**当面 canonical に使わず suspect 留保**。フル15,623は
+  ローカル（コミット 07393be）に保全、必要時に回収。
+- **これが用語カードの錨の既定ソース**（`assemble_term_card.py --gold` の既定）。scheme=jp_statutory_definition /
+  authority_rank=100 のまま `alo_terms`→`alo_hubs`（provisional→canonical）へ投入できる。

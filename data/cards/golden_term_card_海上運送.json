@@ -1,0 +1,17 @@
+{
+ "concept": "海上運送",
+ "readings": {},
+ "reading_agreement": null,
+ "statutory_definitions": [
+  {
+   "law": "商法",
+   "uri": "egov:132AC0000000048:art:569:item:3",
+   "authority_rank": 100,
+   "definition_type": "item_definition",
+   "confidence": "high",
+   "definition": "第六百八十四条に規定する船舶（第七百四十七条に規定する非航海船を含む。）による物品又は旅客の運送をいう。"
+  }
+ ],
+ "glosses": {},
+ "jlt": null
+}
