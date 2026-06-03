@@ -38,8 +38,11 @@ def children(n, tag):
 
 
 DEF_TAIL = re.compile(r"(をいう|をいい|という)。?$")
-INLINE = re.compile(r"「([^「」]{1,30})」とは[、，]?(.{2,}?(?:をいう|をいい)。?)")
-INLINE2 = re.compile(r"(?:^|[、，。\s])([^、，。\s「」]{2,20}?)とは[、，](.{2,}?(?:をいう|をいい)。?)")
+# 文中定義の3書式（号建てColumnは別処理）
+P_TOHA = re.compile(r"「([^「」]{1,30})」とは[、，]?(.{2,80}?(?:をいう|をいい))。")   # 「X」とは、…をいう
+P_PAREN = re.compile(r"(?<=[をはがにへとやもの、。「」）・　])([一-龥々ー]{2,15}[ぁ-ん]{0,3})（((?:[^（）]){4,90}?をいう)。")  # X（…をいう）
+P_ABBR = re.compile(r"(?:^|[、。）])([^、。「」（）]{3,60}?)（以下(?:[^「）]{0,15})?「([^」]{1,20})」という。?）")  # …（以下「X」という）
+_LEAD = re.compile(r"^(?:又は|若しくは|及び|並びに|かつ|が|は|を|に|の|で|と|から|より|、|。|・)+")
 
 
 def law_meta(doc):
@@ -67,19 +70,20 @@ def extract(doc, law_name_override=None):
     out = []
     seen = set()
 
-    def add(term, definition, article, item):
+    def add(term, definition, article, item, dtype, confidence):
         term = term.strip(); definition = definition.strip()
-        if not term or len(term) > 40 or not DEF_TAIL.search(definition):
+        if not term or len(term) > 40 or not definition:
             return
         uri = f"egov:{law_id}:art:{article}" + (f":item:{item}" if item else "")
-        key = (term, article, item or "")
+        key = (term, article)
         if key in seen:
             return
         seen.add(key)
         out.append({"term": term, "definition": definition, "law_id": law_id,
                     "law_name": law_name, "article": article, "item": item,
                     "uri": uri, "scheme": "jp_statutory_definition",
-                    "authority_rank": 100, "source": "egov"})
+                    "authority_rank": 100, "source": "egov",
+                    "definition_type": dtype, "confidence": confidence})
 
     def walk(n, article=None):
         if isinstance(n, dict):
@@ -87,23 +91,27 @@ def extract(doc, law_name_override=None):
                 article = (n.get("attr") or {}).get("Num")
             if n.get("tag") == "Item" and article:
                 inum = (n.get("attr") or {}).get("Num")
-                # (1) Column建て定義
+                # (1) 号建てColumn定義（会社法2条型）= high
                 isent = children(n, "ItemSentence")
                 if isent:
                     cols = children(isent[0], "Column")
                     if len(cols) >= 2:
                         term = text(cols[0])
-                        # 定義 = Column2以降 ＋ Subitem（イロハ等）
                         deftxt = "".join(text(c) for c in cols[1:])
                         for sub in n.get("children", []) or []:
                             if isinstance(sub, dict) and str(sub.get("tag", "")).startswith("Subitem"):
                                 deftxt += text(sub)
-                        add(term, deftxt, article, inum)
-            # (2) 文中定義（Sentence/Paragraph テキスト）
-            if n.get("tag") in ("Sentence",):
+                        if DEF_TAIL.search(deftxt):
+                            add(term, deftxt, article, inum, "item_definition", "high")
+            # (2) 文中・括弧書き定義（Sentence テキスト）
+            if n.get("tag") == "Sentence":
                 t = text(n)
-                for m in INLINE.finditer(t):
-                    add(m.group(1), m.group(2), article, None)
+                for m in P_TOHA.finditer(t):                       # 「X」とは…をいう = high
+                    add(m.group(1), m.group(2) + "。", article, None, "inline_toha", "high")
+                for m in P_PAREN.finditer(t):                      # X（…をいう）= high
+                    add(m.group(1), m.group(2) + "。", article, None, "paren_definition", "high")
+                for m in P_ABBR.finditer(t):                       # …（以下「X」という）= medium（定義句境界がfuzzy）
+                    add(m.group(2), _LEAD.sub("", m.group(1)), article, None, "paren_abbreviation", "medium")
             for c in n.get("children", []) or []:
                 walk(c, article)
         elif isinstance(n, list):
