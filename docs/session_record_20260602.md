@@ -129,7 +129,14 @@ type: paren_definition3,903/item_definition1,036/inline_toha943。リッチ: 租
 有斐閣glossが条文逐語引用＝錨↔gloss相互検証。`data/cards/`。
 新法令でも実証（著作物/著作者/実演家/個人情報/公衆送信）＝著作物・個人情報は**学陽glossが
 著作権法2条1項/個人情報保護法2条1項を逐語引用**で錨↔gloss相互検証が成立。
+**バッチ全自動生成（クラウド実行）**: 有斐閣all_entries(13,344)をBoxから取得し、high錨3,063語ぶんを
+1本に集約＝`data/cards/golden_term_cards_high.jsonl`（`--from-gold --jsonl-out`、JLT読みjsonl対応追加）。
+有斐閣gloss付き571/学陽289/読みあり755(多源一致740)、**リッチカード554**（錨＋有斐閣＝同一法令明示引用、
+例 ばい煙/レコード）、**錨単独ノード2,288**（辞書未収載の専門語＝法定定義のみの権威ノード）。
+汎用語(子会社等)は会社法/金商法/農協法/独禁法…**法令ごとに別定義**を束ねる(各authority100)。
+= alo_terms/alo_hubs 投入の feedstock 完成。
 
 ### 次（ローカル＝素材がある場所で）
-全158法令フル再走で錨量産 → 全用語カード自動生成 → scheme別に alo_terms/alo_hubs 投入
-（provisional→接続→canonical）。書誌軸（NDL錨＋bencom簡易TOC）は文献レイヤ仕様に整合させて並走。
+カード(3,063)を scheme別に alo_terms/alo_hubs へ投入（provisional→接続→canonical、汎用語は最一般＝
+会社法を primary）。paren_abbreviation(medium 9,741)の境界精緻化で錨追補。
+書誌軸（NDL錨＋bencom簡易TOC）は文献レイヤ仕様に整合させて並走。
