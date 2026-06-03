@@ -1,0 +1,3 @@
+{"headword": "援用", "law": "民事訴訟法", "cite": "民訴四五④", "sim": 0.982, "diffs": [{"op": "delete", "yuhikaku": "補", "egov": ""}, {"op": "insert", "yuhikaku": "", "egov": "人"}], "quote": "補助参加の訴訟行為は、補助参加を許さない裁判が確定した場合においても、当事者が援用したときは、その効力を有する"}
+{"headword": "技芸", "law": "民法", "cite": "民三三②", "sim": 0.879, "diffs": [{"op": "insert", "yuhikaku": "", "egov": "しない。"}, {"op": "delete", "yuhikaku": "(さい", "egov": ""}], "quote": "学術、技芸、慈善、祭祀（さいし）、宗教その他の公益を目的とする法人"}
+{"headword": "常習", "law": "刑事訴訟法", "cite": "刑訴八九③", "sim": 0.868, "diffs": [{"op": "replace", "yuhikaku": "懲役又は", "egov": "拘"}, {"op": "replace", "yuhikaku": "錮", "egov": "刑"}, {"op": "insert", "yuhikaku": "", "egov": "。四被"}], "quote": "被告人が常習として長期三年以上の懲役又は禁錮に当たる罪を犯したものであるとき"}
