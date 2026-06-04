@@ -1,0 +1,237 @@
+consultation_hash,matter_type_report_safe,case_outline_report_safe,query_text_report_safe,alo_inferred_case_category,flags,book_reach_via_terms,raw_toc_probe_hit_count,raw_record_probe_hit_count,failure_or_outcome_class
+6721f60977f3,[区切り無・表示抑制],,[区切り無・表示抑制],後見,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,non_stop_term_hit
+bc3d63c1eae5,[区切り無・表示抑制],,[区切り無・表示抑制],一般民事,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,20,0,stoplist_only_hit
+ca33bb9b74c7,[区切り無・表示抑制],,[区切り無・表示抑制],一般民事,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,20,0,stoplist_only_hit
+6501cfd92379,[区切り無・表示抑制],,[区切り無・表示抑制],一般民事,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,20,0,stoplist_only_hit
+02994e52a7c4,[区切り無・表示抑制],,[区切り無・表示抑制],一般民事,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+c8b9c8b3d34e,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|noise|pii_risk_suppressed_from_report,0,0,0,noise_record
+26aa3469fdab,損害賠償請求事件(交通事故),,損害賠償請求事件(交通事故),損害賠償（交通）,outline_missing,0,0,0,stoplist_only_hit
+afbc6ba6a92a,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,3,2,raw_probe_hit_but_no_term_hit
+d8ee553c1dd4,[区切り無・表示抑制],,[区切り無・表示抑制],損害賠償（交通）,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,1,0,stoplist_only_hit
+aa1ceab3bf99,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+0e3b174921fb,[区切り無・表示抑制],,[区切り無・表示抑制],廃業支援（法的整理）,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+1404a8a6ccaa,[区切り無・表示抑制],,[区切り無・表示抑制],廃業支援（法的整理）,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+ac6c0f541f75,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+b2bce894cd4e,[区切り無・表示抑制],,[区切り無・表示抑制],破産管財事件,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,2,0,raw_probe_hit_but_no_term_hit
+bc477c6d5067,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+8bf66a2adaee,[区切り無・表示抑制],,[区切り無・表示抑制],廃業支援（法的整理）,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+f1093181b852,[区切り無・表示抑制],,[区切り無・表示抑制],一般民事,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,20,0,stoplist_only_hit
+7ae9da2b312b,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+d8ae40df84c1,損害賠償請求事件,交通事故弁護士特約案件,損害賠償請求事件 交通事故弁護士特約案件,一般民事,,0,20,0,stoplist_only_hit
+b6968bb3f991,離婚事件,離婚事件,離婚事件 離婚事件,離婚,,0,13,22,raw_probe_hit_but_no_term_hit
+ed36c7e8eabe,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+b0e147d5a2cd,著作権侵害事件,著作権侵害　イラスト,著作権侵害事件 著作権侵害　イラスト,(未分類),,0,4,0,raw_probe_hit_but_no_term_hit
+a9fe73396143,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+54aaea4c36e6,離婚予備相談,離婚相談？,離婚予備相談 離婚相談？,離婚,,0,0,0,no_term_no_raw_probe
+7e990cb5a15b,株主総会取締役会対応,,株主総会取締役会対応,(未分類),outline_missing,0,0,0,stoplist_only_hit
+bfb7895d159e,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+d9df604fe6fb,[区切り無・表示抑制],谷板金 事業承継・再生,[区切り無・表示抑制] 谷板金 事業承継・再生,(未分類),no_delimiter|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+77519de113e1,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+5170d88b9307,企業法務,,企業法務,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,no_term_no_raw_probe
+0cb5a3839290,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+d12baf1e39b8,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+23289a8efce6,[区切り無・表示抑制],契約書レビュー,[区切り無・表示抑制] 契約書レビュー,契約法務,no_delimiter|pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+50ab3274fc9c,交通事故,[PIIのため表示抑制],交通事故 [PIIのため表示抑制],損害賠償（交通）,pii_risk_suppressed_from_report,0,149,185,raw_probe_hit_but_no_term_hit
+98cee4135531,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+2bd7124ae5ac,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+e475331f6aa2,債務整理,大亀さん＿債務整理,債務整理 大亀さん＿債務整理,債務整理,,0,27,9,raw_probe_hit_but_no_term_hit
+3c7221a66d89,ライセンス契約書レビュー,[PIIのため表示抑制],ライセンス契約書レビュー [PIIのため表示抑制],契約法務,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+7f365d609626,不当利得返還請求,,不当利得返還請求,(未分類),outline_missing,0,58,0,stoplist_only_hit
+84a8234ff548,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|noise|pii_risk_suppressed_from_report,0,0,0,noise_record
+0e753c51b25a,損害賠償請求事件,[PIIのため表示抑制],損害賠償請求事件 [PIIのため表示抑制],一般民事,pii_risk_suppressed_from_report,0,20,0,stoplist_only_hit
+76cdd7e86443,離婚等請求事件,,離婚等請求事件,離婚,outline_missing,0,0,0,stoplist_only_hit
+c253a04ea8c4,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+c85234510574,不動産売買,,不動産売買,不動産,outline_missing,0,53,5,non_stop_term_hit
+da7a1a9b6614,債務整理,[PIIのため表示抑制],債務整理 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,27,9,stoplist_only_hit
+3bb086f7dd38,退店金支払い請求,,退店金支払い請求,(未分類),outline_missing,0,0,0,stoplist_only_hit
+1eaa01ed8416,事業清算・保証解除,,事業清算・保証解除,(未分類),outline_missing,0,0,0,stoplist_only_hit
+14563fea5a80,新事業・契約書作成,,新事業・契約書作成,契約法務,outline_missing,0,0,0,stoplist_only_hit
+eeb54bdb8285,金銭トラブル,,金銭トラブル,(未分類),outline_missing,0,2,0,raw_probe_hit_but_no_term_hit
+c51996348635,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+dfea64f4e260,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+2d8d6507af1f,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+5d9d3a0ff9d2,交通事故,,交通事故,損害賠償（交通）,outline_missing,0,149,185,raw_probe_hit_but_no_term_hit
+4bba64e8c5fd,M&A,,M&A,M&A支援,outline_missing,0,224,117,raw_probe_hit_but_no_term_hit
+5fa2c9e6b3fc,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+8f5a791f0467,相続,,相続,相続,outline_missing,0,781,288,raw_probe_hit_but_no_term_hit
+68413e8847f9,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+75f1f6342a7a,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+7936f2948188,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+bc7ec5783af5,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+873703c00421,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+dd20b0bf13b3,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+81eb42636828,事業譲渡契約,,事業譲渡契約,M&A支援,outline_missing,0,18,0,stoplist_only_hit
+f3205e2bf808,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+72fd256e0cf2,道路交通法違反,,道路交通法違反,損害賠償（交通）,outline_missing,0,15,0,raw_probe_hit_but_no_term_hit
+18c63e95a62e,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+dfb98f3ad24e,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+cd64f1f3f535,交通事故,,交通事故,損害賠償（交通）,outline_missing,0,149,185,raw_probe_hit_but_no_term_hit
+60e144619eaa,傷害事件,,傷害事件,(未分類),outline_missing,0,13,0,raw_probe_hit_but_no_term_hit
+1885d3f47c60,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+4b5ee5aa752a,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+e9ca6b5d35ec,少数株主売却交渉事件,,少数株主売却交渉事件,(未分類),outline_missing,0,0,0,stoplist_only_hit
+44ec79df7172,発信者情報開示請求事件,発信者情報開示請求事件,発信者情報開示請求事件 発信者情報開示請求事件,(未分類),,0,1,0,stoplist_only_hit
+e8a79705fe08,交通事故,,交通事故,損害賠償（交通）,outline_missing,0,149,185,raw_probe_hit_but_no_term_hit
+a11ad0501a13,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+d11ee0dfc622,少数株主対応 法律相談,,少数株主対応 法律相談,契約法務,outline_missing,0,0,0,stoplist_only_hit
+6a9740c8e777,[PIIのため表示抑制],,[PIIのため表示抑制],相続,outline_missing|pii_risk_suppressed_from_report,0,2,5,raw_probe_hit_but_no_term_hit
+79309fa81bae,交通事故相談,,交通事故相談,(未分類),outline_missing,0,3,0,raw_probe_hit_but_no_term_hit
+35a5abefc733,当番弁護,不同意性交渉（当番弁護）,当番弁護 不同意性交渉（当番弁護）,(未分類),,0,9,0,raw_probe_hit_but_no_term_hit
+f3e9c3911a4e,相続放棄,相続放棄相談,相続放棄 相続放棄相談,相続,,0,135,8,stoplist_only_hit
+d3b71a313bda,事業清算,[PIIのため表示抑制],事業清算 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+1f87618c762a,私的整理,[PIIのため表示抑制],私的整理 [PIIのため表示抑制],廃業支援（私的整理）,pii_risk_suppressed_from_report,0,46,11,stoplist_only_hit
+d59c335bf87f,[PIIのため表示抑制],[PIIのため表示抑制],[PIIのため表示抑制] [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,3,0,stoplist_only_hit
+a8a82d421358,[PIIのため表示抑制],,[PIIのため表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+bfbe2f40879e,欠陥住宅京都ネット相談,[PIIのため表示抑制],欠陥住宅京都ネット相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+f2c3c51737dc,法人事業再生計画策定支援,[PIIのため表示抑制],法人事業再生計画策定支援 [PIIのため表示抑制],事業再生（私的整理）,pii_risk_suppressed_from_report,0,0,0,non_stop_term_hit
+06531cb3fd02,詐欺被害事件,,詐欺被害事件,(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+a47f842e9e7f,詐欺被害事件,,詐欺被害事件,(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+6d48d6ec04a4,ECサイト契約書相談,[PIIのため表示抑制],ECサイト契約書相談 [PIIのため表示抑制],契約法務,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+58cffb1c4fe1,事業承継相談,[PIIのため表示抑制],事業承継相談 [PIIのため表示抑制],M&A支援,pii_risk_suppressed_from_report,0,0,4,stoplist_only_hit
+a3331bce5b85,詐欺被害事件,,詐欺被害事件,(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+708b5addc849,債権回収,,債権回収,一般民事,outline_missing,0,68,18,raw_probe_hit_but_no_term_hit
+5c77d5aaebf6,詐欺被害事件,[PIIのため表示抑制],詐欺被害事件 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+c597a9534d51,損害賠償請求事件(交通事故),,損害賠償請求事件(交通事故),損害賠償（交通）,outline_missing,0,0,0,stoplist_only_hit
+57e16e42c6d4,債権回収,[PIIのため表示抑制],債権回収 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,68,18,stoplist_only_hit
+6b09034d1f38,自己破産,[PIIのため表示抑制],自己破産 [PIIのため表示抑制],廃業支援（法的整理）,pii_risk_suppressed_from_report,0,25,0,raw_probe_hit_but_no_term_hit
+4671eb7f2700,慰謝料請求,[PIIのため表示抑制],慰謝料請求 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,72,2,stoplist_only_hit
+5f6deff3491e,法テラス,[PIIのため表示抑制],法テラス [PIIのため表示抑制],相続,pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+e4ec62ab9513,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|noise|pii_risk_suppressed_from_report,0,0,0,noise_record
+c7bb38637483,M&A,,M&A,(未分類),outline_missing,0,224,117,raw_probe_hit_but_no_term_hit
+bd22889fb126,詐欺被害事件,,詐欺被害事件,(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+d1a101e804c1,交通事故相談,,交通事故相談,損害賠償（交通）,outline_missing,0,3,0,raw_probe_hit_but_no_term_hit
+f0e6e6a6e4be,相続放棄,[PIIのため表示抑制],相続放棄 [PIIのため表示抑制],相続,pii_risk_suppressed_from_report,0,135,8,stoplist_only_hit
+f4bf6baf00a7,情報商材被害相談,,情報商材被害相談,(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+0ff72c63e65a,破産管財人事件,,破産管財人事件,破産管財事件,outline_missing,0,1,0,non_stop_term_hit
+5eb52e23d11d,債務整理相談,[PIIのため表示抑制],債務整理相談 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+cb3c08a379bf,大麻取締法違反,[PIIのため表示抑制],大麻取締法違反 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,1,0,raw_probe_hit_but_no_term_hit
+ffbec64b0885,当番弁護,[PIIのため表示抑制],当番弁護 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,9,0,raw_probe_hit_but_no_term_hit
+6cc9e1491057,情報商材被害相談,,情報商材被害相談,(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+6fd2955308df,継続的契約の解消,"かね正グループ会社
+金属製のパレットを製造しているメーカー
+納入先のワコーパレットから取引契約の解除通知が届いた。
+継続的供給契約の解除","継続的契約の解消 かね正グループ会社
+金属製のパレットを製造しているメーカー
+納入先のワコーパレットから取引契約の解除通知が届いた。
+継続的供給契約の解除",契約法務,,0,7,0,stoplist_only_hit
+0e762ab04eeb,売掛金回収,[PIIのため表示抑制],売掛金回収 [PIIのため表示抑制],一般民事,pii_risk_suppressed_from_report,0,8,2,stoplist_only_hit
+54b1c50d9f79,損害賠償請求法律相談,,損害賠償請求法律相談,(未分類),outline_missing,0,0,0,stoplist_only_hit
+5225ca43f33d,詐欺被害事件,,詐欺被害事件,(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+6c86dd73d008,債務整理相談,,債務整理相談,債務整理,outline_missing,0,0,0,no_term_no_raw_probe
+6544cdc67e8b,詐欺被害事件,[PIIのため表示抑制],詐欺被害事件 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+c13d4a8573e6,ストーカー相談,[PIIのため表示抑制],ストーカー相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+8602e668ec49,相談,,相談,(未分類),outline_missing|generic_matter_type_excluded_from_probe,0,0,0,no_term_no_raw_probe
+b3c10b9b03b0,詐欺被害事件,[PIIのため表示抑制],詐欺被害事件 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+d75d001765c0,相続相談,[PIIのため表示抑制],相続相談 [PIIのため表示抑制],相続,pii_risk_suppressed_from_report,0,2,5,raw_probe_hit_but_no_term_hit
+19a2536e01d6,弁護士照会対応相談,[PIIのため表示抑制],弁護士照会対応相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+8f8a3d63ea0f,不動産相続相談,[PIIのため表示抑制],不動産相続相談 [PIIのため表示抑制],相続,pii_risk_suppressed_from_report,0,0,1,non_stop_term_hit
+97e74e21292d,損害賠償請求事件,,損害賠償請求事件,一般民事,outline_missing,0,20,0,stoplist_only_hit
+f2db574f2d15,詐欺被害,[PIIのため表示抑制],詐欺被害 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,5,0,raw_probe_hit_but_no_term_hit
+41527c52dc68,債務整理,[PIIのため表示抑制],債務整理 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,27,9,raw_probe_hit_but_no_term_hit
+bd1ad74b7cea,債務整理,[PIIのため表示抑制],債務整理 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,27,9,raw_probe_hit_but_no_term_hit
+19ae8b9e14a2,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+4b04486b45b4,京都情報商材被害対策弁護団相談案件,,京都情報商材被害対策弁護団相談案件,(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+7c416bbc5695,企業法務,[PIIのため表示抑制],企業法務 [PIIのため表示抑制],契約法務,pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,no_term_no_raw_probe
+4a71b261af25,欠陥住宅京都ネット相談,[PIIのため表示抑制],欠陥住宅京都ネット相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+0f1e8b79e889,詐欺被害事件,[PIIのため表示抑制],詐欺被害事件 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+01da0116489d,相続相談,[PIIのため表示抑制],相続相談 [PIIのため表示抑制],相続,pii_risk_suppressed_from_report,0,2,5,raw_probe_hit_but_no_term_hit
+3c98f5196038,相続相談,[PIIのため表示抑制],相続相談 [PIIのため表示抑制],相続,pii_risk_suppressed_from_report,0,2,5,raw_probe_hit_but_no_term_hit
+163aa957c12c,相続相談,[PIIのため表示抑制],相続相談 [PIIのため表示抑制],相続,pii_risk_suppressed_from_report,0,2,5,raw_probe_hit_but_no_term_hit
+8d569b75c0e5,相続相談,[PIIのため表示抑制],相続相談 [PIIのため表示抑制],相続,pii_risk_suppressed_from_report,0,2,5,raw_probe_hit_but_no_term_hit
+bbf392ed053d,薬機法違反,[PIIのため表示抑制],薬機法違反 [PIIのため表示抑制],刑事,pii_risk_suppressed_from_report,0,3,0,raw_probe_hit_but_no_term_hit
+9b09104b7281,暴行,[PIIのため表示抑制],暴行 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,111,2,raw_probe_hit_but_no_term_hit
+616f50c6ce35,債務整理,[PIIのため表示抑制],債務整理 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,27,9,raw_probe_hit_but_no_term_hit
+6ca59b2b6995,M&A,,M&A,M&A支援,outline_missing,0,224,117,raw_probe_hit_but_no_term_hit
+382299f481dc,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+3883970d1b59,[PIIのため表示抑制],[PIIのため表示抑制],[PIIのため表示抑制] [PIIのため表示抑制],(未分類),no_delimiter|pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+ce960c7c215a,債務整理,[PIIのため表示抑制],債務整理 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,27,9,raw_probe_hit_but_no_term_hit
+0fd012240113,債務整理,[PIIのため表示抑制],債務整理 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,27,9,raw_probe_hit_but_no_term_hit
+92f72da9f841,住宅ローン抵当権相談,[PIIのため表示抑制],住宅ローン抵当権相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+df71e6870e64,民事再生スポンサー支援,,民事再生スポンサー支援,事業再生（法的整理）,outline_missing,0,0,0,no_term_no_raw_probe
+fdc80a920a13,任意後見監督人,,任意後見監督人,(未分類),outline_missing,0,36,0,non_stop_term_hit
+505633220b2d,相続放棄相談,,相続放棄相談,相続,outline_missing,0,0,0,stoplist_only_hit
+068e019ee60f,損害賠償等請求事件,[PIIのため表示抑制],損害賠償等請求事件 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+f529466b3e58,相続相談,[PIIのため表示抑制],相続相談 [PIIのため表示抑制],相続,pii_risk_suppressed_from_report,0,2,5,raw_probe_hit_but_no_term_hit
+fac39c43c35a,傷害事件,[PIIのため表示抑制],傷害事件 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,13,0,raw_probe_hit_but_no_term_hit
+b5d113f8e042,交通事故,,交通事故,損害賠償（交通）,outline_missing,0,149,185,raw_probe_hit_but_no_term_hit
+061d50fb5679,「ごはん日和」事業買取スキーム,[PIIのため表示抑制],「ごはん日和」事業買取スキーム [PIIのため表示抑制],M&A支援,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+8f67569bbd6b,債務整理,,債務整理,債務整理,outline_missing,0,27,9,raw_probe_hit_but_no_term_hit
+67c505a559b3,企業法務,,企業法務,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,no_term_no_raw_probe
+c0c37d9d96e1,法律相談,[PIIのため表示抑制],法律相談 [PIIのため表示抑制],契約法務,pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+8acc9de325ad,住居侵入・窃盗未遂事件,[PIIのため表示抑制],住居侵入・窃盗未遂事件 [PIIのため表示抑制],刑事,pii_risk_suppressed_from_report,0,1,0,raw_probe_hit_but_no_term_hit
+2a55f5ac7e4a,債務整理相談,,債務整理相談,債務整理,outline_missing,0,0,0,no_term_no_raw_probe
+5965c022a935,債務整理相談,,債務整理相談,債務整理,outline_missing,0,0,0,no_term_no_raw_probe
+50dbb398efc9,生命・身体犯,[PIIのため表示抑制],生命・身体犯 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+7dc1cfade99d,M&Aバイサイド支援,[PIIのため表示抑制],M&Aバイサイド支援 [PIIのため表示抑制],M&A支援,pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+27e7c69dbb2c,M&A(売り手側廃業支援),,M&A(売り手側廃業支援),廃業支援（法的整理）,outline_missing,0,0,0,no_term_no_raw_probe
+c909303294e0,労務相談,,労務相談,(未分類),outline_missing|generic_matter_type_excluded_from_probe,0,0,0,no_term_no_raw_probe
+a23faec536c5,相続相談,[PIIのため表示抑制],相続相談 [PIIのため表示抑制],相続,pii_risk_suppressed_from_report,0,2,5,raw_probe_hit_but_no_term_hit
+ad3b6364f6f0,パワハラ相談,[PIIのため表示抑制],パワハラ相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,5,0,raw_probe_hit_but_no_term_hit
+1c5b207b3d42,債務整理,[PIIのため表示抑制],債務整理 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,27,9,raw_probe_hit_but_no_term_hit
+bea3909154e0,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+dadd29eb8df5,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+a7c6c9d55593,傷害,[PIIのため表示抑制],傷害 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,143,6,raw_probe_hit_but_no_term_hit
+2ac3d40e367d,事業整理相談,,事業整理相談,(未分類),outline_missing,0,0,0,stoplist_only_hit
+825350dc72e0,損害賠償請求事件,,損害賠償請求事件,(未分類),outline_missing,0,20,0,stoplist_only_hit
+856e3d96abc5,経営者保証ガイドライン,,経営者保証ガイドライン,廃業支援（私的整理）,outline_missing,0,12,7,raw_probe_hit_but_no_term_hit
+793b82eae6f2,経営相談,[PIIのため表示抑制],経営相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+68d3aad9be57,離縁相談,[PIIのため表示抑制],離縁相談 [PIIのため表示抑制],契約法務,pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+9062dcc9eb58,金銭貸借相談,[PIIのため表示抑制],金銭貸借相談 [PIIのため表示抑制],契約法務,pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+b0e47dcb0cd7,任意整理,[PIIのため表示抑制],任意整理 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,13,0,raw_probe_hit_but_no_term_hit
+3c00998ce91b,パワハラ相談,[PIIのため表示抑制],パワハラ相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,5,0,raw_probe_hit_but_no_term_hit
+19443a7fca0b,建造物侵入・窃盗未遂,[PIIのため表示抑制],建造物侵入・窃盗未遂 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+a586ede0665c,交通事故,,交通事故,損害賠償（交通）,outline_missing,0,149,185,raw_probe_hit_but_no_term_hit
+b059baed638c,交通事故,,交通事故,損害賠償（交通）,outline_missing,0,149,185,raw_probe_hit_but_no_term_hit
+f1344ce356b5,あっせん補助,[PIIのため表示抑制],あっせん補助 [PIIのため表示抑制],後見,pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+76d32b066705,クレジット・サラ金法律相談,[PIIのため表示抑制],クレジット・サラ金法律相談 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+f861740d573b,クレジット・サラ金法律相談,[PIIのため表示抑制],クレジット・サラ金法律相談 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+78a66b13ee0a,クレジット・サラ金法律相談,[PIIのため表示抑制],クレジット・サラ金法律相談 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+79b5a5262324,クレジット・サラ金法律相談,[PIIのため表示抑制],クレジット・サラ金法律相談 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+166e8d2e4c97,クレジット・サラ金法律相談,[PIIのため表示抑制],クレジット・サラ金法律相談 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+f16ea36ec84e,クレジット・サラ金法律相談,[PIIのため表示抑制],クレジット・サラ金法律相談 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+e7fcff328a54,事業再生(私的整理),,事業再生(私的整理),廃業支援（私的整理）,outline_missing,0,0,0,stoplist_only_hit
+8b712424d412,[区切り無・表示抑制],,[区切り無・表示抑制],M&A支援,no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+00680ed1d01d,団体交渉,,団体交渉,労働,outline_missing,0,88,0,raw_probe_hit_but_no_term_hit
+16ec6ac16e44,養育費請求事件,,養育費請求事件,離婚,outline_missing,0,1,0,stoplist_only_hit
+4fc0f665b54b,法律相談,[PIIのため表示抑制],法律相談 [PIIのため表示抑制],契約法務,pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+572ed462868f,法律相談,[PIIのため表示抑制],法律相談 [PIIのため表示抑制],契約法務,pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+2e4ab5d3d8c5,損害賠償請求事件(交通事故),,損害賠償請求事件(交通事故),損害賠償（交通）,outline_missing,0,0,0,stoplist_only_hit
+9f8e25771825,損害賠償請求事件,[PIIのため表示抑制],損害賠償請求事件 [PIIのため表示抑制],一般民事,pii_risk_suppressed_from_report,0,20,0,stoplist_only_hit
+546bdc4efc17,[区切り無・表示抑制],,[区切り無・表示抑制],(未分類),no_delimiter|outline_missing|pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+fd6f5d06adaf,欠陥住宅京都ネット相談,[PIIのため表示抑制],欠陥住宅京都ネット相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+79e6dcc6e881,ひまわりホットダイヤル,[PIIのため表示抑制],ひまわりホットダイヤル [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+5af244ec3233,債務整理相談,,債務整理相談,債務整理,outline_missing,0,0,0,no_term_no_raw_probe
+428849494c59,法律相談,,法律相談,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+52fade7c1ed5,従業員対応,[PIIのため表示抑制],従業員対応 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+9db74fa0f58a,廃業支援,,廃業支援,廃業支援（法的整理）,outline_missing,0,3,2,raw_probe_hit_but_no_term_hit
+5820998b84c1,廃業支援,,廃業支援,廃業支援（法的整理）,outline_missing,0,3,2,raw_probe_hit_but_no_term_hit
+058eee9e5b21,犯罪被害者相談,,犯罪被害者相談,(未分類),outline_missing,0,0,0,non_stop_term_hit
+88ad83ed6b47,当番弁護(詐欺事件),,当番弁護(詐欺事件),(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+353b42d0cf2b,犯罪被害者相談,,犯罪被害者相談,(未分類),outline_missing,0,0,0,non_stop_term_hit
+3874a450d7d0,宿泊施設運営相談,き＿キラエリ・モアテス＿宿泊施設運営相談,宿泊施設運営相談 き＿キラエリ・モアテス＿宿泊施設運営相談,(未分類),,0,0,0,stoplist_only_hit
+51f4bb088b08,退職・損害賠償対応,か＿門泰之＿退職・損害賠償対応,退職・損害賠償対応 か＿門泰之＿退職・損害賠償対応,(未分類),,0,0,0,no_term_no_raw_probe
+7f2904b8a8aa,山中司法書士 事業承継案件,山中司法書士 事業承継案件,山中司法書士 事業承継案件 山中司法書士 事業承継案件,(未分類),,0,0,0,stoplist_only_hit
+9dea5d647d0d,企業法務,,企業法務,契約法務,outline_missing|generic_matter_type_excluded_from_probe,0,0,0,no_term_no_raw_probe
+60ea3a785ede,契約書レビュー,,契約書レビュー,契約法務,outline_missing,0,9,2,raw_probe_hit_but_no_term_hit
+0169e1a7943e,システム開発費損害賠償請求,[PIIのため表示抑制],システム開発費損害賠償請求 [PIIのため表示抑制],一般民事,pii_risk_suppressed_from_report,0,0,0,stoplist_only_hit
+07617c61eff9,債務整理相談,[PIIのため表示抑制],債務整理相談 [PIIのため表示抑制],債務整理,pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+d492433119f7,欠陥住宅京都ネット,[PIIのため表示抑制],欠陥住宅京都ネット [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+9a151b1421c4,和解あっせん申立,[PIIのため表示抑制],和解あっせん申立 [PIIのため表示抑制],一般民事,pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+843c7e488988,債務整理相談,[PIIのため表示抑制],債務整理相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+6c8b2975c005,債務整理相談,,債務整理相談,(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+1b66e85b6fd5,経営改善支援,,経営改善支援,(未分類),outline_missing,0,0,1,raw_probe_hit_but_no_term_hit
+a44b0f9dea96,廃業支援,[PIIのため表示抑制],廃業支援 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,3,2,stoplist_only_hit
+3e52ea46c017,相続相談,,相続相談,(未分類),outline_missing,0,2,5,raw_probe_hit_but_no_term_hit
+08ac489749da,相続相談,,相続相談,(未分類),outline_missing,0,2,5,raw_probe_hit_but_no_term_hit
+bebe3f72e298,法律相談,,法律相談,(未分類),outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+4fb90abd7772,労務相談,,労務相談,(未分類),outline_missing|generic_matter_type_excluded_from_probe,0,0,0,no_term_no_raw_probe
+3f5382a48157,[PIIのため表示抑制],[PIIのため表示抑制],[PIIのため表示抑制] [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+752c1f58a9e2,住居侵入・不同意わいせつ未遂,[PIIのため表示抑制],住居侵入・不同意わいせつ未遂 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report,0,0,0,no_term_no_raw_probe
+cb33f12e1cc0,法律相談,,法律相談,(未分類),outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+0b44bb19f79b,労務相談,,労務相談,(未分類),outline_missing|generic_matter_type_excluded_from_probe,0,0,0,no_term_no_raw_probe
+53be9f0607a6,法律相談,[PIIのため表示抑制],法律相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+bbb1a6facefa,法律相談,[PIIのため表示抑制],法律相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+77b4fbf4763b,和解あっせん申立事件,,和解あっせん申立事件,(未分類),outline_missing,0,0,0,no_term_no_raw_probe
+082fd0c77ed6,法律相談,[PIIのため表示抑制],法律相談 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+0794b4b81930,法律相談,,法律相談,(未分類),outline_missing|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit
+2b9a64ba5da5,支援専門家業務,[PIIのため表示抑制],支援専門家業務 [PIIのため表示抑制],(未分類),pii_risk_suppressed_from_report|generic_matter_type_excluded_from_probe,0,0,0,stoplist_only_hit

@@ -1,5 +1,10 @@
 # 検索ベンチ ベースライン（A0-5 / Phase A 着手前に作成）
 
+> **【位置づけ更新 2026-06-05】このテンプレは Stage2（owner 監修 gold）用。**
+> Stage1 は gold を作らない観測ベースラインに変更した（owner判断「まず実測→後でgold」）。
+> Stage1 の方法・結果は `baseline_method.md` / `baseline_result_20260605.md` / `measure_consultation_reach.py` を参照。
+> 本テンプレの expected_concepts/expected_articles は Stage2 で owner が監修して埋める欄であり、Stage1 では使用しない。
+
 > 目的: 語彙554・蔵書6,524・`bib_terms`未投入の**現状**で検索性能を1回測り、以後の投入効果を比較する基準にする。
 > 価値の最終判定は「件数」でなく**この到達率**（owner方針＝根拠が見える・自己監査可能でなければ業務に入れない）。
 > 50件は**浅井の実務相談類型**から作る（owner主導）。下は記入フォーマットと種例。

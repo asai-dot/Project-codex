@@ -1,0 +1,3335 @@
+{
+"snapshot_note": "A1 baseline canonical terms snapshot (statutory definitions; not PII)",
+"as_of": "2026-06-05",
+"project_id": "nixfjmwxmgugiiuqfuym",
+"bib_terms_count": 0,
+"bib_records_total": 10326,
+"bib_toc_total": 555887,
+"terms_count": 554,
+"terms": [
+{
+"term_id": "egovcard:ばい煙",
+"term": "ばい煙",
+"term_yomi": "ばいえん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:ばい煙発生施設",
+"term": "ばい煙発生施設",
+"term_yomi": "ばいえんはっせいしせつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:レコード",
+"term": "レコード",
+"term_yomi": "れこーど",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:ローン提携販売",
+"term": "ローン提携販売",
+"term_yomi": "ろーんていけいはんばい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:一般廃棄物",
+"term": "一般廃棄物",
+"term_yomi": "いっぱんはいきぶつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:一般放送",
+"term": "一般放送",
+"term_yomi": "いっぱんほうそう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:一般放送事業者",
+"term": "一般放送事業者",
+"term_yomi": "いっぱんほうそうじぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:不作為",
+"term": "不作為",
+"term_yomi": "ふさくい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:不作為の違法確認の訴え",
+"term": "不作為の違法確認の訴え",
+"term_yomi": "ふさくいについてのいほうかくにんのうったえ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:不公正な取引方法",
+"term": "不公正な取引方法",
+"term_yomi": "ふこうせいなとりひきほうほう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:不動産",
+"term": "不動産",
+"term_yomi": "ふどうさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:不動産特定共同事業",
+"term": "不動産特定共同事業",
+"term_yomi": "ふどうさんとくていきょうどうじぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:不正競争",
+"term": "不正競争",
+"term_yomi": "ふせいきょうそう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:不開港",
+"term": "不開港",
+"term_yomi": "ふかいこう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:中小企業者",
+"term": "中小企業者",
+"term_yomi": "ちゅうしょうきぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:中断",
+"term": "中断",
+"term_yomi": "ちゅうだん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:中間期間",
+"term": "中間期間",
+"term_yomi": "ちゅうかんきかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:主登記",
+"term": "主登記",
+"term_yomi": "しゅとうき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:乗員",
+"term": "乗員",
+"term_yomi": "じょういん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:事務所",
+"term": "事務所",
+"term_yomi": "じむしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:事後設立",
+"term": "事後設立",
+"term_yomi": "じごせつりつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:事業",
+"term": "事業",
+"term_yomi": "じぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:事業主",
+"term": "事業主",
+"term_yomi": "じぎょうぬし",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:事業専従者",
+"term": "事業専従者",
+"term_yomi": "じぎょうせんじゅうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:事業年度",
+"term": "事業年度",
+"term_yomi": "じぎょうねんど",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:事業所得",
+"term": "事業所得",
+"term_yomi": "じぎょうしょとく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:事業者",
+"term": "事業者",
+"term_yomi": "じぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:事由",
+"term": "事由",
+"term_yomi": "じゆう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:二次的著作物",
+"term": "二次的著作物",
+"term_yomi": "にじてきちょさくぶつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:介護休業",
+"term": "介護休業",
+"term_yomi": "かいごきゅうぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:介護医療院",
+"term": "介護医療院",
+"term_yomi": "かいごいりょういん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:介護老人保健施設",
+"term": "介護老人保健施設",
+"term_yomi": "かいごろうじんほけんしせつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:付加保険料",
+"term": "付加保険料",
+"term_yomi": "ふかほけんりょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:代表清算人",
+"term": "代表清算人",
+"term_yomi": "だいひょうせいさんにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:仮処分命令",
+"term": "仮処分命令",
+"term_yomi": "かりしょぶんめいれい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:任意継続被保険者",
+"term": "任意継続被保険者",
+"term_yomi": "にんいけいぞくひほけんしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:会員",
+"term": "会員",
+"term_yomi": "かいいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:会社",
+"term": "会社",
+"term_yomi": "かいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:会計参与設置会社",
+"term": "会計参与設置会社",
+"term_yomi": "かいけいさんよせっちがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:会計監査人設置会社",
+"term": "会計監査人設置会社",
+"term_yomi": "かいけいかんさにんせっちがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:住居地",
+"term": "住居地",
+"term_yomi": "しゅうきょち",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:併合",
+"term": "併合",
+"term_yomi": "へいごう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:使用",
+"term": "使用",
+"term_yomi": "しよう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:使用者",
+"term": "使用者",
+"term_yomi": "しようしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:価額",
+"term": "価額",
+"term_yomi": "かがく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保全管理人",
+"term": "保全管理人",
+"term_yomi": "ほぜんかんりにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保税地域",
+"term": "保税地域",
+"term_yomi": "ほぜいちいき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保護者",
+"term": "保護者",
+"term_yomi": "ほごしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保険事故",
+"term": "保険事故",
+"term_yomi": "ほけんじこ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保険仲立人",
+"term": "保険仲立人",
+"term_yomi": "ほけんなかだちにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保険契約",
+"term": "保険契約",
+"term_yomi": "ほけんけいやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保険契約者保護機構",
+"term": "保険契約者保護機構",
+"term_yomi": "ほけんけいやくしゃほごきこう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保険料率",
+"term": "保険料率",
+"term_yomi": "ほけんりょうりつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保険業",
+"term": "保険業",
+"term_yomi": "ほけんぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保険者",
+"term": "保険者",
+"term_yomi": "ほけんしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保険薬剤師",
+"term": "保険薬剤師",
+"term_yomi": "ほけんやくざいし",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:保険金受取人",
+"term": "保険金受取人",
+"term_yomi": "ほけんきんうけとりにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:信用取引",
+"term": "信用取引",
+"term_yomi": "しんようとりひき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:信託財産",
+"term": "信託財産",
+"term_yomi": "しんたくざいさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:修繕",
+"term": "修繕",
+"term_yomi": "しゅうぜん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:倉庫営業者",
+"term": "倉庫営業者",
+"term_yomi": "そうこえいぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:個人情報",
+"term": "個人情報",
+"term_yomi": "こじんじょうほう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:個品運送契約",
+"term": "個品運送契約",
+"term_yomi": "こひんうんそうけいやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:借地権",
+"term": "借地権",
+"term_yomi": "しゃくちけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:催告",
+"term": "催告",
+"term_yomi": "さいこく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:債務者",
+"term": "債務者",
+"term_yomi": "さいむしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:債務超過",
+"term": "債務超過",
+"term_yomi": "さいむちょうか",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:充当",
+"term": "充当",
+"term_yomi": "じゅうとう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:先物取引",
+"term": "先物取引",
+"term_yomi": "さきものとりひき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:児童福祉司",
+"term": "児童福祉司",
+"term_yomi": "じどうふくしし",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:入国審査官",
+"term": "入国審査官",
+"term_yomi": "にゅうこくしんさかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:入国警備官",
+"term": "入国警備官",
+"term_yomi": "にゅうこくけいびかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:入漁権",
+"term": "入漁権",
+"term_yomi": "にゅうぎょけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:全部航海傭船契約",
+"term": "全部航海傭船契約",
+"term_yomi": "ぜんぶこうかいようせんけいやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公共施設",
+"term": "公共施設",
+"term_yomi": "こうきょうしせつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公共法人",
+"term": "公共法人",
+"term_yomi": "こうきょうほうじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公務員",
+"term": "公務員",
+"term_yomi": "こうむいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公務所",
+"term": "公務所",
+"term_yomi": "こうむしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公募",
+"term": "公募",
+"term_yomi": "こうぼ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公告",
+"term": "公告",
+"term_yomi": "こうこく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公有財産",
+"term": "公有財産",
+"term_yomi": "こうゆうざいさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公社債",
+"term": "公社債",
+"term_yomi": "こうしゃさい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公社債投資信託",
+"term": "公社債投資信託",
+"term_yomi": "こうしゃさいとうししんたく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公開",
+"term": "公開",
+"term_yomi": "こうかい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公開会社",
+"term": "公開会社",
+"term_yomi": "こうかいがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:公開買付け",
+"term": "公開買付け",
+"term_yomi": "こうかいかいつけ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:共同著作物",
+"term": "共同著作物",
+"term_yomi": "きょうどうちょさくぶつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:共済事業",
+"term": "共済事業",
+"term_yomi": "きょうさいじぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:共済組合",
+"term": "共済組合",
+"term_yomi": "きょうさいくみあい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:内国法人",
+"term": "内国法人",
+"term_yomi": "ないこくほうじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:内国貨物",
+"term": "内国貨物",
+"term_yomi": "ないこくかもつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:内覧",
+"term": "内覧",
+"term_yomi": "ないらん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:再生債務者",
+"term": "再生債務者",
+"term_yomi": "さいせいさいむしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:再生手続",
+"term": "再生手続",
+"term_yomi": "さいせいてつづき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:再生計画",
+"term": "再生計画",
+"term_yomi": "さいせいけいかく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:処分",
+"term": "処分",
+"term_yomi": "しょぶん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:処分の取消しの訴え",
+"term": "処分の取消しの訴え",
+"term_yomi": "しょぶんのとりけしのうったえ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:出国",
+"term": "出国",
+"term_yomi": "しゅっこく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:出資",
+"term": "出資",
+"term_yomi": "しゅっし",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:利子割",
+"term": "利子割",
+"term_yomi": "りしわり",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:利害関係人",
+"term": "利害関係人",
+"term_yomi": "りがいかんけいにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:利用行為",
+"term": "利用行為",
+"term_yomi": "りようこうい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:前払式支払手段",
+"term": "前払式支払手段",
+"term_yomi": "まえばらいしきしはらいしゅだん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:割賦販売",
+"term": "割賦販売",
+"term_yomi": "かっぷはんばい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:労働災害",
+"term": "労働災害",
+"term_yomi": "ろうどうさいがい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:労働組合",
+"term": "労働組合",
+"term_yomi": "ろうどうくみあい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:労働者",
+"term": "労働者",
+"term_yomi": "ろうどうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:労働者派遣",
+"term": "労働者派遣",
+"term_yomi": "ろうどうしゃはけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:労働者派遣事業",
+"term": "労働者派遣事業",
+"term_yomi": "ろうどうしゃはけんじぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:労働者派遣契約",
+"term": "労働者派遣契約",
+"term_yomi": "ろうどうしゃはけんけいやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:動産",
+"term": "動産",
+"term_yomi": "どうさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:募集",
+"term": "募集",
+"term_yomi": "ぼしゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:勧誘",
+"term": "勧誘",
+"term_yomi": "かんゆう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:化学物質",
+"term": "化学物質",
+"term_yomi": "かがくぶっしつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:区分所有権",
+"term": "区分所有権",
+"term_yomi": "くぶんしょゆうけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:医薬品",
+"term": "医薬品",
+"term_yomi": "いやくひん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:医薬部外品",
+"term": "医薬部外品",
+"term_yomi": "いやくぶがいひん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:半期報告書",
+"term": "半期報告書",
+"term_yomi": "はんきほうこくしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:協会",
+"term": "協会",
+"term_yomi": "きょうかい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:厚生年金基金",
+"term": "厚生年金基金",
+"term_yomi": "こうせいねんきんききん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:原料",
+"term": "原料",
+"term_yomi": "げんりょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:参加人",
+"term": "参加人",
+"term_yomi": "さんかにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:取引参加者",
+"term": "取引参加者",
+"term_yomi": "とりひきさんかしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:取引所金融商品市場",
+"term": "取引所金融商品市場",
+"term_yomi": "とりひきじょきんゆうしょうひんしじょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:取得請求権付株式",
+"term": "取得請求権付株式",
+"term_yomi": "しゅとくせいきゅうけんつきかぶしき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:取締役会設置会社",
+"term": "取締役会設置会社",
+"term_yomi": "とりしまりやくかいせっちがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:受益者",
+"term": "受益者",
+"term_yomi": "じゅえきしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:受託会社",
+"term": "受託会社",
+"term_yomi": "じゅたくがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:司法警察職員",
+"term": "司法警察職員",
+"term_yomi": "しほうけいさつしょくいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:合同運用信託",
+"term": "合同運用信託",
+"term_yomi": "ごうどううんようしんたく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:同族会社",
+"term": "同族会社",
+"term_yomi": "どうぞくがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:商人",
+"term": "商人",
+"term_yomi": "しょうにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:商号",
+"term": "商号",
+"term_yomi": "しょうごう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:商品",
+"term": "商品",
+"term_yomi": "しょうひん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:商品先物取引仲介業",
+"term": "商品先物取引仲介業",
+"term_yomi": "しょうひんさきものとりひきちゅうかいぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:商品先物取引業者",
+"term": "商品先物取引業者",
+"term_yomi": "しょうひんさきものとりひきぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:商品取引所",
+"term": "商品取引所",
+"term_yomi": "しょうひんとりひきじょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:商品市場",
+"term": "商品市場",
+"term_yomi": "しょうひんしじょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:商工債",
+"term": "商工債",
+"term_yomi": "しょうこうさい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:商標",
+"term": "商標",
+"term_yomi": "しょうひょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:問屋",
+"term": "問屋",
+"term_yomi": "といや",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:営業",
+"term": "営業",
+"term_yomi": "えいぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:営業所",
+"term": "営業所",
+"term_yomi": "えいぎょうしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:営業秘密",
+"term": "営業秘密",
+"term_yomi": "えいぎょうひみつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:団地共用部分",
+"term": "団地共用部分",
+"term_yomi": "だんちきょうようぶぶん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:固定資産",
+"term": "固定資産",
+"term_yomi": "こていしさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:固有財産",
+"term": "固有財産",
+"term_yomi": "こゆうざいさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:国営企業",
+"term": "国営企業",
+"term_yomi": "こくえいきぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:国民",
+"term": "国民",
+"term_yomi": "こくみん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:国税",
+"term": "国税",
+"term_yomi": "こくぜい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:国際放送",
+"term": "国際放送",
+"term_yomi": "こくさいほうそう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:土地",
+"term": "土地",
+"term_yomi": "とち",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:土地課税台帳",
+"term": "土地課税台帳",
+"term_yomi": "とちかぜいだいちょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:在留資格",
+"term": "在留資格",
+"term_yomi": "ざいりゅうしかく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:地区計画",
+"term": "地区計画",
+"term_yomi": "ちくけいかく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:地方公社",
+"term": "地方公社",
+"term_yomi": "ちほうこうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:地方団体",
+"term": "地方団体",
+"term_yomi": "ちほうだんたい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:地方独立行政法人",
+"term": "地方独立行政法人",
+"term_yomi": "ちほうどくりつぎょうせいほうじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:地方税",
+"term": "地方税",
+"term_yomi": "ちほうぜい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:地番",
+"term": "地番",
+"term_yomi": "ちばん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:地目",
+"term": "地目",
+"term_yomi": "ちもく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:地積",
+"term": "地積",
+"term_yomi": "ちせき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:地震保険",
+"term": "地震保険",
+"term_yomi": "じしんほけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:均等割",
+"term": "均等割",
+"term_yomi": "きんとうわり",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:執行役員",
+"term": "執行役員",
+"term_yomi": "しっこうやくいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:基幹放送",
+"term": "基幹放送",
+"term_yomi": "きかんほうそう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:基幹放送事業者",
+"term": "基幹放送事業者",
+"term_yomi": "きかんほうそうじぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:基準",
+"term": "基準",
+"term_yomi": "きじゅん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:基準日",
+"term": "基準日",
+"term_yomi": "きじゅんび",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:基準期間",
+"term": "基準期間",
+"term_yomi": "きじゅんきかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:報酬",
+"term": "報酬",
+"term_yomi": "ほうしゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:場合",
+"term": "場合",
+"term_yomi": "ばあい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:売春",
+"term": "売春",
+"term_yomi": "ばいしゅん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:変動所得",
+"term": "変動所得",
+"term_yomi": "へんどうしょとく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:外国人",
+"term": "外国人",
+"term_yomi": "がいこくじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:外国会社",
+"term": "外国会社",
+"term_yomi": "がいこくがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:外国保険業者",
+"term": "外国保険業者",
+"term_yomi": "がいこくほけんぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:外国倒産処理手続",
+"term": "外国倒産処理手続",
+"term_yomi": "がいこくとうさんしょりてつづき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:外国市場デリバティブ取引",
+"term": "外国市場デリバティブ取引",
+"term_yomi": "がいこくしじょうでりばてぃぶとりひき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:外国法人",
+"term": "外国法人",
+"term_yomi": "がいこくほうじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:外国証券業者",
+"term": "外国証券業者",
+"term_yomi": "がいこくしょうけんぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:外国貨物",
+"term": "外国貨物",
+"term_yomi": "がいこくかもつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:外国貿易船",
+"term": "外国貿易船",
+"term_yomi": "がいこくぼうえきせん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:外貨証券",
+"term": "外貨証券",
+"term_yomi": "がいかしょうけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:大規模訴訟",
+"term": "大規模訴訟",
+"term_yomi": "だいきぼそしょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:失業",
+"term": "失業",
+"term_yomi": "しつぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:委託",
+"term": "委託",
+"term_yomi": "いたく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:委託者保護基金",
+"term": "委託者保護基金",
+"term_yomi": "いたくしゃほごききん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:子会社",
+"term": "子会社",
+"term_yomi": "こがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:学位",
+"term": "学位",
+"term_yomi": "がくい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:宅地",
+"term": "宅地",
+"term_yomi": "たくち",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:宅地建物取引士",
+"term": "宅地建物取引士",
+"term_yomi": "たくちたてものとりひきし",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:宅地建物取引業",
+"term": "宅地建物取引業",
+"term_yomi": "たくちたてものとりひきぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:完全子会社",
+"term": "完全子会社",
+"term_yomi": "かんぜんこがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:完全親会社",
+"term": "完全親会社",
+"term_yomi": "かんぜんおやがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:官職",
+"term": "官職",
+"term_yomi": "かんしょく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:定型約款",
+"term": "定型約款",
+"term_yomi": "ていけいやっかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:定期積金",
+"term": "定期積金",
+"term_yomi": "ていきつみきん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:定期巡回・随時対応型訪問介護看護",
+"term": "定期巡回・随時対応型訪問介護看護",
+"term_yomi": "ていきじゅんかいずいじたいおうがたほうもんかいごかんご",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:定置漁業権",
+"term": "定置漁業権",
+"term_yomi": "ていちぎょぎょうけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:家屋",
+"term": "家屋",
+"term_yomi": "かおく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:家屋課税台帳",
+"term": "家屋課税台帳",
+"term_yomi": "かおくかぜいだいちょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:家族",
+"term": "家族",
+"term_yomi": "かぞく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:容積率",
+"term": "容積率",
+"term_yomi": "ようせきりつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:対外支払手段",
+"term": "対外支払手段",
+"term_yomi": "たいがいしはらいしゅだん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:専門委員",
+"term": "専門委員",
+"term_yomi": "せんもんいいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:小商人",
+"term": "小商人",
+"term_yomi": "こしょうにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:少年",
+"term": "少年",
+"term_yomi": "しょうねん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:居住者",
+"term": "居住者",
+"term_yomi": "きょじゅうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:居室",
+"term": "居室",
+"term_yomi": "きょしつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:差押債権者",
+"term": "差押債権者",
+"term_yomi": "さしおさえさいけんしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:市場デリバティブ取引",
+"term": "市場デリバティブ取引",
+"term_yomi": "しじょうでりばてぃぶとりひき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:市町村",
+"term": "市町村",
+"term_yomi": "しちょうそん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:年度",
+"term": "年度",
+"term_yomi": "ねんど",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:廃止",
+"term": "廃止",
+"term_yomi": "はいし",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:建築物",
+"term": "建築物",
+"term_yomi": "けんちくぶつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:建蔽率",
+"term": "建蔽率",
+"term_yomi": "けんぺいりつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:弁護士会",
+"term": "弁護士会",
+"term_yomi": "べんごしかい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:引受け",
+"term": "引受け",
+"term_yomi": "ひきうけ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:強制換価手続",
+"term": "強制換価手続",
+"term_yomi": "きょうせいかんかてつづき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:当事者",
+"term": "当事者",
+"term_yomi": "とうじしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:役務",
+"term": "役務",
+"term_yomi": "えきむ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:役員",
+"term": "役員",
+"term_yomi": "やくいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:後見人",
+"term": "後見人",
+"term_yomi": "こうけんにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:後見監督人",
+"term": "後見監督人",
+"term_yomi": "こうけんかんとくにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:情報公開条例",
+"term": "情報公開条例",
+"term_yomi": "じょうほうこうかいじょうれい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:情報取得手続",
+"term": "情報取得手続",
+"term_yomi": "じょうほうしゅとくてつづき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:意思表示",
+"term": "意思表示",
+"term_yomi": "いしひょうじ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:所得割",
+"term": "所得割",
+"term_yomi": "しょとくわり",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:手続",
+"term": "手続",
+"term_yomi": "てつづき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:扶養親族",
+"term": "扶養親族",
+"term_yomi": "ふようしんぞく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:承役地",
+"term": "承役地",
+"term_yomi": "しょうえきち",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:承継",
+"term": "承継",
+"term_yomi": "しょうけい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:投資信託",
+"term": "投資信託",
+"term_yomi": "とうししんたく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:投資者保護基金",
+"term": "投資者保護基金",
+"term_yomi": "とうししゃほごききん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:抗告訴訟",
+"term": "抗告訴訟",
+"term_yomi": "こうこくそしょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:抵当証券",
+"term": "抵当証券",
+"term_yomi": "ていとうしょうけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:担保不動産収益執行",
+"term": "担保不動産収益執行",
+"term_yomi": "たんぽふどうさんしゅうえきしっこう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:担保権",
+"term": "担保権",
+"term_yomi": "たんぽけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:持分",
+"term": "持分",
+"term_yomi": "もちぶん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:持分会社",
+"term": "持分会社",
+"term_yomi": "もちぶんがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:指名委員会等設置会社",
+"term": "指名委員会等設置会社",
+"term_yomi": "しめいいいんかいとうせっちがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:指定",
+"term": "指定",
+"term_yomi": "してい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:採用",
+"term": "採用",
+"term_yomi": "さいよう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:採草放牧地",
+"term": "採草放牧地",
+"term_yomi": "さいそうほうぼくち",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:提供",
+"term": "提供",
+"term_yomi": "ていきょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:提出",
+"term": "提出",
+"term_yomi": "ていしゅつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:損害保険会社",
+"term": "損害保険会社",
+"term_yomi": "そんがいほけんかいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:損害保険契約",
+"term": "損害保険契約",
+"term_yomi": "そんがいほけんけいやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:支払",
+"term": "支払",
+"term_yomi": "しはらい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:支払不能",
+"term": "支払不能",
+"term_yomi": "しはらいふのう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:改修",
+"term": "改修",
+"term_yomi": "かいしゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:改築",
+"term": "改築",
+"term_yomi": "かいちく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:放棄",
+"term": "放棄",
+"term_yomi": "ほうき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:放送",
+"term": "放送",
+"term_yomi": "ほうそう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:放送事業者",
+"term": "放送事業者",
+"term_yomi": "ほうそうじぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:放送局",
+"term": "放送局",
+"term_yomi": "ほうそうきょく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:放送番組",
+"term": "放送番組",
+"term_yomi": "ほうそうばんぐみ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:敷地利用権",
+"term": "敷地利用権",
+"term_yomi": "しきちりようけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:敷金",
+"term": "敷金",
+"term_yomi": "しききん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:新設合併",
+"term": "新設合併",
+"term_yomi": "しんせつがっぺい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:施設",
+"term": "施設",
+"term_yomi": "しせつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:日雇労働者",
+"term": "日雇労働者",
+"term_yomi": "ひやといろうどうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:日雇特例被保険者",
+"term": "日雇特例被保険者",
+"term_yomi": "ひやといとくれいひほけんしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:旧商法",
+"term": "旧商法",
+"term_yomi": "きゅうしょうほう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:昇任",
+"term": "昇任",
+"term_yomi": "しょうかく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:普通徴収",
+"term": "普通徴収",
+"term_yomi": "ふつうちょうしゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:普通法人",
+"term": "普通法人",
+"term_yomi": "ふつうほうじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:暗号資産",
+"term": "暗号資産",
+"term_yomi": "あんごうしさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:更正",
+"term": "更正",
+"term_yomi": "こうせい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:更正の請求",
+"term": "更正の請求",
+"term_yomi": "こうせいのせいきゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:更生事件",
+"term": "更生事件",
+"term_yomi": "こうせいじけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:更生会社",
+"term": "更生会社",
+"term_yomi": "こうせいかいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:更生債権",
+"term": "更生債権",
+"term_yomi": "こうせいさいけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:更生手続",
+"term": "更生手続",
+"term_yomi": "こうせいてつづき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:更生裁判所",
+"term": "更生裁判所",
+"term_yomi": "こうせいさいばんしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:更生計画",
+"term": "更生計画",
+"term_yomi": "こうせいけいかく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:有価証券報告書",
+"term": "有価証券報告書",
+"term_yomi": "ゆうかしょうけんほうこくしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:有効期間",
+"term": "有効期間",
+"term_yomi": "ゆうこうきかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:有線放送",
+"term": "有線放送",
+"term_yomi": "ゆうせんほうそう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:有限責任事業組合",
+"term": "有限責任事業組合",
+"term_yomi": "ゆうげんせきにんじぎょうくみあい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:期間",
+"term": "期間",
+"term_yomi": "きかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:期限",
+"term": "期限",
+"term_yomi": "きげん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:本邦",
+"term": "本邦",
+"term_yomi": "ほんぽう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:株主",
+"term": "株主",
+"term_yomi": "かぶぬし",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:株主名簿管理人",
+"term": "株主名簿管理人",
+"term_yomi": "かぶぬしめいぼかんりにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:株式",
+"term": "株式",
+"term_yomi": "かぶしき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:株式交付",
+"term": "株式交付",
+"term_yomi": "かぶしきこうふ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:株式交換",
+"term": "株式交換",
+"term_yomi": "かぶしきこうかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:株式移転",
+"term": "株式移転",
+"term_yomi": "かぶしきいてん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:棚卸資産",
+"term": "棚卸資産",
+"term_yomi": "たなおろししさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:業務",
+"term": "業務",
+"term_yomi": "ぎょうむ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:業務執行取締役",
+"term": "業務執行取締役",
+"term_yomi": "ぎょうむしっこうとりしまりやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:業務方法書",
+"term": "業務方法書",
+"term_yomi": "ぎょうむほうほうしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:標準報酬",
+"term": "標準報酬",
+"term_yomi": "ひょうじゅんほうしゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:標準職務遂行能力",
+"term": "標準職務遂行能力",
+"term_yomi": "ひょうじゅんしょくむすいこうのうりょく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:標章",
+"term": "標章",
+"term_yomi": "ひょうしょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:権利",
+"term": "権利",
+"term_yomi": "けんり",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:機長",
+"term": "機長",
+"term_yomi": "きちょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:民衆訴訟",
+"term": "民衆訴訟",
+"term_yomi": "みんしゅうそしょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:水産資源",
+"term": "水産資源",
+"term_yomi": "すいさんしげん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:決定",
+"term": "決定",
+"term_yomi": "けってい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:河川区域",
+"term": "河川区域",
+"term_yomi": "かせんくいき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:法人",
+"term": "法人",
+"term_yomi": "ほうじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:法人番号",
+"term": "法人番号",
+"term_yomi": "ほうじん・ばんごう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:法令",
+"term": "法令",
+"term_yomi": "ほうれい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:法定受託事務",
+"term": "法定受託事務",
+"term_yomi": "ほうていじゅたくじむ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:法定外目的税",
+"term": "法定外目的税",
+"term_yomi": "ほうていがいもくてきぜい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:法定準備金",
+"term": "法定準備金",
+"term_yomi": "ほうていじゅんびきん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:法定申告期限",
+"term": "法定申告期限",
+"term_yomi": "ほうていしんこくきげん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:法定納期限",
+"term": "法定納期限",
+"term_yomi": "ほうていのうきげん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:法律",
+"term": "法律",
+"term_yomi": "ほうりつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:法律顧問",
+"term": "法律顧問",
+"term_yomi": "ほうりつこもん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:派遣労働者",
+"term": "派遣労働者",
+"term_yomi": "はけんろうどうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:海上運送",
+"term": "海上運送",
+"term_yomi": "かいじょううんそう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:消費者契約",
+"term": "消費者契約",
+"term_yomi": "しょうひしゃけいやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:減価償却資産",
+"term": "減価償却資産",
+"term_yomi": "げんかしょうきゃくしさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:滞納処分",
+"term": "滞納処分",
+"term_yomi": "たいのうしょぶん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:源泉徴収",
+"term": "源泉徴収",
+"term_yomi": "げんせんちょうしゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:準備金",
+"term": "準備金",
+"term_yomi": "じゅんびきん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:漁業権",
+"term": "漁業権",
+"term_yomi": "ぎょぎょうけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:漁業調整",
+"term": "漁業調整",
+"term_yomi": "ぎょぎょうちょうせい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:災害",
+"term": "災害",
+"term_yomi": "さいがい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:無効等確認の訴え",
+"term": "無効等確認の訴え",
+"term_yomi": "むこうとうかくにんのうったえ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:無差別大量殺人行為",
+"term": "無差別大量殺人行為",
+"term_yomi": "むさべつたいりょうさつじんこうい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:無線局",
+"term": "無線局",
+"term_yomi": "むせんきょく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:無線従事者",
+"term": "無線従事者",
+"term_yomi": "むせんじゅうじしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:無線電信",
+"term": "無線電信",
+"term_yomi": "むせんでんしん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:無線電話",
+"term": "無線電話",
+"term_yomi": "むせんでんわ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:物",
+"term": "物",
+"term_yomi": "もの",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:物品",
+"term": "物品",
+"term_yomi": "ぶっぴん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:特別徴収",
+"term": "特別徴収",
+"term_yomi": "とくべつちょうしゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:特別徴収義務者",
+"term": "特別徴収義務者",
+"term_yomi": "とくべつちょうしゅうぎむしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:特別管理産業廃棄物",
+"term": "特別管理産業廃棄物",
+"term_yomi": "とくべつかんりさんぎょうはいきぶつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:特定取引所金融商品市場",
+"term": "特定取引所金融商品市場",
+"term_yomi": "とくていとりひきしょきんゆうしょうひんしじょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:特定地上基幹放送事業者",
+"term": "特定地上基幹放送事業者",
+"term_yomi": "とくていちじょうきかんほうそうじぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:特定扶養親族",
+"term": "特定扶養親族",
+"term_yomi": "とくていふようしんぞく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:特定投資家",
+"term": "特定投資家",
+"term_yomi": "とくていとうしか",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:特定目的会社",
+"term": "特定目的会社",
+"term_yomi": "とくていもくてきがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:特定粉じん",
+"term": "特定粉じん",
+"term_yomi": "とくていふんじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:特有財産",
+"term": "特有財産",
+"term_yomi": "とくゆうざいさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:独立行政法人",
+"term": "独立行政法人",
+"term_yomi": "どくりつぎょうせいほうじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:現物給付",
+"term": "現物給付",
+"term_yomi": "げんぶつきゅうふ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:理事",
+"term": "理事",
+"term_yomi": "りじ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:環境影響評価",
+"term": "環境影響評価",
+"term_yomi": "かんきょうえいきょうひょうか",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:生命保険会社",
+"term": "生命保険会社",
+"term_yomi": "せいめいほけんがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:生活排水",
+"term": "生活排水",
+"term_yomi": "せいかつはいすい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:産業廃棄物",
+"term": "産業廃棄物",
+"term_yomi": "さんぎょうはいきぶつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:申出",
+"term": "申出",
+"term_yomi": "もうしで",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:申告納付",
+"term": "申告納付",
+"term_yomi": "しんこくのうふ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:申告納入",
+"term": "申告納入",
+"term_yomi": "しんこくのうにゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:申告納税方式",
+"term": "申告納税方式",
+"term_yomi": "しんこくのうぜいほうしき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:申請",
+"term": "申請",
+"term_yomi": "しんせい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:病院",
+"term": "病院",
+"term_yomi": "びょういん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:療養病床",
+"term": "療養病床",
+"term_yomi": "りょうようびょうしょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:発明",
+"term": "発明",
+"term_yomi": "はつめい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:発行",
+"term": "発行",
+"term_yomi": "はっこう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:発行可能種類株式総数",
+"term": "発行可能種類株式総数",
+"term_yomi": "はっこうかのうしゅるいかぶしきそうすう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:発行日取引",
+"term": "発行日取引",
+"term_yomi": "はっこうびとりひき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:発行済株式",
+"term": "発行済株式",
+"term_yomi": "はっこうずみかぶしき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:登記",
+"term": "登記",
+"term_yomi": "とうき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:登記原因",
+"term": "登記原因",
+"term_yomi": "とうきげんいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:登記名義人",
+"term": "登記名義人",
+"term_yomi": "とうきめいぎにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:登記官",
+"term": "登記官",
+"term_yomi": "とうきかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:登記簿",
+"term": "登記簿",
+"term_yomi": "とうきぼ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:登記識別情報",
+"term": "登記識別情報",
+"term_yomi": "とうきしきべつじょうほう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:登録",
+"term": "登録",
+"term_yomi": "とうろく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:登録商標",
+"term": "登録商標",
+"term_yomi": "とうろくしょうひょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:監査役会設置会社",
+"term": "監査役会設置会社",
+"term_yomi": "かんさやくかいせっちがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:監査法人",
+"term": "監査法人",
+"term_yomi": "かんさほうじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:監査等委員会設置会社",
+"term": "監査等委員会設置会社",
+"term_yomi": "かんさとういいんかいせっちがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:監督委員",
+"term": "監督委員",
+"term_yomi": "かんとくいいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:監督庁",
+"term": "監督庁",
+"term_yomi": "かんとくちょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:目的",
+"term": "目的",
+"term_yomi": "もくてき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:目論見書",
+"term": "目論見書",
+"term_yomi": "もくろみしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:相互会社",
+"term": "相互会社",
+"term_yomi": "そうごがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:相続人",
+"term": "相続人",
+"term_yomi": "そうぞくにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:相続債権者",
+"term": "相続債権者",
+"term_yomi": "そうぞくさいけんしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:破産事件",
+"term": "破産事件",
+"term_yomi": "はさんじけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:破産債権",
+"term": "破産債権",
+"term_yomi": "はさんさいけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:破産債権者",
+"term": "破産債権者",
+"term_yomi": "はさんさいけんしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:破産手続",
+"term": "破産手続",
+"term_yomi": "はさんてつづき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:破産管財人",
+"term": "破産管財人",
+"term_yomi": "はさんかんざいにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:破産者",
+"term": "破産者",
+"term_yomi": "はさんしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:破産裁判所",
+"term": "破産裁判所",
+"term_yomi": "はさんさいばんしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:破産財団",
+"term": "破産財団",
+"term_yomi": "はさんざいだん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:確定",
+"term": "確定",
+"term_yomi": "かくてい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:確定申告書",
+"term": "確定申告書",
+"term_yomi": "かくていしんこくしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:確定給付企業年金",
+"term": "確定給付企業年金",
+"term_yomi": "かくていきゅうふきぎょうねんきん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:社債",
+"term": "社債",
+"term_yomi": "しゃさい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:社債権者集会",
+"term": "社債権者集会",
+"term_yomi": "しゃさいけんしゃしゅうかい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:社債管理補助者",
+"term": "社債管理補助者",
+"term_yomi": "しゃさいかんりほじょしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:社外取締役",
+"term": "社外取締役",
+"term_yomi": "しゃがいとりしまりやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:社外監査役",
+"term": "社外監査役",
+"term_yomi": "しゃがいかんさやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:私募",
+"term": "私募",
+"term_yomi": "しぼ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:秘密",
+"term": "秘密",
+"term_yomi": "ひみつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:租税条約",
+"term": "租税条約",
+"term_yomi": "ぜいじょうやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:租税特別措置",
+"term": "租税特別措置",
+"term_yomi": "ぜいとくべつそち",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:移出",
+"term": "移出",
+"term_yomi": "いしゅつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:税関空港",
+"term": "税関空港",
+"term_yomi": "ぜいかんくうこう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:種類株主総会",
+"term": "種類株主総会",
+"term_yomi": "しゅるいかぶぬしそうかい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:種類株式発行会社",
+"term": "種類株式発行会社",
+"term_yomi": "しゅるいかぶしきはっこうがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:競争",
+"term": "競争",
+"term_yomi": "きょうそう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:筆界特定",
+"term": "筆界特定",
+"term_yomi": "ひっかいとくてい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:管理人",
+"term": "管理人",
+"term_yomi": "かんりにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:管理職員",
+"term": "管理職員",
+"term_yomi": "かんりしょくいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:粉じん",
+"term": "粉じん",
+"term_yomi": "ふんじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:納期限",
+"term": "納期限",
+"term_yomi": "のうきげん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:納税者",
+"term": "納税者",
+"term_yomi": "のうぜいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:納税通知書",
+"term": "納税通知書",
+"term_yomi": "のうぜいつうちしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:組合",
+"term": "組合",
+"term_yomi": "くみあい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:組合員",
+"term": "組合員",
+"term_yomi": "くみあいいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:組合財産",
+"term": "組合財産",
+"term_yomi": "くみあいざいさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:組織的犯罪集団",
+"term": "組織的犯罪集団",
+"term_yomi": "そしきてきはんざいしょばつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:給与所得",
+"term": "給与所得",
+"term_yomi": "きゅうよしょとく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:総会",
+"term": "総会",
+"term_yomi": "そうかい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:繰延資産",
+"term": "繰延資産",
+"term_yomi": "くりのべしさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:義務付けの訴え",
+"term": "義務付けの訴え",
+"term_yomi": "ぎむづけのうったえ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:翻訳権",
+"term": "翻訳権",
+"term_yomi": "ほんやくけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:老人扶養親族",
+"term": "老人扶養親族",
+"term_yomi": "ろうじんふよう・しんぞく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:考案",
+"term": "考案",
+"term_yomi": "こうあん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:耐震改修",
+"term": "耐震改修",
+"term_yomi": "たいしんかいしゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:職務",
+"term": "職務",
+"term_yomi": "しょくむ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:職員",
+"term": "職員",
+"term_yomi": "しょくいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:職員団体",
+"term": "職員団体",
+"term_yomi": "しょくいんだんたい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:育児休業",
+"term": "育児休業",
+"term_yomi": "いくじきゅうぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:臨時所得",
+"term": "臨時所得",
+"term_yomi": "りんじしょとく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:自動公衆送信",
+"term": "自動公衆送信",
+"term_yomi": "じどうこうしゅうそうしん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:自動車",
+"term": "自動車",
+"term_yomi": "じどうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:自治事務",
+"term": "自治事務",
+"term_yomi": "じちじむ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:自立支援医療",
+"term": "自立支援医療",
+"term_yomi": "じりつしえんいりょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:航空機",
+"term": "航空機",
+"term_yomi": "こうくうき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:航空運送",
+"term": "航空運送",
+"term_yomi": "こうくううんそう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:苦情処理手続",
+"term": "苦情処理手続",
+"term_yomi": "くじょうしょりてつづき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:著作物",
+"term": "著作物",
+"term_yomi": "ちょさくぶつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:行政事件訴訟",
+"term": "行政事件訴訟",
+"term_yomi": "ぎょうせいじけんそしょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:行政庁",
+"term": "行政庁",
+"term_yomi": "ぎょうせいちょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:行政指導",
+"term": "行政指導",
+"term_yomi": "ぎょうせいしどう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:行政機関",
+"term": "行政機関",
+"term_yomi": "ぎょうせいきかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:表示に関する登記",
+"term": "表示に関する登記",
+"term_yomi": "ひょうじにかんするとうき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:被保護者",
+"term": "被保護者",
+"term_yomi": "ひほごしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:被保険者",
+"term": "被保険者",
+"term_yomi": "ひほけんしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:被害者",
+"term": "被害者",
+"term_yomi": "ひがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:被相続人",
+"term": "被相続人",
+"term_yomi": "ひそうぞくにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:裁判所",
+"term": "裁判所",
+"term_yomi": "さいばんしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:裁決",
+"term": "裁決",
+"term_yomi": "さいけつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:製造たばこ",
+"term": "製造たばこ",
+"term_yomi": "せいぞうたばこ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:要保護者",
+"term": "要保護者",
+"term_yomi": "ようほごしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:要役地",
+"term": "要役地",
+"term_yomi": "ようえきち",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:規約",
+"term": "規約",
+"term_yomi": "きやく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:覚醒剤",
+"term": "覚醒剤",
+"term_yomi": "かくせいざい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:親会社",
+"term": "親会社",
+"term_yomi": "おやがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:訂正報告書",
+"term": "訂正報告書",
+"term_yomi": "ていせいほうこくしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:計画",
+"term": "計画",
+"term_yomi": "けいかく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:計算書類",
+"term": "計算書類",
+"term_yomi": "けいさんしょるい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:記録命令付差押え",
+"term": "記録命令付差押え",
+"term_yomi": "きろくめいれいつきさしおさえ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:訪問販売",
+"term": "訪問販売",
+"term_yomi": "ほうもんはんばい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:設立時発行株式",
+"term": "設立時発行株式",
+"term_yomi": "せつりつじはっこうかぶしき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:許諾",
+"term": "許諾",
+"term_yomi": "きょだく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:診療所",
+"term": "診療所",
+"term_yomi": "しんりょうじょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:証券会社",
+"term": "証券会社",
+"term_yomi": "しょうけんがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:証券取引所",
+"term": "証券取引所",
+"term_yomi": "しょうけんとりひきじょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:証券業",
+"term": "証券業",
+"term_yomi": "しょうけんぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:証券金融会社",
+"term": "証券金融会社",
+"term_yomi": "しょうけんきんゆうがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:証紙徴収",
+"term": "証紙徴収",
+"term_yomi": "しょうしちょうしゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:評価益",
+"term": "評価益",
+"term_yomi": "ひょうかえき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:認定",
+"term": "認定",
+"term_yomi": "にんてい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:認定基幹放送事業者",
+"term": "認定基幹放送事業者",
+"term_yomi": "にんていきかんほうそうじぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:課税仕入れ",
+"term": "課税仕入れ",
+"term_yomi": "かぜいしいれ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:課税期間",
+"term": "課税期間",
+"term_yomi": "かぜいきかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:課税貨物",
+"term": "課税貨物",
+"term_yomi": "かぜいかもつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:課税資産の譲渡等",
+"term": "課税資産の譲渡等",
+"term_yomi": "かぜいしさんのじょうととう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:調整対象固定資産",
+"term": "調整対象固定資産",
+"term_yomi": "ちょうせいたいしょうこていしさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:調整所得金額",
+"term": "調整所得金額",
+"term_yomi": "ちょうせいしょとくきんがく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:調査委員",
+"term": "調査委員",
+"term_yomi": "ちょうさいいん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:請求",
+"term": "請求",
+"term_yomi": "せいきゅう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:請求書",
+"term": "請求書",
+"term_yomi": "せいきゅうしょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:請求権",
+"term": "請求権",
+"term_yomi": "せいきゅうけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:議事録",
+"term": "議事録",
+"term_yomi": "ぎじろく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:譲渡",
+"term": "譲渡",
+"term_yomi": "じょうと",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:譲渡制限株式",
+"term": "譲渡制限株式",
+"term_yomi": "じょうとせいげんかぶしき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:負担金",
+"term": "負担金",
+"term_yomi": "ふたんきん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:財団債権",
+"term": "財団債権",
+"term_yomi": "ざいだんさいけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:財産",
+"term": "財産",
+"term_yomi": "ざいさん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:財産権",
+"term": "財産権",
+"term_yomi": "ざいさんけん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:貨物",
+"term": "貨物",
+"term_yomi": "かもつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:販売",
+"term": "販売",
+"term_yomi": "はんばい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:貴金属",
+"term": "貴金属",
+"term_yomi": "ききんぞく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:買入消却",
+"term": "買入消却",
+"term_yomi": "かいいれしょうきゃく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:貸付信託",
+"term": "貸付信託",
+"term_yomi": "かしつけしんたく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:貸借対照表",
+"term": "貸借対照表",
+"term_yomi": "たいしゃくたいしょうひょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:費用",
+"term": "費用",
+"term_yomi": "ひよう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:賃金",
+"term": "賃金",
+"term_yomi": "ちんぎん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:資産の譲渡等",
+"term": "資産の譲渡等",
+"term_yomi": "しさんのじょうととう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:資金移動業者",
+"term": "資金移動業者",
+"term_yomi": "しきんいどうぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:賞与",
+"term": "賞与",
+"term_yomi": "しょうよ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:賦課課税方式",
+"term": "賦課課税方式",
+"term_yomi": "ふかかぜいほうしき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:贈与",
+"term": "贈与",
+"term_yomi": "ぞうよ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:転任",
+"term": "転任",
+"term_yomi": "てんにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:転換",
+"term": "転換",
+"term_yomi": "てんかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:転換社債",
+"term": "転換社債",
+"term_yomi": "てんかんしゃさい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:輸出",
+"term": "輸出",
+"term_yomi": "ゆしゅつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:農地",
+"term": "農地",
+"term_yomi": "のうち",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:農地中間管理事業",
+"term": "農地中間管理事業",
+"term_yomi": "のうちちゅうかんかんりじぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:農地所有適格法人",
+"term": "農地所有適格法人",
+"term_yomi": "のうちしょゆうてきかくほうじん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:農業",
+"term": "農業",
+"term_yomi": "のうぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:連結財務諸表",
+"term": "連結財務諸表",
+"term_yomi": "れんけつざいむしょひょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:運行",
+"term": "運行",
+"term_yomi": "うんこう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:運転者",
+"term": "運転者",
+"term_yomi": "うんてんしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:運送人",
+"term": "運送人",
+"term_yomi": "うんそうにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:運送取扱人",
+"term": "運送取扱人",
+"term_yomi": "うんそうとりあつかいにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:道路管理者",
+"term": "道路管理者",
+"term_yomi": "どうろかんりしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:選挙人",
+"term": "選挙人",
+"term_yomi": "せんきょにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:遺族",
+"term": "遺族",
+"term_yomi": "いぞく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:遺留物",
+"term": "遺留物",
+"term_yomi": "いりゅうぶつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:還付加算金",
+"term": "還付加算金",
+"term_yomi": "かんぷかさんきん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:部会",
+"term": "部会",
+"term_yomi": "ぶかい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:都市計画",
+"term": "都市計画",
+"term_yomi": "としけいかく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:都市計画事業",
+"term": "都市計画事業",
+"term_yomi": "としけいかくじぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:都市計画区域",
+"term": "都市計画区域",
+"term_yomi": "としけいかくくいき",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:都市計画施設",
+"term": "都市計画施設",
+"term_yomi": "としけいかくしせつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:配偶者",
+"term": "配偶者",
+"term_yomi": "はいぐうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:配当",
+"term": "配当",
+"term_yomi": "はいとう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:金利",
+"term": "金利",
+"term_yomi": "きんり",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:金庫",
+"term": "金庫",
+"term_yomi": "きんこ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:金融サービス仲介業",
+"term": "金融サービス仲介業",
+"term_yomi": "きんゆうさーびすちゅうかいぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:金融商品の販売",
+"term": "金融商品の販売",
+"term_yomi": "きんゆうしょうひんのはんばい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:金融商品取引所",
+"term": "金融商品取引所",
+"term_yomi": "きんゆうしょうひんとりひきじょ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:金融商品取引業協会",
+"term": "金融商品取引業協会",
+"term_yomi": "きんゆうしょうひんとりひきぎょうきょうかい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:金融商品取引業者",
+"term": "金融商品取引業者",
+"term_yomi": "きんゆうしょうひんとりひきぎょうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:金融機関",
+"term": "金融機関",
+"term_yomi": "きんゆうきかん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:銀行",
+"term": "銀行",
+"term_yomi": "ぎんこう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:銀行代理業",
+"term": "銀行代理業",
+"term_yomi": "ぎんこうだいりぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:銀行持株会社",
+"term": "銀行持株会社",
+"term_yomi": "ぎんこうもちかぶがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:銀行業",
+"term": "銀行業",
+"term_yomi": "ぎんこうぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:銃砲",
+"term": "銃砲",
+"term_yomi": "じゅうほう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:鑑定人",
+"term": "鑑定人",
+"term_yomi": "かんていにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:長期信用銀行",
+"term": "長期信用銀行",
+"term_yomi": "ちょうきしんようぎんこう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:開港",
+"term": "開港",
+"term_yomi": "かいこう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:開発行為",
+"term": "開発行為",
+"term_yomi": "かいはつこうい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:関与",
+"term": "関与",
+"term_yomi": "かんよ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:附帯税",
+"term": "附帯税",
+"term_yomi": "ふたいぜい",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:降任",
+"term": "降任",
+"term_yomi": "こうにん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:陸上運送",
+"term": "陸上運送",
+"term_yomi": "りくじょううんそう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:障害者",
+"term": "障害者",
+"term_yomi": "しょうがいしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:障害者支援施設",
+"term": "障害者支援施設",
+"term_yomi": "しょうがいしゃしえんしせつ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:離職",
+"term": "離職",
+"term_yomi": "りしょく",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:難民",
+"term": "難民",
+"term_yomi": "なんみん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:電気通信",
+"term": "電気通信",
+"term_yomi": "でんきつうしん",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:電気通信事業",
+"term": "電気通信事業",
+"term_yomi": "でんきつうしんじぎょう",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:電波",
+"term": "電波",
+"term_yomi": "でんぱ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:青色事業専従者",
+"term": "青色事業専従者",
+"term_yomi": "あおいろじぎょうせんじゅうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:非居住者",
+"term": "非居住者",
+"term_yomi": "ひきょじゅうしゃ",
+"scheme": "jp_statutory_definition"
+},
+{
+"term_id": "egovcard:高速取引行為者",
+"term": "高速取引行為者",
+"term_yomi": "こうそくとりひきこういしゃ",
+"scheme": "jp_statutory_definition"
+}
+]
+}

@@ -11,3 +11,9 @@ config/gakuyo.env
 .selftest/
 __pycache__/
 *.pyc
+
+# A1 実相談検索観測ベースライン: PII/大容量を除外し、安全な集計のみコミット
+/build/search_bench/*
+!/build/search_bench/terms_554_snapshot.json
+!/build/search_bench/a1_consultation_queries_report_safe.csv
+!/build/search_bench/a1_summary.json

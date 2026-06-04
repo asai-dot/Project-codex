@@ -1,0 +1,164 @@
+{
+  "asof": "20260605",
+  "by_inferred_category": {
+    "(未分類)": {
+      "n": 109,
+      "non_stop_term_hit": 3,
+      "zero_or_stop": 103
+    },
+    "M&A支援": {
+      "n": 7,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 7
+    },
+    "一般民事": {
+      "n": 13,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 13
+    },
+    "不動産": {
+      "n": 1,
+      "non_stop_term_hit": 1,
+      "zero_or_stop": 0
+    },
+    "事業再生（法的整理）": {
+      "n": 1,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 1
+    },
+    "事業再生（私的整理）": {
+      "n": 1,
+      "non_stop_term_hit": 1,
+      "zero_or_stop": 0
+    },
+    "債務整理": {
+      "n": 21,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 21
+    },
+    "刑事": {
+      "n": 2,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 2
+    },
+    "労働": {
+      "n": 1,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 1
+    },
+    "契約法務": {
+      "n": 29,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 29
+    },
+    "廃業支援（法的整理）": {
+      "n": 7,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 7
+    },
+    "廃業支援（私的整理）": {
+      "n": 3,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 3
+    },
+    "後見": {
+      "n": 2,
+      "non_stop_term_hit": 1,
+      "zero_or_stop": 1
+    },
+    "損害賠償（交通）": {
+      "n": 13,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 13
+    },
+    "相続": {
+      "n": 14,
+      "non_stop_term_hit": 1,
+      "zero_or_stop": 13
+    },
+    "破産管財事件": {
+      "n": 2,
+      "non_stop_term_hit": 1,
+      "zero_or_stop": 1
+    },
+    "離婚": {
+      "n": 4,
+      "non_stop_term_hit": 0,
+      "zero_or_stop": 4
+    }
+  },
+  "data_driven_stoplist_terms": [
+    "会社",
+    "株式",
+    "法律",
+    "請求"
+  ],
+  "is_evaluation": false,
+  "name": "A1 consultation search observation baseline",
+  "non_stop_match_field_contribution": {
+    "both": 2,
+    "matter_type": 6
+  },
+  "note": "kansoku baseline: records only the DB reaction to real consultation text; before-snapshot for the bib_terms bridge",
+  "outcome_distribution": {
+    "no_term_no_raw_probe": 57,
+    "noise_record": 3,
+    "non_stop_term_hit": 8,
+    "raw_probe_hit_but_no_term_hit": 58,
+    "stoplist_only_hit": 104
+  },
+  "raw_probe_status": "done",
+  "reach_rate_non_stop_term": {
+    "all_non_noise": 0.0352,
+    "with_outline": 0.0198,
+    "without_outline": 0.0476
+  },
+  "structural_facts": {
+    "bib_records_total": 10326,
+    "bib_terms_count": 0,
+    "bib_toc_total": 555887,
+    "book_reach_via_terms_all_zero": true,
+    "terms_count": 554
+  },
+  "term_match_type_distribution": {
+    "compound_embedded_hit": 3,
+    "non_stop_term_hit": 8,
+    "short_term_hit": 46,
+    "stoplist_only_hit": 110
+  },
+  "term_presence_top": [
+    "会社",
+    "法律",
+    "株式",
+    "請求",
+    "事業",
+    "承継",
+    "放棄",
+    "株主",
+    "物",
+    "不動産",
+    "動産",
+    "法人",
+    "病院",
+    "被害者",
+    "再生計画",
+    "後見人",
+    "後見監督人",
+    "支払",
+    "施設",
+    "業務",
+    "破産管財人",
+    "総会",
+    "計画",
+    "譲渡",
+    "財産"
+  ],
+  "totals": {
+    "consultations": 230,
+    "generic_matter_type_excluded_from_probe": 34,
+    "no_delimiter": 42,
+    "noise_excluded": 3,
+    "outline_missing": 129,
+    "pii_risk_suppressed_from_report": 129
+  }
+}
