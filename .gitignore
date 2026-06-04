@@ -22,3 +22,6 @@ __pycache__/
 !/build/search_bench/shiseido_match_summary.json
 !/build/search_bench/sources/
 !/build/search_bench/sources/captured_book_lists.md
+!/build/search_bench/sources/source_books.tsv
+!/build/search_bench/multisource_shelf_endorsements.csv
+!/build/search_bench/multisource_core_works.csv
