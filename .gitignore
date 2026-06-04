@@ -17,3 +17,6 @@ __pycache__/
 !/build/search_bench/terms_554_snapshot.json
 !/build/search_bench/a1_consultation_queries_report_safe.csv
 !/build/search_bench/a1_summary.json
+!/build/search_bench/shiseido_standard_books_master.csv
+!/build/search_bench/shiseido_shelf_standard_flag_candidates.csv
+!/build/search_bench/shiseido_match_summary.json
