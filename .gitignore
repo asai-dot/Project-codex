@@ -20,3 +20,5 @@ __pycache__/
 !/build/search_bench/shiseido_standard_books_master.csv
 !/build/search_bench/shiseido_shelf_standard_flag_candidates.csv
 !/build/search_bench/shiseido_match_summary.json
+!/build/search_bench/sources/
+!/build/search_bench/sources/captured_book_lists.md

@@ -2,19 +2,19 @@
 
 > 目的: 「定評ある法律実務書」を推す**独立した複数の権威**を登録し、ISBN突合で蔵書フラグの重みを
 > 「**何系統が・どの性質から推すか**」で積むための原簿。多ソース一致＝偏りが打ち消された“本物の定番”＝納得感。
-> owner(浅井さん)が逐次提供。harvest=至誠堂のみ取得済、他は号令で同パイプライン取得。
+> owner(浅井さん)が逐次提供。捕獲リスト=`build/search_bench/sources/captured_book_lists.md`(#2-#7)。至誠堂#1はISBN突合済(474)。
 > 取得物は書誌事実(書名/著者/ISBN)＋どのリストに載るか、内部利用。原データ非改変・read-only。
 
 ## ソース一覧
 | # | ソース | URL | 性質 | 寄り/対象 | 規模感 | 取得状況 |
 |---|---|---|---|---|--:|---|
 | 1 | 至誠堂書店オンラインショップ | ssl.shiseido-shoten.co.jp (tag tid=5/6, items cid=4–33) | 書店・全社横断 | 企業＋個人 両方・新人＋30分野 | 1,036(実棚突合474) | **取得・突合済** |
-| 2 | BUSINESS LAWYERS 記事898 | businesslawyers.jp/articles/898 | 弁護士媒体・弁護士3名推薦 | やや企業 | 中 | 未取得 |
-| 3 | 勁草書房 法律実務書MAP | keisobiblio.com (ls_map, 大島義則) | 実務家キュレーション | 実務全般・分野網羅 | 中・**全8回** | 未取得 |
-| 4 | 契約ウォッチ おすすめ法務書 | keiyaku-watch.jp/media/.../houmu_recommended_books | 企業法務媒体 | 企業・契約寄り | 約60 | 未取得 |
-| 5 | BUSINESS&LAW 採用ガイド2024 | businessandlaw.jp/recruit_features/recruitguide2024-books | 媒体・新人/先端 | 新刊・サイバー/情報/キャリア | 6 | 未取得 |
-| 6 | 弁護士ドットコムタイムズ | bengo4.com/times (Vol.72ほか) | 定期刊・**バックナンバー約70号** | 分野横断・時系列 | 数百(号×6冊) | 未取得 |
-| 7 | LEGAL JOB BOARD 書籍 | legal-job-board.com/media/lawyer/books | 媒体・キャリア段階別 | 弁護士スキル/キャリア寄り | 15 | 未取得 |
+| 2 | BUSINESS LAWYERS 記事898 | businesslawyers.jp/articles/898 | 弁護士媒体・弁護士3名推薦 | やや企業 | 約40 | **取得済(captured)** |
+| 3 | 勁草書房 法律実務書MAP | keisobiblio.com (ls_map, 大島義則) | 実務家キュレーション | 実務全般・分野網羅 | 中・**全8回** | **部分(PartIIのみ)** |
+| 4 | 契約ウォッチ おすすめ法務書 | keiyaku-watch.jp/media/.../houmu_recommended_books | 企業法務媒体 | 企業・契約寄り | 約55 | **取得済(captured)** |
+| 5 | BUSINESS&LAW 採用ガイド2024 | businessandlaw.jp/recruit_features/recruitguide2024-books | 媒体・新人/先端 | 新刊・サイバー/情報/キャリア | 6 | **取得済(captured)** |
+| 6 | 弁護士ドットコムタイムズ | bengo4.com/times (Vol.72ほか) | 定期刊・**バックナンバー約70号** | 分野横断・時系列 | 数百(号×6冊) | **部分(Vol.72のみ)** |
+| 7 | LEGAL JOB BOARD 書籍 | legal-job-board.com/media/lawyer/books | 媒体・キャリア段階別 | 弁護士スキル/キャリア寄り | 15 | **取得済(captured)** |
 | 8 | 大阪弁護士会「役立ち本」 | (owner抽出・出所資料) | 弁護士会・公的/地域 | **事務職員/パラリーガル/書式/事務所運営**寄り・大阪 | 24 | **owner提供(下記)** |
 | 9 | 二弁フロンティア「この一冊」法律実務書セレクト(2016/8-9) | niben.jp/.../2016_NO08_27.pdf | 弁護士会誌・各分野の弁護士が"この一冊"推薦 | 実体法11分野＋法律事務 | 約28 | **取得・抽出済(下記)** |
 
