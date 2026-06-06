@@ -50,6 +50,21 @@ check("正本 canonical_key 一意", rec["canonical_key"] == "tokyo-koto|1969-05
 check("正本 hh_id 保持", rec["hh_id"] == "L02420223")
 check("正本 case_node_id", rec["case_node_id"] == "alo:case:tokyo-koto:1969-05-19:昭和41（ネ）2780号")
 
+# --- leala係属事件の形式（事務所自身の事件 = 内部PD判決文の供給源） ---
+cn2 = parse_case_number("令和４年（ワ）第２６０号")
+check("leala 事件番号 mark=ワ", cn2["mark"] == "ワ")
+check("leala 事件番号 number=260（全角）", cn2["number"] == 260)
+check("leala 事件番号 西暦=2022", cn2["seireki_year"] == 2022)
+nara = parse_court("奈良地方裁判所　民事部３B")
+check("leala 裁判所 level=district", nara["level"] == "district")
+check("leala 裁判所 slug=nara-chiho（部は除外）", nara["court_slug"] == "nara-chiho")
+check("leala 部=民事部3B を division に分離（NFKC正規化後）", nara["division"] == "民事部3B")
+rec2 = normalize_citation("奈良地方裁判所　民事部３B", None, "令和４年（ワ）第２６０号")
+check("leala 正本 court_slug 部を含まない", rec2["court_slug"] == "nara-chiho")
+check("leala 正本 division 保持", rec2["division"] == "民事部3B")
+check("leala 正本キー（判決日naでも事件番号で同定）",
+      rec2["case_node_id"] == "alo:case:nara-chiho:na:令和4（ワ）260号")
+
 # --- 着地解決（3層・優先順） ---
 # court_id あり → 裁判所HTMLが最優先（内部PDが無い場合）
 land = resolve_case(dict(rec, court_id="85887"), context={"cid": "ebaaf", "viewer_page": 83})

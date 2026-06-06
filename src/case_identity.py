@@ -12,7 +12,13 @@ case_spine 名寄せ用の正本キーに正規化する。判例レーンの心
   {court_slug, court_level, detail_variant, judged_on, case_number{...},
    canonical_key, case_node_id}
 
-依存なし（stdlibのみ）。alo-kg(Python)・case_spine と地続きに使える。
+依存なし（stdlibのみ）。alo-kg(Python) と地続きに使える。
+
+既存ALO資産との関係（重要）:
+- 判例の**正本キーはALOにまだ無い**（裁判所マスタ・事件番号の素材はあるが未正規化）。本モジュールがその正本キーを提供する。
+- 事務所自身の係属事件は leala `JurisdictionCourt`（`leala__CaseNo__c`=事件番号 / `leala__CourtName__c`=裁判所＋部）に
+  構造化済。これを本モジュールで正規化すれば、**事務所の事件＝内部PD判決文**を判例グラフに接続できる（着地①の供給源）。
+- 部・係（例「民事部3B」）は判例の同定（裁判所＋判決日＋事件番号）に含めず division として分離保持。
 """
 import re
 import unicodedata
@@ -87,30 +93,39 @@ def parse_case_number(s):
 
 
 def parse_court(s):
-    """裁判所名 → {name, level, detail_variant, court_slug, bench}。"""
+    """裁判所名 → {name, level, detail_variant, court_slug, bench, division}。
+    『奈良地方裁判所　民事部３B』のような部・係（leala係属事件の形式）にも対応。
+    部・係は court_slug/正本キーには入れない（判例の同定は 裁判所＋判決日＋事件番号）。"""
     raw = _nfkc(s)
-    # 大法廷・小法廷など合議体表記を分離（slugには含めない）
     bench = None
     bm = re.search(r"(大法廷|第[一二三]小法廷)", raw)
     if bm:
         bench = bm.group(1)
     name = re.sub(r"(大法廷|第[一二三]小法廷|判決|決定|命令)", "", raw).strip()
     for needle, level, variant, slug, type_ro in COURT_RULES:
-        if needle in name:
+        idx = name.find(needle)
+        if idx >= 0:
+            place = name[:idx].strip()                       # 地名（needleの前）
+            division = name[idx + len(needle):].strip() or None  # 部・係・支部（needleの後）
+            court_name = (place + needle).strip()
             if slug is None:
-                # 地名（『東京』『福岡高等裁判所』→ tokyo/fukuoka）+ 種別romaji
-                place = name.replace(needle, "").strip()
-                slug = _place_slug(place) + "-" + type_ro   # 例 tokyo-koto
-            return {"name": name, "level": level, "detail_variant": variant,
-                    "court_slug": slug, "bench": bench}
+                slug = _place_slug(place) + "-" + type_ro    # 例 nara-chiho
+            return {"name": court_name, "level": level, "detail_variant": variant,
+                    "court_slug": slug, "bench": bench, "division": division}
     return {"name": name, "level": "unknown", "detail_variant": 4,
-            "court_slug": _place_slug(name), "bench": bench}
+            "court_slug": _place_slug(name), "bench": bench, "division": None}
 
 
 _PLACE_ROMAJI = {
     "東京": "tokyo", "大阪": "osaka", "名古屋": "nagoya", "広島": "hiroshima",
     "福岡": "fukuoka", "仙台": "sendai", "札幌": "sapporo", "高松": "takamatsu",
+    "京都": "kyoto", "神戸": "kobe", "横浜": "yokohama", "千葉": "chiba",
+    "さいたま": "saitama", "奈良": "nara", "大津": "otsu", "金沢": "kanazawa",
+    "那覇": "naha", "高松": "takamatsu", "松山": "matsuyama",
 }
+
+
+_PLACE_ROMAJI_LEGACY_REMOVED = True
 
 
 def _place_slug(place):
@@ -124,7 +139,7 @@ def _place_slug(place):
 
 def normalize_citation(court, date, caseno, title=None, hh_id=None, court_id=None):
     """採取した1引用を正本レコードに正規化する。"""
-    c = parse_court(court) if court else {"court_slug": "unknown", "level": "unknown", "detail_variant": 4, "name": "", "bench": None}
+    c = parse_court(court) if court else {"court_slug": "unknown", "level": "unknown", "detail_variant": 4, "name": "", "bench": None, "division": None}
     judged_on = parse_date(date) if date else None
     cn = parse_case_number(caseno) if caseno else None
     caseno_norm = cn["normalized"] if cn else (_nfkc(caseno) if caseno else "")
@@ -134,7 +149,7 @@ def normalize_citation(court, date, caseno, title=None, hh_id=None, court_id=Non
         "case_node_id": case_node_id,
         "canonical_key": canonical_key,
         "court": c["name"], "court_slug": c["court_slug"], "court_level": c["level"],
-        "detail_variant": c["detail_variant"], "bench": c["bench"],
+        "detail_variant": c["detail_variant"], "bench": c["bench"], "division": c.get("division"),
         "judged_on": judged_on,
         "case_number": cn, "case_number_text": caseno_norm,
         "title": _nfkc(title) if title else None,
