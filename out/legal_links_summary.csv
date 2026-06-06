@@ -1,0 +1,5 @@
+journal_book_id,statute_ref,statute_ref_with_article,statute_ref_egov_confirmed,statute_conf_high,statute_conf_medium,statute_conf_low,case_citation
+305760,7,0,0,0,0,7,0
+305761,7,5,1,5,2,0,2
+305762,3,0,0,0,3,0,0
+305763_nested,2,1,1,1,1,0,1

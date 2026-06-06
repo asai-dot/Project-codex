@@ -1,0 +1,18 @@
+{
+  "book_id": "305762",
+  "content_type": "journal",
+  "title": "法律時報 連載・対談特集号",
+  "toc": [
+    {"level": 1, "label": "第1部　民事手続法の現在", "print_page": 1},
+    {"level": 2, "label": "アメリカ法律事情　その３ ── 集団訴訟の最前線　樋口範雄", "print_page": 4},
+    {"level": 2, "label": "破産法の実務（上）　伊藤眞", "print_page": 12},
+    {"level": 2, "label": "破産法の実務（下）　伊藤眞", "print_page": 20},
+    {"level": 1, "label": "第2部　座談会", "print_page": 30},
+    {"level": 2, "label": "座談会　これからの司法制度　司会・宮川光治／髙橋宏志／笠井正俊", "print_page": 31},
+    {"level": 2, "label": "民法（債権法）改正の到達点（完）　潮見佳男、中田裕康", "print_page": 45},
+    {"level": 1, "label": "資料編", "print_page": 60},
+    {"level": 2, "label": "あ", "print_page": 61},
+    {"level": 2, "label": "山田太郎", "print_page": 62},
+    {"level": 1, "label": "奥付", "print_page": 80}
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "book_id": "305763",
+  "content_type": "journal",
+  "title": "判例タイムズ ネスト構造テスト号",
+  "toc": [
+    {
+      "label": "【特集】行政法の最前線",
+      "level": 1,
+      "children": [
+        {"label": "行政事件訴訟法の現代的課題　宇賀克也", "print_page": 3},
+        {"label": "都市計画法第二十九条と開発許可　大橋洋一", "print_page": 11}
+      ]
+    },
+    {
+      "label": "判例研究　最大判昭和60年3月27日租税訴訟　評釈　金子宏",
+      "level": 1,
+      "print_page": 20
+    }
+  ]
+}

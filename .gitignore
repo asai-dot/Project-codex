@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+# 本番スイープの出力 (fixtures 由来の out/ はサンプルとして追跡対象)
+/out_*/
