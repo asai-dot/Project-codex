@@ -20,7 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from _toc_text import normalize_title, title_set  # noqa: E402
+from _toc_text import title_set  # noqa: E402
 
 
 def _iter_bundle(path: Path):
@@ -47,7 +47,9 @@ def classify(existing: list[dict], new: list[dict]) -> dict:
 
 def render(bundle_path: Path, limit: int | None = None) -> str:
     rows = list(_iter_bundle(bundle_path))
-    enrich = sum(1 for r in rows if not (title_set(r["existing_nodes"]) - title_set(r["new_nodes"])))
+    # ヘッダ集計は per-row の classify と同じ基準を使う (表示と矛盾させない)。
+    enrich = sum(1 for r in rows
+                 if classify(r["existing_nodes"], r["new_nodes"])["kind"] == "enrich")
     out = [
         "# legallib overwrite_simple 差分レビュー",
         "",

@@ -95,7 +95,10 @@ def main(argv: list[str] | None = None) -> int:
 
     expect = None
     if args.expect:
-        a, h, d = (int(x) for x in args.expect.split(","))
+        try:
+            a, h, d = (int(x) for x in args.expect.split(","))
+        except ValueError:
+            ap.error('--expect は "auto,human,defer" の整数3つ 例: "1839,305,616"')
         expect = (a, h, d)
 
     res = validate(load_resolver(Path(args.resolver)), expect)

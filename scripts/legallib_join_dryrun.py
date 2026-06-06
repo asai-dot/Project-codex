@@ -110,14 +110,46 @@ def load_legallib_nodes(legallib_dir: Path, book_id: str) -> list[dict]:
     return []
 
 
-def load_existing_toc(toc_dir: Path, isbn: str) -> list[dict] | None:
+def read_existing_state(toc_dir: Path, isbn: str) -> tuple[str, list[dict] | None]:
+    """既存 TOC ファイルの状態を返す。
+
+    returns:
+        ("absent", None)      ファイルなし → 新規作成可。
+        ("ok", nodes)         読めた → 通常判定。
+        ("unreadable", None)  **存在するが parse 不能** → 保護扱い
+                              (読めないものを legallib で上書きしてはならない)。
+    """
     path = toc_dir / f"isbn_{isbn}.json"
     if not path.exists():
-        return None
+        return ("absent", None)
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return ("ok", json.loads(path.read_text(encoding="utf-8")))
     except Exception:
-        return []
+        return ("unreadable", None)
+
+
+def load_existing_toc(toc_dir: Path, isbn: str) -> list[dict] | None:
+    """後方互換ヘルパ。unreadable と absent を区別したい場合は
+    read_existing_state / decide_for_isbn を使うこと。"""
+    state, nodes = read_existing_state(toc_dir, isbn)
+    return nodes if state == "ok" else None
+
+
+def decide_for_isbn(
+    toc_dir: Path, isbn: str, protected: frozenset[str]
+) -> tuple[str, str, list[dict] | None]:
+    """既存ファイル状態を読み、action を決める。
+
+    parse 不能 (unreadable) は **route_human_review** に固定し、書き込み系へ
+    決して落とさない (corrupt な保護ファイルを上書きしない二重防御の核)。
+
+    returns: (action, existing_state, existing_nodes_for_report)
+    """
+    state, nodes = read_existing_state(toc_dir, isbn)
+    if state == "unreadable":
+        return "route_human_review", state, None
+    existing = nodes if state == "ok" else None
+    return decide_join_action(existing, protected_sources=protected), state, existing
 
 
 def load_books_isbn_set(books_path: Path) -> set[str]:
@@ -151,8 +183,10 @@ def detect_mismerge(resolver_rows: list[dict], known_isbns: set[str]) -> dict[st
     for r in auto:
         bid, isbn = r["legallib_book_id"], r["isbn"]
         if not bid:
-            blocked[bid] = "blocked_no_book_id"
-        elif not isbn or not _ISBN13.match(isbn):
+            # 空 book_id は dict のキーにできない (衝突する) ので run_dryrun 側で
+            # 行ごとに blocked_no_book_id にする。ここでは扱わない。
+            continue
+        if not isbn or not _ISBN13.match(isbn):
             blocked[bid] = "blocked_bad_isbn"
         elif isbn not in known_isbns:
             blocked[bid] = "blocked_missing_isbn"  # books.json に無い ISBN
@@ -206,6 +240,9 @@ def run_dryrun(
             continue
 
         # --- auto_accept ---
+        if not bid:
+            actions.append({"book_id": bid, "isbn": isbn, "action": "blocked_no_book_id"})
+            continue
         if bid in blocked:
             actions.append({"book_id": bid, "isbn": isbn, "action": blocked[bid]})
             continue
@@ -222,8 +259,9 @@ def run_dryrun(
             actions.append({"book_id": bid, "isbn": isbn, "action": "skip_empty_after_convert"})
             continue
 
-        existing = load_existing_toc(toc_dir, isbn)
-        action = decide_join_action(existing, protected_sources=protected)
+        action, ex_state, existing = decide_for_isbn(toc_dir, isbn, protected)
+        # unreadable は読めない以上 primary source も不明。
+        reason = "existing_unreadable" if ex_state == "unreadable" else "existing_protected"
 
         entry: dict[str, Any] = {
             "book_id": bid,
@@ -231,6 +269,7 @@ def run_dryrun(
             "action": action,
             "new_node_count": len(new_nodes),
             "existing_node_count": len(existing) if existing else 0,
+            "existing_state": ex_state,
             "existing_primary_source": (
                 existing_primary_source(existing, priority) if existing else None
             ),
@@ -249,23 +288,24 @@ def run_dryrun(
                 {
                     "book_id": bid,
                     "isbn": isbn,
-                    "reason": "existing_protected",
+                    "reason": reason,
                     "existing_primary_source": entry["existing_primary_source"],
                 }
             )
             review_bundle.append(
-                {"isbn": isbn, "book_id": bid, "reason": "existing_protected",
+                {"isbn": isbn, "book_id": bid, "reason": reason,
                  "existing_primary_source": entry["existing_primary_source"],
                  "existing_nodes": existing or [], "candidate_nodes": new_nodes}
             )
         actions.append(entry)
 
     # --- 検収アサーション (バグ検出): 保護対象が書き込み候補に入っていないこと ---
+    # ライブ状態で再判定。unreadable/protected が書き込み候補に紛れていれば違反。
     invariant_violations = []
     for e in actions:
         if e.get("action") in WRITE_ACTIONS and e["isbn"] in proposed_files:
-            existing = load_existing_toc(toc_dir, e["isbn"])
-            if existing and decide_join_action(existing, protected_sources=protected) not in WRITE_ACTIONS:
+            live_action, _, _ = decide_for_isbn(toc_dir, e["isbn"], protected)
+            if live_action not in WRITE_ACTIONS:
                 invariant_violations.append(e["isbn"])
 
     counts = Counter(e["action"] for e in actions)

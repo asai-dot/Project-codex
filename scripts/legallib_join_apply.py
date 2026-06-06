@@ -33,15 +33,14 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from legallib_join_dryrun import (  # noqa: E402
+    decide_for_isbn,
     load_books_isbn_set,
-    load_existing_toc,
     load_resolver,
     run_dryrun,
 )
 from legallib_join_policy import (  # noqa: E402
     PROTECTED_SOURCES,
     WRITE_ACTIONS,
-    decide_join_action,
     load_policy,
 )
 
@@ -79,40 +78,40 @@ def apply_join(
     hastoc_isbns: list[str] = []
     log_f = log_path.open("a", encoding="utf-8") if (log_path and commit) else None
 
-    for entry in result["actions"]:
-        action = entry.get("action")
-        isbn = entry.get("isbn")
-        if action not in WRITE_ACTIONS or isbn not in proposed:
-            continue
+    try:
+        for entry in result["actions"]:
+            action = entry.get("action")
+            isbn = entry.get("isbn")
+            if action not in WRITE_ACTIONS or isbn not in proposed:
+                continue
 
-        if whitelist is not None and isbn not in whitelist:
-            applied.append({"isbn": isbn, "status": "needs_approval", "action": action})
-            continue
+            if whitelist is not None and isbn not in whitelist:
+                applied.append({"isbn": isbn, "status": "needs_approval", "action": action})
+                continue
 
-        # defense in depth: ライブの既存へゲートを再適用。
-        live_existing = load_existing_toc(toc_dir, isbn)
-        live_action = decide_join_action(live_existing, protected_sources=protected)
-        if live_action not in WRITE_ACTIONS:
-            applied.append({"isbn": isbn, "status": "refused_protected",
-                            "live_action": live_action})
-            continue
+            # defense in depth: ライブの既存へゲートを再適用 (unreadable も保護)。
+            live_action, _, _ = decide_for_isbn(toc_dir, isbn, protected)
+            if live_action not in WRITE_ACTIONS:
+                applied.append({"isbn": isbn, "status": "refused_protected",
+                                "live_action": live_action})
+                continue
 
-        nodes = proposed[isbn]
-        out_path = toc_dir / f"isbn_{isbn}.json"
-        if commit:
-            _atomic_write_json(out_path, nodes)
-            status = "written"
-        else:
-            status = "would_write"
-        hastoc_isbns.append(isbn)
-        rec = {"isbn": isbn, "status": status, "action": live_action,
-               "node_count": len(nodes), "ts": time.strftime("%Y-%m-%dT%H:%M:%S")}
-        applied.append(rec)
+            nodes = proposed[isbn]
+            out_path = toc_dir / f"isbn_{isbn}.json"
+            if commit:
+                _atomic_write_json(out_path, nodes)
+                status = "written"
+            else:
+                status = "would_write"
+            hastoc_isbns.append(isbn)
+            rec = {"isbn": isbn, "status": status, "action": live_action,
+                   "node_count": len(nodes), "ts": time.strftime("%Y-%m-%dT%H:%M:%S")}
+            applied.append(rec)
+            if log_f:
+                log_f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    finally:
         if log_f:
-            log_f.write(json.dumps(rec, ensure_ascii=False) + "\n")
-
-    if log_f:
-        log_f.close()
+            log_f.close()
 
     from collections import Counter
 

@@ -269,6 +269,55 @@ def test_apply_whitelist() -> None:
         check((toc_dir / "isbn_9784000000034.json").exists(), "承認分は作成された")
 
 
+def test_unreadable_existing_protected() -> None:
+    # 既存ファイルが存在するが parse 不能 → 絶対に上書きしない (route_human_review)。
+    import tempfile
+
+    from legallib_join_apply import apply_join
+    from legallib_join_dryrun import decide_for_isbn
+
+    policy = load_policy(None)
+    with tempfile.TemporaryDirectory() as td:
+        resolver, legallib_dir, toc_dir, known = _demo_inputs(Path(td))
+        # L100 の宛先 ISBN ファイルを壊す (truncated JSON)。
+        corrupt = toc_dir / "isbn_9784000000010.json"
+        corrupt.write_text('[{"t": "壊れ', encoding="utf-8")  # 不正 JSON
+
+        protected = frozenset(policy["protected_sources"])
+        action, state, nodes = decide_for_isbn(toc_dir, "9784000000010", protected)
+        check(state == "unreadable", "parse 不能を unreadable と判定")
+        check(action == "route_human_review", "unreadable は上書きせずレビューへ")
+
+        res = run_dryrun(resolver, legallib_dir, toc_dir, known, policy)
+        by_book = {a["book_id"]: a for a in res["actions"]}
+        check(by_book["L100"]["action"] == "route_human_review", "L100 はレビュー行き")
+        check("9784000000010" not in res["proposed_files"], "壊れたファイルは書き込み候補外")
+        check(res["invariant_violations"] == [], "不変条件違反 0 (保護)")
+
+        # apply commit でも壊れたファイルは触らない。
+        before = corrupt.read_text()
+        apply_join(resolver, legallib_dir, toc_dir, known, policy,
+                   commit=True, whitelist=None)
+        check(corrupt.read_text() == before, "commit でも壊れた保護ファイル不変")
+
+
+def test_empty_book_id_blocked_individually() -> None:
+    # 空 book_id の auto_accept 行が衝突せず行ごとに blocked される。
+    import tempfile
+
+    policy = load_policy(None)
+    with tempfile.TemporaryDirectory() as td:
+        _, legallib_dir, toc_dir, known = _demo_inputs(Path(td))
+        rows = [
+            {"legallib_book_id": "", "isbn": "9784000000010", "bucket": "auto_accept"},
+            {"legallib_book_id": "", "isbn": "badisbn", "bucket": "auto_accept"},
+        ]
+        res = run_dryrun(rows, legallib_dir, toc_dir, known, policy)
+        empties = [a for a in res["actions"] if a["action"] == "blocked_no_book_id"]
+        check(len(empties) == 2, "空 book_id 2 行が各々 blocked (衝突なし)")
+        check("9784000000010" not in res["proposed_files"], "空 book_id では書かない")
+
+
 def main() -> int:
     tests = [
         test_parent_reconstruction,
@@ -280,6 +329,8 @@ def main() -> int:
         test_mismerge_guard,
         test_dryrun_invariants,
         test_dryrun_idempotent,
+        test_unreadable_existing_protected,
+        test_empty_book_id_blocked_individually,
         test_apply_safety,
         test_apply_whitelist,
     ]
