@@ -7,6 +7,7 @@
 | `crosswalk_master.csv` | Gmail全案件ラベル1,181件を構造化した3システム横断表 | `sf_id`（背骨）。Box有無・担当弁護士付き |
 | `dict_aliases.csv` | 別名・旧称・グループ名・当事者区分・紹介元の候補（154） | `canonical_client` ↔ `alias_term`。別名辞書Seed |
 | `dict_noncase.csv` | 非案件パターン（運営アドレス/配信/研修活動/運用トリアージ/紹介元）（41） | ゲート1（案件性）で早期除外 |
+| `gap_rejudged.csv` | 漏れ候補26件の別名辞書による再判定（解消23/真の漏れ2/要確認1） | メール未ラベリングの実対応リスト |
 | `dict_attorney_prior.csv` | 依頼者→担当弁護士→区分→案件数（Box弁護士別フォルダ由来）（136） | 候補を絞るprior（§03-E） |
 
 ## 重要な前提
