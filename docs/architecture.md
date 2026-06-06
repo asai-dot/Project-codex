@@ -65,11 +65,11 @@ OUT=~/Box/.../app/data/toc_search_index_v2.json python3 scripts/build_toc_search
 1. **有償DLの実テンプレ確定**:
    - リーガルライブラリー: **確定済** `https://legal-library.jp/r/{book_key}?page={viewer_page}&ctg=view`（実例 `/r/326510?page=39`）。
      `link_parse` で実URLから book_key/viewer_page を自動抽出 → `calibrate --url ... --print P` で offset 確定。
-   - ベンコム（弁護士ドットコム・ライブラリー）: **book_only 確定** `https://library.bengo4.com/reader/?cid={book_key}`
+   - ベンコム（弁護士ドットコム・ライブラリー）: **ページ着地 確定** `https://library.bengo4.com/reader/?cid={book_key}&adr={viewer_page}`
      （`cid`=64桁hexの content hash。`/books/{hash}` ランディング形式も link_parse で捕捉）。
-     実機確認で reader はSPA、印刷41ページ表示中もURLは `?cid=...` のまま＝**ページはURLで指定不可**。
-     よって bencom は常にトップ着地（cidは貼付け校正で取得、ページ送りは人が行う）。
-     ※将来 reader の『共有』機能がページ付きURLを出すなら offset_url へ昇格可能（link_parse は準備済）。
+     アドレスバーはSPAで更新されないが、reader の**共有/リンクボタンが `&adr={viewer_page}` 付きURLを発行**する。
+     `adr`=ビューワーページ=紙面+offset。offsetは『引用判例リンク』画面の「○ページ 紙面△ページ」表記
+     （例: 83ページ=紙面43ページ→offset 40）または共有URL貼付け校正で1点確定。
 2. **本番データ接続**: Box『app/data』の 5,206冊 TOC と books.json でインデックス再構築。
    所有側2図書館（自炊PDF・物理本）の `book_links.json` は **`scripts/generate_book_links.py`** で
    books.json から自動生成できる（校正ゼロ・有償DLの校正値はマージ保持）:
@@ -91,3 +91,23 @@ OUT=~/Box/.../app/data/toc_search_index_v2.json python3 scripts/build_toc_search
 - **deeplink.js を単一実装**にしてサーバ/ブラウザ共有 → 着地挙動のズレを構造的に排除。
 - **本文コピー = 引用ハンドル**。実本文テキストはPDF/有償DL側の権利物のため複製せず、「書名・章節・ページ・
   各図書館deeplink・node_id」という機械可読ハンドルをコピーする。AIに渡せば出典付きで参照できる。
+
+## 7. 文献→判例リンク（本丸の構想・将来）
+
+ベンコム reader は本文ページ（紙面43）に対し **右下「判例」ボタン → 引用判例リンク** を持ち、
+そのページで引用されている裁判例の一覧（裁判所・年月日・事件番号・事件名）を表示する。
+さらに各判例は **判例秘書（LIC / legal-info.com）** の判例本文へ遷移する（ベンコムがLICを買収し連携）。
+観測例（コンメンタール民訴III・紙面43p）: 東京高判昭43.8.6、東京高判昭44.5.19（判例秘書ID `L02420223`）、福岡高判昭46.3.9 等。
+
+**ALOが目指す姿**: 別会社・別目的で作られた「文献リーダー × 判例DB」の継ぎ目を、所内の静的DBで溶かし、
+`(書籍, 紙面ページ) → 引用判例 → 判例本文` を**ワンクリックでバーンと飛べる**形にする。現状ベンコム×判例秘書の
+連携はUIが粗く実用に遠いので、所内側で滑らかな導線を作る価値が高い。
+
+設計の足がかり（本リポジトリの拡張として）:
+- TOCノード/ページに対し **引用判例のエッジ**（`case_citations`）を持たせる。1ページに複数判例可。
+- 判例の正規キー = 裁判所＋年月日＋事件番号、加えて判例秘書ID等の外部キー。
+- deeplink.js と同じ「データ駆動の着地解決」を判例DBにも適用（判例秘書 / D1-Law / 裁判所サイト等を
+  `case_sources` として並列化し、契約があるものへ着地）。
+- ③RAGの回答は、書籍パッセージの引用ハンドルに加えて**根拠判例へのリンク**も同梱する。
+
+→ `schema/supabase_schema.sql` 末尾に `case_citations` / `case_sources` の将来用DDL（コメント）を用意。

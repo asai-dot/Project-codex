@@ -22,12 +22,12 @@
       "kind": "digital_library",
       "tier": "paid",
       "cost": "subscription",
-      "page_strategy": "book_only",
+      "page_strategy": "offset_url",
       "needs_auth": true,
-      "url_template": null,
+      "url_template": "https://library.bengo4.com/reader/?cid={book_key}&adr={viewer_page}",
       "book_url_template": "https://library.bengo4.com/reader/?cid={book_key}",
-      "link_parse": { "host": "library.bengo4.com", "key_regex": "(?:cid=|/books/)([0-9a-fA-F]{16,})", "page_param": "page" },
-      "note": "実機確認済: reader はSPAで、印刷41ページ表示中もURLは ?cid={64桁hex} のまま（ページ番号がURLに反映されない）。よってURLでのページ指定は不可＝book_only（常にトップ着地、ページ送りは人が行う）。cid が book_key。link_parse の page_param は将来『共有』機能がページURLを出す場合の保険。"
+      "link_parse": { "host": "library.bengo4.com", "key_regex": "(?:cid=|/books/)([0-9a-fA-F]{16,})", "page_param": "adr" },
+      "note": "ページ着地可（確定）。reader 右上の共有/リンクボタンが ?cid=...&adr={viewer_page} を発行する（adr=ビューワーページ=紙面+offset）。アドレスバーはSPAで更新されないが共有URLにページが乗る。offsetは『引用判例リンク』画面の『○ページ 紙面△ページ』や1点合わせで確定（例: 83ページ=紙面43ページ→offset 40）。cid が book_key。"
     },
     {
       "id": "legal_library",

@@ -72,3 +72,33 @@ create index if not exists toc_nodes_title_trgm on toc_nodes using gin (title gi
 
 -- pg_trgm（②キーワード検索の部分一致高速化）
 create extension if not exists pg_trgm;
+
+-- ============================================================================
+-- 将来: 文献→判例リンク（docs/architecture.md §7）。
+-- ベンコムの「引用判例リンク」= (書籍, 紙面ページ) → 引用判例 → 判例本文(判例秘書/LIC 等)。
+-- ALOでこの遷移を所内側でシームレス化するための土台。今は未使用（コメント）。
+-- ============================================================================
+-- create table case_sources (               -- 判例の着地先（deeplink.js と同じデータ駆動）
+--   id            text primary key,          -- hanrei_hisho / d1_law / courts_go_jp
+--   label         text not null,
+--   tier          text,                      -- paid / free
+--   url_template  text,                      -- {case_key} を埋める
+--   needs_auth    boolean default false
+-- );
+-- create table cases (                       -- 判例の正規レコード
+--   case_id     bigserial primary key,
+--   court       text,                        -- 東京高等裁判所
+--   judged_on   date,                        -- 1969-05-19
+--   case_number text,                        -- 昭和41年（ネ）第2780号
+--   title       text,                        -- 建物収去、土地明渡請求控訴事件
+--   hh_id       text,                        -- 判例秘書ID 例 L02420223
+--   unique (court, judged_on, case_number)
+-- );
+-- create table case_citations (              -- 文献ノード/ページ → 判例 のエッジ（1ページ複数可）
+--   id          bigserial primary key,
+--   book_id     text references books(book_id) on delete cascade,
+--   toc_node_id text references toc_nodes(toc_node_id),
+--   print_page  integer,                     -- 引用が載る紙面ページ
+--   case_id     bigint references cases(case_id) on delete cascade,
+--   source_hint text                         -- どの図書館の引用判例リンク由来か
+-- );
