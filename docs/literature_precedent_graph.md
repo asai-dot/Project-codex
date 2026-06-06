@@ -120,10 +120,12 @@ literature_node (書籍/章節/ページ = 本リポジトリの toc_nodes)
 - **下級審（高判/地判/家判）: 被覆0%**。原因は normalizer ではなく **`opac_parse.py` の抽出regex**:
   `(?:…|高[裁判]|地[裁判]|…)` が **`高`始まり**で**地名（東京等）を捨てる** → ref が「高判昭44.5.19…」になり
   どの高裁か特定不能（地名情報が抽出段で失われている）。
-- **改善レバー（上流）**: opac_parse の case_ref 抽出regex を地名込みに広げる。例:
-  `(?:最[大小]?[判決]|[一-龥ぁ-ヶ]{1,4}(?:高|地|家|簡)[判決審])…`。下級審の地名を保持でき被覆率が大幅改善の見込み。
-- 当面: 地名を欠く下級審 ref は `pending_place_recovery`（記事本文から地名復元 or 保留）扱い。
-- 最高裁は地名不要で完結するため、**今すぐ高被覆**で正本キー化＝17,259件のうち最高裁分から名寄せ着手できる。
+- **改善を実装済み**: `src/case_identity.py:extract_case_refs()` が **記事 `raw_text` から地名込みで再抽出**する
+  （`opac_parse` を再実行せず上流の欠落を回避。`ext_opac_articles.jsonl` は raw_text を保持）。
+  validator に `--from-raw` モードを追加。
+- **before/after 実証**（代表サンプル）: 旧 case_ref_text = **40%** → `--from-raw` = **100%**（高裁・地裁・家裁を回収）。
+- 助詞の誤抽出を回避（place は漢字2-4、`について` 等のひらがなで切れる）。
+- **フル実行（推奨）**: `python3 scripts/validate_case_refs.py opac_parsed/ext_opac_articles.jsonl --from-raw`
 
 - ベンコム precedents は **viewer_page で引ける**ので、`book_links.bencom.offset` で紙面ページ↔viewer_page
   を相互変換し、我々のTOC（章節→紙面ページ）と接合 → 「**この章が引く判例**」が機械的に出る。

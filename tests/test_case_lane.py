@@ -8,7 +8,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from src.case_identity import parse_date, parse_case_number, parse_court, normalize_citation, normalize_case_ref
+from src.case_identity import (parse_date, parse_case_number, parse_court, normalize_citation,
+                               normalize_case_ref, extract_case_refs, normalize_text)
 from src.case_deeplink import resolve_case, best_landing
 from scripts.harvest_precedents import harvest_text
 
@@ -80,6 +81,19 @@ check("case_ref 東京高判→tokyo-koto", r_koto["court_slug"] == "tokyo-koto"
 check("case_ref 東京高判 判決日", r_koto["judged_on"] == "1969-05-19")
 r_chi = normalize_case_ref("大阪地判平20・3・1判時1234-56")
 check("case_ref 大阪地判→osaka-chiho", r_chi["court_slug"] == "osaka-chiho")
+
+# --- 本文からの抽出（地名を保持＝opac_parseの欠陥を上流回避） ---
+prose = "本判決（東京高判昭44.5.19判タ239-236）は、最大判昭44.11.26民集23-11-2150を引用するが、大阪地判平15・3・20も参照。"
+refs = extract_case_refs(prose)
+check("extract: 3件抽出", len(refs) == 3)
+check("extract: 東京高判の地名を保持", any(r.startswith("東京高判") for r in refs))
+check("extract: 最大判も抽出", any(r.startswith("最大判") for r in refs))
+recs = normalize_text(prose)
+slugs = {r["court_slug"] for r in recs}
+check("extract→normalize: 東京高裁を特定", "tokyo-koto" in slugs)
+check("extract→normalize: 大阪地裁を特定", "osaka-chiho" in slugs)
+check("extract→normalize: 最高裁を特定", "saikosai" in slugs)
+check("extract: 助詞を誤抽出しない（について等）", all("について" not in r and "ついて" not in r for r in refs))
 
 # --- 着地解決（3層・優先順） ---
 # court_id あり → 裁判所HTMLが最優先（内部PDが無い場合）

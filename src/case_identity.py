@@ -226,10 +226,37 @@ def normalize_case_ref(text, hh_id=None, court_id=None):
     }
 
 
+# 改良版・本文からの判例参照抽出（地名を保持＝opac_parse の抽出regex欠陥を上流回避）
+# opac_parse は `高[裁判]` 始まりで地名(東京)を捨てていた。ここは place(漢字2-4)+(高|地|家|簡)+判決審 を保持。
+EXTRACT_RE = re.compile(
+    r"("
+    r"最(?:大|小)?[判決]"                        # 最判/最決/最大判/最大決（最高裁は地名不要）
+    r"|[一-龥]{2,4}(?:高|地|家|簡)(?:判|決|審)"    # 東京高判/大阪地判/福岡家審 …（地名を保持）
+    r")"
+    r"[\s,，、]*"
+    r"((?:明治|大正|昭和|平成|令和|明|大|昭|平|令)\s*(?:元|\d+)\s*年?[\s.・/]*\d+\s*[月.・/]*\s*\d+\s*日?)"  # 判決日
+    r"(\s*(?:民集|刑集|集民|集刑|裁時|判時|判タ|家月|金法|金判|労判|訟月|行集)\s*[\d‐–－・\-]+)?"           # 判例集citation(任意)
+)
+
+
+def extract_case_refs(text):
+    """本文/記事テキストから判例参照を抽出（地名込み）。returns list[str]。
+    opac_parse.py の case_ref_text が下級審の地名を落としていた問題を、raw_text からの再抽出で回避する。"""
+    if not text:
+        return []
+    t = _nfkc(text)
+    return [(m.group(1) + m.group(2) + (m.group(3) or "")).strip() for m in EXTRACT_RE.finditer(t)]
+
+
+def normalize_text(text, **kw):
+    """テキストから判例参照を抽出し、各々を正本レコードへ。returns list[record]。"""
+    out = []
+    for ref in extract_case_refs(text):
+        rec = normalize_case_ref(ref, **kw)
+        if rec:
+            out.append(rec)
+    return out
+
+
 if __name__ == "__main__":
     import json, sys
-    # デモ: 標準入力に「court | date | caseno」を渡す
-    for line in sys.stdin:
-        parts = [p.strip() for p in line.split("|")]
-        if len(parts) >= 3:
-            print(json.dumps(normalize_citation(*parts[:3]), ensure_ascii=False))

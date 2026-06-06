@@ -23,12 +23,14 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from src.case_identity import normalize_case_ref  # noqa: E402
+from src.case_identity import normalize_case_ref, extract_case_refs  # noqa: E402
 
 SPLIT_RE = re.compile(r"[；;]")
 
 
-def iter_refs(path):
+def iter_refs(path, from_raw=False):
+    """from_raw=False: 既存 case_ref_text（；区切り）を使う（地名欠落あり）。
+    from_raw=True : raw_text から extract_case_refs で地名込みに再抽出（推奨）。"""
     with open(path, encoding="utf-8", errors="replace") as f:
         for line in f:
             line = line.strip()
@@ -40,18 +42,25 @@ def iter_refs(path):
                 continue
             if not isinstance(art, dict):
                 continue
-            crt = art.get("case_ref_text")
-            if not crt:
-                continue
-            for ref in SPLIT_RE.split(crt):
-                ref = ref.strip()
-                if len(ref) >= 3:
-                    yield ref
+            if from_raw:
+                for ref in extract_case_refs(art.get("raw_text") or art.get("title") or ""):
+                    if len(ref) >= 3:
+                        yield ref
+            else:
+                crt = art.get("case_ref_text")
+                if not crt:
+                    continue
+                for ref in SPLIT_RE.split(crt):
+                    ref = ref.strip()
+                    if len(ref) >= 3:
+                        yield ref
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("path")
+    ap.add_argument("--from-raw", action="store_true",
+                    help="raw_text から地名込みで再抽出（opac_parse の地名欠落を回避）")
     ap.add_argument("--sample-fails", type=int, default=15)
     ap.add_argument("--sample-collisions", type=int, default=10)
     args = ap.parse_args()
@@ -62,7 +71,7 @@ def main():
     by_level = defaultdict(int)
     no_caseno = no_date = 0
 
-    for ref in iter_refs(args.path):
+    for ref in iter_refs(args.path, from_raw=args.from_raw):
         total += 1
         rec = normalize_case_ref(ref)
         if rec is None:
