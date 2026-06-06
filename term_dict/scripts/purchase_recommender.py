@@ -97,11 +97,18 @@ REL = {
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-# 所蔵カタログ books.json の genre（classify_genre / NDC_GENRE_MAP 由来）を
+# 所蔵カタログ books.json の genre（classify_genre / NDC バックフィル由来）を
 # term_dict の domain_l1 へ写像する。候補側 (book_coverage_by_domain.json) の
 # domain_l1 と同じ軸に揃えることで「所蔵 × 候補」の内積が取れる。
+#
+# 語彙は2系統の和集合:
+#   (1) booklib.py の GENRE_RULES（キーワード分類。「〜実務」「〜法務」系）
+#   (2) app/data/ndc_genre_mapping.json（NDCバックフィル。「民法」「刑法」等）
+# 候補軸 = {commercial, civil, administrative, labor, procedure, criminal, ip, tax}
+# それ以外（other/information/international/medical）は所蔵分布には載るが候補とは
+# 整合しない（内積0）。これは仕様どおり（該当候補が無いだけ）。
 GENRE_TO_DOMAIN: dict[str, str] = {
-    # commercial（商事・企業法務系）
+    # ── commercial（商事・企業法務系）──
     "M&A": "commercial",
     "事業承継": "commercial",
     "経済法": "commercial",
@@ -113,44 +120,86 @@ GENRE_TO_DOMAIN: dict[str, str] = {
     "渉外法務": "commercial",
     "企業法務": "commercial",
     "登記実務": "commercial",
-    # civil（民事系）
+    "経済・経営": "commercial",
+    "経営": "commercial",
+    "経営管理": "commercial",
+    "会計・財務": "commercial",
+    # ── civil（民事系）──
     "民事実務": "civil",
-    "交通事故": "civil",
-    "不動産": "civil",
-    "消費者法": "civil",
+    "民法": "civil",
+    "家族法・相続": "civil",
     "家事実務": "civil",
+    "不動産": "civil",
+    "不動産法": "civil",
+    "交通事故": "civil",
+    "消費者法": "civil",
     "倒産法": "civil",
-    # procedure（手続）
+    # ── procedure（民事手続）──
     "訴訟実務": "procedure",
-    # criminal（刑事）
+    "訴訟法": "procedure",
+    "民事訴訟法": "procedure",
+    # ── criminal（刑事。刑事訴訟法を含む）──
     "刑事実務": "criminal",
-    # administrative（公法・行政）
+    "刑法": "criminal",
+    "刑事訴訟法": "criminal",
+    # ── administrative（公法・行政・社会保障・環境）──
     "公法実務": "administrative",
-    # labor（労働）
+    "憲法": "administrative",
+    "行政法": "administrative",
+    "社会保障": "administrative",
+    "環境法": "administrative",
+    # ── labor（労働）──
     "労働法務": "labor",
-    # ip（知財）
+    "労働法": "labor",
+    # ── ip（知財）──
     "知的財産": "ip",
-    # tax（税務）
+    # ── tax（税務）──
     "税務・会計": "tax",
-    # その他（軸外。所蔵分布の母数には入れるが候補とは整合しにくい）
+    "税法": "tax",
+    # ── 軸外（所蔵分布の母数には入るが候補とは整合しにくい）──
     "情報法": "information",
     "国際法務": "international",
+    "国際法": "international",
     "医事・薬事": "medical",
+    "医事法": "medical",
+    "法学一般": "other",
+    "法制史": "other",
+    "産業一般": "other",
     "その他": "other",
 }
 
-# NDC 分類（先頭一致）→ domain_l1。books.json の `ndc` を補助シグナルに使う。
+# NDC 分類（先頭一致・最長優先）→ domain_l1。books.json の `ndc` を補助シグナルに。
+# app/data/ndc_genre_mapping.json の ndc_prefix_fallback を domain へ写像したもの。
 NDC_PREFIX_TO_DOMAIN: list[tuple[str, str]] = [
+    ("320", "other"),         # 法学一般
+    ("321", "other"),
+    ("322", "other"),         # 法制史
+    ("323", "administrative"),# 憲法・行政法
+    ("324.6", "civil"),       # 家族法・相続
+    ("324.8", "civil"),       # 不動産法
     ("324", "civil"),         # 民法
     ("325", "commercial"),    # 商法・会社法
-    ("323", "administrative"),# 憲法・行政法
     ("326", "criminal"),      # 刑法
-    ("327", "procedure"),     # 司法・訴訟法
+    ("327.4", "civil"),       # 倒産法
+    ("327.6", "criminal"),    # 刑事訴訟法
+    ("327.2", "procedure"),   # 民事訴訟法
+    ("327.3", "procedure"),
+    ("327.5", "procedure"),
+    ("327", "procedure"),     # 訴訟法（民訴系）
+    ("328", "administrative"),# 行政法
     ("329", "international"),  # 国際法
-    ("366", "labor"),         # 労働
-    ("507.2", "ip"),          # 工業所有権
-    ("345", "tax"),           # 租税
+    ("330", "commercial"),    # 経済・経営
+    ("335", "commercial"),    # 経営
+    ("336", "commercial"),    # 経営管理
+    ("338", "commercial"),    # ファイナンス
+    ("345", "tax"),           # 税法
     ("364", "administrative"),# 社会保障
+    ("366", "labor"),         # 労働
+    ("498", "medical"),       # 医事法
+    ("507.2", "ip"),          # 工業所有権
+    ("519", "administrative"),# 環境法
+    ("007", "information"),   # 情報法
+    ("673", "civil"),         # 不動産法
 ]
 
 # 旗艦級（基幹書）を示す書名/シリーズのキーワード。
@@ -314,6 +363,7 @@ class PurchaseRecommender:
         # derived
         self.demand: Counter = Counter()         # domain -> weight（所蔵主題分布）
         self.demand_share: dict[str, float] = {}
+        self.unmapped_genres: Counter = Counter() # 写像漏れ genre の観測（実データ点検用）
         self.held_isbn: set = set()
         self.held_bencom_id: set = set()
         self.held_title: set = set()
@@ -429,14 +479,22 @@ class PurchaseRecommender:
     def _holding_domains(self, b: dict) -> list[str]:
         """所蔵1冊の主題（domain_l1）リスト。genre優先、補助でndc。"""
         domains: list[str] = []
+        unmapped: list[str] = []
         for g in _as_list(b.get("genre")):
-            d = GENRE_TO_DOMAIN.get(g.strip())
+            key = g.strip()
+            d = GENRE_TO_DOMAIN.get(key)
             if d:
                 domains.append(d)
+            elif key:
+                unmapped.append(key)
         if not domains:
             d = ndc_to_domain(b.get("ndc"))
             if d:
                 domains.append(d)
+            else:
+                # genre も ndc も写像できなかった → 観測（写像辞書の補正点になる）
+                for key in unmapped:
+                    self.unmapped_genres[key] += 1
         # 重複除去（順序保持）
         seen = set()
         uniq = []
@@ -671,6 +729,11 @@ class PurchaseRecommender:
         L.append("■ 所蔵の主題分布（= 現業テーマの強さ）")
         for d, w, share in self.demand_summary():
             L.append(f"    {d:<14} {share*100:5.1f}%  ({w:.1f})")
+        if self.unmapped_genres:
+            L.append("")
+            L.append("  ⚠ 未写像 genre（GENRE_TO_DOMAIN 補正候補・上位10）:")
+            for g, c in self.unmapped_genres.most_common(10):
+                L.append(f"      {g}  ×{c}")
         L.append("")
         L.append("-" * 76)
         L.append(f"■ Top {len(recs)} 購入提案")

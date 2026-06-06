@@ -150,6 +150,12 @@ dist   = pr.demand_summary()           # 所蔵の主題分布
    の写像を補正、または `weight_power` を調整して再実行。
 4. 旗艦級の出方が強すぎ/弱すぎる場合は `--flagship-alpha` で調整。
 
+> `GENRE_TO_DOMAIN` は2系統の語彙の和集合をカバー: `booklib.py` の
+> `GENRE_RULES`（キーワード分類「〜実務/〜法務」）と
+> `app/data/ndc_genre_mapping.json`（NDCバックフィル「民法/刑法/民事訴訟法」等。
+> 2026-05-13 backfill で所蔵に付与）。レポート冒頭に **未写像 genre** を出すので、
+> 写像漏れがあればそこを見て `GENRE_TO_DOMAIN` に追記すればよい。
+
 ---
 
 ## 6. テスト

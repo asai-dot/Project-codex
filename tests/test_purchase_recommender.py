@@ -24,6 +24,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "term_dict", "s
 
 from purchase_recommender import (  # noqa: E402
     PurchaseRecommender,
+    GENRE_TO_DOMAIN,
     normalize_isbn,
     normalize_title,
     flatten_toc,
@@ -261,6 +262,57 @@ def test_domain_hits_profile():
     recs = pr.recommend(top_n=5)
     assert recs and recs[0].book_id == "x"
     print("✓ test_domain_hits_profile", prof)
+
+
+def test_ndc_backfill_genre_mapping():
+    """NDCバックフィル由来の genre 語彙が domain へ写像されること
+    （2026-05-13 backfill で増えた語彙が demand に反映される）。"""
+    # 代表的な NDC-genre が正しい domain に向く
+    cases = {
+        "民法": "civil", "家族法・相続": "civil", "不動産法": "civil",
+        "刑法": "criminal", "刑事訴訟法": "criminal",
+        "民事訴訟法": "procedure", "訴訟法": "procedure",
+        "憲法": "administrative", "行政法": "administrative", "社会保障": "administrative",
+        "税法": "tax", "労働法": "labor", "商法・会社法": "commercial",
+        "経済・経営": "commercial", "ファイナンス": "commercial",
+    }
+    for genre, dom in cases.items():
+        assert GENRE_TO_DOMAIN.get(genre) == dom, (genre, dom)
+
+    # NDC 先頭一致（最長優先）: 倒産法/刑訴/民訴の分岐
+    assert ndc_to_domain("327.4") == "civil"      # 倒産法
+    assert ndc_to_domain("327.6") == "criminal"   # 刑事訴訟法
+    assert ndc_to_domain("327.2") == "procedure"  # 民事訴訟法
+    assert ndc_to_domain("327") == "procedure"    # 訴訟法（総則）
+    assert ndc_to_domain("345.1") == "tax"
+
+    # NDCバックフィル genre のみの所蔵が demand に載る
+    pr = PurchaseRecommender()
+    pr.load_from_memory(
+        holdings=[
+            {"id": "a", "isbn": "9784000000001", "title": "民法概説", "genre": ["民法"]},
+            {"id": "b", "isbn": "9784000000002", "title": "刑法各論", "genre": ["刑法"]},
+            {"id": "c", "isbn": "9784000000003", "title": "民事訴訟法", "genre": ["民事訴訟法"]},
+        ],
+        bencom=[], coverage=[], tag_domain={},
+    )
+    assert set(pr.demand_share) == {"civil", "criminal", "procedure"}
+    assert not pr.unmapped_genres
+    print("✓ test_ndc_backfill_genre_mapping", dict(pr.demand_share))
+
+
+def test_unmapped_genre_observability():
+    """未知 genre かつ ndc も無い所蔵は unmapped_genres に記録される。"""
+    pr = PurchaseRecommender()
+    pr.load_from_memory(
+        holdings=[
+            {"id": "z", "isbn": "9784000000009", "title": "謎ジャンル本",
+             "genre": ["架空ジャンルXYZ"]},
+        ],
+        bencom=[], coverage=[], tag_domain={},
+    )
+    assert pr.unmapped_genres.get("架空ジャンルXYZ") == 1
+    print("✓ test_unmapped_genre_observability", dict(pr.unmapped_genres))
 
 
 def test_report_renders():
