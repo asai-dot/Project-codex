@@ -17,16 +17,17 @@
     },
     {
       "id": "bencom",
-      "label": "ベンコム（BUSINESS LAWYERS LIBRARY / 弁護士ドットコムLIBRARY）",
+      "label": "ベンコム（弁護士ドットコム・ライブラリー）",
       "short_label": "ベンコム",
       "kind": "digital_library",
       "tier": "paid",
       "cost": "subscription",
       "page_strategy": "offset_url",
       "needs_auth": true,
-      "url_template": "https://www.businesslawyers.jp/lib/book/{book_key}?page={viewer_page}",
-      "book_url_template": "https://www.businesslawyers.jp/lib/book/{book_key}",
-      "note": "暫定テンプレート。実際のビューワーで『現在ページのURL発行』した結果を calibrate に与えて book_key と url_template を確定すること。"
+      "url_template": "https://library.bengo4.com/reader/?cid={book_key}&page={viewer_page}",
+      "book_url_template": "https://library.bengo4.com/reader/?cid={book_key}",
+      "link_parse": { "host": "library.bengo4.com", "key_regex": "(?:cid=|/books/)([0-9a-fA-F]{16,})", "page_param": "page" },
+      "note": "book-top形式は確認済（https://library.bengo4.com/reader/?cid={64桁hex}）。cid が book_key。ページ送り時のURL（page paramの名前・有無）は未確認のため url_template の &page={viewer_page} は暫定。本文の特定ページを開いた実URLを1本もらえば確定する。現状は貼付け校正で cid を取得し、offsetはnull→トップ着地。"
     },
     {
       "id": "legal_library",

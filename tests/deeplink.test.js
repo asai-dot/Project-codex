@@ -41,12 +41,27 @@ t('paste-URL校正: offset = viewer - print', () => {
   assert.strictEqual(Deeplink.computeOffset(33, p.viewer_page), 6);
 });
 
-// 3) ベンコム: offset=null（未校正）→ トップ着地
+// 3) ベンコム: offset=null（未校正）→ トップ着地（実ホスト library.bengo4.com）
 t('bencom: offset未校正 → トップ着地', () => {
-  const r = Deeplink.resolveLink(byId.bencom, { book_key: 'BLL-x', offset: null }, 135);
+  const r = Deeplink.resolveLink(byId.bencom, { book_key: 'ebaaf6907d0c7eaf14a99fcd7e40c42283674fb06f5f4216fa45a02d118465b5', offset: null }, 135);
   assert.strictEqual(r.status, 'book_top');
   assert.strictEqual(r.reason, 'offset_not_calibrated');
-  assert.strictEqual(r.url, 'https://www.businesslawyers.jp/lib/book/BLL-x');
+  assert.strictEqual(r.url, 'https://library.bengo4.com/reader/?cid=ebaaf6907d0c7eaf14a99fcd7e40c42283674fb06f5f4216fa45a02d118465b5');
+});
+
+// 3b) parseViewerUrl: ベンコム reader URL から cid を book_key として抽出（page無し→viewer_page null）
+t('parseViewerUrl: 実ベンコムreader URL → cid捕捉', () => {
+  const p = Deeplink.parseViewerUrl(SOURCES, 'https://library.bengo4.com/reader/?cid=ebaaf6907d0c7eaf14a99fcd7e40c42283674fb06f5f4216fa45a02d118465b5');
+  assert.strictEqual(p.source_id, 'bencom');
+  assert.strictEqual(p.book_key, 'ebaaf6907d0c7eaf14a99fcd7e40c42283674fb06f5f4216fa45a02d118465b5');
+  assert.strictEqual(p.viewer_page, null);
+});
+
+// 3c) parseViewerUrl: ベンコム books ランディング形式でも cid を捕捉
+t('parseViewerUrl: ベンコム /books/ 形式も捕捉', () => {
+  const p = Deeplink.parseViewerUrl(SOURCES, 'https://library.bengo4.com/books/09fbb75af2ad93c5daf60babe8d2c1192329d7a8ed03936a7ea4b602e25b4b46');
+  assert.strictEqual(p.source_id, 'bencom');
+  assert.strictEqual(p.book_key, '09fbb75af2ad93c5daf60babe8d2c1192329d7a8ed03936a7ea4b602e25b4b46');
 });
 
 // 4) print_page不明（本トップから開く）→ トップ着地
