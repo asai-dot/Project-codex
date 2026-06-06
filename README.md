@@ -72,3 +72,10 @@ e-gov 法令データ（`data/egov/`）は git 履歴に存在した実資産を
 # 任意の TOC ノード jsonl (text フィールド) に法令/判例リンクを付与
 python scripts/run_legal_links_nodes.py --nodes nodes.jsonl --out out_real
 ```
+
+### DB 投入の設計（書込み前レビュー）
+
+本番 DB への投入は **未実施**。「汚いデータを入れない」ための設計・品質分析を
+`reports/LEGAL_LINK_INGEST_DESIGN.md` に整理した（結論: 既存の
+claim/evidence/serving + release governance に乗せ、confidence で gate）。
+品質実測は `out_real/legal_link_quality_metrics.csv`。

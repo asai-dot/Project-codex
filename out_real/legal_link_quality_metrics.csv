@@ -1,0 +1,14 @@
+metric,value,note
+article_case_nodes_scanned,12253,bib_toc nodes containing 第○条 or a case pattern
+statute_refs_extracted,589,precision-first: law-name adjacent to 第○条 only
+statute_conf_high,347,has article number
+statute_conf_medium,197,bare law name at word boundary
+statute_conf_low,45,short law name embedded in kanji run (FP risk)
+statute_resolved_article_pct,58.9,share of refs resolved to a specific article
+statute_egov_confirmed,121,article has an e-gov definition (strong)
+statute_ambiguous_lawname,0,154-law index has no name collisions
+bare_article_nodes_not_guessed,~9600,第○条 nodes with no in-index adjacent law = correctly skipped
+case_citations_extracted,1544,from 1497 nodes
+case_court_parsed_pct,100.0,
+case_era_parsed_pct,100.0,
+low_conf_false_positive_examples,"医療法人→医療法; 人民法院→民法; 旧/新民法; 株式会社法→会社法",isolated in low bucket
