@@ -41,12 +41,13 @@ t('paste-URL校正: offset = viewer - print', () => {
   assert.strictEqual(Deeplink.computeOffset(33, p.viewer_page), 6);
 });
 
-// 3) ベンコム: offset=null（未校正）→ トップ着地（実ホスト library.bengo4.com）
-t('bencom: offset未校正 → トップ着地', () => {
-  const r = Deeplink.resolveLink(byId.bencom, { book_key: 'ebaaf6907d0c7eaf14a99fcd7e40c42283674fb06f5f4216fa45a02d118465b5', offset: null }, 135);
+// 3) ベンコム: book_only — print_page があっても常にトップ着地（reader はURLにページを持たない）
+t('bencom: book_only → 常にトップ着地', () => {
+  const cid = 'ebaaf6907d0c7eaf14a99fcd7e40c42283674fb06f5f4216fa45a02d118465b5';
+  const r = Deeplink.resolveLink(byId.bencom, { book_key: cid }, 41);
   assert.strictEqual(r.status, 'book_top');
-  assert.strictEqual(r.reason, 'offset_not_calibrated');
-  assert.strictEqual(r.url, 'https://library.bengo4.com/reader/?cid=ebaaf6907d0c7eaf14a99fcd7e40c42283674fb06f5f4216fa45a02d118465b5');
+  assert.strictEqual(r.reason, 'book_only');
+  assert.strictEqual(r.url, 'https://library.bengo4.com/reader/?cid=' + cid);
 });
 
 // 3b) parseViewerUrl: ベンコム reader URL から cid を book_key として抽出（page無し→viewer_page null）

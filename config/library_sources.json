@@ -22,12 +22,12 @@
       "kind": "digital_library",
       "tier": "paid",
       "cost": "subscription",
-      "page_strategy": "offset_url",
+      "page_strategy": "book_only",
       "needs_auth": true,
-      "url_template": "https://library.bengo4.com/reader/?cid={book_key}&page={viewer_page}",
+      "url_template": null,
       "book_url_template": "https://library.bengo4.com/reader/?cid={book_key}",
       "link_parse": { "host": "library.bengo4.com", "key_regex": "(?:cid=|/books/)([0-9a-fA-F]{16,})", "page_param": "page" },
-      "note": "book-top形式は確認済（https://library.bengo4.com/reader/?cid={64桁hex}）。cid が book_key。ページ送り時のURL（page paramの名前・有無）は未確認のため url_template の &page={viewer_page} は暫定。本文の特定ページを開いた実URLを1本もらえば確定する。現状は貼付け校正で cid を取得し、offsetはnull→トップ着地。"
+      "note": "実機確認済: reader はSPAで、印刷41ページ表示中もURLは ?cid={64桁hex} のまま（ページ番号がURLに反映されない）。よってURLでのページ指定は不可＝book_only（常にトップ着地、ページ送りは人が行う）。cid が book_key。link_parse の page_param は将来『共有』機能がページURLを出す場合の保険。"
     },
     {
       "id": "legal_library",

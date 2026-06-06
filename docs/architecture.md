@@ -65,10 +65,11 @@ OUT=~/Box/.../app/data/toc_search_index_v2.json python3 scripts/build_toc_search
 1. **有償DLの実テンプレ確定**:
    - リーガルライブラリー: **確定済** `https://legal-library.jp/r/{book_key}?page={viewer_page}&ctg=view`（実例 `/r/326510?page=39`）。
      `link_parse` で実URLから book_key/viewer_page を自動抽出 → `calibrate --url ... --print P` で offset 確定。
-   - ベンコム（弁護士ドットコム・ライブラリー）: **book-top確定** `https://library.bengo4.com/reader/?cid={book_key}`
+   - ベンコム（弁護士ドットコム・ライブラリー）: **book_only 確定** `https://library.bengo4.com/reader/?cid={book_key}`
      （`cid`=64桁hexの content hash。`/books/{hash}` ランディング形式も link_parse で捕捉）。
-     ページ送り時のURL（reader はSPAで page param 未確認）は**本文の特定ページを開いた実URLが1本**あれば確定。
-     それまで bencom は cid を貼付け校正で取得し **トップ着地**（offset=null）。
+     実機確認で reader はSPA、印刷41ページ表示中もURLは `?cid=...` のまま＝**ページはURLで指定不可**。
+     よって bencom は常にトップ着地（cidは貼付け校正で取得、ページ送りは人が行う）。
+     ※将来 reader の『共有』機能がページ付きURLを出すなら offset_url へ昇格可能（link_parse は準備済）。
 2. **本番データ接続**: Box『app/data』の 5,206冊 TOC と books.json でインデックス再構築。
    所有側2図書館（自炊PDF・物理本）の `book_links.json` は **`scripts/generate_book_links.py`** で
    books.json から自動生成できる（校正ゼロ・有償DLの校正値はマージ保持）:

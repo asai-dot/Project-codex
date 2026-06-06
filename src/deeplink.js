@@ -60,6 +60,16 @@
     // その本がこのライブラリに登録されていない
     if (!link) return Object.assign(base, { status: 'unavailable' });
 
+    // book_only: このビューワーはページをURLで指定できない（例: ベンコム reader はSPAで
+    // ページめくりがURLに反映されない）。常に本トップに着地し、ページ送りは人が行う。
+    if (source.page_strategy === 'book_only') {
+      const topUrl0 = fillTemplate(source.book_url_template || source.url_template, Object.assign({}, link, { print_page: printPage }));
+      if (topUrl0 && !hasUnfilledPlaceholder(topUrl0)) {
+        return Object.assign(base, { status: 'book_top', url: topUrl0, print_page: printPage != null ? printPage : null, reason: 'book_only', needs_auth: !!source.needs_auth });
+      }
+      return Object.assign(base, { status: 'unavailable', reason: 'no_resolvable_url' });
+    }
+
     const offset = typeof link.offset === 'number' ? link.offset : null;
     const canPage = offset !== null && printPage != null && Number.isFinite(printPage);
 
