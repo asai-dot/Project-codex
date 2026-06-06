@@ -24,6 +24,7 @@ legallib の詳細目次（TOC）を本番ブックJSON（canonical, `app/data/t
 | `docs/handoff_mac_session_legallib_join.md` | Mac セッションへの発注書（preflight→dryrun→戻す物） |
 | `docs/fork1_roadmap_after_join.md` | 接合の前後と「その先」のロードマップ |
 | `docs/merge_engine_integration_design.md` | legallib を `merge_toc_updates.py` へ統合する設計（回帰ゼロの段階移行） |
+| `pipeline/pipeline.json` + `scripts/pipeline_probe.py` + `scripts/pipeline_dashboard.py` | 静的/動的DB 全体の進捗ダッシュボード（done/詰まり/入れる箇所・GPT往復の未戻りを可視化）→ `docs/pipeline_dashboard.md` |
 
 ## クイックスタート（実データ不要）
 
