@@ -78,13 +78,17 @@ create extension if not exists pg_trgm;
 -- ベンコムの「引用判例リンク」= (書籍, 紙面ページ) → 引用判例 → 判例本文(判例秘書/LIC 等)。
 -- ALOでこの遷移を所内側でシームレス化するための土台。今は未使用（コメント）。
 -- ============================================================================
--- create table case_sources (               -- 判例の着地先（deeplink.js と同じデータ駆動）
---   id            text primary key,          -- hanrei_hisho / d1_law / courts_go_jp
+-- create table case_sources (               -- 判例の着地先（deeplink.js と同じデータ駆動・優先順で解決）
+--   id            text primary key,          -- internal_pd / courts_go_jp / d1_law / bencom_onramp(hanrei_hisho)
 --   label         text not null,
---   tier          text,                      -- paid / free
---   url_template  text,                      -- {case_key} を埋める
+--   tier          text,                      -- paid / free / owned
+--   priority      integer,                   -- 小さいほど優先（内部PD→公開→オンランプ）
+--   url_template  text,                      -- {case_key} 等を埋める
 --   needs_auth    boolean default false
 -- );
+-- 注: 判例秘書(legal-info.com)は /plus/detail?screen_info_id={enc}&select_id={enc} が Laravel暗号化
+--     トークンのため【直リンク生成不可】。判例秘書へはベンコム precedents ページ
+--     library.bengo4.com/books/{cid}/precedents#page_{viewer_page}（構築可・安定）をオンランプに使う。
 -- create table cases (                       -- 判例の正規レコード
 --   case_id     bigserial primary key,
 --   court       text,                        -- 東京高等裁判所

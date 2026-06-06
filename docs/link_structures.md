@@ -53,15 +53,21 @@ deeplink.js / config.link_parse / 将来の case_citations を確定するため
 | 種別 | パターン | 状態 |
 |---|---|---|
 | 会員ログイン | `https://www.legal-info.com/`（LIC会員） | 確定（公開） |
-| 判例ID | `L` + 8桁（例 `L02420223`） | 確定（スクショ） |
-| 判例本文 deeplink | `legal-info.com/...?hanreiId=L...`（仮説） | **未確認（要実URL）** |
+| 判例ID | `L` + 8桁（例 `L02420223`, `L02010234`） | 確定 |
+| 判例本文画面 | `https://www.legal-info.com/plus/detail?screen_info_id={enc}&select_id={enc}` | **確定・ただし構築不可** |
+
+> ⚠ **判例秘書への直接deeplinkは不可**。`screen_info_id`/`select_id` は Laravel の暗号化トークン
+> （`eyJpdiI6…` = `{"iv","value","mac"}` のbase64）。サーバ秘密鍵で暗号化され、判例IDが露出せず、
+> 毎回ランダムIV。**任意の判例についてURLを生成できない**（捕捉済みURLが鍵未変更の間だけ生きる程度）。
+> → 判例秘書は「暗号化ハンドオフ」設計。ALOから L番号で直リンクする手段は提供されていない。
 
 - チェーン: ベンコム reader 右下「**判例**」→ **引用判例リンク画面**
   `library.bengo4.com/books/{cid}/precedents#page_{viewer_page}`（**確定**。頁別の引用判例一覧、複数可）
-  → 各判例 → LICログイン → 判例秘書 判例本文。
-- → `case_citations` の一次データはこの `precedents` ページから取れる（book=cid, viewer_page=page_, 判例=L番号）。
-- 残: 各判例 → **legal-info.com の判例本文URL**（判例deeplink形式）。legal-info.com も SPA で URL 不変の可能性あり。
-  その場合は判例側も「共有/印刷ボタンが出すURL」を探す。
+  → 各判例リンク → LICログイン → 判例秘書 `/plus/detail`（暗号化トークン）。
+- → `case_citations` の一次データはこの `precedents` ページから取れる（book=cid, viewer_page=page_, 判例=L番号＋裁判所・年月日・事件番号）。
+- **着地戦略（判例秘書が直リンク不可なので）**: ①所内に生判決文(PD)があれば内部表示 → ②裁判所サイト/他DBで
+  事件番号から引ける物 → ③最後に**ベンコム precedents ページ**（`/books/{cid}/precedents#page_{N}`＝構築可・安定）を
+  判例秘書への“オンランプ”として開く。判例秘書 `/plus/detail` の直接生成はしない。
 
 ---
 
@@ -72,7 +78,7 @@ deeplink.js / config.link_parse / 将来の case_citations を確定するため
 1. [x] **cid粒度** → 別セクションでも cid 不変 = 巻/ISBN単位。`bencom` は単一 `{cid, offset}` でよい。
 2. [ ] **offset厳密化**（#2'）: reader 画面に印刷された**紙面ページ**と共有URLの **adr** の1組を清書（例「紙面43表示中→adr=○」）。`adr = print + offset` を1点確定。
 3. [x] **引用判例リンク画面のURL** → `library.bengo4.com/books/{cid}/precedents#page_{viewer_page}`（実例 `#page_134`）。
-4. [ ] **判例本文URL** ←次の最重要：引用判例リンクから1判例を開いた **legal-info.com の実URL**（ログイン後）。判例deeplink形式の確定 → `case_sources.url_template`。
+4. [x] **判例本文URL** → `legal-info.com/plus/detail?screen_info_id={enc}&select_id={enc}`（Laravel暗号化トークン）。**直リンク構築は不可**と判明。判例秘書への着地は「ベンコム precedents ページ」をオンランプに使う（上記着地戦略）。
 5. [ ] **ベンコム検索結果URL**: 任意語で検索した `library.bengo4.com/search?...`。
 6. [ ] **リーガル検索/法令リンクURL**: 検索結果ページ・法令リンク先。
 

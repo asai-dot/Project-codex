@@ -103,11 +103,19 @@ OUT=~/Box/.../app/data/toc_search_index_v2.json python3 scripts/build_toc_search
 `(書籍, 紙面ページ) → 引用判例 → 判例本文` を**ワンクリックでバーンと飛べる**形にする。現状ベンコム×判例秘書の
 連携はUIが粗く実用に遠いので、所内側で滑らかな導線を作る価値が高い。
 
+**判明した制約（重要）**: 判例秘書（legal-info.com）の判例本文URLは
+`/plus/detail?screen_info_id={enc}&select_id={enc}` で、両トークンは **Laravel暗号化**（iv/value/mac）。
+判例IDが露出せず毎回ランダムIVのため、**任意の判例についてURLを生成できない**＝判例秘書への直リンクは不可。
+これがベンコム×判例秘書の連携が「シームレスでない」技術的理由（暗号化ハンドオフ）。一方、ベンコムの
+引用判例リンク画面 `library.bengo4.com/books/{cid}/precedents#page_{viewer_page}` は**構築可・安定**。
+
 設計の足がかり（本リポジトリの拡張として）:
 - TOCノード/ページに対し **引用判例のエッジ**（`case_citations`）を持たせる。1ページに複数判例可。
-- 判例の正規キー = 裁判所＋年月日＋事件番号、加えて判例秘書ID等の外部キー。
-- deeplink.js と同じ「データ駆動の着地解決」を判例DBにも適用（判例秘書 / D1-Law / 裁判所サイト等を
-  `case_sources` として並列化し、契約があるものへ着地）。
-- ③RAGの回答は、書籍パッセージの引用ハンドルに加えて**根拠判例へのリンク**も同梱する。
+  一次データはベンコム `precedents` ページから取得（book=cid, viewer_page, 裁判所/年月日/事件番号/L番号）。
+- 判例の正規キー = 裁判所＋年月日＋事件番号（＋判例秘書L番号は参考キー）。
+- **着地はデータ駆動で優先順** （deeplink.js と同じ思想の `case_sources`）:
+  ① 所内に生判決文(PD・著作権なし)があれば内部表示 → ② 裁判所サイト等の安定URLがあればそこ →
+  ③ **ベンコム precedents ページをオンランプ**に判例秘書へ。判例秘書 `/plus/detail` は直接生成しない。
+- ③RAGの回答は、書籍パッセージの引用ハンドルに加えて**根拠判例へのリンク**（上記優先順で解決）も同梱する。
 
 → `schema/supabase_schema.sql` 末尾に `case_citations` / `case_sources` の将来用DDL（コメント）を用意。
