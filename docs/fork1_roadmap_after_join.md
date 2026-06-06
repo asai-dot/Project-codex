@@ -28,7 +28,8 @@ web セッション（本リポジトリ）と Mac セッション（`~/alo-ai/`
   実件数での閾値調整）→ preflight の戻りで対応。
 
 ### さらに web 側で前倒しできる候補（任意・低リスク）
-- `merge_toc_updates.py` への legallib 分岐統合案（設計のみ。本実装は実データ後）。
+- [x] `merge_toc_updates.py` への legallib 分岐統合案 →
+  `docs/merge_engine_integration_design.md`（設計のみ。本実装は実データ後）。
 - `bib_extra.toc` 射影を books.json へ書く経路の設計（hasToc 整合とセット）。
 - toc_search_index への legallib ノード取り込み方針（全文検索に効く）。
 

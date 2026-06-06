@@ -23,6 +23,7 @@ legallib の詳細目次（TOC）を本番ブックJSON（canonical, `app/data/t
 | `.github/workflows/ci.yml` | CI（compile + 全テスト + ドライラン素振り） |
 | `docs/handoff_mac_session_legallib_join.md` | Mac セッションへの発注書（preflight→dryrun→戻す物） |
 | `docs/fork1_roadmap_after_join.md` | 接合の前後と「その先」のロードマップ |
+| `docs/merge_engine_integration_design.md` | legallib を `merge_toc_updates.py` へ統合する設計（回帰ゼロの段階移行） |
 
 ## クイックスタート（実データ不要）
 
