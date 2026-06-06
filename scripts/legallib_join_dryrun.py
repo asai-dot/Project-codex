@@ -181,6 +181,9 @@ def run_dryrun(
     review_queue: list[dict] = []
     defer_staging: list[dict] = []
     all_warnings: list[str] = []
+    # 自己完結バンドル (こちら側へ戻す引き継ぎ物。books.json/legallib_dir 不要)。
+    overwrites_bundle: list[dict] = []  # overwrite_simple の旧+新
+    review_bundle: list[dict] = []      # 保護衝突レビューの既存+候補
 
     for r in resolver_rows:
         bucket = r["bucket"]
@@ -236,6 +239,11 @@ def run_dryrun(
         if action in WRITE_ACTIONS:
             proposed_files[isbn] = new_nodes
             entry["node_delta"] = len(new_nodes) - (len(existing) if existing else 0)
+            if action == "overwrite_simple":
+                overwrites_bundle.append(
+                    {"isbn": isbn, "book_id": bid,
+                     "existing_nodes": existing or [], "new_nodes": new_nodes}
+                )
         elif action == "route_human_review":
             review_queue.append(
                 {
@@ -244,6 +252,11 @@ def run_dryrun(
                     "reason": "existing_protected",
                     "existing_primary_source": entry["existing_primary_source"],
                 }
+            )
+            review_bundle.append(
+                {"isbn": isbn, "book_id": bid, "reason": "existing_protected",
+                 "existing_primary_source": entry["existing_primary_source"],
+                 "existing_nodes": existing or [], "candidate_nodes": new_nodes}
             )
         actions.append(entry)
 
@@ -265,6 +278,8 @@ def run_dryrun(
         "blocked": blocked,
         "warnings": all_warnings,
         "invariant_violations": invariant_violations,
+        "overwrites_bundle": overwrites_bundle,
+        "review_bundle": review_bundle,
     }
 
 
@@ -289,6 +304,16 @@ def write_report(result: dict[str, Any], out_dir: Path) -> None:
     )
     (out_dir / "actions.jsonl").write_text(
         "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in result["actions"]),
+        encoding="utf-8",
+    )
+    # 自己完結バンドル: これらを本リポジトリへ戻せば、こちら側で diff レビュー /
+    # トリアージができる (books.json / legallib_dir なしで完結)。
+    (out_dir / "overwrites_bundle.jsonl").write_text(
+        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in result["overwrites_bundle"]),
+        encoding="utf-8",
+    )
+    (out_dir / "review_bundle.jsonl").write_text(
+        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in result["review_bundle"]),
         encoding="utf-8",
     )
 

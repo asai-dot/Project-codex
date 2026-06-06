@@ -15,14 +15,21 @@ legallib の詳細目次（TOC）を本番ブックJSON（canonical, `app/data/t
 | `scripts/legallib_join_dryrun.py` | ③ auto_accept 新規分の**書き込みゼロ**ドライラン diff CLI |
 | `scripts/legallib_join_apply.py` | 本適用器（**dry-run 既定**・書き込み直前にゲート再適用で保護対象を物理的に上書き不可） |
 | `data/toc_merge_policy_legallib.json` | 拡張優先順位ポリシー（既存に `ndl` / `legallib` を追加） |
-| `tests/test_legallib_join.py` | 検収テスト（72 checks・stdlib のみ・外部依存なし） |
-| `.github/workflows/ci.yml` | CI（compile + テスト + ドライラン素振り） |
+| `scripts/validate_resolver.py` | preflight: resolver 出力の契約検証（Mac 着手前に fail-fast） |
+| `scripts/inspect_legallib_dir.py` | preflight: `legallib_dl/*.json` のスキーマ点検 |
+| `scripts/render_proposed_diff.py` | 下流: `overwrites_bundle.jsonl` → 旧/新 TOC 差分 markdown |
+| `scripts/triage_review_queue.py` | 下流: `review_bundle.jsonl` → 保護衝突をタイトル類似度でトリアージ |
+| `tests/test_legallib_join.py` / `tests/test_handoff_tools.py` | 検収テスト（72 + 26 = 98 checks・stdlib のみ） |
+| `.github/workflows/ci.yml` | CI（compile + 全テスト + ドライラン素振り） |
+| `docs/handoff_mac_session_legallib_join.md` | Mac セッションへの発注書（preflight→dryrun→戻す物） |
+| `docs/fork1_roadmap_after_join.md` | 接合の前後と「その先」のロードマップ |
 
 ## クイックスタート（実データ不要）
 
 ```bash
 # 検収テスト
 python tests/test_legallib_join.py            # → 72 passed, 0 failed
+python tests/test_handoff_tools.py            # → 26 passed, 0 failed
 
 # 同梱フィクスチャでドライラン素振り
 python scripts/legallib_join_dryrun.py --demo --out build/legallib_dryrun_demo

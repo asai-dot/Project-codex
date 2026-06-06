@@ -18,7 +18,11 @@ jobs:
       - name: Validate policy JSON
         run: python -c "import json; json.load(open('data/toc_merge_policy_legallib.json')); print('policy json OK')"
       - name: Acceptance tests
-        run: python tests/test_legallib_join.py
+        run: |
+          for t in tests/test_*.py; do
+            echo "== $t =="
+            python "$t"
+          done
       - name: Dry-run demo (must exit 0 = no invariant violation)
         run: python scripts/legallib_join_dryrun.py --demo --out build/legallib_dryrun_demo
       - name: Show dry-run report
