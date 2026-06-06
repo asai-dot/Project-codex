@@ -13,14 +13,16 @@ legallib の詳細目次（TOC）を本番ブックJSON（canonical, `app/data/t
 | `scripts/legallib_to_canonical.py` | ① legallib `{l,p,t,level}` → 本番ノード変換器（`parent_toc_node_id` を level 入れ子から再構築） |
 | `scripts/legallib_join_policy.py` | ② `toc_source` 優先順位ポリシー + simple-only 上書きゲート |
 | `scripts/legallib_join_dryrun.py` | ③ auto_accept 新規分の**書き込みゼロ**ドライラン diff CLI |
+| `scripts/legallib_join_apply.py` | 本適用器（**dry-run 既定**・書き込み直前にゲート再適用で保護対象を物理的に上書き不可） |
 | `data/toc_merge_policy_legallib.json` | 拡張優先順位ポリシー（既存に `ndl` / `legallib` を追加） |
-| `tests/test_legallib_join.py` | 検収テスト（stdlib のみ・外部依存なし） |
+| `tests/test_legallib_join.py` | 検収テスト（72 checks・stdlib のみ・外部依存なし） |
+| `.github/workflows/ci.yml` | CI（compile + テスト + ドライラン素振り） |
 
 ## クイックスタート（実データ不要）
 
 ```bash
 # 検収テスト
-python tests/test_legallib_join.py            # → 46 passed, 0 failed
+python tests/test_legallib_join.py            # → 72 passed, 0 failed
 
 # 同梱フィクスチャでドライラン素振り
 python scripts/legallib_join_dryrun.py --demo --out build/legallib_dryrun_demo

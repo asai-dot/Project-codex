@@ -13,11 +13,13 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
+from legallib_join_apply import apply_join  # noqa: E402
 from legallib_join_dryrun import detect_mismerge, run_dryrun, _demo_inputs  # noqa: E402
 from legallib_join_policy import (  # noqa: E402
     WRITE_ACTIONS,
@@ -175,15 +177,111 @@ def test_dryrun_invariants() -> None:
         check(write_isbns == set(result["proposed_files"]), "書込候補とproposed一致")
 
 
+def test_tree_validity() -> None:
+    # 変換結果が妥当な木か: 親参照は必ず既出ノード、depth は親+1 以内、
+    # toc_path_id は親 path の接頭。深い入れ子と飛びを混在させる。
+    raw = [
+        {"level": 1, "t": "A"},
+        {"level": 2, "t": "A1"},
+        {"level": 4, "t": "A1a(飛び)"},   # 2 -> 4 飛び → depth=3 にクランプ
+        {"level": 1, "t": "B"},
+        {"level": 2, "t": "B1"},
+    ]
+    nodes = convert_legallib_nodes(raw, "9784000000010")
+    seen: dict[str, dict] = {}
+    by_id = {n["toc_node_id"]: n for n in nodes}
+    for n in nodes:
+        pid = n["parent_toc_node_id"]
+        if pid:
+            check(pid in seen, f"親 {pid} は既出 (forward ref 禁止)")
+            parent = by_id[pid]
+            check(n["depth"] == parent["depth"] + 1, "depth は親+1")
+            check(n["toc_path_id"].startswith(parent["toc_path_id"] + "."),
+                  "path は親 path の接頭")
+        else:
+            check(n["depth"] == 1, "親なしは depth=1")
+        seen[n["toc_node_id"]] = n
+    # toc_node_id は一意。
+    check(len(by_id) == len(nodes), "toc_node_id 一意")
+    # path_id も一意。
+    paths = [n["toc_path_id"] for n in nodes]
+    check(len(set(paths)) == len(paths), "toc_path_id 一意")
+
+
+def test_dryrun_idempotent() -> None:
+    import tempfile
+
+    policy = load_policy(None)
+    with tempfile.TemporaryDirectory() as td:
+        resolver, legallib_dir, toc_dir, known = _demo_inputs(Path(td))
+        r1 = run_dryrun(resolver, legallib_dir, toc_dir, known, policy)
+        r2 = run_dryrun(resolver, legallib_dir, toc_dir, known, policy)
+        check(r1["counts"] == r2["counts"], "dryrun カウント冪等")
+        check(r1["proposed_files"] == r2["proposed_files"], "提案ファイル冪等")
+
+
+def test_apply_safety() -> None:
+    import tempfile
+
+    policy = load_policy(None)
+    with tempfile.TemporaryDirectory() as td:
+        resolver, legallib_dir, toc_dir, known = _demo_inputs(Path(td))
+
+        # dry-run (commit=False): 1 バイトも書かない。
+        before = {p.name: p.read_text() for p in toc_dir.glob("*.json")}
+        res = apply_join(resolver, legallib_dir, toc_dir, known, policy,
+                         commit=False, whitelist=None)
+        after = {p.name: p.read_text() for p in toc_dir.glob("*.json")}
+        check(before == after, "dry-run は既存ファイル不変")
+        check("isbn_9784000000034.json" not in after, "dry-run は新規も作らない")
+        check(res["status_counts"].get("would_write") == 2, "would_write 2 件 (L100,L200)")
+        # 人手保護 (9784000000027) は applied に出ない (書き込み候補ですらない)。
+        check(all(a["isbn"] != "9784000000027" for a in res["applied"]),
+              "人手TOC は適用候補に入らない")
+
+        # commit=True: simple/新規のみ書く。人手は触らない。
+        manual_before = (toc_dir / "isbn_9784000000027.json").read_text()
+        res2 = apply_join(resolver, legallib_dir, toc_dir, known, policy,
+                          commit=True, whitelist=None)
+        check(res2["status_counts"].get("written") == 2, "written 2 件")
+        manual_after = (toc_dir / "isbn_9784000000027.json").read_text()
+        check(manual_before == manual_after, "人手TOC は commit でも不変 (diff 0)")
+        # 上書きされた simple は legallib になっている。
+        written = json.loads((toc_dir / "isbn_9784000000010.json").read_text())
+        check(written[0]["toc_source"] == "legallib", "simple→legallib 昇格")
+        # 再実行は冪等 (既 legallib → skip、書き込み 0)。
+        res3 = apply_join(resolver, legallib_dir, toc_dir, known, policy,
+                          commit=True, whitelist=None)
+        check(res3["status_counts"].get("written", 0) == 0, "再commit は書き込み0 (冪等)")
+
+
+def test_apply_whitelist() -> None:
+    import tempfile
+
+    policy = load_policy(None)
+    with tempfile.TemporaryDirectory() as td:
+        resolver, legallib_dir, toc_dir, known = _demo_inputs(Path(td))
+        # L200 の ISBN のみ承認。
+        res = apply_join(resolver, legallib_dir, toc_dir, known, policy,
+                         commit=True, whitelist={"9784000000034"})
+        check(res["status_counts"].get("written") == 1, "whitelist で1件のみ書込")
+        check(res["status_counts"].get("needs_approval") == 1, "未承認は needs_approval")
+        check((toc_dir / "isbn_9784000000034.json").exists(), "承認分は作成された")
+
+
 def main() -> int:
     tests = [
         test_parent_reconstruction,
         test_level_jump_clamp,
         test_deterministic,
         test_empty_and_projection,
+        test_tree_validity,
         test_policy_gate,
         test_mismerge_guard,
         test_dryrun_invariants,
+        test_dryrun_idempotent,
+        test_apply_safety,
+        test_apply_whitelist,
     ]
     for t in tests:
         print(f"• {t.__name__}")

@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile check
+        run: python -m py_compile scripts/*.py tests/*.py
+      - name: Validate policy JSON
+        run: python -c "import json; json.load(open('data/toc_merge_policy_legallib.json')); print('policy json OK')"
+      - name: Acceptance tests
+        run: python tests/test_legallib_join.py
+      - name: Dry-run demo (must exit 0 = no invariant violation)
+        run: python scripts/legallib_join_dryrun.py --demo --out build/legallib_dryrun_demo
+      - name: Show dry-run report
+        run: cat build/legallib_dryrun_demo/report.md

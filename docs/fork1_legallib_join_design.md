@@ -154,9 +154,12 @@ python tests/test_legallib_join.py   # → 46 passed, 0 failed
    `report.md` の不変条件違反 0・blocked 件数・overwrite 候補件数を確認。
 2. **人手レビュー**: `proposed/` を既存と目視 diff（特に overwrite_simple）。
    `review_queue.jsonl`（305 + 保護衝突分）を浅井さんが裁定。
-3. **本適用**: ドライランで承認された ISBN のみ `app/data/toc/` へ反映。
-   反映器は本ドライランの `create` / `overwrite_simple` 結果を入力にし、
-   `merge_toc_updates.py` と同じ `books_write_lock` / `atomic_write_json` で書く。
+3. **本適用** (`scripts/legallib_join_apply.py`): ドライランで承認された ISBN のみ
+   `app/data/toc/` へ反映。**既定は dry-run**（`--commit` 必須）、`--only-isbns` で
+   承認ホワイトリストを渡せる。書き込み直前にライブの既存へ `decide_join_action` を
+   **再適用**し、書き込み系でなければ `refused_protected` で拒否（保護対象を物理的に
+   上書き不可能にする二重ガード）。atomic write・冪等（既 legallib は skip）。
+   hasToc 反映は既存パイプラインへ委譲（manifest 出力）。
 4. **defer_new**: `defer_staging.jsonl` を別途キュー化（OCR奥付→再NDL照合 等、別タスク）。
 
 ## 8. 既存 `merge_toc_updates.py` との関係
@@ -173,8 +176,10 @@ docs/fork1_legallib_join_design.md         本設計書
 scripts/legallib_to_canonical.py           ① 変換器
 scripts/legallib_join_policy.py            ② 優先順位ポリシー + simple-only ゲート
 scripts/legallib_join_dryrun.py            ③ ドライラン diff CLI（--demo 同梱）
+scripts/legallib_join_apply.py             本適用器（dry-run 既定・二重ガード）
 data/toc_merge_policy_legallib.json        拡張ポリシー（ndl / legallib 追加）
-tests/test_legallib_join.py                検収テスト（46 checks, stdlib のみ）
+tests/test_legallib_join.py                検収テスト（72 checks, stdlib のみ）
+.github/workflows/ci.yml                    CI（compile + テスト + ドライラン素振り）
 ```
 
 > 注: 実 resolver 出力と `legallib_dl/*.json` は `~/alo-ai/` 側（本リポジトリ外）。
