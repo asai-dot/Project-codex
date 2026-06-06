@@ -104,5 +104,24 @@ create extension if not exists pg_trgm;
 --   toc_node_id text references toc_nodes(toc_node_id),
 --   print_page  integer,                     -- 引用が載る紙面ページ
 --   case_id     bigint references cases(case_id) on delete cascade,
---   source_hint text                         -- どの図書館の引用判例リンク由来か
+--   source_hint text,                        -- どの図書館の引用判例リンク由来か（例 bencom_precedents）
+--   claim_scope text default 'cites',        -- D1KOS流: 'cites'(文脈支持) 止まり。同一性主張はしない
+--   review_status text default 'pending_review'
 -- );
+-- 文献→法令 のエッジ（リーガル法令リンク / 自炊PDF OCR本文 → alo-kg resolver で解決）
+-- create table law_citations (
+--   id          bigserial primary key,
+--   book_id     text references books(book_id) on delete cascade,
+--   toc_node_id text references toc_nodes(toc_node_id),
+--   print_page  integer,
+--   law_id      text,                         -- e-Gov 15桁 lawId（民法=129AC0000000089）
+--   article     integer,                      -- 条
+--   paragraph   integer,                      -- 項
+--   egov_url    text,                          -- /law/{law_id}#Mp-At_{article}（着地）
+--   claim_scope text default 'cites',
+--   review_status text default 'pending_review'
+-- );
+-- 注: 着地URLは「参照着地リゾルバ」（deeplink.js を文献/法令/判例に一般化）で生成。
+--     法令=e-Gov(構築可) / 判例=内部PD→裁判所detail{2|4|7}?id=→ベンコムprecedentsオンランプ。
+--     本テーブル群は ALO 既存の alo-kg（nodes/edges/case_spine, e-Gov pipeline）に接続する想定。
+--     詳細は docs/literature_precedent_graph.md。

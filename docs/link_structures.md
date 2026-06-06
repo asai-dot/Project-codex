@@ -89,6 +89,35 @@ deeplink.js / config.link_parse / 将来の case_citations を確定するため
 | 取得物 | 反映先 |
 |---|---|
 | reader/ページ・book_key の形 | `config/library_sources.json` の `url_template` / `link_parse` |
-| cid粒度（分冊） | `data/book_links.json` の `bencom` を配列化 + deeplink.js に range選択を追加 |
-| 判例deeplink形式 | `schema/supabase_schema.sql` の `case_sources.url_template`（現在コメント） |
+| cid粒度（巻=ISBN単位、確定） | `data/book_links.json` の `bencom` は単一 `{cid, offset}` |
 | 引用判例の一覧 | `case_citations`（book_id, print_page, case_id） |
+| 判例/法令の着地 | 参照着地リゾルバ（§6） + `case_sources`/`law_citations`（schema コメント） |
+
+---
+
+## 6. ALOが構築できる公開アンカー（商用との決定的な差）
+
+判例秘書のように暗号化された壁庭と違い、**以下は我々がURLを構築できる**＝内製グラフの着地先にできる。
+
+### e-Gov法令（laws.e-gov.go.jp）— 文献→法令の着地
+| 用途 | URL | 例（民法709条） |
+|---|---|---|
+| 人間向け本文 | `https://laws.e-gov.go.jp/law/{lawId}#{anchor}` | `/law/129AC0000000089#Mp-At_709`（anchor要最終確認） |
+| API | `https://laws.e-gov.go.jp/api/1/articles;lawId={lawId};article={n};paragraph={p}` | `;lawId=129AC0000000089;article=709` |
+
+- `lawId`=15桁（民法 `129AC0000000089`）。ALO `alo-kg/resolver.py`＋`law_name_lookup` が法令名→lawId を解決済。
+- 版は `temporal.py` で施行時点に整合。**改正耐性**は商用ビューワーにない強み。
+
+### 裁判所 裁判例（courts.go.jp）— 判例の公開着地（②）
+| 種別 | URL | 備考 |
+|---|---|---|
+| 判例詳細 | `https://www.courts.go.jp/app/hanrei_jp/detail{2\|4\|7}?id={courtId}` | detail2=最高裁 / 4=下級・高裁 / 7=知財高 |
+| 検索 | `https://www.courts.go.jp/app/hanrei_jp/search{2\|4\|7}` | id は事件番号から要解決（harvest時に保存） |
+
+→ これらを `case_sources` / `law_citations` の着地テンプレに設定する。詳細設計は
+  [literature_precedent_graph.md](literature_precedent_graph.md)。
+
+### 未確認（要確認）
+- e-Gov 人間向けURLの条文アンカー形式（`#Mp-At_{n}` 系）の最終確認。
+- 裁判所 `detail` の `id` を事件番号から解決するクエリ形式。
+- リーガルの法令リンク機能のURL形式（採取で確定）。
