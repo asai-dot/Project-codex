@@ -1,5 +1,12 @@
 # 法令リンク DB 投入 設計・データ品質分析（書込み前レビュー）
 
+> ⚠ **§3 の「新スキーマ案」は superseded（2026-06-06）。** 設計図書（35_link_layer /
+> 31_case_layer / 30_law_layer / DD-LAWTIME-001）精読により、法令リンク/引用の層は
+> **既に設計済**と判明。新スキーマ `legal.*` は作らず、既存 `alo_edges` に
+> commentary→statute(`interprets`)/case(`evaluates`) エッジとして供給する方針に確定。
+> 確定版は **`reports/DD-TOCLEGALREF_draft_v0.1.md`** を参照。
+> 本書の §2（データ品質実測）と §4（confidence ゲート）は引き続き有効。
+
 - 日付: 2026-06-06
 - 状態: **分析と設計のみ。DB への書込みは一切行っていない（read-only 調査）。**
 - 目的: 「抽出した条文・判例リンクを、汚いデータを入れずに、どの形で投入するのが

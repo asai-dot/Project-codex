@@ -75,7 +75,23 @@ python scripts/run_legal_links_nodes.py --nodes nodes.jsonl --out out_real
 
 ### DB 投入の設計（書込み前レビュー）
 
-本番 DB への投入は **未実施**。「汚いデータを入れない」ための設計・品質分析を
-`reports/LEGAL_LINK_INGEST_DESIGN.md` に整理した（結論: 既存の
-claim/evidence/serving + release governance に乗せ、confidence で gate）。
-品質実測は `out_real/legal_link_quality_metrics.csv`。
+本番 DB への投入は **未実施・read-only 調査のみ**。設計図書（`35_link_layer` /
+`31_case_layer` / `30_law_layer` / `DD-LAWTIME-001`）精読の結果、法令リンク/引用層は
+**既に設計済**と判明 → 新スキーマは作らず、既存 **`alo_edges`** に供給する方針に確定。
+
+- 確定設計（草案・未投函）: `reports/DD-TOCLEGALREF_draft_v0.1.md`
+- データ品質実測: `out_real/legal_link_quality_metrics.csv` / 経緯: `reports/LEGAL_LINK_INGEST_DESIGN.md`
+
+#### Phase 0: alo_edges 準拠エクスポート（書込みなし）
+
+`legal_links` 出力を link layer 準拠の edge/evidence/pointer に整形（DB 投入はしない）:
+
+```bash
+python scripts/run_alo_edges_export.py --nodes <nodes.jsonl> --out out_real
+```
+
+- 文献→条文 = `interprets`、文献→判例 = `evaluates`（固定 edge_type 10値に準拠）
+- `assertion_mode=vendor_implicit` / `assertion_confidence=NULL`（llm専用）/ tier→`weight`
+- Gate-5（evidence 必須）自己検査つき。判例は事件番号欠落のため `needs_case_uri` 候補で保留
+- 実データ成果物: `out_real/alo_edges_export.jsonl`(49) / `alo_edge_evidence_export.jsonl` /
+  `alo_pointers_export.jsonl` / `alo_case_ref_candidates.jsonl`(25) / `alo_edges_export_summary.json`

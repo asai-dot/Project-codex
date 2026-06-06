@@ -1,0 +1,19 @@
+{
+  "nodes": 600,
+  "statute_edges": 49,
+  "edge_evidence": 49,
+  "pointers": 74,
+  "case_ref_candidates": 25,
+  "skipped_low_conf": 0,
+  "edge_type_breakdown": {
+    "interprets": 49
+  },
+  "gate5_orphan_edges": 0,
+  "constraints_enforced": [
+    "edge_type∈{interprets,evaluates}",
+    "assertion_mode=vendor_implicit",
+    "assertion_confidence=NULL (llm only)",
+    "weight=tier(high1.0/med0.7); low excluded",
+    "Gate-5 evidence required"
+  ]
+}
