@@ -99,8 +99,16 @@ literature_node (書籍/章節/ページ = 本リポジトリの toc_nodes)
 | エッジ種別 | 一次ソース（商用の強みを吸う） | 解決先（ALO公開アンカー） |
 |---|---|---|
 | 文献→法令 | ① リーガルの法令リンク ② 自炊PDF/OCR本文を `resolver.py`+`extract_links` で抽出 | e-Gov lawId+article |
-| 文献→判例 | ベンコム `precedents#page_{N}`（頁別引用判例一覧）を採取 | case_spine → 裁判所/内部PD/オンランプ |
+| 文献→判例 | ① **既存OPAC/CiNii**（`case_ref_text` 略記形、case_citations 17,259件）② ベンコム `precedents#page_{N}` | 判例正本 → 裁判所/内部PD/オンランプ |
 | 文献→文献 | 本文の「前掲」「本書○頁」等 | 4図書館リゾルバ |
+
+### 既存の判例参照インフラ（第一法規 / D1KOS / OPAC-CiNii）— 重複構築しない
+- `opac_parse.py` が最高裁OPACから `case_ref_text`（『最大判昭44.11.26民集23-11-2150』等の略記形）を抽出済。
+- OPAC/CiNii PostgreSQL: **case_citations 17,259件**、`opac_cinii_bib_docket_keys.docket_raw`（docket=事件番号）。
+- D1KOS↔OPAC/CiNii の `article_cites_case` 候補・レビューレーン（5,010候補、P1/P2/P3、`reject_not_same_case`）。
+- **ただし判例の正本キーは未整備**（docket_raw は生文字列）。`src/case_identity.py:normalize_case_ref()` が
+  この略記形を食って `canonical_key`/`case_node_id` を与える＝**既存17,259件と bencom precedents を同じ正本に名寄せ**。
+- 規律は完全一致（claim_scope=cites / pending_review / 同一性主張しない / canonical昇格はreview後）。
 
 - ベンコム precedents は **viewer_page で引ける**ので、`book_links.bencom.offset` で紙面ページ↔viewer_page
   を相互変換し、我々のTOC（章節→紙面ページ）と接合 → 「**この章が引く判例**」が機械的に出る。

@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from src.case_identity import parse_date, parse_case_number, parse_court, normalize_citation
+from src.case_identity import parse_date, parse_case_number, parse_court, normalize_citation, normalize_case_ref
 from src.case_deeplink import resolve_case, best_landing
 from scripts.harvest_precedents import harvest_text
 
@@ -64,6 +64,22 @@ check("leala 正本 court_slug 部を含まない", rec2["court_slug"] == "nara-
 check("leala 正本 division 保持", rec2["division"] == "民事部3B")
 check("leala 正本キー（判決日naでも事件番号で同定）",
       rec2["case_node_id"] == "alo:case:nara-chiho:na:令和4（ワ）260号")
+
+# --- 略記の判例参照（OPAC/CiNii case_ref_text 形式）への合わせ込み ---
+check("略記日付 昭44.11.26 → 1969-11-26", parse_date("昭44.11.26") == "1969-11-26")
+check("略記日付 平20・3・1 → 2008-03-01", parse_date("平20・3・1") == "2008-03-01")
+r_saiko = normalize_case_ref("最大判昭44.11.26民集23-11-2150")
+check("case_ref 最大判→最高裁", r_saiko["court_slug"] == "saikosai")
+check("case_ref 最大判→大法廷", r_saiko["bench"] == "大法廷")
+check("case_ref 判決日", r_saiko["judged_on"] == "1969-11-26")
+check("case_ref 判例集citation", r_saiko["reporter"].startswith("民集"))
+check("case_ref 正本キー(事件番号無→citationで同定)",
+      r_saiko["case_node_id"] == "alo:case:saikosai:1969-11-26:民集23-11-2150")
+r_koto = normalize_case_ref("東京高判昭和44年5月19日")
+check("case_ref 東京高判→tokyo-koto", r_koto["court_slug"] == "tokyo-koto")
+check("case_ref 東京高判 判決日", r_koto["judged_on"] == "1969-05-19")
+r_chi = normalize_case_ref("大阪地判平20・3・1判時1234-56")
+check("case_ref 大阪地判→osaka-chiho", r_chi["court_slug"] == "osaka-chiho")
 
 # --- 着地解決（3層・優先順） ---
 # court_id あり → 裁判所HTMLが最優先（内部PDが無い場合）
