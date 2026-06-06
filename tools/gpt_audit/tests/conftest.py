@@ -36,10 +36,11 @@ def write_request(root, sub, filename, request_id, gate, status="queued",
     _write(os.path.join(root, sub, filename), "\n".join(fm) + "\n")
 
 
-def write_result(root, filename, label, request_id):
-    body = "{}\n\nrequest_id: {}\nreviewer: GPT-5.5 Pro\n\n## verdict\nok.\n".format(
-        label, request_id
-    )
+def write_result(root, filename, label, request_id, body_extra=""):
+    body = "{}\n\nrequest_id: {}\nreviewer: GPT-5.5 Pro\n".format(label, request_id)
+    if body_extra:
+        body += body_extra.rstrip("\n") + "\n"
+    body += "\n## verdict\nok.\n"
     _write(os.path.join(root, "from_gpt", filename), body)
 
 
@@ -114,3 +115,61 @@ def build_lane(root):
 @pytest.fixture
 def lane_root(tmp_path):
     return build_lane(str(tmp_path / "gpt_ometsuke"))
+
+
+def build_design_doc_lane(root):
+    """設計書 §13 の理想シナリオ: answered_not_processed = 4, processed 空。
+
+    検収テスト (TEST-1〜6) 用。NEED_MORE / PASS_WITH_NOTES の構造化本文も入れて
+    反映キュー抽出を検証できるようにする。
+    """
+    write_request(
+        root, "to_gpt", "20260605_statusregistry_v0.1_DDSTATUS_REQUEST.md",
+        "20260605_statusregistry_v0.1_DDSTATUS", "DDSTATUS", topic="statusregistry",
+    )
+    write_request(
+        root, "to_gpt", "20260605_claudehead_v1.1_DDCLAUDEHEAD_REQUEST.md",
+        "20260605_claudehead_v1.1_DDCLAUDEHEAD", "DDCLAUDEHEAD", topic="claudehead",
+    )
+    write_request(
+        root, "to_gpt", "20260605_quasijudicial_v0.4_DDCASESOURCE_REQUEST.md",
+        "20260605_quasijudicial_v0.4_DDCASESOURCE", "DDCASESOURCE",
+        status="blocked", topic="quasijudicial",
+    )
+    write_request(
+        root, "to_gpt", "20260606_legaldb_v0.5_DESIGN_REQUEST.md",
+        "20260606_legaldb_v0.5_DESIGN", "DESIGN", topic="legaldb",
+    )
+
+    write_result(root, "20260605_statusregistry_v0.1_DDSTATUS_RESULT.md",
+                 "DDSTATUS_MODIFY_REQUIRED", "20260605_statusregistry_v0.1_DDSTATUS")
+    write_result(
+        root, "20260605_claudehead_v1.1_DDCLAUDEHEAD_RESULT.md",
+        "DDCLAUDEHEAD_PASS_WITH_NOTES", "20260605_claudehead_v1.1_DDCLAUDEHEAD",
+        body_extra=(
+            "notes:\n"
+            "blocking_before_ratify:\n"
+            "  - 第二Anthropic を hand/capacity と書く (固定担当にしない)\n"
+            "  - head 落ち時の fallback を明記\n"
+            "non_blocking_after_ratify:\n"
+            "  - cost lane の表現修正\n"
+        ),
+    )
+    write_result(
+        root, "20260605_quasijudicial_v0.4_DDCASESOURCE_RESULT.md",
+        "DDCASESOURCE_NEED_MORE", "20260605_quasijudicial_v0.4_DDCASESOURCE",
+        body_extra=(
+            "need_more_type: material_absent\n"
+            "missing_materials:\n"
+            "  - DD-CASE-SOURCE-CASEID_v0.4_closure_20260604.md\n"
+            "  - registry_negative_test.py\n"
+        ),
+    )
+    write_result(root, "20260606_legaldb_v0.5_DESIGN_RESULT.md",
+                 "DESIGN_MODIFY_REQUIRED", "20260606_legaldb_v0.5_DESIGN")
+    return root
+
+
+@pytest.fixture
+def design_lane_root(tmp_path):
+    return build_design_doc_lane(str(tmp_path / "gpt_ometsuke"))

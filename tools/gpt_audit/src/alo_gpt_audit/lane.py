@@ -62,6 +62,7 @@ class Request:
     lane_status: str = ""
     result_path: Optional[str] = None
     result_label: Optional[str] = None
+    meta: Dict[str, str] = field(default_factory=dict)
 
     @property
     def allowed_labels(self) -> set:
@@ -116,6 +117,7 @@ def parse_request(path: str) -> Request:
         status=(meta.get("status") or "queued").strip(),
         expected_result=expected,
         supersedes=meta.get("supersedes"),
+        meta=meta,
     )
 
 

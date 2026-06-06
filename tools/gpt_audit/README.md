@@ -51,6 +51,54 @@ alo-gpt-audit close 20260605_quasijudicial_v0.4_DDCASESOURCE
 # 3) answered_not_processed を一括退避 (既定 dry-run。--apply で実行)
 alo-gpt-audit close-all
 alo-gpt-audit close-all --apply
+
+# 4) 反映キュー: RESULT を消化するための next_action を表示
+alo-gpt-audit action-queue
+alo-gpt-audit action-queue --json
+
+# 5) REQUEST の preflight 検査 (scope境界 / target_mode / source_hash)
+alo-gpt-audit lint
+alo-gpt-audit lint --strict   # 警告があれば exit 1
+```
+
+## 反映キュー (action-queue) — 監査の出口を閉じる
+
+退避 (`processed/`) は **「GPT 照会 1 回分は回答済み」** を意味するだけで、
+**「設計に反映済み」ではない**。RESULT が返っただけで止まると「赤入れをもらった
+だけ」事故になる。`action-queue` は from_gpt の全 RESULT を読み、ラベルから
+次アクションを導出して反映キュー (Box フォルダを増やさず台帳派生ビュー) を出す。
+
+| RESULT label | next_action_type | flags |
+|---|---|---|
+| `PASS` / `PASS_WITH_NOTES` | `ratify` | `ratify_required` (PASS_WITH_NOTES は `blocking_before_ratify` を ratify 前に反映必須) |
+| `MODIFY_REQUIRED` | `patch` | `requeue_expected` |
+| `NEED_MORE` | `required_materials` | `requeue_expected`, `need_more_type`, `missing_materials` |
+| `FAIL` | `reject` | — |
+
+RESULT 本文に次の任意項目があれば抽出して表示する (§2 PASS_WITH_NOTES 粒度 / §5 NEED_MORE 細分):
+
+```yaml
+need_more_type: material_absent|context_insufficient|evidence_unverified|ambiguity_owner
+missing_materials:
+  - ...
+blocking_before_ratify:    # PASS_WITH_NOTES でも ratify 前に必須の修正
+  - ...
+```
+
+退避済み (`processed_done`) の RESULT も消化対象として出し続ける — ここが
+「監査結果が返っただけで設計に反映されない」事故を防ぐ要。
+
+## lint — REQUEST preflight (監査スコープ境界 §4 / target_mode §6)
+
+T2 監査 (accepted化・規範新設・本番投入前) の REQUEST が、揃っているべき
+front-matter キーを持つか検査する (advisory。`--strict` で exit 1)。
+
+```yaml
+review_scope:          # include / exclude。exclude が特に重要 (確定事項を蒸し返さない)
+regression_anchors:    # 矛盾してはいけない accepted/canonical の Box ID
+decision_requested:    # PASS可否 / accepted化可否 / backfill可否
+target_mode:           # inline_embedded | box_hash_locked | box_pointer_only
+source_hash:           # T2 は box_hash_locked 推奨 (unresolved を弾く)
 ```
 
 ## lane status (三点照合 §6)
@@ -83,6 +131,23 @@ cd tools/gpt_audit
 PYTHONPATH=src python -m pytest -q
 ```
 
-テストフィクスチャは 2026-06-06 時点の実 Box 状態を再現する
-(真の `answered_not_processed` は quasijudicial の 1 件のみ、
-再投函済みの statusregistry v0.2 / legaldb v0.5.1 は `active`)。
+テストフィクスチャは 2 系統:
+
+- `lane_root`: 2026-06-06 時点の**実 Box 状態**を再現
+  (真の `answered_not_processed` は quasijudicial の 1 件のみ、
+  再投函済みの statusregistry v0.2 / legaldb v0.5.1 は `active`)。
+- `design_lane_root`: 設計書 §13 の**理想シナリオ** (answered=4, processed 空)。
+  検収テスト用。
+
+### 検収テスト (TEST-1〜6)
+
+`tests/test_acceptance.py` が Mac CC 実装の受け入れ基準を固定する:
+
+| test | 内容 |
+|---|---|
+| TEST-1 status | answered_not_processed が正しく数えられる |
+| TEST-2 dry-run | 退避予定が表示され、NEED_MORE/MODIFY_REQUIRED も対象。何も動かさない |
+| TEST-3 execute | REQUEST が processed へ移動、to_gpt 直下は 0、from_gpt RESULT は残る |
+| **TEST-4 idempotency** | **再実行で二重移動・二重台帳追記しない (no-op)** |
+| TEST-5 missing-result | RESULT のない REQUEST は移動しない |
+| TEST-6 bad-label | 先頭行が不正な RESULT は移動しない |

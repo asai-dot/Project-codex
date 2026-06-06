@@ -36,10 +36,11 @@ def next_action_for(gate, label: str) -> str:
     return _NEXT_ACTION.get(suffix, "")
 
 
-def make_entry(close_result) -> Dict[str, object]:
+def make_entry(close_result, action=None) -> Dict[str, object]:
+    """台帳 1 行を作る。``action`` (classify.ActionItem) があれば反映キュー項目も載せる。"""
     req = close_result.request
     label = close_result.result_label
-    return {
+    entry = {
         "request_id": req.request_id,
         "topic": req.topic,
         "gate": req.gate,
@@ -54,6 +55,20 @@ def make_entry(close_result) -> Dict[str, object]:
         "supersedes_request_id": req.supersedes,
         "notes": "; ".join(close_result.warnings),
     }
+    if action is not None:
+        # 反映キュー項目 (§1): 退避だけで終わらせないための next_action 構造化
+        entry.update(
+            {
+                "next_action_type": action.next_action_type,
+                "ratify_required": action.ratify_required,
+                "requeue_expected": action.requeue_expected,
+                "need_more_type": action.need_more_type,
+                "missing_materials": action.missing_materials,
+                "blocking_before_ratify": action.blocking_notes,
+                "reflected": False,  # 反映済みフラグ (人手 / 後続ツールで true 化)
+            }
+        )
+    return entry
 
 
 def append(root: str, entry: Dict[str, object]) -> None:

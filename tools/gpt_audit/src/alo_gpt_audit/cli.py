@@ -16,6 +16,7 @@ import sys
 from typing import List, Optional
 
 from . import __version__, ledger
+from .classify import ACTION_ORDER, build_action_queue, derive_action
 from .lane import (
     ANSWERED_NOT_PROCESSED,
     BLOCKED_ACTIVE,
@@ -23,6 +24,7 @@ from .lane import (
     PROCESSED_WITHOUT_RESULT,
     CloseError,
     close_request,
+    lane_dirs,
     scan,
 )
 
@@ -108,7 +110,9 @@ def _do_close(lane, ident: str, force: bool) -> int:
     except CloseError as exc:
         print("REFUSED [{}] {}".format(exc.code, exc.message), file=sys.stderr)
         return 2
-    entry = ledger.make_entry(result)
+    result_path = os.path.join(lane_dirs(lane.root)["from_gpt"], result.result_filename)
+    action = derive_action(result.request.gate, result_path, result.request, ANSWERED_NOT_PROCESSED)
+    entry = ledger.make_entry(result, action)
     ledger.append(lane.root, entry)
     ledger.render_md(lane.root)
     print(
@@ -154,6 +158,79 @@ def cmd_close_all(args) -> int:
     return rc
 
 
+# --- action-queue (反映キュー) --------------------------------------------
+def cmd_action_queue(args) -> int:
+    root = _resolve_root(args.root)
+    lane = scan(root)
+    items = build_action_queue(lane)
+
+    if args.json:
+        print(json.dumps([vars(i) for i in items], ensure_ascii=False, indent=2))
+        return 0
+
+    print("root: {}".format(root))
+    print("反映キュー (RESULT を消化するための next_action。退避済でも反映は別)\n")
+    by_type = {t: [] for t in ACTION_ORDER}
+    for i in items:
+        by_type.setdefault(i.next_action_type, []).append(i)
+    for atype in ACTION_ORDER:
+        bucket = by_type.get(atype) or []
+        if not bucket:
+            continue
+        print("[{}]  ({} 件)".format(atype, len(bucket)))
+        for i in bucket:
+            flags = []
+            if i.ratify_required:
+                flags.append("ratify_required")
+            if i.requeue_expected:
+                flags.append("requeue")
+            if i.need_more_type:
+                flags.append("need_more={}".format(i.need_more_type))
+            if i.lane_status != "processed_done":
+                flags.append(i.lane_status)
+            suffix = "  <{}>".format(", ".join(flags)) if flags else ""
+            print("  - {}  [{}]{}".format(i.request_id or i.result_filename, i.result_label, suffix))
+            for m in i.missing_materials:
+                print("      missing: {}".format(m))
+            for b in i.blocking_notes:
+                print("      blocking-before-ratify: {}".format(b))
+        print("")
+    if not items:
+        print("(from_gpt に RESULT がありません)")
+    return 0
+
+
+# --- lint (REQUEST preflight 検査) -----------------------------------------
+# T2 監査 (accepted化/規範新設/本番投入前) で揃っているべき front-matter キー
+_SCOPE_KEYS = ("review_scope", "regression_anchors", "decision_requested")
+
+
+def cmd_lint(args) -> int:
+    root = _resolve_root(args.root)
+    lane = scan(root)
+    total_warnings = 0
+    for req in lane.requests:
+        warns = []
+        for key in _SCOPE_KEYS:
+            if key not in req.meta:
+                warns.append("missing {} (監査スコープ境界 §4)".format(key))
+        if "target_mode" not in req.meta:
+            warns.append("missing target_mode (inline_embedded|box_hash_locked|box_pointer_only §6)")
+        sh = req.meta.get("source_hash")
+        if not sh or sh.lower() in ("unresolved", "none", ""):
+            warns.append("source_hash 未固定 (T2 は box_hash_locked 推奨 §6)")
+        if warns:
+            total_warnings += len(warns)
+            print("{}  (status={})".format(req.filename, req.status))
+            for w in warns:
+                print("  - {}".format(w))
+    if total_warnings == 0:
+        print("lint: 警告なし ({} REQUEST 検査)".format(len(lane.requests)))
+        return 0
+    print("\nlint: {} 件の警告".format(total_warnings))
+    return 1 if args.strict else 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="alo-gpt-audit",
@@ -180,6 +257,14 @@ def build_parser() -> argparse.ArgumentParser:
     pa.add_argument("--apply", action="store_true", help="実際に退避を実行 (未指定は dry-run)")
     pa.add_argument("--force", action="store_true", help="ラベル不正/重複衝突でも強制実行")
     pa.set_defaults(func=cmd_close_all)
+
+    pq = sub.add_parser("action-queue", help="RESULT の next_action を反映キューとして表示")
+    pq.add_argument("--json", action="store_true", help="JSON で出力")
+    pq.set_defaults(func=cmd_action_queue)
+
+    pl = sub.add_parser("lint", help="REQUEST の preflight 検査 (scope/target_mode/hash)")
+    pl.add_argument("--strict", action="store_true", help="警告があれば exit 1")
+    pl.set_defaults(func=cmd_lint)
 
     return p
 
