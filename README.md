@@ -55,3 +55,20 @@ python -m pytest tests/ -q
 
 e-gov 法令データ（`data/egov/`）は git 履歴に存在した実資産を復元したもの。
 詳細・数値は `reports/STEP_A2_JournalArticleParser_Report.md` を参照。
+
+## 本番データでの検証（Supabase / Box）
+
+利用可能な MCP を精査し、到達可能な**本番データ**でパイプラインを実測した
+（`reports/REAL_DATA_FINDINGS.md`、成果物 `out_real/`）:
+
+- 本番 `biblio.bib_toc`（552,544 ノード）には条文参照 10,211 / 判例参照 2,042 /
+  中核法令名 10,089 ノードが実在。法令別 mention は 民法 3,139 / 会社法 1,293 …
+- 実ノード 600 件を `legal_links.py` で処理 → statute 49（e-gov 突合 38）＋ case 25。
+  枝番（…第二十条の二→`art:20_2`）・全角数字（農地法第３条）も実データで解決。
+- **重要**: クリーニング済 DB は「タイトル　著者」の U+3000 区切りを失っており、
+  article parser の本番スイープは生 `legallib_dl/*.json`（番頭Mac）が必要。
+
+```bash
+# 任意の TOC ノード jsonl (text フィールド) に法令/判例リンクを付与
+python scripts/run_legal_links_nodes.py --nodes nodes.jsonl --out out_real
+```
