@@ -119,5 +119,7 @@ deeplink.js / config.link_parse / 将来の case_citations を確定するため
 
 ### 未確認（要確認）
 - e-Gov 人間向けURLの条文アンカー形式（`#Mp-At_{n}` 系）の最終確認。
-- 裁判所 `detail` の `id` を事件番号から解決するクエリ形式。
+- ~~裁判所 `detail` の `id` を事件番号から解決~~ → **ALOに既存メタデータあり**（事件番号→courtId）。流用。
 - リーガルの法令リンク機能のURL形式（採取で確定）。
+
+> 表示方針: 着地は **JSON→HTML 優先**（裁判所HTML判例詳細・e-Gov HTML本文）。PDFは副（DLリンク）。
