@@ -460,17 +460,18 @@ class PurchaseRecommender:
         if pdom and pdom != "unclassified":
             prof[pdom] += 2.0
 
-        # (b) domain_distribution があれば加点（任意フィールド）
-        dist = cov.get("domain_distribution") or cov.get("domains")
+        # (b) domain_hits があれば加点（book_coverage_by_domain.json の実フィールド名は
+        #     domain_hits = {domain: ヒット数}。別名 domain_distribution/domains も許容）
+        dist = cov.get("domain_hits") or cov.get("domain_distribution") or cov.get("domains")
         if isinstance(dist, dict):
             for d, c in dist.items():
-                if d and d != "unclassified":
+                if d and d not in ("unclassified", "unknown"):
                     prof[d] += float(c)
 
-        # (c) tags → domain
+        # (c) tags → domain（term_dict照合が疎なため重要なフォールバック）
         for tag in _as_list(book.get("tags")):
             d = self.tag_domain.get(tag)
-            if d and d != "unclassified":
+            if d and d not in ("unclassified", "unknown"):
                 prof[d] += 1.0
 
         total = sum(prof.values())

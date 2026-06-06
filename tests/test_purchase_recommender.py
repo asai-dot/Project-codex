@@ -242,6 +242,27 @@ def test_dedup_alert_shopping_list():
     print("✓ test_dedup_alert_shopping_list", reasons)
 
 
+def test_domain_hits_profile():
+    """book_coverage の実フィールド domain_hits から主題プロファイルが作られる
+    （tags 無し・primary_domain=unclassified でも domain_hits を拾う）。"""
+    pr = PurchaseRecommender(min_toc_nodes=10)
+    pr.load_from_memory(
+        holdings=[{"id": "h1", "isbn": "9784000000001", "title": "労働法A",
+                   "genre": ["労働法務"], "status": {"physical": True}}],
+        bencom=[{"id": "x", "isbn": "9784999999999", "title": "ある実務書",
+                 "tags": [], "toc": [{"t": f"n{i}"} for i in range(20)]}],
+        coverage=[{"book_id": "x", "primary_domain": "unclassified",
+                   "total_toc": 20, "domain_hits": {"labor": 3, "unknown": 5}}],
+        tag_domain={},
+    )
+    prof = pr._candidate_profile(pr.bencom[0])
+    assert prof.get("labor", 0) > 0      # domain_hits から labor を採用
+    assert "unknown" not in prof          # unknown/unclassified は除外
+    recs = pr.recommend(top_n=5)
+    assert recs and recs[0].book_id == "x"
+    print("✓ test_domain_hits_profile", prof)
+
+
 def test_report_renders():
     pr = build()
     report = pr.full_report(top_n=10)

@@ -37,8 +37,16 @@
   したものが「現業テーマの強さ」。
 
 - **候補の主題プロファイル** `profile[domain]`
-  `book_coverage_by_domain.json` の `primary_domain`（＋任意の
-  `domain_distribution`）と、`tags`→`domain_l1` 写像から合成し、合計1へ正規化。
+  `book_coverage_by_domain.json` の `primary_domain` と `domain_hits`
+  （= `{domain: TOCヒット数}` の実フィールド）、および `tags`→`domain_l1`
+  写像から合成し、合計1へ正規化。`unclassified` / `unknown` は除外。
+
+  > 実データ注記: term_dict 照合は疎で（`matched_toc` が小さく、約3,800冊中
+  > 1,907冊が `primary_domain=unclassified`）、`domain_hits` だけでは信号が弱い
+  > 候補が多い。このため `tags`→`domain` フォールバックが実務上は効く。
+  > 候補側の実ドメイン軸は
+  > `commercial / civil / administrative / labor / procedure / criminal / ip / tax`
+  > （所蔵 `genre` の写像先と一致するよう `GENRE_TO_DOMAIN` を設計済み）。
 
 - **関連度**
   ```
