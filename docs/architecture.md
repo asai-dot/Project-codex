@@ -66,8 +66,13 @@ OUT=~/Box/.../app/data/toc_search_index_v2.json python3 scripts/build_toc_search
    - リーガルライブラリー: **確定済** `https://legal-library.jp/r/{book_key}?page={viewer_page}&ctg=view`（実例 `/r/326510?page=39`）。
      `link_parse` で実URLから book_key/viewer_page を自動抽出 → `calibrate --url ... --print P` で offset 確定。
    - ベンコム: 実ページURLを1本取得し `url_template`／`book_url_template`／`link_parse` を確定（現状は暫定値）。
-2. **本番データ接続**: Box『app/data』の 5,206冊 TOC と books.json でインデックス再構築。`book_links.json` を
-   自炊PDFのフォルダ/ファイル（既存 `app/data` のマッピング）から自動生成。
+2. **本番データ接続**: Box『app/data』の 5,206冊 TOC と books.json でインデックス再構築。
+   所有側2図書館（自炊PDF・物理本）の `book_links.json` は **`scripts/generate_book_links.py`** で
+   books.json から自動生成できる（校正ゼロ・有償DLの校正値はマージ保持）:
+   ```bash
+   BOOKS_JSON=~/Box/.../app/data/books.json OUT=data/book_links.json python3 scripts/generate_book_links.py --dry-run
+   ```
+   フィールド揺れ（canonical v1 / legacy）は候補パス総当りで吸収。実データに合わせ `CANDIDATES` を調整。
 3. **③ 埋め込み + RAG**: `schema/supabase_schema.sql` を alo-connect か asai-dot's Project に適用し、
    `toc_nodes` を投入 → `embedding`（pgvector）→「事務所ライブラリに聞く」アシスタント。回答は必ず
    引用ハンドル（書名・章節・ページ・各図書館deeplink）付きで返す。
