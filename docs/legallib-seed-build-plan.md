@@ -1,8 +1,12 @@
-# legallib → biblio 取込プラン v0.4（ライブスキーマ準拠）
+# legallib → biblio 取込プラン v0.5（ライブスキーマ準拠 ＋ legaldb v0.5 監査整合）
 
-> status: レビュー用。**v0.1〜v0.3（alo.works/toc_nodes/fingerprints/メダリオン）は撤回・superseded。**
+> status: レビュー用（v0.5）。**v0.1〜v0.3（alo.works/toc_nodes/fingerprints/メダリオン）は撤回・superseded。**
 > 正本(SoT)は Box の ALO 仕様書＋CODEX設計＋**ライブ `biblio` スキーマ**。
 > 対象DB: Supabase `asai-dot's Project`（`nixfjmwxmgugiiuqfuym`）の **既存 `biblio` スキーマ**。
+>
+> **v0.5 の差分**: GPT お目付け役の `20260606_legaldb_v0.5_DESIGN_RESULT.md`（判定 MODIFY_REQUIRED）を受け、
+> 上位設計（判例/法令/文献DB v0.5）の横断指摘 F1/F2/F5/F6 を本 biblio 層に落とし込んで整合をとった。
+> 追加: §A 識別子責務表 / §B anchor⊥locator 規律 / §C candidate 規律 / §D over-reach ラベル / §E 上位設計への入れ子。
 
 ## 0. 状況（ライブ確認済み 2026-06-06）
 `biblio` は稼働中。bib_records 10,326 / bib_toc 552,544 / authors 2,200 / terms 554 / bib_terms 0。
@@ -63,3 +67,94 @@
 - 巻末索引 terms を今やるか後か
 - **コード置き場**: `load_legallib.py` は private repo `asai-biblio-ingest` に置くのが筋（私の現GitHubスコープは `project-codex` のみ＝直接pushは別途権限/手段が要る）。当面このrepoにドラフトを置き、後で移送も可
 - **legallib生JSONの実トップレベル列**（書名/著者/出版社等のキー名）確認 → マッピング確定（1冊実物が要る）
+
+---
+
+# v0.5 増分（legaldb v0.5 監査整合）
+
+上位設計 `STATIC_DB_INTEGRATION_PLAN v0.5`（判例/法令/文献DB全体）への GPT 監査
+`20260606_legaldb_v0.5_DESIGN_RESULT.md`（**DESIGN_MODIFY_REQUIRED**）の横断指摘のうち、
+書誌(biblio)層に効く F1（anchor governance）/ F2（識別子責務分離）/ F5（文献identifier table）/
+F6（citation/treatment は candidate）を本プランに落とし込む。
+
+## §A 識別子責務表（F2 への回答）— biblio は manifestation/expression 外部IDと source-local キーのみ持つ
+
+GPT 指摘 F2:「`alo_work_uri / external_work_id / expression_id / manifestation_id / locator` の責務を
+分離せよ。さもないと v0.4 の source_uri 分裂が別名で再発する」。biblio をこの責務表に明示的に写像する：
+
+| FRBR/責務 | 定義 | legallib biblio での持ち方 | 列 |
+|---|---|---|---|
+| **alo_work_uri**（ALO正準・Work） | 版を束ねた抽象著作の同一性 | **持たない**（後述） | — |
+| **external_work_id** | 外部標準のWork識別子 | **持たない**（後述） | — |
+| **expression/manifestation 外部ID** | 版・刷の外部識別子 | legallib内部book_id・ISBN | `bib_id`内・`isbn` |
+| **source-local record key** | 「このソースが見た1版」の記録キー | `LEGALLIB:{book_id}` | `bib_records.bib_id`(PK) |
+| **locator**（章節） | 版固有の位置参照 | TOCの出現順・階層・頁 | `bib_toc.(ordinal,level,page)` |
+
+**要点（GPT への主張）**:
+- **ISBN は Work 識別子ではなく manifestation（版・刷）識別子**。よって ISBN をマージキーにしないのは
+  DDL-20260428-01（版を束ねない）と F2（Work と manifestation を混同しない）の**両方に整合**する。
+- **biblio 層は意図的に Work URI を mint しない**。biblio = 「各ソースが観測した1 manifestation の忠実保全」
+  （source-thin）。版を束ねる Work 同一性は **authority 層で promotion 制・誤マージ0・版非束ね**で後段。
+  → これにより「source_object_uri を Work IRI に固定して既存URIと衝突」という F2 の地雷を biblio では踏まない
+  （そもそも biblio に Work IRI を置かないため）。
+- `bib_id='LEGALLIB:{book_id}'` は **source-local record key** であって canonical URI ではない。
+  canonical 化（alo_work_uri）は authority 層の仕事。biblio の bib_id は外部に対する同一性を主張しない。
+
+## §B anchor ⊥ locator 規律（F1/F3 への回答）— bib_toc は locator であって anchor ではない
+
+GPT 指摘 F1/F3:「offset/ordinal は expression 固有の **locator** であり、Work/Expression 横断の
+**anchor** に使ってはいけない。anchor は mint・lineage 管理せよ」。
+
+- `bib_toc.(bib_id, ordinal)` は **locator**。再スクレイプで TOC が変われば ordinal はずれ得る = それで正しい
+  （locator は版固有・再計算可能でよい）。
+- biblio は **TOC ノードに stable_anchor_id を mint しない**。章節の安定アンカー（検索/RAG/章節ナビ用）は
+  serving/authority 層の関心事として後段に切り出す。biblio は raw の決定論的射影に徹する。
+- **版固有性の担保**: bib_toc は `raw`(jsonb) の決定論的射影であり、`raw` の同一性は `source_hash`(sha256) で
+  追跡する。raw が変われば source_hash が変わり再射影で検知できる。= F3「offset は text_version と複合で持て」の
+  biblio 版（ordinal は bib_id=その source の版レコード に内属し、版同一性は source_hash が担う）。
+
+## §C candidate 規律（F5/F6 への回答）— 索引・著者・雑誌記事は truth に直結しない
+
+GPT 指摘 F6:「citation/treatment を未定義のまま本番 edge に入れると candidate を truth 扱いする v0.4 regression」。
+biblio で「観測」と「同定」を分け、後者を candidate に留める：
+
+- **巻末索引 terms**: scheme='LEGALLIB' で**生の索引語を忠実保全するのみ**。語彙ハブ（alo_hubs/Term=sense）への
+  attach・broader 付与は **candidate**（後フェーズ・promotion 制）。biblio.terms に入れること自体は truth 主張ではない。
+- **著者**: `LEGALLIB-AUTH:{md5(normalized)}` は **source-local の名寄せ**であって人物同一性の確定ではない。
+  横断の person 同定（所蔵↔legallib↔bencom↔CiNii）は authority/evidence/claim で candidate→reviewed→promoted。
+- **雑誌記事（次スコープ）**: F5 に従い、記事を biblio に投入する際は **article_work_id を ALO が mint し、
+  DOI/NDL/CiNii/誌面文献番号/巻号頁は identifier 子テーブルにぶら下げる**。巻号頁だけの一致は candidate match。
+  （現フェーズは書籍のみ。雑誌は本規律を満たす設計が固まってから。）
+
+## §D over-reach ラベル（F・§3 への回答）— 確定度を主張ごとに明示
+
+GPT 指摘「research-backed / primary-verified / grey-lit / design-synthesis を各主張につけよ」。本プランの確定度：
+
+| 主張 | ラベル | 根拠 |
+|---|---|---|
+| biblio スキーマ形状（bib_records/bib_toc 等の列） | **primary-verified** | ライブDB実測 2026-06-06 |
+| bib_toc がフラット（親を持たない） | **primary-verified** | ライブDB実測 + bencom raw 実物 |
+| load_bencom.py の取込順・冪等・決定論ID | **primary-verified**（パターン） | 既存ローダ稼働実績 |
+| legallib 生JSONのトップレベル列名（書名/著者/出版社キー） | **design-synthesis（未検証）** | 実物1冊未取得＝TODO。ローダにTODO明示 |
+| ISBN=manifestation 識別子という FRBR 解釈 | **research-backed** | FRBR/USLM の Work⊥Manifestation 区別 |
+| 雑誌記事 article_work_id+identifier子テーブル | **design-synthesis** | legaldb v0.5 F5 を踏襲、実装未着手 |
+
+## §E 上位設計（legaldb v0.5）への入れ子
+
+- 本 biblio 層は legaldb v0.5 の**文献(literature)レイヤの最下流＝忠実保全層**に当たる。
+  legaldb v0.5 の dual-anchor / Work IRI / citation edge は **authority 以上の層**の話で、biblio は
+  その**素材（manifestation 観測）を欠損なく貯める**役割に限定する（責務の上下分界）。
+- legaldb v0.5 が MODIFY_REQUIRED なのは主に **法令時間軸（DD-LAWTIME 依存）と識別子責務と treatment 語彙**。
+  **書籍 biblio 取込はこれらに依存しない**（法令時間も treatment も書籍メタには不要）。よって
+  **legallib 書籍取込は legaldb v0.5 の保留事項にブロックされず、先行して着手可能**。
+- ただし「後段 authority 昇格」を設計する時点で、§A の責務表 4〜5 列分離と §C の candidate 規律を必須とする。
+
+## §F v0.5 で確定した回答（旧 §7 ブロッカーの解消状況）
+
+1. `bib_id='LEGALLIB:{book_id}'`（ISBN非キー） → **確定**。§A で FRBR/DDL-20260428-01/F2 と整合を示した。
+2. `form_type`: 書籍は **'BOOK' 統一**（asai-bookshelf 式の細分類は authority/serving 層の派生属性として後段）。
+   雑誌は 'PERIODICAL' だが次スコープ。
+3. 巻末索引 terms: **生保全のみ今フェーズ可・語彙attachは後**（§C）。まず空でも可。
+4. コード置き場: 当面 `project-codex/loaders/` にドラフト、確定後 `asai-biblio-ingest` へ移送。
+5. **残る唯一の hard ブロッカー**: legallib 生JSONの実トップレベル列名（§D で design-synthesis＝未検証）。
+   実物1冊で `load_legallib.py` の TODO 5箇所を確定すれば実装着手可能。
