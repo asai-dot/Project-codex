@@ -37,9 +37,10 @@
       "cost": "subscription",
       "page_strategy": "offset_url",
       "needs_auth": true,
-      "url_template": "https://legal-library.jp/book/{book_key}/page/{viewer_page}",
-      "book_url_template": "https://legal-library.jp/book/{book_key}",
-      "note": "暫定テンプレート。LEGAL LIBRARY は『今読んでいるページのURLを発行して共有』が可能。そのURLを calibrate に与えてテンプレートと offset を確定すること。"
+      "url_template": "https://legal-library.jp/r/{book_key}?page={viewer_page}&ctg=view",
+      "book_url_template": "https://legal-library.jp/r/{book_key}?ctg=view",
+      "link_parse": { "host": "legal-library.jp", "key_regex": "/r/(\\d+)", "page_param": "page" },
+      "note": "実URL確認済（例 https://legal-library.jp/r/326510?page=39&ctg=view）。book_key は /r/ の数値ID（ISBNではない）。ビューワーで『現在ページのURL発行』した実URLを calibrate(--url) に渡せば book_key と offset を自動抽出できる。"
     },
     {
       "id": "physical_shelf",

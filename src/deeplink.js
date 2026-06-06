@@ -115,5 +115,28 @@
     return knownViewerPage - knownPrintPage;
   }
 
-  return { resolveLink: resolveLink, resolveAll: resolveAll, computeOffset: computeOffset, fillTemplate: fillTemplate };
+  /**
+   * 実ビューワーのURLから source_id / book_key / viewer_page を抽出する。
+   * 各 source の link_parse = { host, key_regex, page_param } に従う（データ駆動）。
+   * 例: "https://legal-library.jp/r/326510?page=39&ctg=view"
+   *      -> { source_id: "legal_library", book_key: "326510", viewer_page: 39 }
+   */
+  function parseViewerUrl(sources, urlStr) {
+    if (!urlStr || !sources) return null;
+    for (var i = 0; i < sources.length; i++) {
+      var s = sources[i];
+      var lp = s.link_parse;
+      if (!lp) continue;
+      if (lp.host && urlStr.indexOf(lp.host) === -1) continue;
+      var book_key = null, viewer_page = null;
+      if (lp.key_regex) { var mk = urlStr.match(new RegExp(lp.key_regex)); if (mk) book_key = mk[1]; }
+      if (lp.page_param) { var mp = urlStr.match(new RegExp('[?&]' + lp.page_param + '=(\\d+)')); if (mp) viewer_page = parseInt(mp[1], 10); }
+      if (book_key != null || viewer_page != null) {
+        return { source_id: s.id, book_key: book_key, viewer_page: viewer_page };
+      }
+    }
+    return null;
+  }
+
+  return { resolveLink: resolveLink, resolveAll: resolveAll, computeOffset: computeOffset, fillTemplate: fillTemplate, parseViewerUrl: parseViewerUrl };
 });

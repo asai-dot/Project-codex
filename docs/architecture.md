@@ -62,8 +62,10 @@ OUT=~/Box/.../app/data/toc_search_index_v2.json python3 scripts/build_toc_search
 
 ## 5. 次にやること
 
-1. **有償DLの実テンプレ確定**: ベンコム/リーガルで1冊ずつ実ページのURLを取得し、`config/library_sources.json` の
-   `url_template`／`book_url_template` を実URL形に修正。同時に各本の `book_key` と offset を `calibrate`。
+1. **有償DLの実テンプレ確定**:
+   - リーガルライブラリー: **確定済** `https://legal-library.jp/r/{book_key}?page={viewer_page}&ctg=view`（実例 `/r/326510?page=39`）。
+     `link_parse` で実URLから book_key/viewer_page を自動抽出 → `calibrate --url ... --print P` で offset 確定。
+   - ベンコム: 実ページURLを1本取得し `url_template`／`book_url_template`／`link_parse` を確定（現状は暫定値）。
 2. **本番データ接続**: Box『app/data』の 5,206冊 TOC と books.json でインデックス再構築。`book_links.json` を
    自炊PDFのフォルダ/ファイル（既存 `app/data` のマッピング）から自動生成。
 3. **③ 埋め込み + RAG**: `schema/supabase_schema.sql` を alo-connect か asai-dot's Project に適用し、

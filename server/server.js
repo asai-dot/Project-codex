@@ -183,6 +183,15 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       let payload;
       try { payload = JSON.parse(body); } catch (e) { return sendJson(res, { error: 'bad json' }, 400); }
+      // 実ビューワーURLが貼られたら source_id / book_key / viewer_page を自動抽出
+      if (payload.url) {
+        const parsed = Deeplink.parseViewerUrl(SOURCES, payload.url);
+        if (parsed) {
+          if (!payload.source_id) payload.source_id = parsed.source_id;
+          if (payload.book_key == null && parsed.book_key != null) payload.book_key = parsed.book_key;
+          if (payload.viewer_page == null && parsed.viewer_page != null) payload.viewer_page = parsed.viewer_page;
+        }
+      }
       const { book_id, source_id, print_page, viewer_page, book_key, folder, file, location } = payload;
       if (!book_id || !source_id) return sendJson(res, { error: 'book_id and source_id required' }, 400);
       const offset = Deeplink.computeOffset(Number(print_page), Number(viewer_page));

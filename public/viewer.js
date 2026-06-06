@@ -166,21 +166,27 @@ function citationHandle(d, node) {
 function calibForm(d, s) {
   const box = el('div', 'calib');
   box.appendChild(el('h4', null, `${s.short_label} の offset を1点合わせ`));
-  box.appendChild(el('div', 'hint', `実ビューワーで任意の本文ページを開き、その「印刷ページ」と「ビューワー側のページ番号」を入力すると offset を確定します（offset = ビューワー − 印刷）。`));
-  const row = el('div', 'row');
-  const bk = el('input'); bk.placeholder = 'book_key（任意）'; bk.style.width = '160px';
+  box.appendChild(el('div', 'hint', `実ビューワー（ケータイ可）で本文ページを開き、その「現在ページのURL」を貼り付け、画面に印刷された「印刷ページ」を入れて保存。URLが無ければビューワーページ番号を手入力（offset = ビューワー − 印刷）。`));
+  const row1 = el('div', 'row');
+  const urlIn = el('input'); urlIn.placeholder = '実ビューワーURLを貼り付け（例 https://legal-library.jp/r/326510?page=39&ctg=view）'; urlIn.style.flex = '1'; urlIn.style.minWidth = '260px';
+  row1.append(urlIn);
+  const row2 = el('div', 'row');
+  const bk = el('input'); bk.placeholder = 'book_key（URLから自動）'; bk.style.width = '150px';
   const pp = el('input'); pp.type = 'number'; pp.placeholder = '印刷ページ'; pp.style.width = '100px';
-  const vp = el('input'); vp.type = 'number'; vp.placeholder = 'ビューワーページ'; vp.style.width = '130px';
+  const vp = el('input'); vp.type = 'number'; vp.placeholder = 'ビューワーページ（URLに無い時）'; vp.style.width = '180px';
   const btn = el('button', 'copybtn', '保存');
   btn.onclick = async () => {
-    const payload = { book_id: d.book_id, source_id: s.source_id, print_page: Number(pp.value), viewer_page: Number(vp.value) };
+    const payload = { book_id: d.book_id, source_id: s.source_id };
+    if (urlIn.value.trim()) payload.url = urlIn.value.trim();
+    if (pp.value !== '') payload.print_page = Number(pp.value);
+    if (vp.value !== '') payload.viewer_page = Number(vp.value);
     if (bk.value.trim()) payload.book_key = bk.value.trim();
     const r = await fetch('/api/calibrate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).then(x => x.json());
-    if (r.ok) { toast(`${s.short_label} offset=${r.saved.offset} を保存`); openBook(d.book_id); }
+    if (r.ok) { toast(`${s.short_label} ${r.saved.offset != null ? 'offset=' + r.saved.offset : 'book_key'} を保存`); openBook(d.book_id); }
     else toast('保存失敗: ' + (r.error || ''));
   };
-  row.append(bk, pp, vp, btn);
-  box.appendChild(row);
+  row2.append(bk, pp, vp, btn);
+  box.append(row1, row2);
   return box;
 }
 

@@ -7,8 +7,12 @@
  * LEGAL LIBRARY は「現在ページのURL発行」、ベンコムは画面のページ送り表示から V を読む。
  *
  * 使い方:
+ *   # 実ビューワーURLを貼るだけ（book_key と viewer_page を自動抽出）＋印刷ページ
+ *   node scripts/calibrate.js --book isbn_9784641138001 \
+ *        --url "https://legal-library.jp/r/326510?page=39&ctg=view" --print 33
+ *   # 手入力でも可
  *   node scripts/calibrate.js --book isbn_9784641138001 --source legal_library \
- *        --print 135 --viewer 151 [--book-key 9784641138001]
+ *        --print 135 --viewer 151 [--book-key 326510]
  *   node scripts/calibrate.js --book isbn_9784xxxx --source physical_shelf --location 民法-A-2
  *
  * data/book_links.json を更新する。
@@ -29,9 +33,22 @@ function parseArgs(argv) {
 
 function main() {
   const a = parseArgs(process.argv);
+  // --url が来たら source/book_key/viewer を自動抽出
+  if (a.url) {
+    const SOURCES = require('../config/library_sources.json').sources;
+    const parsed = Deeplink.parseViewerUrl(SOURCES, a.url);
+    if (parsed) {
+      if (!a.source) a.source = parsed.source_id;
+      if (!a['book-key'] && parsed.book_key != null) a['book-key'] = parsed.book_key;
+      if (a.viewer == null && parsed.viewer_page != null) a.viewer = parsed.viewer_page;
+      console.log(`URL解析: source=${parsed.source_id} book_key=${parsed.book_key} viewer_page=${parsed.viewer_page}`);
+    } else {
+      console.error('URLからソースを判定できませんでした（config の link_parse を確認）');
+    }
+  }
   if (!a.book || !a.source) {
-    console.error('必須: --book <book_id> --source <office_pdf|bencom|legal_library|physical_shelf>');
-    console.error('ページ着地用: --print <印刷ページ> --viewer <ビューワーページ> [--book-key K]');
+    console.error('必須: --book <book_id> --source <office_pdf|bencom|legal_library|physical_shelf>（--url 指定時 source は自動）');
+    console.error('ページ着地用: --url <実URL> --print <印刷ページ>  または  --print P --viewer V [--book-key K]');
     console.error('物理本: --location <棚位置>   自炊PDF: --folder F --file NAME.pdf');
     process.exit(1);
   }
