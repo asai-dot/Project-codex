@@ -1,0 +1,8 @@
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+/tmp/
+# 本番の巨大インデックス（サンプルの data/toc_search_index.json はコミットする）
+/data/toc_search_index_v2.json

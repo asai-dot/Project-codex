@@ -1,0 +1,58 @@
+{
+  "$comment": "4つのデータ保存（図書館）を1つのビューワーから横断するための正規設定。url_template の {viewer_page} は print_page + offset で解決される（offsetは本ごとにbook_links.jsonで1点合わせ）。有償DLの url_template は暫定値。calibrate（/api/calibrate または scripts/calibrate.js）で実URLから確定する。",
+  "version": 1,
+  "sources": [
+    {
+      "id": "office_pdf",
+      "label": "事務所PDF（自炊）",
+      "short_label": "自炊PDF",
+      "kind": "self_scan_pdf",
+      "tier": "owned",
+      "cost": "free",
+      "page_strategy": "offset_url",
+      "needs_auth": false,
+      "url_template": "/pdf_orig/{folder}/{file}#page={viewer_page}",
+      "book_url_template": "/pdf_orig/{folder}/{file}",
+      "note": "Box『し＿自炊書籍データ』の原本を server.js が /pdf_orig/{folder}/{file} で配信。viewer_page は PDF.js のページ番号（ファイル先頭からの位置）。offset = pdf_page - print_page。"
+    },
+    {
+      "id": "bencom",
+      "label": "ベンコム（BUSINESS LAWYERS LIBRARY / 弁護士ドットコムLIBRARY）",
+      "short_label": "ベンコム",
+      "kind": "digital_library",
+      "tier": "paid",
+      "cost": "subscription",
+      "page_strategy": "offset_url",
+      "needs_auth": true,
+      "url_template": "https://www.businesslawyers.jp/lib/book/{book_key}?page={viewer_page}",
+      "book_url_template": "https://www.businesslawyers.jp/lib/book/{book_key}",
+      "note": "暫定テンプレート。実際のビューワーで『現在ページのURL発行』した結果を calibrate に与えて book_key と url_template を確定すること。"
+    },
+    {
+      "id": "legal_library",
+      "label": "リーガルライブラリー（LEGAL LIBRARY）",
+      "short_label": "リーガル",
+      "kind": "digital_library",
+      "tier": "paid",
+      "cost": "subscription",
+      "page_strategy": "offset_url",
+      "needs_auth": true,
+      "url_template": "https://legal-library.jp/book/{book_key}/page/{viewer_page}",
+      "book_url_template": "https://legal-library.jp/book/{book_key}",
+      "note": "暫定テンプレート。LEGAL LIBRARY は『今読んでいるページのURLを発行して共有』が可能。そのURLを calibrate に与えてテンプレートと offset を確定すること。"
+    },
+    {
+      "id": "physical_shelf",
+      "label": "物理本棚（所内）",
+      "short_label": "物理本",
+      "kind": "physical",
+      "tier": "owned",
+      "cost": "free",
+      "page_strategy": "locate",
+      "needs_auth": false,
+      "url_template": null,
+      "book_url_template": null,
+      "note": "URLなし。棚位置（location）と印刷ページ（print_page）を表示し、人が現物をめくる導線。"
+    }
+  ]
+}
