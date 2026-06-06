@@ -40,3 +40,17 @@ $$;
 
 comment on function codex.add_provenance(text, text) is
   '対象テーブルに来歴メタ列(source, ingested_*, validated_*, quality_status, row_hash, version, notes)を付与する。空テーブルに対して使う。';
+
+-- 業務列から安定した row_hash を作る。NULL と空文字を区別し、列の順序を保持する。
+-- 二重投入・改竄の識別に使う。NULL は chr(1)、区切りは chr(31) で表現。
+create or replace function codex.stable_hash(variadic vals text[])
+returns text
+language sql
+immutable
+as $$
+  select md5(string_agg(coalesce(v, chr(1)), chr(31) order by ord))
+  from unnest(vals) with ordinality as t(v, ord);
+$$;
+
+comment on function codex.stable_hash(text[]) is
+  '列値から row_hash を生成。NULL(chr1)と空文字を区別し列順を保持するため、単純連結より衝突に強い。';

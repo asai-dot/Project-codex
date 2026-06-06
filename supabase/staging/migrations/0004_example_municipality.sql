@@ -64,11 +64,9 @@ as $$
 begin
   -- 業務列から row_hash を計算（二重投入・改竄の識別に使う）
   update landing.municipality
-     set row_hash = md5(concat_ws('|',
-           coalesce(muni_code, ''), coalesce(prefecture_code, ''),
-           coalesce(prefecture_name, ''), coalesce(city_name, ''),
-           coalesce(city_kana, ''), coalesce(valid_from::text, ''),
-           coalesce(valid_to::text, '')))
+     set row_hash = codex.stable_hash(
+           muni_code, prefecture_code, prefecture_name, city_name,
+           city_kana, valid_from::text, valid_to::text)
    where quality_status = 'unverified';
 
   -- 検査NGを quarantined にする

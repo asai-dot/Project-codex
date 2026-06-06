@@ -1,10 +1,9 @@
 name: data-quality-gate
 
-# 門番の一部（静的チェック）。
-# 依存ツールなしで動く軽量ガード:
-#  1. マイグレーションのファイル名が連番規約に従うか
-#  2. 認証情報（JWT/サービスロールキー等）を誤ってコミットしていないか
-# 実データ・SQL実行を伴う検査は Supabase ブランチ/ローカルで別途行う。
+# 門番の一部。
+#  static-guard : 依存ツールなしの軽量ガード（命名規約・認証情報の混入）
+#  gate-test    : 実 Postgres を立て、staging マイグレーション適用後に門番テストを走らせ、
+#                 「汚いデータが確実に隔離される」ことを検証する（門番の形骸化防止）。
 
 on:
   pull_request:
@@ -42,3 +41,36 @@ jobs:
             exit 1
           fi
           echo "OK: 認証情報の混入なし"
+
+  gate-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: codex
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: codex
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: staging マイグレーション適用 → 門番テスト
+        run: |
+          set -euo pipefail
+          for f in $(ls supabase/staging/migrations/*.sql | sort); do
+            echo ">> apply $(basename "$f")"
+            psql -v ON_ERROR_STOP=1 -q -f "$f"
+          done
+          for t in $(ls supabase/staging/tests/*.sql | sort); do
+            echo ">> test $(basename "$t")"
+            psql -v ON_ERROR_STOP=1 -f "$t"
+          done

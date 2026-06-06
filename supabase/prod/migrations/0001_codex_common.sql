@@ -36,3 +36,16 @@ $$;
 
 comment on function codex.add_provenance(text, text) is
   '対象テーブルに来歴メタ列を付与する。空テーブルに対して使う。';
+
+-- 業務列から安定した row_hash を作る。NULL と空文字を区別し、列の順序を保持する。
+create or replace function codex.stable_hash(variadic vals text[])
+returns text
+language sql
+immutable
+as $$
+  select md5(string_agg(coalesce(v, chr(1)), chr(31) order by ord))
+  from unnest(vals) with ordinality as t(v, ord);
+$$;
+
+comment on function codex.stable_hash(text[]) is
+  '列値から row_hash を生成。NULL(chr1)と空文字を区別し列順を保持する。';
