@@ -1,0 +1,44 @@
+name: data-quality-gate
+
+# 門番の一部（静的チェック）。
+# 依存ツールなしで動く軽量ガード:
+#  1. マイグレーションのファイル名が連番規約に従うか
+#  2. 認証情報（JWT/サービスロールキー等）を誤ってコミットしていないか
+# 実データ・SQL実行を伴う検査は Supabase ブランチ/ローカルで別途行う。
+
+on:
+  pull_request:
+  push:
+    branches: ["**"]
+
+jobs:
+  static-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: マイグレーション命名規約チェック
+        run: |
+          set -euo pipefail
+          fail=0
+          for f in $(find supabase -path '*/migrations/*.sql' 2>/dev/null | sort); do
+            base=$(basename "$f")
+            if ! echo "$base" | grep -Eq '^[0-9]{4}_.+\.sql$'; then
+              echo "::error file=$f::命名規約違反 (期待: NNNN_説明.sql): $base"
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: 認証情報の混入チェック
+        run: |
+          set -euo pipefail
+          # Supabase の JWT は eyJ で始まる。実鍵やパスワード付き接続文字列の混入を弾く。
+          # （"service_role" という単語自体は文書に正当に出現するため対象外）
+          if grep -RInE '(eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}|postgres(ql)?://[^ ]*:[^ ]*@)' \
+                 --include='*.sql' --include='*.md' --include='*.yml' --include='*.json' \
+                 --exclude-dir='.git' . ; then
+            echo "::error::認証情報らしき文字列が混入しています。コミットから除去してください。"
+            exit 1
+          fi
+          echo "OK: 認証情報の混入なし"
