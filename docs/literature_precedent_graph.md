@@ -110,6 +110,21 @@ literature_node (書籍/章節/ページ = 本リポジトリの toc_nodes)
   この略記形を食って `canonical_key`/`case_node_id` を与える＝**既存17,259件と bencom precedents を同じ正本に名寄せ**。
 - 規律は完全一致（claim_scope=cites / pending_review / 同一性主張しない / canonical昇格はreview後）。
 
+### normalize_case_ref 被覆率の実証（`scripts/validate_case_refs.py`）
+実OPACの `case_ref_text` を ；分割 → `normalize_case_ref` → 被覆率/衝突を測る。
+本番フル（`opac_parsed/ext_opac_articles.jsonl` 48MB, ~17,259件）は env で1コマンド:
+`python3 scripts/validate_case_refs.py opac_parsed/ext_opac_articles.jsonl`
+
+サンドボックスでは .jsonl のテキスト表現取得が不可のため、**OPAC実フォーマットの代表サンプルで実証**:
+- **最高裁（最判/最大判/最決）: 被覆100%**。同一判例の重複引用は1正本キーに **dedup**（衝突0）。
+- **下級審（高判/地判/家判）: 被覆0%**。原因は normalizer ではなく **`opac_parse.py` の抽出regex**:
+  `(?:…|高[裁判]|地[裁判]|…)` が **`高`始まり**で**地名（東京等）を捨てる** → ref が「高判昭44.5.19…」になり
+  どの高裁か特定不能（地名情報が抽出段で失われている）。
+- **改善レバー（上流）**: opac_parse の case_ref 抽出regex を地名込みに広げる。例:
+  `(?:最[大小]?[判決]|[一-龥ぁ-ヶ]{1,4}(?:高|地|家|簡)[判決審])…`。下級審の地名を保持でき被覆率が大幅改善の見込み。
+- 当面: 地名を欠く下級審 ref は `pending_place_recovery`（記事本文から地名復元 or 保留）扱い。
+- 最高裁は地名不要で完結するため、**今すぐ高被覆**で正本キー化＝17,259件のうち最高裁分から名寄せ着手できる。
+
 - ベンコム precedents は **viewer_page で引ける**ので、`book_links.bencom.offset` で紙面ページ↔viewer_page
   を相互変換し、我々のTOC（章節→紙面ページ）と接合 → 「**この章が引く判例**」が機械的に出る。
 - リーガルの法令リンク／OCR本文抽出は、alo-kg の既存 resolver/gate にそのまま流し込める。
