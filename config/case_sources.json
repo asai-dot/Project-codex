@@ -1,0 +1,36 @@
+{
+  "$comment": "判例の着地先。優先順(priority小=優先)で内部PD→裁判所HTML→ベンコムオンランプ。判例秘書本文は暗号化URLのため直接生成不可（オンランプ経由）。着地はJSON→HTML優先（PDFは副）。",
+  "version": 1,
+  "sources": [
+    {
+      "id": "internal_pd",
+      "label": "所内判決文（PD）",
+      "tier": "owned",
+      "priority": 0,
+      "needs_auth": false,
+      "requires": ["has_internal_pd"],
+      "url_template": "/case/{case_node_id}",
+      "note": "著作権の無い生判決文を所内HTMLビューワーで表示。最速・最も自由。"
+    },
+    {
+      "id": "courts",
+      "label": "裁判所 裁判例（HTML）",
+      "tier": "free",
+      "priority": 1,
+      "needs_auth": false,
+      "requires": ["court_id"],
+      "url_template": "https://www.courts.go.jp/app/hanrei_jp/detail{detail_variant}?id={court_id}",
+      "note": "court_id は ALO既存メタデータ（事件番号→courtId）。detail2=最高裁/4=下級審/7=知財高（variant要最終確認）。HTML詳細に着地、判決PDFは副。"
+    },
+    {
+      "id": "bencom_onramp",
+      "label": "ベンコム引用判例（→判例秘書）",
+      "tier": "paid",
+      "priority": 2,
+      "needs_auth": true,
+      "requires": ["cid", "viewer_page"],
+      "url_template": "https://library.bengo4.com/books/{cid}/precedents#page_{viewer_page}",
+      "note": "判例秘書(legal-info.com)は直リンク不可。ベンコムの引用判例リンク画面をオンランプにする。"
+    }
+  ]
+}

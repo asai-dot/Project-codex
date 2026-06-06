@@ -135,8 +135,13 @@ A: …（要旨）…
 
 1. **接続層**: 本リポジトリ `toc_nodes` を alo-kg の literature_node として登録（id体系を `alo:book:isbn:...:toc:...` で既に整合）。
 2. **法令レーン（既存流用）**: 自炊PDF/OCR本文 → alo-kg resolver → 文献→法令エッジ。e-Gov着地。
-3. **判例レーン（新規）**: ベンコム precedents harvest → case_spine 名寄せ → 文献→判例エッジ。
-   裁判所 detail / 内部PD / オンランプの着地リゾルバ実装（deeplink.js を参照種別で一般化）。
+3. **判例レーン（新規・着手済）**: ベンコム precedents harvest → case_spine 名寄せ → 文献→判例エッジ。
+   実装（本リポジトリ）:
+   - `src/case_identity.py` … 和暦/事件番号/裁判所の正規化＋正本キー（canonical_key / case_node_id）
+   - `src/case_deeplink.py` + `config/case_sources.json` … 判例の3層着地（内部PD→裁判所HTML→ベンコムオンランプ）
+   - `scripts/harvest_precedents.py` … precedentsページ本文→引用レコード（regexで頑健、claim_scope=cites）
+   - `tests/test_case_lane.py` … スクショ実判例で30チェック
+   残: 実HTMLでの最終調整、court_id 既存メタデータの接続、case_spine への upsert。
 4. **オフセット相互変換**: TOC紙面ページ ↔ 各図書館viewer_page ↔ precedents page_ を一本化。
 5. **RAG**: pgvector（文献ノード）＋エッジ同梱回答。3レーン出典で着地。
 
