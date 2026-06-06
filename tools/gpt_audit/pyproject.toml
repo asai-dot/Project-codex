@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alo-gpt-audit"
+version = "0.2.0"
+description = "GPT Pro 目付け役 監査レーン (gpt_ometsuke) の close/status ツール — フォルダ位置=状態を強制する単一書き手CLI"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{ name = "ALO / 浅井法律事務所" }]
+license = { text = "Proprietary" }
+dependencies = []
+
+[project.scripts]
+alo-gpt-audit = "alo_gpt_audit.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
