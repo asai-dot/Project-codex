@@ -28,6 +28,27 @@ Python 3.9+。外部依存なし（stdlib のみ）。
 
 ## 2. 手順（この順に実行）
 
+### STEP 0 — パイプライン snapshot（全体像の現状を1枚に）
+
+接合作業の前後で、静的/動的DB 全体の進捗を1枚に固める。`snapshot.json` は
+小さい純データなので本リポジトリへ戻せば web 側で同じダッシュボードを描ける。
+
+```bash
+python scripts/pipeline_probe.py --manifest pipeline/pipeline.json \
+  --root bookdx="<Box>/claude/事務所内本棚DX化計画" \
+  --root alo="$HOME/alo-ai" \
+  --root repo="$(pwd)" \
+  --out build/pipeline_snapshot.json
+
+# 確認用に手元で描画 (任意)
+python scripts/pipeline_dashboard.py --manifest pipeline/pipeline.json \
+  --snapshot build/pipeline_snapshot.json --out-html build/dashboard.html
+```
+
+`pipeline.json` の `path`/`expected` が実環境とずれていたら（NDLレポート名・
+matter 完了ログ名など `note` の TODO 箇所）、合わせて修正し web 側へ知らせる。
+**接合の前と後の2回**採ると、本接合で何が動いたかが差分で見える。
+
 ### STEP 1 — preflight（壊れた入力を深部で踏む前に弾く）
 
 ```bash
@@ -79,6 +100,10 @@ python scripts/legallib_join_dryrun.py \
 | `overwrites_bundle.jsonl` | **旧+新ノード**入り。`render_proposed_diff.py` で差分レビュー |
 | `review_bundle.jsonl` | 保護衝突の**既存+候補**。`triage_review_queue.py` でトリアージ |
 | `review_queue.jsonl` / `defer_staging.jsonl` | レビュー待ち / defer の一覧 |
+
+さらに STEP 0 の `build/pipeline_snapshot.json`（接合**前**と**後**の2本）を
+`handoff/pipeline_snapshot_<YYYYMMDD>_{before,after}.json` として戻す
+（web 側でダッシュボード描画・差分追跡に使う）。
 
 > `proposed/`（提案 TOC 本体）と `books.json`・`legallib_dl/` は**戻さない**
 > （大きい・機微）。バンドルだけで web 側のレビューは完結する。
