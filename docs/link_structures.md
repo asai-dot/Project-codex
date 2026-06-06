@@ -27,25 +27,24 @@ deeplink.js / config.link_parse / 将来の case_citations を確定するため
 | 書籍ランディング | `https://library.bengo4.com/books/{cid}` | **確定**（cid=64桁hex） |
 | reader 本トップ | `https://library.bengo4.com/reader/?cid={cid}` | 確定 |
 | reader ページ着地 | `https://library.bengo4.com/reader/?cid={cid}&adr={viewer_page}` | **確定**（共有/リンクボタンが発行。adr=ビューワーページ） |
+| 引用判例リンク（頁別の引用判例一覧） | `https://library.bengo4.com/books/{cid}/precedents#page_{viewer_page}` | **確定**（実例 `#page_134`）。**文献→判例の入口** |
 | 検索 | `https://library.bengo4.com/search?q=...` | 未確認（要URL） |
 | その他 | `/signin` `/help` `/seminar` | 確定（公開） |
 
 - offset: `adr = print_page + offset`。例: 引用判例リンク画面「83ページ＝紙面43ページ」→ offset 40。
 - アドレスバーはSPAで更新されない。**ページ取得は必ず共有/リンクボタン経由**。
+- 観測: 同地点で reader `adr=133` と precedents `#page_134` が**1ずれ**（adr=0始まり / `page_`=1始まりの疑い）。
+  reader 画面に印刷された紙面ページと adr の1組を清書すれば offset を厳密確定できる（チェックリスト#2'）。
+- `precedents#page_{N}` の `N` は viewer ページ（≒ adr+1）。判例一覧は**紙面ページではなく viewer ページで引ける**。
 
-### ⚠ 最重要の未解決: `cid` の粒度
-スクショの見出し「**コンメンタール民事訴訟法III ／ 第2編／第1章〜第3章／第133条〜第178条**」より、
-`cid` は**書籍全体ではなく「分冊／条文範囲」単位**の可能性が高い（= 1 ISBN ↔ 複数 cid）。
+### ✓ `cid` の粒度 — 巻/ISBN単位（暫定確定）
+検証: 同一書籍内で**別セクションへ移動しても reader の cid は不変**（同じ `ebaaf6907d0c…465b5`）。
+→ `cid` は **1 ebook（≒ 1 巻 = 1 ISBN）単位**。引用判例リンク見出しの「第133条〜第178条」は
+そのページの所在ラベルであって cid の範囲ではない。
 
-これが正なら book_links の `bencom` を**配列化**する必要がある:
-```jsonc
-"bencom": [
-  { "cid": "ebaaf6...", "section": "第133条〜第178条", "print_range": [1, 220], "offset": 40 },
-  { "cid": "9c1f...",    "section": "第179条〜...",     "print_range": [221, 440], "offset": 40 }
-]
-```
-着地時は「紙面ページが入る print_range の cid」を選んで `&adr=print_page+offset`。
-→ **確認方法**: 同じ本の別の条文範囲/巻を開き、reader の cid が変わるかを見る（チェックリスト#1）。
+**帰結**: `data/book_links.json` の `bencom` は **単一 `{cid, offset}` でよい**（現状の設計のまま。配列化不要）。
+- 多巻物は各巻が別ISBN＝別cidなので、book_id(ISBN)キーで自然に分かれる。
+- 将来 1 cid が複数巻を内包する例が出たら、その本だけ `print_range` で cid を選ぶ配列化に拡張する。
 
 ---
 
@@ -57,8 +56,12 @@ deeplink.js / config.link_parse / 将来の case_citations を確定するため
 | 判例ID | `L` + 8桁（例 `L02420223`） | 確定（スクショ） |
 | 判例本文 deeplink | `legal-info.com/...?hanreiId=L...`（仮説） | **未確認（要実URL）** |
 
-- ベンコム reader 右下「**判例**」→ 引用判例リンク画面（その紙面ページの引用判例一覧。複数可）→ 各判例 → LICログイン → 判例秘書 判例本文。
-- legal-info.com も SPA で URL 不変の可能性あり。その場合は判例側も「共有/印刷ボタンが出すURL」を探す。
+- チェーン: ベンコム reader 右下「**判例**」→ **引用判例リンク画面**
+  `library.bengo4.com/books/{cid}/precedents#page_{viewer_page}`（**確定**。頁別の引用判例一覧、複数可）
+  → 各判例 → LICログイン → 判例秘書 判例本文。
+- → `case_citations` の一次データはこの `precedents` ページから取れる（book=cid, viewer_page=page_, 判例=L番号）。
+- 残: 各判例 → **legal-info.com の判例本文URL**（判例deeplink形式）。legal-info.com も SPA で URL 不変の可能性あり。
+  その場合は判例側も「共有/印刷ボタンが出すURL」を探す。
 
 ---
 
@@ -66,10 +69,10 @@ deeplink.js / config.link_parse / 将来の case_citations を確定するため
 
 優先順。各URLをこのスレッドに貼れば config / case_sources に落とし込みます。
 
-1. [ ] **cid粒度の確定**: 同じ本（例 コンメンタール民訴III）の**別の条文範囲/巻**を開いた reader 共有URL。cid が変わるか？
-2. [ ] **offsetの安定性**: 目次で離れた章にジャンプ→共有→ `&adr`。紙面ページとの差が章内・巻内で一定か（同一 offset か）。
-3. [ ] **引用判例リンク画面のURL**（「判例」ボタン後の画面）。共有 or アドレスバー。
-4. [ ] **判例本文URL**: 引用判例リンクから1判例を開いた **legal-info.com の実URL**（ログイン後）。判例deeplink形式の確定 → `case_sources.url_template`。
+1. [x] **cid粒度** → 別セクションでも cid 不変 = 巻/ISBN単位。`bencom` は単一 `{cid, offset}` でよい。
+2. [ ] **offset厳密化**（#2'）: reader 画面に印刷された**紙面ページ**と共有URLの **adr** の1組を清書（例「紙面43表示中→adr=○」）。`adr = print + offset` を1点確定。
+3. [x] **引用判例リンク画面のURL** → `library.bengo4.com/books/{cid}/precedents#page_{viewer_page}`（実例 `#page_134`）。
+4. [ ] **判例本文URL** ←次の最重要：引用判例リンクから1判例を開いた **legal-info.com の実URL**（ログイン後）。判例deeplink形式の確定 → `case_sources.url_template`。
 5. [ ] **ベンコム検索結果URL**: 任意語で検索した `library.bengo4.com/search?...`。
 6. [ ] **リーガル検索/法令リンクURL**: 検索結果ページ・法令リンク先。
 
