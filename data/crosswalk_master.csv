@@ -1,0 +1,1182 @@
+sf_id,key_prefix,object_type,依頼者,事件名,box_folder,担当弁護士,box区分,label_name
+,,不明(),案件外,,—,,,ALO/_案件外
+,,不明(),要確認,,—,,,ALO/_要確認
+,,不明(),誤分類,,—,,,ALO/_誤分類
+0015h00001KUdB9AAL,001,取引先(Account),株式会社わかば経営会計,,—,,,ALO/0015h00001KUdB9AAL_株式会社わかば経営会計
+0015h00001KUdExAAL,001,取引先(Account),株式会社シマプリ,,—,,,ALO/0015h00001KUdExAAL_株式会社シマプリ
+0015h00001btzg0AAA,001,取引先(Account),株式会社ノーツセキュリティ,,—,,,ALO/0015h00001btzg0AAA_株式会社ノーツセキュリティ
+0015h00000Po7OSAAZ,001,取引先(Account),株式会社ミックス,,○,浅井,相談,ALO/0015h00000Po7OSAAZ_株式会社ミックス
+0015h00000FpO0xAAF,001,取引先(Account),五宝 美優紀,,—,,,ALO/0015h00000FpO0xAAF_五宝 美優紀
+0015h00000GqJSGAA3,001,取引先(Account),山口 幸樹,,○,浅井,相談,ALO/0015h00000GqJSGAA3_山口 幸樹
+0015h00000Gnx26AAB,001,取引先(Account),岡原 慶高,,—,,,ALO/0015h00000Gnx26AAB_岡原 慶高
+0015h00000Gob0ZAAR,001,取引先(Account),杉本 大生,,—,,,ALO/0015h00000Gob0ZAAR_杉本 大生
+0015h00001LkYaxAAF,001,取引先(Account),都スクリーン株式会社,,○,浅井,受任案件,ALO/0015h00001LkYaxAAF_都スクリーン株式会社
+a03RA00001G5ZWUYA3,a03,顧問・その他(要SF確認),AI’m株式会社,契約書レビュー,○,浅井,相談,ALO/a03RA00001G5ZWUYA3_AI’m株式会社＿契約書レビュー
+a035h000005gLAfAAM,a03,顧問・その他(要SF確認),ASXEED,退職者(安田淳樹)対応,—,,,ALO/a035h000005gLAfAAM_ASXEED＿退職者(安田淳樹)対応
+a035h00000bCw41AAC,a03,顧問・その他(要SF確認),株式会社ASXEED,損害賠償請求事件(対中岡氏),—,,,ALO/a035h00000bCw41AAC_株式会社ASXEED＿損害賠償請求事件(対中岡氏)
+a035h000006elaFAAQ,a03,顧問・その他(要SF確認),ASXEED バイト内定拒否,,—,,,ALO/a035h000006elaFAAQ_ASXEED バイト内定拒否
+a035h000009auk0AAA,a03,顧問・その他(要SF確認),ASXEED村上英乃さん対応,,—,,,ALO/a035h000009auk0AAA_ASXEED村上英乃さん対応
+a035h000006QeywAAC,a03,顧問・その他(要SF確認),JHONAN 内部通報窓口,,—,,,ALO/a035h000006QeywAAC_JHONAN 内部通報窓口
+a03J2000009D5YuIAK,a03,顧問・その他(要SF確認),JOHNAN,応用科学研究所案件,○,浅井,受任案件,ALO/a03J2000009D5YuIAK_JOHNAN＿応用科学研究所案件
+a03J200000CMvNiIAL,a03,顧問・その他(要SF確認),JOHNAN,環境問題相談,○,浅井,受任案件,ALO/a03J200000CMvNiIAL_JOHNAN＿環境問題相談
+a035h00000dkf5jAAA,a03,顧問・その他(要SF確認),きゅうべぇ,事業譲受事案,—,,,ALO/a035h00000dkf5jAAA_きゅうべぇ＿事業譲受事案
+a03J200000488EkIAI,a03,顧問・その他(要SF確認),きゅうべえ,PJP契約解除案件,—,,,ALO/a03J200000488EkIAI_きゅうべえ＿PJP契約解除案件
+a03J20000082TZHIA2,a03,顧問・その他(要SF確認),きゅうべえ,シェアサイクル事業譲渡,—,,,ALO/a03J20000082TZHIA2_きゅうべえ＿シェアサイクル事業譲渡
+a035h00000ZmnvvAAB,a03,顧問・その他(要SF確認),どうぶつ病院京都株式会社,,—,,,ALO/a035h00000ZmnvvAAB_どうぶつ病院京都株式会社
+a035h00000fOs1EAAS,a03,顧問・その他(要SF確認),どうぶつ病院京都,従業員解雇問題,—,,,ALO/a035h00000fOs1EAAS_どうぶつ病院京都＿従業員解雇問題
+a035h000006KyvwAAC,a03,顧問・その他(要SF確認),コムスキャンテクノ,退職従業員対応,—,,,ALO/a035h000006KyvwAAC_コムスキャンテクノ＿退職従業員対応
+a035h00000TY3rrAAD,a03,顧問・その他(要SF確認),コムスキャンテクノ,JAMSTECK,—,,,ALO/a035h00000TY3rrAAD_コムスキャンテクノ＿JAMSTECK
+a035h00000gK8YMAA0,a03,顧問・その他(要SF確認),コムスキャンテクノ,菊池さん対応,—,,,ALO/a035h00000gK8YMAA0_コムスキャンテクノ＿菊池さん対応
+a03RA00000dNR2fYAG,a03,顧問・その他(要SF確認),テスト,タイムチャージ＿株式会社きゅうべえ,—,,,ALO/a03RA00000dNR2fYAG_テスト＿タイムチャージ＿株式会社きゅうべえ
+a035h00000DILBEAA5,a03,顧問・その他(要SF確認),ホワイトラビット・業務委託契約関係,,—,,,ALO/a035h00000DILBEAA5_ホワイトラビット・業務委託契約関係
+a035h000006Wdu9AAC,a03,顧問・その他(要SF確認),労働事件,,—,,,ALO/a035h000006Wdu9AAC_労働事件
+a035h00000454PfAAI,a03,顧問・その他(要SF確認),損害賠償,,—,,,ALO/a035h00000454PfAAI_損害賠償
+a03J200000FATsHIAX,a03,顧問・その他(要SF確認),目片鉄工所,対従業員に関するご相談,○,浅井,受任案件,ALO/a03J200000FATsHIAX_目片鉄工所＿対従業員に関するご相談
+a03RA00000XvgqmYAB,a03,顧問・その他(要SF確認),株式会社目片鉄工所,リストラ対応,○,浅井,受任案件,ALO/a03RA00000XvgqmYAB_株式会社目片鉄工所＿リストラ対応
+a03J2000006eFJLIA2,a03,顧問・その他(要SF確認),隈元建設,松尾充晃対応,○,浅井,受任案件,ALO/a03J2000006eFJLIA2_隈元建設＿松尾充晃対応
+a035h00000l3T2qAAE,a03,顧問・その他(要SF確認),隈元建設,広和建設 請負代金請求交渉事件,○,浅井,受任案件,ALO/a035h00000l3T2qAAE_隈元建設＿広和建設 請負代金請求交渉事件
+a03J2000009EG5xIAG,a03,顧問・その他(要SF確認),隈元建設,協議会対応,○,浅井,受任案件,ALO/a03J2000009EG5xIAG_隈元建設＿協議会対応
+a03RA00000irE6mYAE,a03,顧問・その他(要SF確認),龍村美術織物,売掛金回収事件,○,浅井,受任案件,ALO/a03RA00000irE6mYAE_龍村美術織物＿売掛金回収事件
+a04RA00000pIRUDYA4,a04,顧問・その他(要SF確認),AI’m株式会社,顧問契約,○,浅井,相談,ALO/a04RA00000pIRUDYA4_AI’m株式会社＿顧問契約
+a045h0000055cNWAAY,a04,顧問・その他(要SF確認),株式会社ASXEED 顧問契約,,—,,,ALO/a045h0000055cNWAAY_株式会社ASXEED 顧問契約
+a045h00000zbNkuAAE,a04,顧問・その他(要SF確認),株式会社Fastlife,顧問契約,○,浅井,相談,ALO/a045h00000zbNkuAAE_株式会社Fastlife＿顧問契約
+a045h0000055cfdAAA,a04,顧問・その他(要SF確認),JOHNAN株式会社顧問契約,,—,,,ALO/a045h0000055cfdAAA_JOHNAN株式会社顧問契約
+a045h00000pJtmKAAS,a04,顧問・その他(要SF確認),株式会社RC・クリエイティブグループ 顧問契約,,—,,,ALO/a045h00000pJtmKAAS_株式会社RC・クリエイティブグループ 顧問契約
+a04J200000gesOiIAI,a04,顧問・その他(要SF確認),かね正グループ,顧問契約,—,,,ALO/a04J200000gesOiIAI_かね正グループ＿顧問契約
+a045h00001PW8juAAD,a04,顧問・その他(要SF確認),株式会社きゅうべえ,顧問契約,—,,,ALO/a045h00001PW8juAAD_株式会社きゅうべえ＿顧問契約
+a045h00001F09RhAAJ,a04,顧問・その他(要SF確認),どうぶつ病院京都株式会社,,—,,,ALO/a045h00001F09RhAAJ_どうぶつ病院京都株式会社
+a04RA00000mRaIHYA0,a04,顧問・その他(要SF確認),株式会社ひとつむり,顧問契約,○,浅井,受任案件,ALO/a04RA00000mRaIHYA0_株式会社ひとつむり＿顧問契約
+a045h0000055cX1AAI,a04,顧問・その他(要SF確認),株式会社エム・イー開発技研 顧問契約,,—,,,ALO/a045h0000055cX1AAI_株式会社エム・イー開発技研 顧問契約
+a045h00000zYhtUAAS,a04,顧問・その他(要SF確認),株式会社シマプリ 顧問契約,,—,,,ALO/a045h00000zYhtUAAS_株式会社シマプリ 顧問契約
+a04RA00000EtIicYAF,a04,顧問・その他(要SF確認),株式会社スペシャルエアサービス東京,顧問契約,—,,,ALO/a04RA00000EtIicYAF_株式会社スペシャルエアサービス東京＿顧問契約
+a04RA00000XllGbYAJ,a04,顧問・その他(要SF確認),株式会社スペシャル・エアー・サービス,顧問契約,○,浅井,受任案件,ALO/a04RA00000XllGbYAJ_株式会社スペシャル・エアー・サービス＿顧問契約
+a045h0000055cm4AAA,a04,顧問・その他(要SF確認),フジサワ機械株式会社顧問契約,,—,,,ALO/a045h0000055cm4AAA_フジサワ機械株式会社顧問契約
+a045h00000uWADnAAO,a04,顧問・その他(要SF確認),株式会社フーズクリエイトMITSUYA 顧問契約,,—,,,ALO/a045h00000uWADnAAO_株式会社フーズクリエイトMITSUYA 顧問契約
+a045h0000055HLZAA2,a04,顧問・その他(要SF確認),株式会社丸惣 顧問契約,,—,,,ALO/a045h0000055HLZAA2_株式会社丸惣 顧問契約
+a04RA000010cinVYAQ,a04,顧問・その他(要SF確認),学校法人岩浅学園_顧問契約,,—,,,ALO/a04RA000010cinVYAQ_学校法人岩浅学園_顧問契約
+a04RA000010cjA5YAI,a04,顧問・その他(要SF確認),学校法人青和学園_顧問契約,,—,,,ALO/a04RA000010cjA5YAI_学校法人青和学園_顧問契約
+a045h00000zbMpGAAU,a04,顧問・その他(要SF確認),宝本商事株式会社(月次報酬発生案件),,○,浅井,受任案件,ALO/a045h00000zbMpGAAU_宝本商事株式会社(月次報酬発生案件)
+a045h0000055ccqAAA,a04,顧問・その他(要SF確認),株式会社幸膳 顧問契約,,—,,,ALO/a045h0000055ccqAAA_株式会社幸膳 顧問契約
+a045h0000055aB5AAI,a04,顧問・その他(要SF確認),株式会社目片鉄工所 顧問契約,,—,,,ALO/a045h0000055aB5AAI_株式会社目片鉄工所 顧問契約
+a045h00001RyvDtAAJ,a04,顧問・その他(要SF確認),都スクリーン株式会社,顧問契約,○,浅井,受任案件,ALO/a045h00001RyvDtAAJ_都スクリーン株式会社＿顧問契約
+a045h0000055b3mAAA,a04,顧問・その他(要SF確認),株式会社金井工芸鋳造所 顧問契約,,—,,,ALO/a045h0000055b3mAAA_株式会社金井工芸鋳造所 顧問契約
+a045h00001orHqdAAE,a04,顧問・その他(要SF確認),株式会社隈元建設,顧問契約,○,浅井,受任案件,ALO/a045h00001orHqdAAE_株式会社隈元建設＿顧問契約
+a045h000015y8CqAAI,a04,顧問・その他(要SF確認),株式会社龍村美術織物,顧問契約,○,浅井,受任案件,ALO/a045h000015y8CqAAI_株式会社龍村美術織物＿顧問契約
+a0A5h00000QJTk6EAH,a0A,受任案件(Matter),ASXEED,破産申立＋事業譲渡,—,,,ALO/a0A5h00000QJTk6EAH_ASXEED＿破産申立＋事業譲渡
+a0A5h0000027PF2EAM,a0A,受任案件(Matter),有限会社Believe,,—,,,ALO/a0A5h0000027PF2EAM_有限会社Believe
+a0A5h0000027PGeEAM,a0A,受任案件(Matter),株式会社BESS京神,,—,,,ALO/a0A5h0000027PGeEAM_株式会社BESS京神
+a0A5h000003QpqrEAC,a0A,受任案件(Matter),株式会社BOD(電子帳簿保存法セミナー),,—,,,ALO/a0A5h000003QpqrEAC_株式会社BOD(電子帳簿保存法セミナー)
+a0A5h0000027PF8EAM,a0A,受任案件(Matter),株式会社CLC,,—,,,ALO/a0A5h0000027PF8EAM_株式会社CLC
+a0AJ200000186GBMAY,a0A,受任案件(Matter),Fastlife,貸金返還等請求事件,○,浅井,相談,ALO/a0AJ200000186GBMAY_Fastlife＿貸金返還等請求事件
+a0AJ2000002ga71MAA,a0A,受任案件(Matter),Fastlife,破産申立,○,浅井,相談,ALO/a0AJ2000002ga71MAA_Fastlife＿破産申立
+a0A5h00000QHaWdEAL,a0A,受任案件(Matter),GMB,建物明渡等請求事件,—,,,ALO/a0A5h00000QHaWdEAL_GMB＿建物明渡等請求事件
+a0A5h0000027PAyEAM,a0A,受任案件(Matter),GoodDesignWorks,,—,,,ALO/a0A5h0000027PAyEAM_GoodDesignWorks
+a0ARA00000FkY652AF,a0A,受任案件(Matter),合同会社HIRAKU,破産申立事件,○,浅井,受任案件,ALO/a0ARA00000FkY652AF_合同会社HIRAKU＿破産申立事件
+a0ARA00000H7YSz2AN,a0A,受任案件(Matter),HIRAKUホールディングス(旧はたご・ASUMO・コーチ),破産申立事件,○,浅井,受任案件,ALO/a0ARA00000H7YSz2AN_HIRAKUホールディングス(旧はたご・ASUMO・コーチ)＿破産申立事件
+a0A5h0000027PFDEA2,a0A,受任案件(Matter),JOHNAN株式会社,,○,浅井,受任案件,ALO/a0A5h0000027PFDEA2_JOHNAN株式会社
+a0ARA00000CwSuf2AF,a0A,受任案件(Matter),JOHNAN株式会社,損害賠償請求事件,○,浅井,受任案件,ALO/a0ARA00000CwSuf2AF_JOHNAN株式会社＿損害賠償請求事件
+a0AJ2000007fQaFMAU,a0A,受任案件(Matter),株式会社Lead,債務整理相談,—,,,ALO/a0AJ2000007fQaFMAU_株式会社Lead＿債務整理相談
+a0AJ2000007fQbsMAE,a0A,受任案件(Matter),株式会社Lead(岩野寛志),債務整理相談,—,,,ALO/a0AJ2000007fQbsMAE_株式会社Lead(岩野寛志)＿債務整理相談
+a0A5h00000PbXp8EAF,a0A,受任案件(Matter),LE MANH NGOC THANH レマインゴックタイン,当番弁護,—,,,ALO/a0A5h00000PbXp8EAF_LE MANH NGOC THANH レマインゴックタイン＿当番弁護
+a0A5h0000027PEkEAM,a0A,受任案件(Matter),MIP,,—,,,ALO/a0A5h0000027PEkEAM_MIP
+a0A5h0000057XgHEAU,a0A,受任案件(Matter),M’s VSD株式会社,,—,,,ALO/a0A5h0000057XgHEAU_M’s VSD株式会社
+a0A5h00000PaE6UEAV,a0A,受任案件(Matter),NKテック,事業清算,—,,,ALO/a0A5h00000PaE6UEAV_NKテック＿事業清算
+a0AJ2000001fAtjMAE,a0A,受任案件(Matter),NKテック,VSすすむすぶ,—,,,ALO/a0AJ2000001fAtjMAE_NKテック＿VSすすむすぶ
+a0AJ2000003PSJnMAO,a0A,受任案件(Matter),NKテック,手形債務不存在確認請求事件,—,,,ALO/a0AJ2000003PSJnMAO_NKテック＿手形債務不存在確認請求事件
+a0AJ2000001gtLAMAY,a0A,受任案件(Matter),OLD&NEWこと古谷勝,破産管財人事件,—,,,ALO/a0AJ2000001gtLAMAY_OLD&NEWこと古谷勝＿破産管財人事件
+a0A5h00000KR5X5EAL,a0A,受任案件(Matter),Oriental株式会社,事業譲渡契約,○,浅井,受任案件,ALO/a0A5h00000KR5X5EAL_Oriental株式会社＿事業譲渡契約
+a0A5h00000L02beEAB,a0A,受任案件(Matter),株式会社Rosnes,少数株主対応,○,浅井,相談,ALO/a0A5h00000L02beEAB_株式会社Rosnes＿少数株主対応
+a0A5h0000027PErEAM,a0A,受任案件(Matter),株式会社Rosnes,,○,浅井,相談,ALO/a0A5h0000027PErEAM_株式会社Rosnes
+a0ARA00000O3ma92AB,a0A,受任案件(Matter),Second Style,株式譲渡契約書作成支援,○,武市,受任案件,ALO/a0ARA00000O3ma92AB_Second Style＿株式譲渡契約書作成支援
+a0ARA00000DuVZV2A3,a0A,受任案件(Matter),SINCEL社,かね正グループ＿損害賠償等請求事件継続的契約の解消,○,浅井,受任案件,ALO/a0ARA00000DuVZV2A3_SINCEL社＿かね正グループ＿損害賠償等請求事件継続的契約の解消
+a0A5h000003PLFoEAO,a0A,受任案件(Matter),えがおの門こと若木 享,破産管財人事件,—,,,ALO/a0A5h000003PLFoEAO_えがおの門こと若木 享＿破産管財人事件
+a0AJ2000008DeRVMA0,a0A,受任案件(Matter),ことほぎ,法律相談,○,浅井,受任案件,ALO/a0AJ2000008DeRVMA0_ことほぎ＿法律相談
+a0A5h000003PdQZEA0,a0A,受任案件(Matter),ひかり監査法人,,—,,,ALO/a0A5h000003PdQZEA0_ひかり監査法人
+a0AJ2000004DVJYMA4,a0A,受任案件(Matter),ひとつむり,企業法務,○,浅井,受任案件,ALO/a0AJ2000004DVJYMA4_ひとつむり＿企業法務
+a0AJ200000727c1MAA,a0A,受任案件(Matter),アダチ,民事再生スポンサー支援,—,,,ALO/a0AJ200000727c1MAA_アダチ＿民事再生スポンサー支援
+a0AJ2000004vM3tMAE,a0A,受任案件(Matter),アドライフ京都,債務整理相談,○,浅井,受任案件,ALO/a0AJ2000004vM3tMAE_アドライフ京都＿債務整理相談
+a0A5h00000MsIgEEAV,a0A,受任案件(Matter),株式会社イング,事業再生検証,○,浅井,受任案件,ALO/a0A5h00000MsIgEEAV_株式会社イング＿事業再生検証
+a0ARA00000SPF5N2AX,a0A,受任案件(Matter),ウイングサポート,企業法務,○,浅井,受任案件,ALO/a0ARA00000SPF5N2AX_ウイングサポート＿企業法務
+a0A5h000003PdQcEAK,a0A,受任案件(Matter),エコップ,,—,,,ALO/a0A5h000003PdQcEAK_エコップ
+a0ARA00000HqnHN2AZ,a0A,受任案件(Matter),エコライフフジワラ,破産管財人事件,○,浅井,受任案件,ALO/a0ARA00000HqnHN2AZ_エコライフフジワラ＿破産管財人事件
+a0A5h00000EPHFNEA5,a0A,受任案件(Matter),株式会社エフ・ツー,,—,,,ALO/a0A5h00000EPHFNEA5_株式会社エフ・ツー
+a0A5h0000027P95EAE,a0A,受任案件(Matter),エムオーエンタープライズ,,—,,,ALO/a0A5h0000027P95EAE_エムオーエンタープライズ
+a0A5h0000027PEuEAM,a0A,受任案件(Matter),株式会社エム・イー開発技研,,—,,,ALO/a0A5h0000027PEuEAM_株式会社エム・イー開発技研
+a0A5h0000026y5jEAA,a0A,受任案件(Matter),株式会社エム・イー開発技研,地位確認等請求控訴事件,—,,,ALO/a0A5h0000026y5jEAA_株式会社エム・イー開発技研＿地位確認等請求控訴事件
+a0A5h0000027P97EAE,a0A,受任案件(Matter),株式会社エル・シー,,—,,,ALO/a0A5h0000027P97EAE_株式会社エル・シー
+a0A5h000003PdQXEA0,a0A,受任案件(Matter),株式会社エースコーポレーション(幸膳の件),,—,,,ALO/a0A5h000003PdQXEA0_株式会社エースコーポレーション(幸膳の件)
+a0A5h0000027PG2EAM,a0A,受任案件(Matter),株式会社カイウル,,—,,,ALO/a0A5h0000027PG2EAM_株式会社カイウル
+a0A5h0000027P9TEAU,a0A,受任案件(Matter),カンサイ合繊工業株式会社,,—,,,ALO/a0A5h0000027P9TEAU_カンサイ合繊工業株式会社
+a0A5h00000PcyKFEAZ,a0A,受任案件(Matter),カードックオオニシ,私的整理,—,,,ALO/a0A5h00000PcyKFEAZ_カードックオオニシ＿私的整理
+a0A5h00000JruePEAR,a0A,受任案件(Matter),株式会社ガレージトニワン,事業承継,—,,,ALO/a0A5h00000JruePEAR_株式会社ガレージトニワン＿事業承継
+a0A5h0000027PA3EAM,a0A,受任案件(Matter),ギャラリー北野,,—,,,ALO/a0A5h0000027PA3EAM_ギャラリー北野
+a0ARA00000CqB0T2AV,a0A,受任案件(Matter),グリーンテック,M&A,○,浅井,受任案件,ALO/a0ARA00000CqB0T2AV_グリーンテック＿M&A
+a0AJ20000068Cg6MAE,a0A,受任案件(Matter),株式会社コウリョウ,破産申立事件,○,浅井,受任案件,ALO/a0AJ20000068Cg6MAE_株式会社コウリョウ＿破産申立事件
+a0A5h0000027PACEA2,a0A,受任案件(Matter),株式会社コムヘルスケア,,—,,,ALO/a0A5h0000027PACEA2_株式会社コムヘルスケア
+a0AJ20000015KaxMAE,a0A,受任案件(Matter),株式会社シマプリ,事業清算・保証解除,—,,,ALO/a0AJ20000015KaxMAE_株式会社シマプリ＿事業清算・保証解除
+a0A5h000003OARJEA4,a0A,受任案件(Matter),ショップ五条,,—,,,ALO/a0A5h000003OARJEA4_ショップ五条
+a0AJ2000007ryhsMAA,a0A,受任案件(Matter),株式会社シンコー住研(旧サーモネット株式会社),債権回収,○,浅井,受任案件,ALO/a0AJ2000007ryhsMAA_株式会社シンコー住研(旧サーモネット株式会社)＿債権回収
+a0A5h0000027CTdEAM,a0A,受任案件(Matter),シーシーエス株式会社,損害賠償請求事件,—,,,ALO/a0A5h0000027CTdEAM_シーシーエス株式会社＿損害賠償請求事件
+a0A5h00000FZL00EAH,a0A,受任案件(Matter),シーティーシージャパン株式会社,株式譲渡契約検討,—,,,ALO/a0A5h00000FZL00EAH_シーティーシージャパン株式会社＿株式譲渡契約検討
+a0A5h0000027PCTEA2,a0A,受任案件(Matter),株式会社スピンオフ,,—,,,ALO/a0A5h0000027PCTEA2_株式会社スピンオフ
+a0A5h0000027PEVEA2,a0A,受任案件(Matter),スピンオフホールディング,,—,,,ALO/a0A5h0000027PEVEA2_スピンオフホールディング
+a0ARA00000CzUv72AF,a0A,受任案件(Matter),スペシャル・エアー・サービス,経営相談,○,浅井,受任案件,ALO/a0ARA00000CzUv72AF_スペシャル・エアー・サービス＿経営相談
+a0A5h0000027P93EAE,a0A,受任案件(Matter),株式会社スーパー大丸,,—,,,ALO/a0A5h0000027P93EAE_株式会社スーパー大丸
+a0A5h0000027PFSEA2,a0A,受任案件(Matter),ソニー(福知山),,—,,,ALO/a0A5h0000027PFSEA2_ソニー(福知山)
+a0A5h0000027P9aEAE,a0A,受任案件(Matter),ソニー損保(藤原直樹),,—,,,ALO/a0A5h0000027P9aEAE_ソニー損保(藤原直樹)
+a0AJ20000061Je6MAE,a0A,受任案件(Matter),株式会社ソーケン,M&A@埼玉,—,,,ALO/a0AJ20000061Je6MAE_株式会社ソーケン＿M&A@埼玉
+a0ARA00000J8LAo2AN,a0A,受任案件(Matter),ソーケンM&A@千葉,,○,浅井,受任案件,ALO/a0ARA00000J8LAo2AN_ソーケンM&A@千葉
+a0A5h00000EOwTNEA1,a0A,受任案件(Matter),タケダネーム協業組合,,—,,,ALO/a0A5h00000EOwTNEA1_タケダネーム協業組合
+a0A5h000009OzbqEAC,a0A,受任案件(Matter),有限会社テイク,外部調査報告書作成,—,,,ALO/a0A5h000009OzbqEAC_有限会社テイク＿外部調査報告書作成
+a0A5h000003PdQrEAK,a0A,受任案件(Matter),トランビ,,—,,,ALO/a0A5h000003PdQrEAK_トランビ
+a0A5h00000F1ekIEAR,a0A,受任案件(Matter),株式会社トータルコミュニケーション,,—,,,ALO/a0A5h00000F1ekIEAR_株式会社トータルコミュニケーション
+a0AJ20000072LvzMAE,a0A,受任案件(Matter),ナガノ精巧,相続放棄相談,—,,,ALO/a0AJ20000072LvzMAE_ナガノ精巧＿相続放棄相談
+a0A5h00000FKxGQEA1,a0A,受任案件(Matter),株式会社ネコラボ,中小企業再生GL 第三者支援専門家 廃業支援,—,,,ALO/a0A5h00000FKxGQEA1_株式会社ネコラボ＿中小企業再生GL 第三者支援専門家 廃業支援
+a0A5h00000O890sEAB,a0A,受任案件(Matter),ノーツセキュリティ,事業清算,—,,,ALO/a0A5h00000O890sEAB_ノーツセキュリティ＿事業清算
+a0ARA00000Gw8AT2AZ,a0A,受任案件(Matter),ハナフル,団体交渉,○,浅井,受任案件,ALO/a0ARA00000Gw8AT2AZ_ハナフル＿団体交渉
+a0A5h00000K7XpVEAV,a0A,受任案件(Matter),株式会社ビランニット,経営者保証ガイドライン,—,,,ALO/a0A5h00000K7XpVEAV_株式会社ビランニット＿経営者保証ガイドライン
+a0A5h00000Q1u2EEAR,a0A,受任案件(Matter),フーズクリエイトMITSUYA,売掛金等請求事件,—,,,ALO/a0A5h00000Q1u2EEAR_フーズクリエイトMITSUYA＿売掛金等請求事件
+a0A5h0000027PDHEA2,a0A,受任案件(Matter),マックス精密株式会社,,—,,,ALO/a0A5h0000027PDHEA2_マックス精密株式会社
+a0A5h0000027PGqEAM,a0A,受任案件(Matter),メゾンドツーリズム京都,,—,,,ALO/a0A5h0000027PGqEAM_メゾンドツーリズム京都
+a0A5h0000027PFJEA2,a0A,受任案件(Matter),ヤナコ計測,,—,,,ALO/a0A5h0000027PFJEA2_ヤナコ計測
+a0A5h0000027PG1EAM,a0A,受任案件(Matter),丈達 弘一,,—,,,ALO/a0A5h0000027PG1EAM_丈達 弘一
+a0A5h0000027PG7EAM,a0A,受任案件(Matter),三上 祥恵,,—,,,ALO/a0A5h0000027PG7EAM_三上 祥恵
+a0A5h0000027PF4EAM,a0A,受任案件(Matter),三久保 学志,,—,,,ALO/a0A5h0000027PF4EAM_三久保 学志
+a0A5h0000027PEyEAM,a0A,受任案件(Matter),三宅 香織,,—,,,ALO/a0A5h0000027PEyEAM_三宅 香織
+a0AJ2000007bNZwMAM,a0A,受任案件(Matter),三森直人,破産管財人事件,—,,,ALO/a0AJ2000007bNZwMAM_三森直人＿破産管財人事件
+a0A5h0000027PGXEA2,a0A,受任案件(Matter),三田村 修,,—,,,ALO/a0A5h0000027PGXEA2_三田村 修
+a0A5h0000027PGSEA2,a0A,受任案件(Matter),三田村 正子,,—,,,ALO/a0A5h0000027PGSEA2_三田村 正子
+a0A5h0000027PCOEA2,a0A,受任案件(Matter),上坂 央子,,—,,,ALO/a0A5h0000027PCOEA2_上坂 央子
+a0A5h0000027PCnEAM,a0A,受任案件(Matter),上田 勇,,—,,,ALO/a0A5h0000027PCnEAM_上田 勇
+a0A5h0000027PCbEAM,a0A,受任案件(Matter),上田 奈緒美,,—,,,ALO/a0A5h0000027PCbEAM_上田 奈緒美
+a0A5h0000027PE7EAM,a0A,受任案件(Matter),上田 貴明,,—,,,ALO/a0A5h0000027PE7EAM_上田 貴明
+a0A5h0000027P8OEAU,a0A,受任案件(Matter),上野 周俊,,—,,,ALO/a0A5h0000027P8OEAU_上野 周俊
+a0A5h0000028qcMEAQ,a0A,受任案件(Matter),中宇木材株式会社,奈良協議会 抜本案件,—,,,ALO/a0A5h0000028qcMEAQ_中宇木材株式会社＿奈良協議会 抜本案件
+a0A5h0000027PE5EAM,a0A,受任案件(Matter),中屋敷 めぐみ,,—,,,ALO/a0A5h0000027PE5EAM_中屋敷 めぐみ
+a0A5h0000027PDLEA2,a0A,受任案件(Matter),中山 義康,,—,,,ALO/a0A5h0000027PDLEA2_中山 義康
+a0ARA00000GtPcT2AV,a0A,受任案件(Matter),中岡 崇(HIRAKU),債務整理,○,浅井,受任案件,ALO/a0ARA00000GtPcT2AV_中岡 崇(HIRAKU)＿債務整理
+a0A5h0000027PAoEAM,a0A,受任案件(Matter),中嶋 孝弘,,—,,,ALO/a0A5h0000027PAoEAM_中嶋 孝弘
+a0A5h0000027P8zEAE,a0A,受任案件(Matter),中川 正明,,—,,,ALO/a0A5h0000027P8zEAE_中川 正明
+a0A5h0000027PGIEA2,a0A,受任案件(Matter),中川 誠二,,—,,,ALO/a0A5h0000027PGIEA2_中川 誠二
+a0A5h0000027PAbEAM,a0A,受任案件(Matter),中村 七百子,,—,,,ALO/a0A5h0000027PAbEAM_中村 七百子
+a0A5h0000027PDpEAM,a0A,受任案件(Matter),中村 基義,,—,,,ALO/a0A5h0000027PDpEAM_中村 基義
+a0A5h0000027P8IEAU,a0A,受任案件(Matter),中村 宗一,,—,,,ALO/a0A5h0000027P8IEAU_中村 宗一
+a0A5h000003PdQwEAK,a0A,受任案件(Matter),中村徹也,,—,,,ALO/a0A5h000003PdQwEAK_中村徹也
+a0A5h0000027P8qEAE,a0A,受任案件(Matter),中村 美峰,,—,,,ALO/a0A5h0000027P8qEAE_中村 美峰
+a0A5h0000027PDcEAM,a0A,受任案件(Matter),中村 隆宏,,—,,,ALO/a0A5h0000027PDcEAM_中村 隆宏
+a0A5h0000027PDxEAM,a0A,受任案件(Matter),中河 亜沙美,,—,,,ALO/a0A5h0000027PDxEAM_中河 亜沙美
+a0A5h0000027PDwEAM,a0A,受任案件(Matter),中河 幹夫,,—,,,ALO/a0A5h0000027PDwEAM_中河 幹夫
+a0ARA00000RBBlN2AX,a0A,受任案件(Matter),中瀬 充,法律相談,○,浅井,受任案件,ALO/a0ARA00000RBBlN2AX_中瀬 充＿法律相談
+a0A5h00000NvKKmEAN,a0A,受任案件(Matter),中西光一,相続放棄,—,,,ALO/a0A5h00000NvKKmEAN_中西光一＿相続放棄
+a0A5h0000027PD0EAM,a0A,受任案件(Matter),中西 恭子,,—,,,ALO/a0A5h0000027PD0EAM_中西 恭子
+a0A5h0000027PASEA2,a0A,受任案件(Matter),中路 智重,,—,,,ALO/a0A5h0000027PASEA2_中路 智重
+a0A5h0000027PBAEA2,a0A,受任案件(Matter),中野 ひろ子,,—,,,ALO/a0A5h0000027PBAEA2_中野 ひろ子
+a0A5h0000027PC4EAM,a0A,受任案件(Matter),中野製薬株式会社,,—,,,ALO/a0A5h0000027PC4EAM_中野製薬株式会社
+a0A5h0000027PFkEAM,a0A,受任案件(Matter),株式会社丸惣,,—,,,ALO/a0A5h0000027PFkEAM_株式会社丸惣
+a0A5h00000BblBWEAZ,a0A,受任案件(Matter),株式会社丸惣,事業再生,—,,,ALO/a0A5h00000BblBWEAZ_株式会社丸惣＿事業再生
+a0A5h0000027PFcEAM,a0A,受任案件(Matter),丸田 晃一郎,,—,,,ALO/a0A5h0000027PFcEAM_丸田 晃一郎
+a0A5h0000027PBJEA2,a0A,受任案件(Matter),丹羽 竜二,,—,,,ALO/a0A5h0000027PBJEA2_丹羽 竜二
+a0AJ2000001P5tYMAS,a0A,受任案件(Matter),久保浩二,損害賠償請求事件(交通事故),○,浅井,受任案件,ALO/a0AJ2000001P5tYMAS_久保浩二＿損害賠償請求事件(交通事故)
+a0A5h0000027PDlEAM,a0A,受任案件(Matter),久保 裕一,,—,,,ALO/a0A5h0000027PDlEAM_久保 裕一
+a0A5h0000027PBFEA2,a0A,受任案件(Matter),乾 信子,,—,,,ALO/a0A5h0000027PBFEA2_乾 信子
+a0A5h000006cLHsEAM,a0A,受任案件(Matter),株式会社亀匠,債務整理,—,,,ALO/a0A5h000006cLHsEAM_株式会社亀匠＿債務整理
+a0A5h0000027PDXEA2,a0A,受任案件(Matter),亀岡 敏彦,,—,,,ALO/a0A5h0000027PDXEA2_亀岡 敏彦
+a0A5h0000027PFTEA2,a0A,受任案件(Matter),事業再生勉強会,,—,,,ALO/a0A5h0000027PFTEA2_事業再生勉強会
+a0A5h0000027PCSEA2,a0A,受任案件(Matter),二上 季代司,,—,,,ALO/a0A5h0000027PCSEA2_二上 季代司
+a0A5h000008xYsgEAE,a0A,受任案件(Matter),五十川 伊佐郎,懲戒請求,—,,,ALO/a0A5h000008xYsgEAE_五十川 伊佐郎＿懲戒請求
+a0A5h0000027PBDEA2,a0A,受任案件(Matter),五十川 伊佐郎,紛議調停委員会,—,,,ALO/a0A5h0000027PBDEA2_五十川 伊佐郎＿紛議調停委員会
+a0A5h000000vXynEAE,a0A,受任案件(Matter),五宝美優紀,破産申立事件,—,,,ALO/a0A5h000000vXynEAE_五宝美優紀＿破産申立事件
+a0A5h0000027PFjEAM,a0A,受任案件(Matter),五宝 美優紀,,—,,,ALO/a0A5h0000027PFjEAM_五宝 美優紀
+a0A5h0000027P8oEAE,a0A,受任案件(Matter),井上 一繁,,—,,,ALO/a0A5h0000027P8oEAE_井上 一繁
+a0A5h0000027PBGEA2,a0A,受任案件(Matter),井上 光代,第三者異議事件,○,浅井,受任案件,ALO/a0A5h0000027PBGEA2_井上 光代＿第三者異議事件
+a0A5h0000027BRdEAM,a0A,受任案件(Matter),井上光代,債権執行事件,○,浅井,受任案件,ALO/a0A5h0000027BRdEAM_井上光代＿債権執行事件
+a0A5h0000027P8nEAE,a0A,受任案件(Matter),井上 力雄,,—,,,ALO/a0A5h0000027P8nEAE_井上 力雄
+a0A5h0000027PCoEAM,a0A,受任案件(Matter),井上 勇,,—,,,ALO/a0A5h0000027PCoEAM_井上 勇
+a0A5h0000028hauEAA,a0A,受任案件(Matter),井上大暉 損害賠償請求(交通)事件,,—,,,ALO/a0A5h0000028hauEAA_井上大暉 損害賠償請求(交通)事件
+a0A5h0000027P9CEAU,a0A,受任案件(Matter),井上 栄,,—,,,ALO/a0A5h0000027P9CEAU_井上 栄
+a0A5h0000027P9jEAE,a0A,受任案件(Matter),井上 生子,,—,,,ALO/a0A5h0000027P9jEAE_井上 生子
+a0A5h0000027PCuEAM,a0A,受任案件(Matter),井上 郁也,,—,,,ALO/a0A5h0000027PCuEAM_井上 郁也
+a0A5h0000027PAsEAM,a0A,受任案件(Matter),井原 典子,,—,,,ALO/a0A5h0000027PAsEAM_井原 典子
+a0ARA00000KSH2P2AX,a0A,受任案件(Matter),井口匡,覚醒剤所持(法テラス),○,武市,受任案件,ALO/a0ARA00000KSH2P2AX_井口匡＿覚醒剤所持(法テラス)
+a0ARA00000CPoYz2AL,a0A,受任案件(Matter),京ノ,「ごはん日和」事業買取スキーム,○,浅井,受任案件,ALO/a0ARA00000CPoYz2AL_京ノ＿「ごはん日和」事業買取スキーム
+a0A5h0000027P8yEAE,a0A,受任案件(Matter),京都ファイナンス,,—,,,ALO/a0A5h0000027P8yEAE_京都ファイナンス
+a0A5h0000026yOtEAI,a0A,受任案件(Matter),京都中小企業診断協会,事業承継勉強会,—,,,ALO/a0A5h0000026yOtEAI_京都中小企業診断協会＿事業承継勉強会
+a0A5h000003PdQhEAK,a0A,受任案件(Matter),京都商工会議所,,—,,,ALO/a0A5h000003PdQhEAK_京都商工会議所
+a0A5h0000027PEvEAM,a0A,受任案件(Matter),京都振袖スタイル,,—,,,ALO/a0A5h0000027PEvEAM_京都振袖スタイル
+a0A5h0000027PFHEA2,a0A,受任案件(Matter),株式会社京都書房,,—,,,ALO/a0A5h0000027PFHEA2_株式会社京都書房
+a0ARA00000Qlt3h2AB,a0A,受任案件(Matter),株式会社京都高雄倶楽部,事業整理相談,○,浅井,受任案件,ALO/a0ARA00000Qlt3h2AB_株式会社京都高雄倶楽部＿事業整理相談
+a0ARA00000F4lxN2AR,a0A,受任案件(Matter),今井秀一,クレジット・サラ金法律相談(京都弁護士会),○,武市,受任案件,ALO/a0ARA00000F4lxN2AR_今井秀一＿クレジット・サラ金法律相談(京都弁護士会)
+a0A5h000000vXz8EAE,a0A,受任案件(Matter),今西正二,損害賠償請求事件(交通事故),—,,,ALO/a0A5h000000vXz8EAE_今西正二＿損害賠償請求事件(交通事故)
+a0A5h0000027PGuEAM,a0A,受任案件(Matter),今西正二(税理士),,—,,,ALO/a0A5h0000027PGuEAM_今西正二(税理士)
+a0A5h0000027P9oEAE,a0A,受任案件(Matter),伊東 隆一,,—,,,ALO/a0A5h0000027P9oEAE_伊東 隆一
+a0A5h0000027PDAEA2,a0A,受任案件(Matter),伊藤 博高,,—,,,ALO/a0A5h0000027PDAEA2_伊藤 博高
+a0A5h0000027PFXEA2,a0A,受任案件(Matter),伊藤 文恵,,—,,,ALO/a0A5h0000027PFXEA2_伊藤 文恵
+a0A5h0000027PADEA2,a0A,受任案件(Matter),株式会社伸工務店,,—,,,ALO/a0A5h0000027PADEA2_株式会社伸工務店
+a0A5h0000027P8TEAU,a0A,受任案件(Matter),佃 貴志(国選),,—,,,ALO/a0A5h0000027P8TEAU_佃 貴志(国選)
+a0A5h0000027CTOEA2,a0A,受任案件(Matter),住廣眞司,経営者保証GL単独型,—,,,ALO/a0A5h0000027CTOEA2_住廣眞司＿経営者保証GL単独型
+a0A5h0000027PAFEA2,a0A,受任案件(Matter),佐々木 恵,,—,,,ALO/a0A5h0000027PAFEA2_佐々木 恵
+a0A5h000007qnqCEAQ,a0A,受任案件(Matter),佐々木盛雄,債務整理,—,,,ALO/a0A5h000007qnqCEAQ_佐々木盛雄＿債務整理
+a0A5h0000027PCAEA2,a0A,受任案件(Matter),佐々木 茂,,—,,,ALO/a0A5h0000027PCAEA2_佐々木 茂
+a0A5h0000027PAAEA2,a0A,受任案件(Matter),佐竹 浩隆,,—,,,ALO/a0A5h0000027PAAEA2_佐竹 浩隆
+a0A5h0000027PD4EAM,a0A,受任案件(Matter),佐藤 伊保子,,—,,,ALO/a0A5h0000027PD4EAM_佐藤 伊保子
+a0A5h0000027PEAEA2,a0A,受任案件(Matter),佐藤 優奈,,—,,,ALO/a0A5h0000027PEAEA2_佐藤 優奈
+a0A5h0000027PAuEAM,a0A,受任案件(Matter),佐藤 滋,,—,,,ALO/a0A5h0000027PAuEAM_佐藤 滋
+a0A5h0000027PB2EAM,a0A,受任案件(Matter),佐藤 英孝,,—,,,ALO/a0A5h0000027PB2EAM_佐藤 英孝
+a0A5h0000027PENEA2,a0A,受任案件(Matter),佐野 正尚,,—,,,ALO/a0A5h0000027PENEA2_佐野 正尚
+a0AJ2000007PqS1MAK,a0A,受任案件(Matter),保川和子,交通事故,—,,,ALO/a0AJ2000007PqS1MAK_保川和子＿交通事故
+a0A5h0000027PEUEA2,a0A,受任案件(Matter),保澤 誠,,—,,,ALO/a0A5h0000027PEUEA2_保澤 誠
+a0A5h0000027PFnEAM,a0A,受任案件(Matter),倉嶌 勝裕,,—,,,ALO/a0A5h0000027PFnEAM_倉嶌 勝裕
+a0AJ200000164MGMAY,a0A,受任案件(Matter),有限会社公建,会社整理,—,,,ALO/a0AJ200000164MGMAY_有限会社公建＿会社整理
+a0A5h0000027PEHEA2,a0A,受任案件(Matter),内林 大輝,,—,,,ALO/a0A5h0000027PEHEA2_内林 大輝
+a0A5h0000027PGhEAM,a0A,受任案件(Matter),冨美家,,—,,,ALO/a0A5h0000027PGhEAM_冨美家
+a0A5h0000027P9uEAE,a0A,受任案件(Matter),冬山 幸,,—,,,ALO/a0A5h0000027P9uEAE_冬山 幸
+a0A5h000003NrkwEAC,a0A,受任案件(Matter),出力確認テスト,,—,,,ALO/a0A5h000003NrkwEAC_出力確認テスト
+a0A5h0000027PBpEAM,a0A,受任案件(Matter),出原 愛,,—,,,ALO/a0A5h0000027PBpEAM_出原 愛
+a0A5h0000027P8CEAU,a0A,受任案件(Matter),出雲 貞好,,—,,,ALO/a0A5h0000027P8CEAU_出雲 貞好
+a0AJ20000077S7EMAU,a0A,受任案件(Matter),初田久子,債務整理(法テラス),—,,,ALO/a0AJ20000077S7EMAU_初田久子＿債務整理(法テラス)
+a0A5h0000027PFvEAM,a0A,受任案件(Matter),前岡 ひろみ,,—,,,ALO/a0A5h0000027PFvEAM_前岡 ひろみ
+a0ARA00000JlLXV2A3,a0A,受任案件(Matter),前田トヨ,損害賠償請求事件,○,浅井,受任案件,ALO/a0ARA00000JlLXV2A3_前田トヨ＿損害賠償請求事件
+a0A5h0000027PGAEA2,a0A,受任案件(Matter),前田 優,,—,,,ALO/a0A5h0000027PGAEA2_前田 優
+a0A5h0000027PCsEAM,a0A,受任案件(Matter),前田 理恵,,—,,,ALO/a0A5h0000027PCsEAM_前田 理恵
+a0A5h0000027P8wEAE,a0A,受任案件(Matter),前田 益男,,—,,,ALO/a0A5h0000027P8wEAE_前田 益男
+a0A5h0000027PC9EAM,a0A,受任案件(Matter),前田 直子,,—,,,ALO/a0A5h0000027PC9EAM_前田 直子
+a0A5h0000027P9EEAU,a0A,受任案件(Matter),前田 聖也,,—,,,ALO/a0A5h0000027P9EEAU_前田 聖也
+a0A5h0000027PFsEAM,a0A,受任案件(Matter),加藤 一成,,—,,,ALO/a0A5h0000027PFsEAM_加藤 一成
+a0A5h0000027PGBEA2,a0A,受任案件(Matter),加藤 朱美,,—,,,ALO/a0A5h0000027PGBEA2_加藤 朱美
+a0A5h0000027P9tEAE,a0A,受任案件(Matter),北原 繁子,,—,,,ALO/a0A5h0000027P9tEAE_北原 繁子
+a0A5h0000027PBvEAM,a0A,受任案件(Matter),北園 禎弘,,—,,,ALO/a0A5h0000027PBvEAM_北園 禎弘
+a0A5h0000027P87EAE,a0A,受任案件(Matter),北川 英一,,—,,,ALO/a0A5h0000027P87EAE_北川 英一
+a0A5h0000027P8AEAU,a0A,受任案件(Matter),株式会社北摂情報学研究所,,—,,,ALO/a0A5h0000027P8AEAU_株式会社北摂情報学研究所
+a0A5h0000027PCBEA2,a0A,受任案件(Matter),北村 恵未子,,—,,,ALO/a0A5h0000027PCBEA2_北村 恵未子
+a0A5h0000027PEGEA2,a0A,受任案件(Matter),北村 浩康,,—,,,ALO/a0A5h0000027PEGEA2_北村 浩康
+a0A5h0000027PDTEA2,a0A,受任案件(Matter),北村 由香子,,—,,,ALO/a0A5h0000027PDTEA2_北村 由香子
+a0A5h0000027PDsEAM,a0A,受任案件(Matter),北村 美優,,—,,,ALO/a0A5h0000027PDsEAM_北村 美優
+a0A5h0000027P8JEAU,a0A,受任案件(Matter),北村 隆三,,—,,,ALO/a0A5h0000027P8JEAU_北村 隆三
+a0A5h0000027P89EAE,a0A,受任案件(Matter),北林 元紀,,—,,,ALO/a0A5h0000027P89EAE_北林 元紀
+a0A5h0000027PDKEA2,a0A,受任案件(Matter),北林 愛,,—,,,ALO/a0A5h0000027PDKEA2_北林 愛
+a0A5h0000027PClEAM,a0A,受任案件(Matter),北橋 真樹,,—,,,ALO/a0A5h0000027PClEAM_北橋 真樹
+a0A5h0000027PCdEAM,a0A,受任案件(Matter),北脇 忠裕,,—,,,ALO/a0A5h0000027PCdEAM_北脇 忠裕
+a0A5h0000027PAHEA2,a0A,受任案件(Matter),北里 隆俊,,—,,,ALO/a0A5h0000027PAHEA2_北里 隆俊
+a0A5h0000027PGfEAM,a0A,受任案件(Matter),十全会,,—,,,ALO/a0A5h0000027PGfEAM_十全会
+a0A5h000003OGmyEAG,a0A,受任案件(Matter),十全会 病院買収,,—,,,ALO/a0A5h000003OGmyEAG_十全会 病院買収
+a0AJ200000213W4MAI,a0A,受任案件(Matter),千田鈴子,交通事故相談,○,浅井,受任案件,ALO/a0AJ200000213W4MAI_千田鈴子＿交通事故相談
+a0AJ20000021A4IMAU,a0A,受任案件(Matter),南橋いずみ,詐欺被害事件,○,武市,受任案件,ALO/a0AJ20000021A4IMAU_南橋いずみ＿詐欺被害事件
+a0A5h0000027P9xEAE,a0A,受任案件(Matter),南部 忠男,,—,,,ALO/a0A5h0000027P9xEAE_南部 忠男
+a0A5h0000027PBqEAM,a0A,受任案件(Matter),原 敬,,—,,,ALO/a0A5h0000027PBqEAM_原 敬
+a0ARA00000NFhx32AD,a0A,受任案件(Matter),原本成實,クレジット・サラ金法律相談(京都弁護士会),○,武市,受任案件,ALO/a0ARA00000NFhx32AD_原本成實＿クレジット・サラ金法律相談(京都弁護士会)
+a0A5h0000027PBhEAM,a0A,受任案件(Matter),原 正彦,,—,,,ALO/a0A5h0000027PBhEAM_原 正彦
+a0A5h0000027PABEA2,a0A,受任案件(Matter),及川 和子,,—,,,ALO/a0A5h0000027PABEA2_及川 和子
+a0A5h0000027PGWEA2,a0A,受任案件(Matter),古山 輝,,—,,,ALO/a0A5h0000027PGWEA2_古山 輝
+a0A5h00000EZ7AwEAL,a0A,受任案件(Matter),古川悟,保証債務整理事件,—,,,ALO/a0A5h00000EZ7AwEAL_古川悟＿保証債務整理事件
+a0A5h0000027PElEAM,a0A,受任案件(Matter),古畑 拓真,,—,,,ALO/a0A5h0000027PElEAM_古畑 拓真
+a0A5h0000027PAVEA2,a0A,受任案件(Matter),古谷 博,,—,,,ALO/a0A5h0000027PAVEA2_古谷 博
+a0A5h0000027PAUEA2,a0A,受任案件(Matter),有限会社古谷建装,,—,,,ALO/a0A5h0000027PAUEA2_有限会社古谷建装
+a0A5h0000027PFOEA2,a0A,受任案件(Matter),吉岡 尚利,,—,,,ALO/a0A5h0000027PFOEA2_吉岡 尚利
+a0A5h0000027P8sEAE,a0A,受任案件(Matter),吉川 信次,,—,,,ALO/a0A5h0000027P8sEAE_吉川 信次
+a0A5h0000027CTeEAM,a0A,受任案件(Matter),吉川昭男,損害賠償請求事件(mints提出),—,,,ALO/a0A5h0000027CTeEAM_吉川昭男＿損害賠償請求事件(mints提出)
+a0A5h0000027PAhEAM,a0A,受任案件(Matter),吉江 信治,,—,,,ALO/a0A5h0000027PAhEAM_吉江 信治
+a0ARA00000Cf6dd2AB,a0A,受任案件(Matter),吉江大地,窃盗保護事件(少年事件),○,武市,受任案件,ALO/a0ARA00000Cf6dd2AB_吉江大地＿窃盗保護事件(少年事件)
+a0ARA00000O8ksg2AB,a0A,受任案件(Matter),吉江大地,示談交渉事件,○,武市,受任案件,ALO/a0ARA00000O8ksg2AB_吉江大地＿示談交渉事件
+a0A5h00000HOx5pEAD,a0A,受任案件(Matter),吉田和子,保佐事件,○,浅井,受任案件,ALO/a0A5h00000HOx5pEAD_吉田和子＿保佐事件
+a0A5h00000NCnwbEAD,a0A,受任案件(Matter),吉田和子,破産申立事件,○,浅井,受任案件,ALO/a0A5h00000NCnwbEAD_吉田和子＿破産申立事件
+a0A5h0000027P8YEAU,a0A,受任案件(Matter),吉田 富士雄,,—,,,ALO/a0A5h0000027P8YEAU_吉田 富士雄
+a0A5h0000027PBHEA2,a0A,受任案件(Matter),吉田 栄治,,—,,,ALO/a0A5h0000027PBHEA2_吉田 栄治
+a0A5h0000027PFBEA2,a0A,受任案件(Matter),吉田 泰,,—,,,ALO/a0A5h0000027PFBEA2_吉田 泰
+a0A5h0000027PAiEAM,a0A,受任案件(Matter),吉田 真枝,,—,,,ALO/a0A5h0000027PAiEAM_吉田 真枝
+a0AJ2000004h0VrMAI,a0A,受任案件(Matter),吉田裕彦,経営者保証ガイドライン(専門家支援),○,浅井,受任案件,ALO/a0AJ2000004h0VrMAI_吉田裕彦＿経営者保証ガイドライン(専門家支援)
+a0A5h0000027PB4EAM,a0A,受任案件(Matter),名和 眞一,,—,,,ALO/a0A5h0000027PB4EAM_名和 眞一
+a0A5h0000027P9UEAU,a0A,受任案件(Matter),名子平 学,,—,,,ALO/a0A5h0000027P9UEAU_名子平 学
+a0A5h0000027P9dEAE,a0A,受任案件(Matter),和田 幸子,,—,,,ALO/a0A5h0000027P9dEAE_和田 幸子
+a0A5h0000027PBUEA2,a0A,受任案件(Matter),和田 靖子,,—,,,ALO/a0A5h0000027PBUEA2_和田 靖子
+a0ARA00000Ap2jZ2AR,a0A,受任案件(Matter),善積康男,窃盗(国選弁護),—,,,ALO/a0ARA00000Ap2jZ2AR_善積康男＿窃盗(国選弁護)
+a0AJ2000004iaTSMAY,a0A,受任案件(Matter),國村伸子,債務整理(法テラス),—,,,ALO/a0AJ2000004iaTSMAY_國村伸子＿債務整理(法テラス)
+a0A5h0000027PFMEA2,a0A,受任案件(Matter),園田 彩佳,,—,,,ALO/a0A5h0000027PFMEA2_園田 彩佳
+a0A5h0000027PBfEAM,a0A,受任案件(Matter),園田 雄一,,—,,,ALO/a0A5h0000027PBfEAM_園田 雄一
+a0A5h0000027PCeEAM,a0A,受任案件(Matter),土坂 義高,,—,,,ALO/a0A5h0000027PCeEAM_土坂 義高
+a0A5h0000027P8lEAE,a0A,受任案件(Matter),土田 武士,,—,,,ALO/a0A5h0000027P8lEAE_土田 武士
+a0A5h000003PdQmEAK,a0A,受任案件(Matter),株式会社地球人クラブ,,—,,,ALO/a0A5h000003PdQmEAK_株式会社地球人クラブ
+a0A5h0000027BQzEAM,a0A,受任案件(Matter),坂井雅明,損害賠償請求事件(交通事故),—,,,ALO/a0A5h0000027BQzEAM_坂井雅明＿損害賠償請求事件(交通事故)
+a0A5h0000027PGYEA2,a0A,受任案件(Matter),坂井 雅明,,—,,,ALO/a0A5h0000027PGYEA2_坂井 雅明
+a0A5h0000027PApEAM,a0A,受任案件(Matter),株式会社坂口タイル,,—,,,ALO/a0A5h0000027PApEAM_株式会社坂口タイル
+a0A5h0000027PCcEAM,a0A,受任案件(Matter),坂口 章子,,—,,,ALO/a0A5h0000027PCcEAM_坂口 章子
+a0A5h0000027PEfEAM,a0A,受任案件(Matter),坂田 克江,,—,,,ALO/a0A5h0000027PEfEAM_坂田 克江
+a0A5h0000027PCHEA2,a0A,受任案件(Matter),堀内 匡夫,,—,,,ALO/a0A5h0000027PCHEA2_堀内 匡夫
+a0A5h0000027PDPEA2,a0A,受任案件(Matter),堀口 康司,,—,,,ALO/a0A5h0000027PDPEA2_堀口 康司
+a0A5h0000027P8pEAE,a0A,受任案件(Matter),堀口 弘次,,—,,,ALO/a0A5h0000027P8pEAE_堀口 弘次
+a0A5h0000027PCJEA2,a0A,受任案件(Matter),堀 哲郎,,—,,,ALO/a0A5h0000027PCJEA2_堀 哲郎
+a0A5h0000027P9VEAU,a0A,受任案件(Matter),堂崎 喜治,,—,,,ALO/a0A5h0000027P9VEAU_堂崎 喜治
+a0A5h0000027PBXEA2,a0A,受任案件(Matter),堤 早恵子,,—,,,ALO/a0A5h0000027PBXEA2_堤 早恵子
+a0A5h0000027P8MEAU,a0A,受任案件(Matter),堤 沙也香,,—,,,ALO/a0A5h0000027P8MEAU_堤 沙也香
+a0A5h0000027PBuEAM,a0A,受任案件(Matter),堤 裕司,,—,,,ALO/a0A5h0000027PBuEAM_堤 裕司
+a0A5h0000027PALEA2,a0A,受任案件(Matter),塚本 良介,,—,,,ALO/a0A5h0000027PALEA2_塚本 良介
+a0A5h0000029HRYEA2,a0A,受任案件(Matter),大城一世,交通事故,—,,,ALO/a0A5h0000029HRYEA2_大城一世＿交通事故
+a0A5h0000027PEiEAM,a0A,受任案件(Matter),大屋 賢二,,—,,,ALO/a0A5h0000027PEiEAM_大屋 賢二
+a0A5h0000027P98EAE,a0A,受任案件(Matter),大峰 祐子,,—,,,ALO/a0A5h0000027P98EAE_大峰 祐子
+a0ARA00000TEfKM2A1,a0A,受任案件(Matter),大島病院(社会医療法人弘仁会)_病院幹事,,—,,,ALO/a0ARA00000TEfKM2A1_大島病院(社会医療法人弘仁会)_病院幹事
+a0A5h0000027P8iEAE,a0A,受任案件(Matter),大川 修平,,—,,,ALO/a0A5h0000027P8iEAE_大川 修平
+a0A5h0000027PBiEAM,a0A,受任案件(Matter),大川 隆,,—,,,ALO/a0A5h0000027PBiEAM_大川 隆
+a0A5h0000027PDoEAM,a0A,受任案件(Matter),大本 久二,,—,,,ALO/a0A5h0000027PDoEAM_大本 久二
+a0A5h0000027PFFEA2,a0A,受任案件(Matter),大村 飛翔,,—,,,ALO/a0A5h0000027PFFEA2_大村 飛翔
+a0A5h0000027PBkEAM,a0A,受任案件(Matter),大東工業株式会社,,—,,,ALO/a0A5h0000027PBkEAM_大東工業株式会社
+a0A5h0000027PCmEAM,a0A,受任案件(Matter),大森 潤吉,,—,,,ALO/a0A5h0000027PCmEAM_大森 潤吉
+a0A5h0000027PESEA2,a0A,受任案件(Matter),大橋 徹也,,—,,,ALO/a0A5h0000027PESEA2_大橋 徹也
+a0A5h0000027PBlEAM,a0A,受任案件(Matter),大江 諒,,—,,,ALO/a0A5h0000027PBlEAM_大江 諒
+a0A5h0000027PCQEA2,a0A,受任案件(Matter),大海 忠,,—,,,ALO/a0A5h0000027PCQEA2_大海 忠
+a0A5h0000027PBcEAM,a0A,受任案件(Matter),大石 将人,,—,,,ALO/a0A5h0000027PBcEAM_大石 将人
+a0A5h0000027P91EAE,a0A,受任案件(Matter),大窪 貞寿,,—,,,ALO/a0A5h0000027P91EAE_大窪 貞寿
+a0A5h0000027PELEA2,a0A,受任案件(Matter),大菅 勇毅,,—,,,ALO/a0A5h0000027PELEA2_大菅 勇毅
+a0A5h0000029TKcEAM,a0A,受任案件(Matter),大萱暢也,覚せい剤取締法違反,—,,,ALO/a0A5h0000029TKcEAM_大萱暢也＿覚せい剤取締法違反
+a0A5h0000027P8uEAE,a0A,受任案件(Matter),大藪 一代,,—,,,ALO/a0A5h0000027P8uEAE_大藪 一代
+a0AJ2000000vqGzMAI,a0A,受任案件(Matter),大西光政(カードックオオニシ),破産申立,—,,,ALO/a0AJ2000000vqGzMAI_大西光政(カードックオオニシ)＿破産申立
+a0A5h0000027PBwEAM,a0A,受任案件(Matter),大西 政行,,—,,,ALO/a0A5h0000027PBwEAM_大西 政行
+a0A5h0000027PGEEA2,a0A,受任案件(Matter),大西 竜也,,—,,,ALO/a0A5h0000027PGEEA2_大西 竜也
+a0A5h0000027PEbEAM,a0A,受任案件(Matter),大谷 勇樹,,—,,,ALO/a0A5h0000027PEbEAM_大谷 勇樹
+a0A5h0000027P9wEAE,a0A,受任案件(Matter),大谷 昭夫,,—,,,ALO/a0A5h0000027P9wEAE_大谷 昭夫
+a0AJ2000001fJBKMA2,a0A,受任案件(Matter),大谷璃衣奈(松谷綾子・崔星子),経営者保証ガイドライン,—,,,ALO/a0AJ2000001fJBKMA2_大谷璃衣奈(松谷綾子・崔星子)＿経営者保証ガイドライン
+a0A5h0000027PAaEAM,a0A,受任案件(Matter),大里 清,,—,,,ALO/a0A5h0000027PAaEAM_大里 清
+a0A5h0000027PDgEAM,a0A,受任案件(Matter),大野 智右,,—,,,ALO/a0A5h0000027PDgEAM_大野 智右
+a0A5h0000029qPQEAY,a0A,受任案件(Matter),大野有里子様,著作権侵害事件,—,,,ALO/a0A5h0000029qPQEAY_大野有里子様＿著作権侵害事件
+a0A5h00000F2NLfEAN,a0A,受任案件(Matter),大門準寿,破産申立事件,—,,,ALO/a0A5h00000F2NLfEAN_大門準寿＿破産申立事件
+a0A5h0000027PBBEA2,a0A,受任案件(Matter),大黒 健二,,—,,,ALO/a0A5h0000027PBBEA2_大黒 健二
+a0A5h0000027PEtEAM,a0A,受任案件(Matter),太田 卓,,—,,,ALO/a0A5h0000027PEtEAM_太田 卓
+a0A5h0000027PEsEAM,a0A,受任案件(Matter),太田 尚,,—,,,ALO/a0A5h0000027PEsEAM_太田 尚
+a0A5h0000027PEXEA2,a0A,受任案件(Matter),太田 愛梨,,—,,,ALO/a0A5h0000027PEXEA2_太田 愛梨
+a0A5h000003PdR1EAK,a0A,受任案件(Matter),奈良商工会議所,,—,,,ALO/a0A5h000003PdR1EAK_奈良商工会議所
+a0A5h0000027PAtEAM,a0A,受任案件(Matter),奥 健,,—,,,ALO/a0A5h0000027PAtEAM_奥 健
+a0A5h0000027PGaEAM,a0A,受任案件(Matter),奥崎 洋丈,,—,,,ALO/a0A5h0000027PGaEAM_奥崎 洋丈
+a0A5h0000027PGREA2,a0A,受任案件(Matter),奥村 直広,,—,,,ALO/a0A5h0000027PGREA2_奥村 直広
+a0A5h0000058IuKEAU,a0A,受任案件(Matter),奥村直樹,業務委託契約締結,—,,,ALO/a0A5h0000058IuKEAU_奥村直樹＿業務委託契約締結
+a0A5h000003PdRBEA0,a0A,受任案件(Matter),奥村眞三,,—,,,ALO/a0A5h000003PdRBEA0_奥村眞三
+a0A5h0000027PDVEA2,a0A,受任案件(Matter),奥村 素一,,—,,,ALO/a0A5h0000027PDVEA2_奥村 素一
+a0A5h00000CpEnFEAV,a0A,受任案件(Matter),奥村英二,保証債務整理事件,—,,,ALO/a0A5h00000CpEnFEAV_奥村英二＿保証債務整理事件
+a0A5h00000C9orSEAR,a0A,受任案件(Matter),奥村鈴代,保証債務整理事件,—,,,ALO/a0A5h00000C9orSEAR_奥村鈴代＿保証債務整理事件
+a0A5h0000027P9nEAE,a0A,受任案件(Matter),好川 千鶴子,遺言執行者,—,,,ALO/a0A5h0000027P9nEAE_好川 千鶴子＿遺言執行者
+a0A5h0000027PDDEA2,a0A,受任案件(Matter),安倉 里美,,—,,,ALO/a0A5h0000027PDDEA2_安倉 里美
+a0A5h0000027PBCEA2,a0A,受任案件(Matter),安本 孝成,,—,,,ALO/a0A5h0000027PBCEA2_安本 孝成
+a0A5h0000027PDCEA2,a0A,受任案件(Matter),安田 健人,,—,,,ALO/a0A5h0000027PDCEA2_安田 健人
+a0A5h0000027PAREA2,a0A,受任案件(Matter),安藤 美香,,—,,,ALO/a0A5h0000027PAREA2_安藤 美香
+a0A5h000006cuzAEAQ,a0A,受任案件(Matter),宝本商事株式会社,地位確認請求事件(mints),○,浅井,受任案件,ALO/a0A5h000006cuzAEAQ_宝本商事株式会社＿地位確認請求事件(mints)
+a0A5h0000027P85EAE,a0A,受任案件(Matter),宮下 元明,,—,,,ALO/a0A5h0000027P85EAE_宮下 元明
+a0A5h0000027PFIEA2,a0A,受任案件(Matter),宮村 真一郎,,—,,,ALO/a0A5h0000027PFIEA2_宮村 真一郎
+a0A5h0000027PBrEAM,a0A,受任案件(Matter),宮田 隆史,,—,,,ALO/a0A5h0000027PBrEAM_宮田 隆史
+a0A5h0000027PFREA2,a0A,受任案件(Matter),寶槻 徹,,—,,,ALO/a0A5h0000027PFREA2_寶槻 徹
+a0A5h0000027P9qEAE,a0A,受任案件(Matter),寺尾 拓真,,—,,,ALO/a0A5h0000027P9qEAE_寺尾 拓真
+a0A5h0000027P99EAE,a0A,受任案件(Matter),寺村 直,,—,,,ALO/a0A5h0000027P99EAE_寺村 直
+a0A5h0000027PBzEAM,a0A,受任案件(Matter),寺西 伸晃,,—,,,ALO/a0A5h0000027PBzEAM_寺西 伸晃
+a0A5h0000027PA2EAM,a0A,受任案件(Matter),小寺 学,,—,,,ALO/a0A5h0000027PA2EAM_小寺 学
+a0A5h0000027PDREA2,a0A,受任案件(Matter),小寺 聡,,—,,,ALO/a0A5h0000027PDREA2_小寺 聡
+a0A5h0000027PBEEA2,a0A,受任案件(Matter),小山 弘昌,,—,,,ALO/a0A5h0000027PBEEA2_小山 弘昌
+a0A5h0000027PCyEAM,a0A,受任案件(Matter),小島 卓也,,—,,,ALO/a0A5h0000027PCyEAM_小島 卓也
+a0A5h0000027P8mEAE,a0A,受任案件(Matter),小島 隆一朗,,—,,,ALO/a0A5h0000027P8mEAE_小島 隆一朗
+a0A5h0000027BQuEAM,a0A,受任案件(Matter),小川明宏,損害賠償請求→控訴,—,,,ALO/a0A5h0000027BQuEAM_小川明宏＿損害賠償請求→控訴
+a0A5h0000027PAdEAM,a0A,受任案件(Matter),小川 明宏,,—,,,ALO/a0A5h0000027PAdEAM_小川 明宏
+a0A5h0000027PCgEAM,a0A,受任案件(Matter),小川 聖子,,—,,,ALO/a0A5h0000027PCgEAM_小川 聖子
+a0A5h0000027P8NEAU,a0A,受任案件(Matter),小林 健一,,—,,,ALO/a0A5h0000027P8NEAU_小林 健一
+a0A5h00000273BWEAY,a0A,受任案件(Matter),小棚廣治,破産申立事件,—,,,ALO/a0A5h00000273BWEAY_小棚廣治＿破産申立事件
+a0A5h0000027PGCEA2,a0A,受任案件(Matter),小田 征司,,—,,,ALO/a0A5h0000027PGCEA2_小田 征司
+a0A5h0000027PFxEAM,a0A,受任案件(Matter),小田 真人,,—,,,ALO/a0A5h0000027PFxEAM_小田 真人
+a0A5h0000027PC6EAM,a0A,受任案件(Matter),小西 勇生,,—,,,ALO/a0A5h0000027PC6EAM_小西 勇生
+a0ARA00000PC1Es2AL,a0A,受任案件(Matter),小野暖人_システム開発費損害賠償請求,,—,,,ALO/a0ARA00000PC1Es2AL_小野暖人_システム開発費損害賠償請求
+a0ARA00000LcH932AF,a0A,受任案件(Matter),小野 芳,交通事故(LAC),○,浅井,受任案件,ALO/a0ARA00000LcH932AF_小野 芳＿交通事故(LAC)
+a0A5h0000027PGHEA2,a0A,受任案件(Matter),尚永 雄一,,—,,,ALO/a0A5h0000027PGHEA2_尚永 雄一
+a0A5h0000027PBMEA2,a0A,受任案件(Matter),尾本 英彰,,—,,,ALO/a0A5h0000027PBMEA2_尾本 英彰
+a0A5h0000027PGnEAM,a0A,受任案件(Matter),山ノ内 昌史,,—,,,ALO/a0A5h0000027PGnEAM_山ノ内 昌史
+a0A5h0000027P8rEAE,a0A,受任案件(Matter),山下 廣幸,,—,,,ALO/a0A5h0000027P8rEAE_山下 廣幸
+a0A5h00000PbWIQEA3,a0A,受任案件(Matter),山下次郎,被疑者国選,—,,,ALO/a0A5h00000PbWIQEA3_山下次郎＿被疑者国選
+a0A5h0000027PEcEAM,a0A,受任案件(Matter),山下 武夫,,—,,,ALO/a0A5h0000027PEcEAM_山下 武夫
+a0A5h0000027PEMEA2,a0A,受任案件(Matter),山中 志朗,,—,,,ALO/a0A5h0000027PEMEA2_山中 志朗
+a0A5h0000027PDJEA2,a0A,受任案件(Matter),山中 行人,,—,,,ALO/a0A5h0000027PDJEA2_山中 行人
+a0A5h000009f0nHEAQ,a0A,受任案件(Matter),山内一治,否認請求事件,—,,,ALO/a0A5h000009f0nHEAQ_山内一治＿否認請求事件
+a0ARA00000DBA4b2AH,a0A,受任案件(Matter),山口スミ子,任意整理(法テラス),—,,,ALO/a0ARA00000DBA4b2AH_山口スミ子＿任意整理(法テラス)
+a0A5h0000027P9pEAE,a0A,受任案件(Matter),山口 省吾,,—,,,ALO/a0A5h0000027P9pEAE_山口 省吾
+a0A5h0000027PG0EAM,a0A,受任案件(Matter),山口 銀太,,—,,,ALO/a0A5h0000027PG0EAM_山口 銀太
+a0A5h0000027PDNEA2,a0A,受任案件(Matter),山崎 優,,—,,,ALO/a0A5h0000027PDNEA2_山崎 優
+a0A5h0000027PCYEA2,a0A,受任案件(Matter),山本 あつ子,,—,,,ALO/a0A5h0000027PCYEA2_山本 あつ子
+a0A5h0000027PAqEAM,a0A,受任案件(Matter),山本 みわ子,,—,,,ALO/a0A5h0000027PAqEAM_山本 みわ子
+a0A5h0000027PC2EAM,a0A,受任案件(Matter),山本 剛,,—,,,ALO/a0A5h0000027PC2EAM_山本 剛
+a0A5h0000027PEKEA2,a0A,受任案件(Matter),山本 勝三,,—,,,ALO/a0A5h0000027PEKEA2_山本 勝三
+a0A5h0000027P8GEAU,a0A,受任案件(Matter),山本 大介,,—,,,ALO/a0A5h0000027P8GEAU_山本 大介
+a0A5h0000027PCKEA2,a0A,受任案件(Matter),山本 守,,—,,,ALO/a0A5h0000027PCKEA2_山本 守
+a0ARA00000DoirC2AR,a0A,受任案件(Matter),山本晋久,交通事故(LAC),○,浅井,受任案件,ALO/a0ARA00000DoirC2AR_山本晋久＿交通事故(LAC)
+a0A5h0000027P9WEAU,a0A,受任案件(Matter),山本 正枝,,—,,,ALO/a0A5h0000027P9WEAU_山本 正枝
+a0A5h0000027PBxEAM,a0A,受任案件(Matter),山本 直美,,—,,,ALO/a0A5h0000027PBxEAM_山本 直美
+a0A5h0000027P9iEAE,a0A,受任案件(Matter),山本 聡,,—,,,ALO/a0A5h0000027P9iEAE_山本 聡
+a0A5h0000027PAXEA2,a0A,受任案件(Matter),山本 良子,,—,,,ALO/a0A5h0000027PAXEA2_山本 良子
+a0A5h0000027P9FEAU,a0A,受任案件(Matter),山本 茂夫,,—,,,ALO/a0A5h0000027P9FEAU_山本 茂夫
+a0AJ2000004t4QkMAI,a0A,受任案件(Matter),山本莉央,薬機法違反(国選弁護),—,,,ALO/a0AJ2000004t4QkMAI_山本莉央＿薬機法違反(国選弁護)
+a0A5h0000027PC3EAM,a0A,受任案件(Matter),山本 雅幸,,—,,,ALO/a0A5h0000027PC3EAM_山本 雅幸
+a0A5h000003PRQiEAO,a0A,受任案件(Matter),山村紗代,遺産分割調停申立事件,—,,,ALO/a0A5h000003PRQiEAO_山村紗代＿遺産分割調停申立事件
+a0A5h0000027CcOEAU,a0A,受任案件(Matter),山村紗代,成年後見人(財産管理),—,,,ALO/a0A5h0000027CcOEAU_山村紗代＿成年後見人(財産管理)
+a0A5h0000027PGsEAM,a0A,受任案件(Matter),山村 紗代,,—,,,ALO/a0A5h0000027PGsEAM_山村 紗代
+a0A5h0000027P88EAE,a0A,受任案件(Matter),山田 史彦,,—,,,ALO/a0A5h0000027P88EAE_山田 史彦
+a0A5h0000027P9OEAU,a0A,受任案件(Matter),山田 哲也,,—,,,ALO/a0A5h0000027P9OEAU_山田 哲也
+a0A5h0000027PDfEAM,a0A,受任案件(Matter),山田 孝,,—,,,ALO/a0A5h0000027PDfEAM_山田 孝
+a0A5h0000027PCVEA2,a0A,受任案件(Matter),山田 庄平,,—,,,ALO/a0A5h0000027PCVEA2_山田 庄平
+a0A5h0000027PFeEAM,a0A,受任案件(Matter),山田 恭弘,,—,,,ALO/a0A5h0000027PFeEAM_山田 恭弘
+a0A5h0000027PEmEAM,a0A,受任案件(Matter),山田 秀和,,—,,,ALO/a0A5h0000027PEmEAM_山田 秀和
+a0A5h0000027PBWEA2,a0A,受任案件(Matter),山田 稔,,—,,,ALO/a0A5h0000027PBWEA2_山田 稔
+a0A5h0000027PF1EAM,a0A,受任案件(Matter),山西 照夫,,—,,,ALO/a0A5h0000027PF1EAM_山西 照夫
+a0A5h00000MjhTWEAZ,a0A,受任案件(Matter),山﨑達志,交通事故,—,,,ALO/a0A5h00000MjhTWEAZ_山﨑達志＿交通事故
+a0A5h0000027P8HEAU,a0A,受任案件(Matter),岡崎 加奈,,—,,,ALO/a0A5h0000027P8HEAU_岡崎 加奈
+a0A5h0000027P9YEAU,a0A,受任案件(Matter),岡崎 真一,,—,,,ALO/a0A5h0000027P9YEAU_岡崎 真一
+a0A5h0000027PCaEAM,a0A,受任案件(Matter),岡崎 靖典,,—,,,ALO/a0A5h0000027PCaEAM_岡崎 靖典
+a0A5h0000027PETEA2,a0A,受任案件(Matter),岡本 万貴子,,—,,,ALO/a0A5h0000027PETEA2_岡本 万貴子
+a0A5h0000027PCrEAM,a0A,受任案件(Matter),岡本 竜次,,—,,,ALO/a0A5h0000027PCrEAM_岡本 竜次
+a0A5h0000027P9REAU,a0A,受任案件(Matter),岡村 時代,,—,,,ALO/a0A5h0000027P9REAU_岡村 時代
+a0AJ2000008De2fMAC,a0A,受任案件(Matter),岡村 祥佑,窃盗・詐欺(国選弁護),—,,,ALO/a0AJ2000008De2fMAC_岡村 祥佑＿窃盗・詐欺(国選弁護)
+a0A5h0000027PEREA2,a0A,受任案件(Matter),岡田 健太,,—,,,ALO/a0A5h0000027PEREA2_岡田 健太
+a0A5h0000027P8gEAE,a0A,受任案件(Matter),岩上 勉,,—,,,ALO/a0A5h0000027P8gEAE_岩上 勉
+a0A5h00000Pzi1GEAR,a0A,受任案件(Matter),岩下桂子,損害賠償請求事件,○,浅井,受任案件,ALO/a0A5h00000Pzi1GEAR_岩下桂子＿損害賠償請求事件
+a0AJ2000003rcxhMAA,a0A,受任案件(Matter),岩下桂子,債権執行及び転付命令申立事件(長野地裁・GMO・三井案件),○,浅井,受任案件,ALO/a0AJ2000003rcxhMAA_岩下桂子＿債権執行及び転付命令申立事件(長野地裁・GMO・三井案件)
+a0AJ2000004DGcpMAG,a0A,受任案件(Matter),岩下桂子,債権仮差押命令申立事件(Pay銀行奈良地裁・Pay・足立案件),○,浅井,受任案件,ALO/a0AJ2000004DGcpMAG_岩下桂子＿債権仮差押命令申立事件(Pay銀行奈良地裁・Pay・足立案件)
+a0AJ2000005PsSHMA0,a0A,受任案件(Matter),岩下桂子,債権執行及び転付命令申立事件(東京地裁・横浜銀行・フェニックス),○,浅井,受任案件,ALO/a0AJ2000005PsSHMA0_岩下桂子＿債権執行及び転付命令申立事件(東京地裁・横浜銀行・フェニックス)
+a0AJ2000006owE5MAI,a0A,受任案件(Matter),岩下桂子,債権執行及び転付命令申立事件(神戸地裁尼崎・PayPay銀行・足立大輝),○,浅井,受任案件,ALO/a0AJ2000006owE5MAI_岩下桂子＿債権執行及び転付命令申立事件(神戸地裁尼崎・PayPay銀行・足立大輝)
+a0A5h0000027PDkEAM,a0A,受任案件(Matter),岩下 泉,,—,,,ALO/a0A5h0000027PDkEAM_岩下 泉
+a0A5h000000vB7KEAU,a0A,受任案件(Matter),岩原奈津美,損害賠償請求控訴事件,—,,,ALO/a0A5h000000vB7KEAU_岩原奈津美＿損害賠償請求控訴事件
+a0A5h0000027PGcEAM,a0A,受任案件(Matter),岩原 奈津美,,—,,,ALO/a0A5h0000027PGcEAM_岩原 奈津美
+a0A5h0000027PCZEA2,a0A,受任案件(Matter),岩原 敏江,,—,,,ALO/a0A5h0000027PCZEA2_岩原 敏江
+a0A5h0000027PE2EAM,a0A,受任案件(Matter),岩本 博嗣,,—,,,ALO/a0A5h0000027PE2EAM_岩本 博嗣
+a0A5h0000027PAZEA2,a0A,受任案件(Matter),岩本 毅,,—,,,ALO/a0A5h0000027PAZEA2_岩本 毅
+a0A5h0000027P9vEAE,a0A,受任案件(Matter),岩永 美穂,,—,,,ALO/a0A5h0000027P9vEAE_岩永 美穂
+a0A5h0000027P9HEAU,a0A,受任案件(Matter),岩田 絢菜,,—,,,ALO/a0A5h0000027P9HEAU_岩田 絢菜
+a0ARA00000CgmB12AJ,a0A,受任案件(Matter),岩田美知(株式会社ちいきおこし),経営者保証ガイドライン,○,浅井,受任案件,ALO/a0ARA00000CgmB12AJ_岩田美知(株式会社ちいきおこし)＿経営者保証ガイドライン
+a0ARA00000PVJ812AH,a0A,受任案件(Matter),岩鼻モータース,,○,浅井,受任案件,ALO/a0ARA00000PVJ812AH_岩鼻モータース
+a0A5h00000QlJvUEAV,a0A,受任案件(Matter),島内勝,保証ガイドライン,—,,,ALO/a0A5h00000QlJvUEAV_島内勝＿保証ガイドライン
+a0AJ20000071Wz9MAE,a0A,受任案件(Matter),島内正広,損害賠償等請求事件,○,浅井,受任案件,ALO/a0AJ20000071Wz9MAE_島内正広＿損害賠償等請求事件
+a0AJ2000008FltaMAC,a0A,受任案件(Matter),島田和志,交通事故(LAC),○,浅井,受任案件,ALO/a0AJ2000008FltaMAC_島田和志＿交通事故(LAC)
+a0A5h0000027PF6EAM,a0A,受任案件(Matter),島田 琢也,,—,,,ALO/a0A5h0000027PF6EAM_島田 琢也
+a0A5h0000027PFaEAM,a0A,受任案件(Matter),有限会社嵐山,,—,,,ALO/a0A5h0000027PFaEAM_有限会社嵐山
+a0A5h0000027PFbEAM,a0A,受任案件(Matter),有限会社嵯峨染,,—,,,ALO/a0A5h0000027PFbEAM_有限会社嵯峨染
+a0A5h0000027PByEAM,a0A,受任案件(Matter),嶋林 久美,,—,,,ALO/a0A5h0000027PByEAM_嶋林 久美
+a0A5h0000027PCCEA2,a0A,受任案件(Matter),嶋田 博次,,—,,,ALO/a0A5h0000027PCCEA2_嶋田 博次
+a0A5h0000027PBnEAM,a0A,受任案件(Matter),嶋田 純章,,—,,,ALO/a0A5h0000027PBnEAM_嶋田 純章
+a0A5h0000027PCXEA2,a0A,受任案件(Matter),嶌 美智代,,—,,,ALO/a0A5h0000027PCXEA2_嶌 美智代
+a0A5h0000027PE1EAM,a0A,受任案件(Matter),川上 智子,,—,,,ALO/a0A5h0000027PE1EAM_川上 智子
+a0A5h0000027PE6EAM,a0A,受任案件(Matter),川上 雅之,,—,,,ALO/a0A5h0000027PE6EAM_川上 雅之
+a0A5h0000027BQpEAM,a0A,受任案件(Matter),川崎・佐藤(京都美術倶楽部),株主代表訴訟,—,,,ALO/a0A5h0000027BQpEAM_川崎・佐藤(京都美術倶楽部)＿株主代表訴訟
+a0A5h0000027PA5EAM,a0A,受任案件(Matter),川端 和恵,,—,,,ALO/a0A5h0000027PA5EAM_川端 和恵
+a0A5h0000026y5dEAA,a0A,受任案件(Matter),川端尚寛,損害賠償請求(交通),—,,,ALO/a0A5h0000026y5dEAA_川端尚寛＿損害賠償請求(交通)
+a0A5h0000027PGJEA2,a0A,受任案件(Matter),川端 尚寛,,—,,,ALO/a0A5h0000027PGJEA2_川端 尚寛
+a0A5h0000027PD1EAM,a0A,受任案件(Matter),常藤 かおり,,—,,,ALO/a0A5h0000027PD1EAM_常藤 かおり
+a0A5h0000027PA9EAM,a0A,受任案件(Matter),平井 弘志,,—,,,ALO/a0A5h0000027PA9EAM_平井 弘志
+a0ARA00000KuIzd2AF,a0A,受任案件(Matter),平和熔工所,M&Aバイサイド支援,—,,,ALO/a0ARA00000KuIzd2AF_平和熔工所＿M&Aバイサイド支援
+a0A5h0000027P8bEAE,a0A,受任案件(Matter),平林 繁造,遺言執行者,—,,,ALO/a0A5h0000027P8bEAE_平林 繁造＿遺言執行者
+a0A5h0000027P9yEAE,a0A,受任案件(Matter),平 芳樹,,—,,,ALO/a0A5h0000027P9yEAE_平 芳樹
+a0A5h0000027P9PEAU,a0A,受任案件(Matter),平野 ヨシ,,—,,,ALO/a0A5h0000027P9PEAU_平野 ヨシ
+a0A5h0000027P7zEAE,a0A,受任案件(Matter),株式会社幸膳,破産申立事件,—,,,ALO/a0A5h0000027P7zEAE_株式会社幸膳＿破産申立事件
+a0A5h0000027CTiEAM,a0A,受任案件(Matter),幸運橋商業協同組合,損害賠償請求事件,—,,,ALO/a0A5h0000027CTiEAM_幸運橋商業協同組合＿損害賠償請求事件
+a0A5h000007rA7DEAU,a0A,受任案件(Matter),幸運橋商業協同組合,総会決議無効確認請求事件,—,,,ALO/a0A5h000007rA7DEAU_幸運橋商業協同組合＿総会決議無効確認請求事件
+a0A5h0000027PDhEAM,a0A,受任案件(Matter),幸運橋商業協同組合,,—,,,ALO/a0A5h0000027PDhEAM_幸運橋商業協同組合
+a0A5h0000027PBPEA2,a0A,受任案件(Matter),庄司 伸矢,,—,,,ALO/a0A5h0000027PBPEA2_庄司 伸矢
+a0A5h0000027PC0EAM,a0A,受任案件(Matter),廣瀬 祐一郎,,—,,,ALO/a0A5h0000027PC0EAM_廣瀬 祐一郎
+a0A5h0000027PFqEAM,a0A,受任案件(Matter),弓削 渡,,—,,,ALO/a0A5h0000027PFqEAM_弓削 渡
+a0A5h0000027PCkEAM,a0A,受任案件(Matter),張 学 達,,—,,,ALO/a0A5h0000027PCkEAM_張 学 達
+a0A5h0000027PD9EAM,a0A,受任案件(Matter),後藤 徹生,,—,,,ALO/a0A5h0000027PD9EAM_後藤 徹生
+a0A5h00000QcTQTEA3,a0A,受任案件(Matter),徳永乃篤,建造物侵入窃盗,—,,,ALO/a0A5h00000QcTQTEA3_徳永乃篤＿建造物侵入窃盗
+a0A5h0000027P8KEAU,a0A,受任案件(Matter),徳永 久子,,—,,,ALO/a0A5h0000027P8KEAU_徳永 久子
+a0A5h0000027P8SEAU,a0A,受任案件(Matter),徳永 涼太,,—,,,ALO/a0A5h0000027P8SEAU_徳永 涼太
+a0A5h0000027PFoEAM,a0A,受任案件(Matter),徳永 直人,,—,,,ALO/a0A5h0000027PFoEAM_徳永 直人
+a0A5h00000DBf4YEAT,a0A,受任案件(Matter),德永(徳永) 涼太・聖摩,相続,—,,,ALO/a0A5h00000DBf4YEAT_德永(徳永) 涼太・聖摩＿相続
+a0AJ2000004vMD0MAM,a0A,受任案件(Matter),志田 充,交通事故,○,浅井,受任案件,ALO/a0AJ2000004vMD0MAM_志田 充＿交通事故
+a0A5h0000027PE8EAM,a0A,受任案件(Matter),志田 喜久子,,—,,,ALO/a0A5h0000027PE8EAM_志田 喜久子
+a0A5h00000EZAoEEAX,a0A,受任案件(Matter),株式会社成研,,○,浅井,受任案件,ALO/a0A5h00000EZAoEEAX_株式会社成研
+a0A5h0000027PFZEA2,a0A,受任案件(Matter),戸田 まなみ,,—,,,ALO/a0A5h0000027PFZEA2_戸田 まなみ
+a0A5h0000027PFlEAM,a0A,受任案件(Matter),指定なし,,—,,,ALO/a0A5h0000027PFlEAM_指定なし
+a0A5h0000027P8WEAU,a0A,受任案件(Matter),斉木 栄一,,—,,,ALO/a0A5h0000027P8WEAU_斉木 栄一
+a0A5h0000027PB8EAM,a0A,受任案件(Matter),新海 佑莉,,—,,,ALO/a0A5h0000027PB8EAM_新海 佑莉
+a0A5h00000EOFpsEAH,a0A,受任案件(Matter),医療法人新生十全会,,○,浅井,受任案件,ALO/a0A5h00000EOFpsEAH_医療法人新生十全会
+a0A5h0000027P8kEAE,a0A,受任案件(Matter),日並 大輔,,—,,,ALO/a0A5h0000027P8kEAE_日並 大輔
+a0A5h0000027CTJEA2,a0A,受任案件(Matter),株式会社日之出工業所,破産申立事件,—,,,ALO/a0A5h0000027CTJEA2_株式会社日之出工業所＿破産申立事件
+a0A5h0000027PFVEA2,a0A,受任案件(Matter),株式会社日之出工業所,,—,,,ALO/a0A5h0000027PFVEA2_株式会社日之出工業所
+a0A5h000006d1OWEAY,a0A,受任案件(Matter),株式会社日本の窓,不当利得返還請求,—,,,ALO/a0A5h000006d1OWEAY_株式会社日本の窓＿不当利得返還請求
+a0A5h00000KkDe6EAF,a0A,受任案件(Matter),日高 孝次,損害賠償請求事件,—,,,ALO/a0A5h00000KkDe6EAF_日高 孝次＿損害賠償請求事件
+a0A5h0000027PB5EAM,a0A,受任案件(Matter),星島 伸行,,—,,,ALO/a0A5h0000027PB5EAM_星島 伸行
+a0A5h0000027PAOEA2,a0A,受任案件(Matter),曽 静,,—,,,ALO/a0A5h0000027PAOEA2_曽 静
+a0A5h0000027PD7EAM,a0A,受任案件(Matter),有田 萌,,—,,,ALO/a0A5h0000027PD7EAM_有田 萌
+a0A5h0000027ChREAU,a0A,受任案件(Matter),有野良子,任意後見監督人選任申立事件,—,,,ALO/a0A5h0000027ChREAU_有野良子＿任意後見監督人選任申立事件
+a0A5h0000027PG5EAM,a0A,受任案件(Matter),有野 良子,,—,,,ALO/a0A5h0000027PG5EAM_有野 良子
+a0A5h0000027P96EAE,a0A,受任案件(Matter),服部 康子,,—,,,ALO/a0A5h0000027P96EAE_服部 康子
+a0A5h0000027P8FEAU,a0A,受任案件(Matter),木元 もとゑ,,—,,,ALO/a0A5h0000027P8FEAU_木元 もとゑ
+a0A5h0000027PChEAM,a0A,受任案件(Matter),木曽 純一,,—,,,ALO/a0A5h0000027PChEAM_木曽 純一
+a0A5h0000027PAIEA2,a0A,受任案件(Matter),木村 唯,,—,,,ALO/a0A5h0000027PAIEA2_木村 唯
+a0A5h0000027PB7EAM,a0A,受任案件(Matter),木村 拓紀,,—,,,ALO/a0A5h0000027PB7EAM_木村 拓紀
+a0A5h0000027PAMEA2,a0A,受任案件(Matter),木村 武人,,—,,,ALO/a0A5h0000027PAMEA2_木村 武人
+a0A5h0000027PEoEAM,a0A,受任案件(Matter),木村 要吾,,—,,,ALO/a0A5h0000027PEoEAM_木村 要吾
+a0A5h0000027PAJEA2,a0A,受任案件(Matter),本田 早紀,,—,,,ALO/a0A5h0000027PAJEA2_本田 早紀
+a0A5h0000027PEdEAM,a0A,受任案件(Matter),朱谷 知洋,,—,,,ALO/a0A5h0000027PEdEAM_朱谷 知洋
+a0A5h0000027P9ZEAU,a0A,受任案件(Matter),杉原 孝佳,,—,,,ALO/a0A5h0000027P9ZEAU_杉原 孝佳
+a0A5h0000028WvbEAE,a0A,受任案件(Matter),杉本大生,損害賠償請求事件,—,,,ALO/a0A5h0000028WvbEAE_杉本大生＿損害賠償請求事件
+a0AJ200000701PpMAI,a0A,受任案件(Matter),杉本麻千子,遺言無効確認等請求事件,—,,,ALO/a0AJ200000701PpMAI_杉本麻千子＿遺言無効確認等請求事件
+a0A5h0000027PAnEAM,a0A,受任案件(Matter),杉本 麻千子,,—,,,ALO/a0A5h0000027PAnEAM_杉本 麻千子
+a0A5h0000027PE4EAM,a0A,受任案件(Matter),杉村 和宣,,—,,,ALO/a0A5h0000027PE4EAM_杉村 和宣
+a0A5h0000027PDiEAM,a0A,受任案件(Matter),杉田 愛美,,—,,,ALO/a0A5h0000027PDiEAM_杉田 愛美
+a0A5h0000027PCfEAM,a0A,受任案件(Matter),杉田 雅文,,—,,,ALO/a0A5h0000027PCfEAM_杉田 雅文
+a0A5h0000027PEjEAM,a0A,受任案件(Matter),杉野 テル子,,—,,,ALO/a0A5h0000027PEjEAM_杉野 テル子
+a0A5h0000027PFpEAM,a0A,受任案件(Matter),村上 仁史,,—,,,ALO/a0A5h0000027PFpEAM_村上 仁史
+a0A5h0000027PBZEA2,a0A,受任案件(Matter),村井 政次郎,,—,,,ALO/a0A5h0000027PBZEA2_村井 政次郎
+a0A5h0000027P8ZEAU,a0A,受任案件(Matter),村田 好雄,,—,,,ALO/a0A5h0000027P8ZEAU_村田 好雄
+a0A5h0000027PEpEAM,a0A,受任案件(Matter),村田 恵,,—,,,ALO/a0A5h0000027PEpEAM_村田 恵
+a0A5h0000027PGkEAM,a0A,受任案件(Matter),村田 晴夫,,—,,,ALO/a0A5h0000027PGkEAM_村田 晴夫
+a0A5h0000027PF3EAM,a0A,受任案件(Matter),村田 義史,,—,,,ALO/a0A5h0000027PF3EAM_村田 義史
+a0A5h0000027P9mEAE,a0A,受任案件(Matter),株式会社東洋トレーディング,,—,,,ALO/a0A5h0000027P9mEAE_株式会社東洋トレーディング
+a0A5h000009ORQsEAO,a0A,受任案件(Matter),株式会社東洋トレーディング,損害賠償請求事件,—,,,ALO/a0A5h000009ORQsEAO_株式会社東洋トレーディング＿損害賠償請求事件
+a0A5h00000D8lEMEAZ,a0A,受任案件(Matter),東洋化学株式会社,M&A,○,浅井,受任案件,ALO/a0A5h00000D8lEMEAZ_東洋化学株式会社＿M&A
+a0A5h0000027BmuEAE,a0A,受任案件(Matter),松井康信,医療承継契約の審査(セカンドオピニオン),—,,,ALO/a0A5h0000027BmuEAE_松井康信＿医療承継契約の審査(セカンドオピニオン)
+a0A5h0000027PEZEA2,a0A,受任案件(Matter),松原 広幸,,—,,,ALO/a0A5h0000027PEZEA2_松原 広幸
+a0A5h0000027P9rEAE,a0A,受任案件(Matter),松岡建材工業株式会社,,—,,,ALO/a0A5h0000027P9rEAE_松岡建材工業株式会社
+a0A5h0000027PFrEAM,a0A,受任案件(Matter),松岡 武一,,—,,,ALO/a0A5h0000027PFrEAM_松岡 武一
+a0A5h0000027PDeEAM,a0A,受任案件(Matter),松村 恒子,,—,,,ALO/a0A5h0000027PDeEAM_松村 恒子
+a0AJ2000007b6N7MAI,a0A,受任案件(Matter),松林 慧,住居侵入・窃盗未遂事件(国選弁護),—,,,ALO/a0AJ2000007b6N7MAI_松林 慧＿住居侵入・窃盗未遂事件(国選弁護)
+a0AJ2000001MaEGMA0,a0A,受任案件(Matter),松浦哲也,遺言作成・遺言執行,○,浅井,受任案件,ALO/a0AJ2000001MaEGMA0_松浦哲也＿遺言作成・遺言執行
+a0A5h0000027P9JEAU,a0A,受任案件(Matter),松田 みさを,,—,,,ALO/a0A5h0000027P9JEAU_松田 みさを
+a0AJ2000002gaEvMAI,a0A,受任案件(Matter),板倉龍馬,破産申立,—,,,ALO/a0AJ2000002gaEvMAI_板倉龍馬＿破産申立
+a0A5h0000027PGMEA2,a0A,受任案件(Matter),板谷 和雄,,—,,,ALO/a0A5h0000027PGMEA2_板谷 和雄
+a0A5h0000027PAEEA2,a0A,受任案件(Matter),林 明子,,—,,,ALO/a0A5h0000027PAEEA2_林 明子
+a0A5h0000027PC7EAM,a0A,受任案件(Matter),林田 小百合,,—,,,ALO/a0A5h0000027PC7EAM_林田 小百合
+a0A5h0000027P8tEAE,a0A,受任案件(Matter),柚木 博,,—,,,ALO/a0A5h0000027P8tEAE_柚木 博
+a0A5h0000027PCMEA2,a0A,受任案件(Matter),柳井 堅志,,—,,,ALO/a0A5h0000027PCMEA2_柳井 堅志
+a0A5h0000027PBVEA2,a0A,受任案件(Matter),柳 大介,,—,,,ALO/a0A5h0000027PBVEA2_柳 大介
+a0AJ2000007sCwZMAU,a0A,受任案件(Matter),柴田愛架,生命・身体犯(犯罪被害者支援委員会),—,,,ALO/a0AJ2000007sCwZMAU_柴田愛架＿生命・身体犯(犯罪被害者支援委員会)
+a0A5h0000027PFwEAM,a0A,受任案件(Matter),栄和,,—,,,ALO/a0A5h0000027PFwEAM_栄和
+a0A5h0000027P9cEAE,a0A,受任案件(Matter),栗栖 哲,,—,,,ALO/a0A5h0000027P9cEAE_栗栖 哲
+a0A5h0000027PF7EAM,a0A,受任案件(Matter),桐畑 清美,遺言執行事件,○,浅井,受任案件,ALO/a0A5h0000027PF7EAM_桐畑 清美＿遺言執行事件
+a0A5h0000027PATEA2,a0A,受任案件(Matter),桑水 流勇気,,—,,,ALO/a0A5h0000027PATEA2_桑水 流勇気
+a0A5h0000026y5iEAA,a0A,受任案件(Matter),株式会社桜井金物,未払賃料請求事件,—,,,ALO/a0A5h0000026y5iEAA_株式会社桜井金物＿未払賃料請求事件
+a0A5h00000NccF0EAJ,a0A,受任案件(Matter),森,担保不動産競売申立事件,—,,,ALO/a0A5h00000NccF0EAJ_森＿担保不動産競売申立事件
+a0A5h000009MWDGEA4,a0A,受任案件(Matter),株式会社森井電機,,—,,,ALO/a0A5h000009MWDGEA4_株式会社森井電機
+a0A5h0000027PBjEAM,a0A,受任案件(Matter),森 佐知子,,—,,,ALO/a0A5h0000027PBjEAM_森 佐知子
+a0A5h0000027PCUEA2,a0A,受任案件(Matter),森 智志,,—,,,ALO/a0A5h0000027PCUEA2_森 智志
+a0A5h0000027PCIEA2,a0A,受任案件(Matter),森本 高裕,,—,,,ALO/a0A5h0000027PCIEA2_森本 高裕
+a0A5h0000027PCqEAM,a0A,受任案件(Matter),森田 佑希,,—,,,ALO/a0A5h0000027PCqEAM_森田 佑希
+a0ARA00000AyTUP2A3,a0A,受任案件(Matter),森田秋也,傷害(当番弁護),—,,,ALO/a0ARA00000AyTUP2A3_森田秋也＿傷害(当番弁護)
+a0A5h0000027PEgEAM,a0A,受任案件(Matter),森田 香織,,—,,,ALO/a0A5h0000027PEgEAM_森田 香織
+a0A5h0000027PDqEAM,a0A,受任案件(Matter),森野 慎悟,,—,,,ALO/a0A5h0000027PDqEAM_森野 慎悟
+a0A5h0000027PFWEA2,a0A,受任案件(Matter),椿本 泰大,,—,,,ALO/a0A5h0000027PFWEA2_椿本 泰大
+a0A5h0000027PFyEAM,a0A,受任案件(Matter),樋口 弘子,,—,,,ALO/a0A5h0000027PFyEAM_樋口 弘子
+a0A5h0000027PAvEAM,a0A,受任案件(Matter),樋口 昌代,,—,,,ALO/a0A5h0000027PAvEAM_樋口 昌代
+a0A5h0000027PGgEAM,a0A,受任案件(Matter),横井 惠子,,○,浅井,受任案件,ALO/a0A5h0000027PGgEAM_横井 惠子
+a0ARA00000E96Cc2AJ,a0A,受任案件(Matter),横尾研一,相続相談(遺言・相続センター),○,武市,受任案件,ALO/a0ARA00000E96Cc2AJ_横尾研一＿相続相談(遺言・相続センター)
+a0A5h0000027PAjEAM,a0A,受任案件(Matter),横山 功,,—,,,ALO/a0A5h0000027PAjEAM_横山 功
+a0A5h0000027P9IEAU,a0A,受任案件(Matter),横田 悟司,,—,,,ALO/a0A5h0000027P9IEAU_横田 悟司
+a0A5h0000027PDOEA2,a0A,受任案件(Matter),橋本 堅吾,,—,,,ALO/a0A5h0000027PDOEA2_橋本 堅吾
+a0A5h0000029TUoEAM,a0A,受任案件(Matter),橋本幸雄,道路交通法違反,—,,,ALO/a0A5h0000029TUoEAM_橋本幸雄＿道路交通法違反
+a0A5h0000027PCvEAM,a0A,受任案件(Matter),橋本 衣都,,—,,,ALO/a0A5h0000027PCvEAM_橋本 衣都
+a0A5h0000027PDBEA2,a0A,受任案件(Matter),橋谷 佳子,,—,,,ALO/a0A5h0000027PDBEA2_橋谷 佳子
+a0A5h0000027PDWEA2,a0A,受任案件(Matter),橋谷 和雄,,—,,,ALO/a0A5h0000027PDWEA2_橋谷 和雄
+a0A5h0000027PFdEAM,a0A,受任案件(Matter),武智 みゆき,,—,,,ALO/a0A5h0000027PFdEAM_武智 みゆき
+a0AJ2000005jwHLMAY,a0A,受任案件(Matter),武林弘輔,出版契約に関する法律相談,—,,,ALO/a0AJ2000005jwHLMAY_武林弘輔＿出版契約に関する法律相談
+a0A5h0000027P9lEAE,a0A,受任案件(Matter),水上 裕樹,,—,,,ALO/a0A5h0000027P9lEAE_水上 裕樹
+a0A5h0000027PEIEA2,a0A,受任案件(Matter),水戸 豪紀,,—,,,ALO/a0A5h0000027PEIEA2_水戸 豪紀
+a0A5h0000027PEQEA2,a0A,受任案件(Matter),水谷 由衣,,—,,,ALO/a0A5h0000027PEQEA2_水谷 由衣
+a0A5h0000027PEaEAM,a0A,受任案件(Matter),永井 えり,,—,,,ALO/a0A5h0000027PEaEAM_永井 えり
+a0ARA00000JtbAT2AZ,a0A,受任案件(Matter),永井二郎,クレジット・サラ金法律相談(京都弁護士会),—,,,ALO/a0ARA00000JtbAT2AZ_永井二郎＿クレジット・サラ金法律相談(京都弁護士会)
+a0A5h0000027PFCEA2,a0A,受任案件(Matter),永井 聖,,—,,,ALO/a0A5h0000027PFCEA2_永井 聖
+a0A5h0000027PBKEA2,a0A,受任案件(Matter),江原 裕親,,—,,,ALO/a0A5h0000027PBKEA2_江原 裕親
+a0A5h0000027P9AEAU,a0A,受任案件(Matter),池口 孟,,—,,,ALO/a0A5h0000027P9AEAU_池口 孟
+a0A5h0000027PDnEAM,a0A,受任案件(Matter),池平 陽子,,—,,,ALO/a0A5h0000027PDnEAM_池平 陽子
+a0A5h0000027PDtEAM,a0A,受任案件(Matter),池本 盛子,,—,,,ALO/a0A5h0000027PDtEAM_池本 盛子
+a0A5h0000027PFAEA2,a0A,受任案件(Matter),池田 博之,,—,,,ALO/a0A5h0000027PFAEA2_池田 博之
+a0A5h0000027P92EAE,a0A,受任案件(Matter),沖野 幹雄,,—,,,ALO/a0A5h0000027P92EAE_沖野 幹雄
+a0A5h0000027P9KEAU,a0A,受任案件(Matter),河井 岳志,,—,,,ALO/a0A5h0000027P9KEAU_河井 岳志
+a0A5h000000vNgTEAU,a0A,受任案件(Matter),河南晶子,自然災害ガイドライン債務整理,—,,,ALO/a0A5h000000vNgTEAU_河南晶子＿自然災害ガイドライン債務整理
+a0A5h0000027PFiEAM,a0A,受任案件(Matter),河南 晶子,,—,,,ALO/a0A5h0000027PFiEAM_河南 晶子
+a0A5h0000027P8BEAU,a0A,受任案件(Matter),河村 ひろみ,,—,,,ALO/a0A5h0000027P8BEAU_河村 ひろみ
+a0A5h0000027PBOEA2,a0A,受任案件(Matter),河村 健史,,—,,,ALO/a0A5h0000027PBOEA2_河村 健史
+a0A5h0000027PD6EAM,a0A,受任案件(Matter),河村 希美,,—,,,ALO/a0A5h0000027PD6EAM_河村 希美
+a0A5h0000027PD5EAM,a0A,受任案件(Matter),河村 智香子,,—,,,ALO/a0A5h0000027PD5EAM_河村 智香子
+a0A5h0000027PD2EAM,a0A,受任案件(Matter),河村 繁之,,—,,,ALO/a0A5h0000027PD2EAM_河村 繁之
+a0A5h0000027P84EAE,a0A,受任案件(Matter),河窪 正,,—,,,ALO/a0A5h0000027P84EAE_河窪 正
+a0A5h0000027PEEEA2,a0A,受任案件(Matter),河野 宏,,—,,,ALO/a0A5h0000027PEEEA2_河野 宏
+a0A5h0000027P8UEAU,a0A,受任案件(Matter),沼田 規男,,—,,,ALO/a0A5h0000027P8UEAU_沼田 規男
+a0A5h0000027PGrEAM,a0A,受任案件(Matter),法寿庵 諄,,—,,,ALO/a0A5h0000027PGrEAM_法寿庵 諄
+a0A5h000003PBbwEAG,a0A,受任案件(Matter),法律相談業務,,—,,,ALO/a0A5h000003PBbwEAG_法律相談業務
+a0AJ2000008DaurMAC,a0A,受任案件(Matter),津村和孝,相続相談,○,武市,受任案件,ALO/a0AJ2000008DaurMAC_津村和孝＿相続相談
+a0A5h0000027PBQEA2,a0A,受任案件(Matter),津田自動車工業株式会社,,—,,,ALO/a0A5h0000027PBQEA2_津田自動車工業株式会社
+a0A5h00000P4x7kEAB,a0A,受任案件(Matter),浅井和子様,相続,—,,,ALO/a0A5h00000P4x7kEAB_浅井和子様＿相続
+a0A5h0000027PGQEA2,a0A,受任案件(Matter),浅井執筆関係,,—,,,ALO/a0A5h0000027PGQEA2_浅井執筆関係
+a0A5h0000027PG4EAM,a0A,受任案件(Matter),浅井 康男,,—,,,ALO/a0A5h0000027PG4EAM_浅井 康男
+a0A5h0000027PDMEA2,a0A,受任案件(Matter),浅井 洋平,,—,,,ALO/a0A5h0000027PDMEA2_浅井 洋平
+a0A5h0000027PB3EAM,a0A,受任案件(Matter),浅井 直美,,—,,,ALO/a0A5h0000027PB3EAM_浅井 直美
+a0ARA00000Pdkas2AB,a0A,受任案件(Matter),浅井眞澄,相続事件,○,浅井,受任案件,ALO/a0ARA00000Pdkas2AB_浅井眞澄＿相続事件
+a0A5h0000027P9sEAE,a0A,受任案件(Matter),浅利 信義,,—,,,ALO/a0A5h0000027P9sEAE_浅利 信義
+a0A5h0000027P8QEAU,a0A,受任案件(Matter),浅田 孟,,—,,,ALO/a0A5h0000027P8QEAU_浅田 孟
+a0A5h0000027CTnEAM,a0A,受任案件(Matter),浅野邦治,破産管財人事件,—,,,ALO/a0A5h0000027CTnEAM_浅野邦治＿破産管財人事件
+a0A5h0000027CgxEAE,a0A,受任案件(Matter),浅野邦治,破産管財事件※クローズ,—,,,ALO/a0A5h0000027CgxEAE_浅野邦治＿破産管財事件※クローズ
+a0A5h0000027PGtEAM,a0A,受任案件(Matter),浅野 邦治,,—,,,ALO/a0A5h0000027PGtEAM_浅野 邦治
+a0A5h0000027BR4EAM,a0A,受任案件(Matter),海雲亭,事業譲渡・破産,—,,,ALO/a0A5h0000027BR4EAM_海雲亭＿事業譲渡・破産
+a0A5h0000027P8jEAE,a0A,受任案件(Matter),深田一不在者財産管理人,,—,,,ALO/a0A5h0000027P8jEAE_深田一不在者財産管理人
+a0A5h0000027P9DEAU,a0A,受任案件(Matter),深谷 將世,,—,,,ALO/a0A5h0000027P9DEAU_深谷 將世
+a0A5h0000027PGNEA2,a0A,受任案件(Matter),清島 万里子,,—,,,ALO/a0A5h0000027PGNEA2_清島 万里子
+a0A5h0000027PAmEAM,a0A,受任案件(Matter),清松 雅彦,,—,,,ALO/a0A5h0000027PAmEAM_清松 雅彦
+a0A5h0000027PFKEA2,a0A,受任案件(Matter),清水 源太,,—,,,ALO/a0A5h0000027PFKEA2_清水 源太
+a0A5h0000027PA4EAM,a0A,受任案件(Matter),清水 由里子,,—,,,ALO/a0A5h0000027PA4EAM_清水 由里子
+a0A5h0000027PCGEA2,a0A,受任案件(Matter),清水 直紀,,—,,,ALO/a0A5h0000027PCGEA2_清水 直紀
+a0A5h0000027PFEEA2,a0A,受任案件(Matter),渡 信吾,,—,,,ALO/a0A5h0000027PFEEA2_渡 信吾
+a0A5h0000027P9MEAU,a0A,受任案件(Matter),渡具知 剛,,—,,,ALO/a0A5h0000027P9MEAU_渡具知 剛
+a0A5h0000027P8LEAU,a0A,受任案件(Matter),渡辺 佳弘,,—,,,ALO/a0A5h0000027P8LEAU_渡辺 佳弘
+a0A5h0000027PGOEA2,a0A,受任案件(Matter),渡辺 章,,—,,,ALO/a0A5h0000027PGOEA2_渡辺 章
+a0A5h0000027PFQEA2,a0A,受任案件(Matter),渡邊 マユミ,,—,,,ALO/a0A5h0000027PFQEA2_渡邊 マユミ
+a0A5h0000027P8fEAE,a0A,受任案件(Matter),渡邊 秀之,,—,,,ALO/a0A5h0000027P8fEAE_渡邊 秀之
+a0A5h0000027PAYEA2,a0A,受任案件(Matter),湊 翔,,—,,,ALO/a0A5h0000027PAYEA2_湊 翔
+a0A5h0000027PGVEA2,a0A,受任案件(Matter),澤路子,遺言執行者,○,浅井,受任案件,ALO/a0A5h0000027PGVEA2_澤路子＿遺言執行者
+a0AJ2000003Gp1cMAC,a0A,受任案件(Matter),澤路子,公正証書遺言作成及び任意後見契約書作成,○,浅井,受任案件,ALO/a0AJ2000003Gp1cMAC_澤路子＿公正証書遺言作成及び任意後見契約書作成
+a0A5h0000027PG6EAM,a0A,受任案件(Matter),濱崎 有美,,—,,,ALO/a0A5h0000027PG6EAM_濱崎 有美
+a0A5h0000027PDYEA2,a0A,受任案件(Matter),濱田 清,,—,,,ALO/a0A5h0000027PDYEA2_濱田 清
+a0AJ2000000tTqBMAU,a0A,受任案件(Matter),濵田弘,保証ガイドライン,—,,,ALO/a0AJ2000000tTqBMAU_濵田弘＿保証ガイドライン
+a0A5h0000027PDQEA2,a0A,受任案件(Matter),照井 猛,,—,,,ALO/a0A5h0000027PDQEA2_照井 猛
+a0A5h00000FJum7EAD,a0A,受任案件(Matter),熊谷 直順,自然災害債務整理ガイドライン,—,,,ALO/a0A5h00000FJum7EAD_熊谷 直順＿自然災害債務整理ガイドライン
+a0A5h0000027PAxEAM,a0A,受任案件(Matter),片山 和希,,—,,,ALO/a0A5h0000027PAxEAM_片山 和希
+a0A5h0000027PBTEA2,a0A,受任案件(Matter),片岡 春樹,,—,,,ALO/a0A5h0000027PBTEA2_片岡 春樹
+a0A5h0000027PBIEA2,a0A,受任案件(Matter),片桐 治子,,—,,,ALO/a0A5h0000027PBIEA2_片桐 治子
+a0A5h0000027PFtEAM,a0A,受任案件(Matter),犬伏 均,,—,,,ALO/a0A5h0000027PFtEAM_犬伏 均
+a0A5h0000027PAlEAM,a0A,受任案件(Matter),犬飼 龍馬,,—,,,ALO/a0A5h0000027PAlEAM_犬飼 龍馬
+a0A5h0000027P9QEAU,a0A,受任案件(Matter),猪内 正寛,,—,,,ALO/a0A5h0000027P9QEAU_猪内 正寛
+a0A5h0000027PGUEA2,a0A,受任案件(Matter),猪口 建太朗,,—,,,ALO/a0A5h0000027PGUEA2_猪口 建太朗
+a0A5h0000027PEOEA2,a0A,受任案件(Matter),猪飼 佳彦,,—,,,ALO/a0A5h0000027PEOEA2_猪飼 佳彦
+a0A5h0000027PAzEAM,a0A,受任案件(Matter),猪飼 裕史,,—,,,ALO/a0A5h0000027PAzEAM_猪飼 裕史
+a0A5h0000027PCDEA2,a0A,受任案件(Matter),玉山 景一,,—,,,ALO/a0A5h0000027PCDEA2_玉山 景一
+a0A5h000003PdQYEA0,a0A,受任案件(Matter),瑞穂青果,,—,,,ALO/a0A5h000003PdQYEA0_瑞穂青果
+a0A5h0000027PCREA2,a0A,受任案件(Matter),田上 秀美,,—,,,ALO/a0A5h0000027PCREA2_田上 秀美
+a0A5h0000027PECEA2,a0A,受任案件(Matter),田中 えい子,,—,,,ALO/a0A5h0000027PECEA2_田中 えい子
+a0A5h0000027PEBEA2,a0A,受任案件(Matter),田中 ゆり衣,,—,,,ALO/a0A5h0000027PEBEA2_田中 ゆり衣
+a0A5h0000027PAGEA2,a0A,受任案件(Matter),田中商事,,—,,,ALO/a0A5h0000027PAGEA2_田中商事
+a0AJ2000006PmfxMAC,a0A,受任案件(Matter),田中外士夫商店,法人破産手続開始申立事件,○,浅井,受任案件,ALO/a0AJ2000006PmfxMAC_田中外士夫商店＿法人破産手続開始申立事件
+a0AJ2000006Pn90MAC,a0A,受任案件(Matter),田中外士夫商店(池本昭夫個人案件),破産申立事件,○,浅井,受任案件,ALO/a0AJ2000006Pn90MAC_田中外士夫商店(池本昭夫個人案件)＿破産申立事件
+a0AJ2000007E894MAC,a0A,受任案件(Matter),田中外士夫商店(池本勇輝個人案件),債務整理事件,○,浅井,受任案件,ALO/a0AJ2000007E894MAC_田中外士夫商店(池本勇輝個人案件)＿債務整理事件
+a0A5h0000027PC5EAM,a0A,受任案件(Matter),田中 小百合,,—,,,ALO/a0A5h0000027PC5EAM_田中 小百合
+a0A5h0000027CTZEA2,a0A,受任案件(Matter),田中弘美,損害賠償請求事件,—,,,ALO/a0A5h0000027CTZEA2_田中弘美＿損害賠償請求事件
+a0A5h0000027PGKEA2,a0A,受任案件(Matter),田中 弘美,,—,,,ALO/a0A5h0000027PGKEA2_田中 弘美
+a0A5h0000027PBaEAM,a0A,受任案件(Matter),田中 悦雄,,—,,,ALO/a0A5h0000027PBaEAM_田中 悦雄
+a0A5h0000027P9BEAU,a0A,受任案件(Matter),田中 愛実,,—,,,ALO/a0A5h0000027P9BEAU_田中 愛実
+a0A5h0000027PA1EAM,a0A,受任案件(Matter),田中 朗之,,—,,,ALO/a0A5h0000027PA1EAM_田中 朗之
+a0A5h0000027PAPEA2,a0A,受任案件(Matter),田中 祐輔,,—,,,ALO/a0A5h0000027PAPEA2_田中 祐輔
+a0A5h0000027P9LEAU,a0A,受任案件(Matter),田中 裕二,,—,,,ALO/a0A5h0000027P9LEAU_田中 裕二
+a0A5h0000027PAcEAM,a0A,受任案件(Matter),田中 貴浩,,—,,,ALO/a0A5h0000027PAcEAM_田中 貴浩
+a0A5h0000027PEFEA2,a0A,受任案件(Matter),田中 達英,,—,,,ALO/a0A5h0000027PEFEA2_田中 達英
+a0A5h0000027P90EAE,a0A,受任案件(Matter),田代 吉子,,—,,,ALO/a0A5h0000027P90EAE_田代 吉子
+a0A5h0000027P9GEAU,a0A,受任案件(Matter),田尻 丈人,,—,,,ALO/a0A5h0000027P9GEAU_田尻 丈人
+a0A5h0000027PEwEAM,a0A,受任案件(Matter),田村 風香,,—,,,ALO/a0A5h0000027PEwEAM_田村 風香
+a0A5h0000027PB6EAM,a0A,受任案件(Matter),田畑 明日香,損害賠償請求事件(交通事故),○,浅井,受任案件,ALO/a0A5h0000027PB6EAM_田畑 明日香＿損害賠償請求事件(交通事故)
+a0A5h0000027P8dEAE,a0A,受任案件(Matter),由田 寿子,,—,,,ALO/a0A5h0000027P8dEAE_由田 寿子
+a0ARA00000J8JsA2AV,a0A,受任案件(Matter),畑中いく子,損害賠償請求事件(交通事故),○,浅井,受任案件,ALO/a0ARA00000J8JsA2AV_畑中いく子＿損害賠償請求事件(交通事故)
+a0A5h0000027PB1EAM,a0A,受任案件(Matter),白井 良平,,—,,,ALO/a0A5h0000027PB1EAM_白井 良平
+a0A5h0000027PDrEAM,a0A,受任案件(Matter),目片鉄工所,請負工事代金請求事件,○,浅井,受任案件,ALO/a0A5h0000027PDrEAM_目片鉄工所＿請負工事代金請求事件
+a0A5h0000027PA0EAM,a0A,受任案件(Matter),真砂 正嘉,,—,,,ALO/a0A5h0000027PA0EAM_真砂 正嘉
+a0A5h0000027PEeEAM,a0A,受任案件(Matter),真鍋 華代,,—,,,ALO/a0A5h0000027PEeEAM_真鍋 華代
+a0A5h0000027PFuEAM,a0A,受任案件(Matter),石元 加津代,,—,,,ALO/a0A5h0000027PFuEAM_石元 加津代
+a0A5h0000027P8VEAU,a0A,受任案件(Matter),石塚 千紗,,—,,,ALO/a0A5h0000027P8VEAU_石塚 千紗
+a0A5h0000027CTTEA2,a0A,受任案件(Matter),石央セラミックス協同組合,廃業支援,—,,,ALO/a0A5h0000027CTTEA2_石央セラミックス協同組合＿廃業支援
+a0A5h0000027PFhEAM,a0A,受任案件(Matter),石央セラミックス協同組合,,—,,,ALO/a0A5h0000027PFhEAM_石央セラミックス協同組合
+a0A5h0000027PBNEA2,a0A,受任案件(Matter),石田 ふき,,—,,,ALO/a0A5h0000027PBNEA2_石田 ふき
+a0A5h0000027PDbEAM,a0A,受任案件(Matter),石田 典敬,,—,,,ALO/a0A5h0000027PDbEAM_石田 典敬
+a0A5h0000027PG8EAM,a0A,受任案件(Matter),石田 治郎,,—,,,ALO/a0A5h0000027PG8EAM_石田 治郎
+a0A5h0000027PGbEAM,a0A,受任案件(Matter),石見 勝,,—,,,ALO/a0A5h0000027PGbEAM_石見 勝
+a0AJ2000006zQtmMAE,a0A,受任案件(Matter),石﨑良子,任意後見監督人事件,○,浅井,受任案件,ALO/a0AJ2000006zQtmMAE_石﨑良子＿任意後見監督人事件
+a0A5h0000027PAgEAM,a0A,受任案件(Matter),有限会社磯亭,,—,,,ALO/a0A5h0000027PAgEAM_有限会社磯亭
+a0A5h0000027PAKEA2,a0A,受任案件(Matter),磯俣 次男,,—,,,ALO/a0A5h0000027PAKEA2_磯俣 次男
+a0A5h0000027PCtEAM,a0A,受任案件(Matter),神志那 雄二,,—,,,ALO/a0A5h0000027PCtEAM_神志那 雄二
+a0A5h0000027PBgEAM,a0A,受任案件(Matter),神田 高宏,,—,,,ALO/a0A5h0000027PBgEAM_神田 高宏
+a0A5h0000027PDmEAM,a0A,受任案件(Matter),福原 紘子,,—,,,ALO/a0A5h0000027PDmEAM_福原 紘子
+a0A5h0000027PCLEA2,a0A,受任案件(Matter),福富 幸子,,—,,,ALO/a0A5h0000027PCLEA2_福富 幸子
+a0A5h0000027P9hEAE,a0A,受任案件(Matter),福岡 章男,,—,,,ALO/a0A5h0000027P9hEAE_福岡 章男
+a0A5h0000027PE9EAM,a0A,受任案件(Matter),福本 正馬,,—,,,ALO/a0A5h0000027PE9EAM_福本 正馬
+a0ARA00000CgJaP2AV,a0A,受任案件(Matter),福永めぐみ,交通事故,○,浅井,受任案件,ALO/a0ARA00000CgJaP2AV_福永めぐみ＿交通事故
+a0A5h0000027CTYEA2,a0A,受任案件(Matter),福永孝文,遺産分割審判,○,浅井,受任案件/相談,ALO/a0A5h0000027CTYEA2_福永孝文＿遺産分割審判
+a0A5h00000BMBlDEAX,a0A,受任案件(Matter),福永孝文,保管金返還等請求事件,○,浅井,受任案件/相談,ALO/a0A5h00000BMBlDEAX_福永孝文＿保管金返還等請求事件
+a0A5h00000PcKt2EAF,a0A,受任案件(Matter),福永孝文,遺産確認請求事件,○,浅井,受任案件/相談,ALO/a0A5h00000PcKt2EAF_福永孝文＿遺産確認請求事件
+a0A5h0000027PG3EAM,a0A,受任案件(Matter),福永 孝文,,○,浅井,受任案件/相談,ALO/a0A5h0000027PG3EAM_福永 孝文
+a0A5h00000EYipCEAT,a0A,受任案件(Matter),福永孝文,不動産強制競売事件,○,浅井,受任案件/相談,ALO/a0A5h00000EYipCEAT_福永孝文＿不動産強制競売事件
+a0A5h00000JYP2eEAH,a0A,受任案件(Matter),福永孝文・尚子,保管金返還等請求事件,—,,,ALO/a0A5h00000JYP2eEAH_福永孝文・尚子＿保管金返還等請求事件
+a0A5h00000ENOJ4EAP,a0A,受任案件(Matter),福永睦美,建物収去土地明渡請求事件,—,,,ALO/a0A5h00000ENOJ4EAP_福永睦美＿建物収去土地明渡請求事件
+a0A5h0000027PCFEA2,a0A,受任案件(Matter),福永 里絵,,—,,,ALO/a0A5h0000027PCFEA2_福永 里絵
+a0A5h0000027PDaEAM,a0A,受任案件(Matter),福田 章,,—,,,ALO/a0A5h0000027PDaEAM_福田 章
+a0A5h0000027PCEEA2,a0A,受任案件(Matter),福留 朱乃愛,,—,,,ALO/a0A5h0000027PCEEA2_福留 朱乃愛
+a0A5h000003PdR6EAK,a0A,受任案件(Matter),福西建設,,—,,,ALO/a0A5h000003PdR6EAK_福西建設
+a0A5h00000C8ghmEAB,a0A,受任案件(Matter),秋山祐二,交通事故,—,,,ALO/a0A5h00000C8ghmEAB_秋山祐二＿交通事故
+a0A5h0000027PE3EAM,a0A,受任案件(Matter),秦 秀一,,—,,,ALO/a0A5h0000027PE3EAM_秦 秀一
+a0A5h0000027PA7EAM,a0A,受任案件(Matter),竹内 恒雄,,—,,,ALO/a0A5h0000027PA7EAM_竹内 恒雄
+a0A5h0000027P8xEAE,a0A,受任案件(Matter),竹内運送,,—,,,ALO/a0A5h0000027P8xEAE_竹内運送
+a0A5h0000027PCzEAM,a0A,受任案件(Matter),竹村 知紘,,—,,,ALO/a0A5h0000027PCzEAM_竹村 知紘
+a0A5h0000027PBeEAM,a0A,受任案件(Matter),竹谷 悠夏,,—,,,ALO/a0A5h0000027PBeEAM_竹谷 悠夏
+a0A5h0000027PDGEA2,a0A,受任案件(Matter),竹野 英雄,,—,,,ALO/a0A5h0000027PDGEA2_竹野 英雄
+a0A5h0000027PBmEAM,a0A,受任案件(Matter),箕浦 佐知子,,—,,,ALO/a0A5h0000027PBmEAM_箕浦 佐知子
+a0A5h0000027PFmEAM,a0A,受任案件(Matter),箱田 美代子,,—,,,ALO/a0A5h0000027PFmEAM_箱田 美代子
+a0A5h00000F2OuEEAV,a0A,受任案件(Matter),篠原澄,経営者保証ガイドライン,—,,,ALO/a0A5h00000F2OuEEAV_篠原澄＿経営者保証ガイドライン
+a0A5h0000027PDIEA2,a0A,受任案件(Matter),米田 太富,,—,,,ALO/a0A5h0000027PDIEA2_米田 太富
+a0A5h00000Nf1MrEAJ,a0A,受任案件(Matter),粟津久雄,土地活用提案契約書検証,—,,,ALO/a0A5h00000Nf1MrEAJ_粟津久雄＿土地活用提案契約書検証
+a0A5h0000028tqnEAA,a0A,受任案件(Matter),紛争調停請求事件,,—,,,ALO/a0A5h0000028tqnEAA_紛争調停請求事件
+a0A5h0000027PFNEA2,a0A,受任案件(Matter),繁道 太一,,—,,,ALO/a0A5h0000027PFNEA2_繁道 太一
+a0A5h0000027PBoEAM,a0A,受任案件(Matter),羽尻 都子,,—,,,ALO/a0A5h0000027PBoEAM_羽尻 都子
+a0A5h0000027PEJEA2,a0A,受任案件(Matter),羽田 多津子,,—,,,ALO/a0A5h0000027PEJEA2_羽田 多津子
+a0A5h0000027PFzEAM,a0A,受任案件(Matter),羽賀 優太,,—,,,ALO/a0A5h0000027PFzEAM_羽賀 優太
+a0A5h0000027PEhEAM,a0A,受任案件(Matter),羽野 誠人,,—,,,ALO/a0A5h0000027PEhEAM_羽野 誠人
+a0A5h0000027PB0EAM,a0A,受任案件(Matter),翁長 めぐ美,,—,,,ALO/a0A5h0000027PB0EAM_翁長 めぐ美
+a0A5h0000027CgnEAE,a0A,受任案件(Matter),能登治子,成年後見事件,—,,,ALO/a0A5h0000027CgnEAE_能登治子＿成年後見事件
+a0A5h0000027P8XEAU,a0A,受任案件(Matter),能登 治子,,—,,,ALO/a0A5h0000027P8XEAU_能登 治子
+a0A5h0000027P8hEAE,a0A,受任案件(Matter),能西 務,,—,,,ALO/a0A5h0000027P8hEAE_能西 務
+a0A5h0000027PA6EAM,a0A,受任案件(Matter),舟山 貴幸,,—,,,ALO/a0A5h0000027PA6EAM_舟山 貴幸
+a0A5h0000027PEnEAM,a0A,受任案件(Matter),花戸 清行,,—,,,ALO/a0A5h0000027PEnEAM_花戸 清行
+a0A5h0000027PDyEAM,a0A,受任案件(Matter),花田 真光,,—,,,ALO/a0A5h0000027PDyEAM_花田 真光
+a0AJ2000001n3k7MAA,a0A,受任案件(Matter),若宮酒造,事業承継相談,—,,,ALO/a0AJ2000001n3k7MAA_若宮酒造＿事業承継相談
+a0ARA00000R54Mo2AJ,a0A,受任案件(Matter),草竹蓮久郎_麻薬及び向精神薬取締法違反,,—,,,ALO/a0ARA00000R54Mo2AJ_草竹蓮久郎_麻薬及び向精神薬取締法違反
+a0A5h0000026yFQEAY,a0A,受任案件(Matter),草野憲昭,車両返還等請求事件,—,,,ALO/a0A5h0000026yFQEAY_草野憲昭＿車両返還等請求事件
+a0A5h0000028qlrEAA,a0A,受任案件(Matter),草野憲昭,車両返還等請求控訴事件,—,,,ALO/a0A5h0000028qlrEAA_草野憲昭＿車両返還等請求控訴事件
+a0A5h0000027PBsEAM,a0A,受任案件(Matter),菅野 芳男,,—,,,ALO/a0A5h0000027PBsEAM_菅野 芳男
+a0A5h0000027PGGEA2,a0A,受任案件(Matter),菊次 正志,,—,,,ALO/a0A5h0000027PGGEA2_菊次 正志
+a0A5h0000027PEDEA2,a0A,受任案件(Matter),菊池 守央,,—,,,ALO/a0A5h0000027PEDEA2_菊池 守央
+a0A5h0000027PGFEA2,a0A,受任案件(Matter),萩尾 和正,,—,,,ALO/a0A5h0000027PGFEA2_萩尾 和正
+a0A5h0000027PA8EAM,a0A,受任案件(Matter),落合 保男,,—,,,ALO/a0A5h0000027PA8EAM_落合 保男
+a0A5h00000M7ESUEA3,a0A,受任案件(Matter),蒋 雅鑫,交通事故,—,,,ALO/a0A5h00000M7ESUEA3_蒋 雅鑫＿交通事故
+a0A5h00000L03NLEAZ,a0A,受任案件(Matter),有限会社藤井工務店,M&A,○,浅井,受任案件,ALO/a0A5h00000L03NLEAZ_有限会社藤井工務店＿M&A
+a0ARA00000Hqobd2AB,a0A,受任案件(Matter),藤原寛治(エコライフフジワラ),破産管財人事件,—,,,ALO/a0ARA00000Hqobd2AB_藤原寛治(エコライフフジワラ)＿破産管財人事件
+a0A5h0000027P9kEAE,a0A,受任案件(Matter),藤原 浩司,,—,,,ALO/a0A5h0000027P9kEAE_藤原 浩司
+a0A5h0000027PF5EAM,a0A,受任案件(Matter),藤原 睦,,—,,,ALO/a0A5h0000027PF5EAM_藤原 睦
+a0AJ2000008FWXuMAO,a0A,受任案件(Matter),藤山隆夫,求償権支払請求事件,○,浅井,受任案件,ALO/a0AJ2000008FWXuMAO_藤山隆夫＿求償権支払請求事件
+a0A5h000003OGTDEA4,a0A,受任案件(Matter),藤崎電機,,—,,,ALO/a0A5h000003OGTDEA4_藤崎電機
+a0A5h0000027PF9EAM,a0A,受任案件(Matter),藤本 健次,,—,,,ALO/a0A5h0000027PF9EAM_藤本 健次
+a0A5h00000Js7awEAB,a0A,受任案件(Matter),藤本慶子,債務整理,—,,,ALO/a0A5h00000Js7awEAB_藤本慶子＿債務整理
+a0A5h0000027P86EAE,a0A,受任案件(Matter),藤本 文彦,,—,,,ALO/a0A5h0000027P86EAE_藤本 文彦
+a0A5h0000027PDZEA2,a0A,受任案件(Matter),藤本 正裕,,—,,,ALO/a0A5h0000027PDZEA2_藤本 正裕
+a0A5h0000027PEWEA2,a0A,受任案件(Matter),藤林 雅信,,—,,,ALO/a0A5h0000027PEWEA2_藤林 雅信
+a0A5h0000027PDFEA2,a0A,受任案件(Matter),藤田 喜子,,—,,,ALO/a0A5h0000027PDFEA2_藤田 喜子
+a0A5h0000027PF0EAM,a0A,受任案件(Matter),藤 竜也,,—,,,ALO/a0A5h0000027PF0EAM_藤 竜也
+a0A5h0000027P8PEAU,a0A,受任案件(Matter),藤長 定子,,—,,,ALO/a0A5h0000027P8PEAU_藤長 定子
+a0A5h0000027P9NEAU,a0A,受任案件(Matter),行田 夏子,,—,,,ALO/a0A5h0000027P9NEAU_行田 夏子
+a0A5h00000NJUp1EAH,a0A,受任案件(Matter),被相続人水野英子相続人,相続相談,—,,,ALO/a0A5h00000NJUp1EAH_被相続人水野英子相続人＿相続相談
+a0A5h0000027P9bEAE,a0A,受任案件(Matter),袴田 千代,,—,,,ALO/a0A5h0000027P9bEAE_袴田 千代
+a0AJ2000006pJ8SMAU,a0A,受任案件(Matter),西井和也・由紀子,住宅ローン抵当権相談,○,浅井,受任案件,ALO/a0AJ2000006pJ8SMAU_西井和也・由紀子＿住宅ローン抵当権相談
+a0A5h0000027PDdEAM,a0A,受任案件(Matter),西口 知佳,,—,,,ALO/a0A5h0000027PDdEAM_西口 知佳
+a0A5h0000027PBREA2,a0A,受任案件(Matter),西尾 登司夫,,—,,,ALO/a0A5h0000027PBREA2_西尾 登司夫
+a0ARA00000KGNMv2AP,a0A,受任案件(Matter),西岡新二_損害賠償請求事件,,—,,,ALO/a0ARA00000KGNMv2AP_西岡新二_損害賠償請求事件
+a0A5h0000027PDjEAM,a0A,受任案件(Matter),西岡 良庸,,—,,,ALO/a0A5h0000027PDjEAM_西岡 良庸
+a0A5h0000027PCwEAM,a0A,受任案件(Matter),西川 利恵,,—,,,ALO/a0A5h0000027PCwEAM_西川 利恵
+a0A5h0000029TKXEA2,a0A,受任案件(Matter),西川孝,公務執行妨害・傷害被疑事件,—,,,ALO/a0A5h0000029TKXEA2_西川孝＿公務執行妨害・傷害被疑事件
+a0A5h0000027PBbEAM,a0A,受任案件(Matter),西川 由希子,,—,,,ALO/a0A5h0000027PBbEAM_西川 由希子
+a0A5h0000027PGLEA2,a0A,受任案件(Matter),西川 直人,,—,,,ALO/a0A5h0000027PGLEA2_西川 直人
+a0A5h0000027PGlEAM,a0A,受任案件(Matter),西方 康博,,—,,,ALO/a0A5h0000027PGlEAM_西方 康博
+a0A5h0000026y5eEAA,a0A,受任案件(Matter),西本武史,遺産分割調停,○,浅井,受任案件,ALO/a0A5h0000026y5eEAA_西本武史＿遺産分割調停
+a0A5h0000027PGTEA2,a0A,受任案件(Matter),西本 武史,,○,浅井,受任案件,ALO/a0A5h0000027PGTEA2_西本 武史
+a0A5h0000027PEPEA2,a0A,受任案件(Matter),西村 和剛,,—,,,ALO/a0A5h0000027PEPEA2_西村 和剛
+a0A5h00000277wuEAA,a0A,受任案件(Matter),西村幸宏,損害賠償請求事件(交通),—,,,ALO/a0A5h00000277wuEAA_西村幸宏＿損害賠償請求事件(交通)
+a0A5h0000027PGoEAM,a0A,受任案件(Matter),西村 幸宏,,—,,,ALO/a0A5h0000027PGoEAM_西村 幸宏
+a0A5h0000027PC8EAM,a0A,受任案件(Matter),西村 智佳,,—,,,ALO/a0A5h0000027PC8EAM_西村 智佳
+a0A5h0000027P8cEAE,a0A,受任案件(Matter),西村 浩,,—,,,ALO/a0A5h0000027P8cEAE_西村 浩
+a0A5h0000027PFfEAM,a0A,受任案件(Matter),西河 大介,,—,,,ALO/a0A5h0000027PFfEAM_西河 大介
+a0A5h0000027P8REAU,a0A,受任案件(Matter),西河 志麻,,—,,,ALO/a0A5h0000027P8REAU_西河 志麻
+a0A5h0000027P8EEAU,a0A,受任案件(Matter),西浦 みよ,,—,,,ALO/a0A5h0000027P8EEAU_西浦 みよ
+a0A5h0000027PBLEA2,a0A,受任案件(Matter),西澤 均,,—,,,ALO/a0A5h0000027PBLEA2_西澤 均
+a0A5h0000027PDvEAM,a0A,受任案件(Matter),西藤 雅也,,—,,,ALO/a0A5h0000027PDvEAM_西藤 雅也
+a0A5h00000KOClIEAX,a0A,受任案件(Matter),見澤一道,損害賠償請求事件(交通事故),○,浅井,受任案件,ALO/a0A5h00000KOClIEAX_見澤一道＿損害賠償請求事件(交通事故)
+a0A5h0000027PFYEA2,a0A,受任案件(Matter),諏訪 昭範,,—,,,ALO/a0A5h0000027PFYEA2_諏訪 昭範
+a0A5h0000027PDEEA2,a0A,受任案件(Matter),谷本 武彦,,—,,,ALO/a0A5h0000027PDEEA2_谷本 武彦
+a0A5h0000027PGjEAM,a0A,受任案件(Matter),谷田 孝明,,—,,,ALO/a0A5h0000027PGjEAM_谷田 孝明
+a0A5h0000027P8vEAE,a0A,受任案件(Matter),谷田 進,,—,,,ALO/a0A5h0000027P8vEAE_谷田 進
+a0A5h0000027PAfEAM,a0A,受任案件(Matter),谷邊 隆成,,—,,,ALO/a0A5h0000027PAfEAM_谷邊 隆成
+a0A5h00000DePxeEAF,a0A,受任案件(Matter),豊原寿美・豊原壽美こと李壽美,破産管財人事件,—,,,ALO/a0A5h00000DePxeEAF_豊原寿美・豊原壽美こと李壽美＿破産管財人事件
+a0A5h00000IszTkEAJ,a0A,受任案件(Matter),有限会社豊和商事,,—,,,ALO/a0A5h00000IszTkEAJ_有限会社豊和商事
+a0A5h0000027PDzEAM,a0A,受任案件(Matter),豊福 敏之,,—,,,ALO/a0A5h0000027PDzEAM_豊福 敏之
+a0A5h0000027PE0EAM,a0A,受任案件(Matter),赤柴 良隆,,—,,,ALO/a0A5h0000027PE0EAM_赤柴 良隆
+a0A5h0000027PEYEA2,a0A,受任案件(Matter),車 美里,,—,,,ALO/a0A5h0000027PEYEA2_車 美里
+a0A5h000000vDGZEA2,a0A,受任案件(Matter),辻本亨,成年後見人(財産管理),○,浅井,受任案件,ALO/a0A5h000000vDGZEA2_辻本亨＿成年後見人(財産管理)
+a0A5h0000027P94EAE,a0A,受任案件(Matter),辻本 亨,,○,浅井,受任案件,ALO/a0A5h0000027P94EAE_辻本 亨
+a0A5h0000027PDuEAM,a0A,受任案件(Matter),近藤 保,,—,,,ALO/a0A5h0000027PDuEAM_近藤 保
+a0A5h0000027PFLEA2,a0A,受任案件(Matter),進藤 雅春,,—,,,ALO/a0A5h0000027PFLEA2_進藤 雅春
+a0A5h0000027PC1EAM,a0A,受任案件(Matter),道関 亘,,—,,,ALO/a0A5h0000027PC1EAM_道関 亘
+a0A5h0000027PCiEAM,a0A,受任案件(Matter),遠藤 憲二,,—,,,ALO/a0A5h0000027PCiEAM_遠藤 憲二
+a0A5h00000H5UEaEAN,a0A,受任案件(Matter),都スクリーン株式会社,中国子会社撤退事件,○,浅井,受任案件,ALO/a0A5h00000H5UEaEAN_都スクリーン株式会社＿中国子会社撤退事件
+a0A5h0000027PDUEA2,a0A,受任案件(Matter),酒井 大輔,,—,,,ALO/a0A5h0000027PDUEA2_酒井 大輔
+a0A5h0000027PDSEA2,a0A,受任案件(Matter),酒井 智子,,—,,,ALO/a0A5h0000027PDSEA2_酒井 智子
+a0ARA00000RWZxZ2AX,a0A,受任案件(Matter),里井真由美,欠陥住宅京都ネット相談,○,武市,受任案件,ALO/a0ARA00000RWZxZ2AX_里井真由美＿欠陥住宅京都ネット相談
+a0A5h0000027PExEAM,a0A,受任案件(Matter),野上 彰,,—,,,ALO/a0A5h0000027PExEAM_野上 彰
+a0A5h0000027PG9EAM,a0A,受任案件(Matter),野崎 康夫,,—,,,ALO/a0A5h0000027PG9EAM_野崎 康夫
+a0A5h0000027PBYEA2,a0A,受任案件(Matter),野崎 晋司,,—,,,ALO/a0A5h0000027PBYEA2_野崎 晋司
+a0A5h0000027PD3EAM,a0A,受任案件(Matter),野崎 芳朋,,—,,,ALO/a0A5h0000027PD3EAM_野崎 芳朋
+a0A5h0000027PCPEA2,a0A,受任案件(Matter),野添 修三,,—,,,ALO/a0A5h0000027PCPEA2_野添 修三
+a0A5h0000027PCWEA2,a0A,受任案件(Matter),野添 敬子,,—,,,ALO/a0A5h0000027PCWEA2_野添 敬子
+a0A5h0000027PGpEAM,a0A,受任案件(Matter),株式会社金井工芸鋳造所,,—,,,ALO/a0A5h0000027PGpEAM_株式会社金井工芸鋳造所
+a0A5h0000027BR0EAM,a0A,受任案件(Matter),株式会社金井工芸鋳造所,廃業支援,—,,,ALO/a0A5h0000027BR0EAM_株式会社金井工芸鋳造所＿廃業支援
+a0A5h0000027PBtEAM,a0A,受任案件(Matter),金井 進,,—,,,ALO/a0A5h0000027PBtEAM_金井 進
+a0A5h0000027PGPEA2,a0A,受任案件(Matter),金戸 博英,,—,,,ALO/a0A5h0000027PGPEA2_金戸 博英
+a0A5h0000027P9SEAU,a0A,受任案件(Matter),金 直季,,—,,,ALO/a0A5h0000027P9SEAU_金 直季
+a0A5h00000PzmX0EAJ,a0A,受任案件(Matter),鈴木ユリ子,京都情報商材被害対策弁護,—,,,ALO/a0A5h00000PzmX0EAJ_鈴木ユリ子＿京都情報商材被害対策弁護
+a0A5h00000290BTEAY,a0A,受任案件(Matter),鈴木労務管理,,—,,,ALO/a0A5h00000290BTEAY_鈴木労務管理
+a0A5h0000027PGDEA2,a0A,受任案件(Matter),鈴江 潤子,,—,,,ALO/a0A5h0000027PGDEA2_鈴江 潤子
+a0A5h0000027PCNEA2,a0A,受任案件(Matter),鍋谷 さゆり,,—,,,ALO/a0A5h0000027PCNEA2_鍋谷 さゆり
+a0A5h0000027P8eEAE,a0A,受任案件(Matter),長村 勝美,,—,,,ALO/a0A5h0000027P8eEAE_長村 勝美
+a0A5h0000027P9XEAU,a0A,受任案件(Matter),長谷川 一郎,,—,,,ALO/a0A5h0000027P9XEAU_長谷川 一郎
+a0A5h0000027PEzEAM,a0A,受任案件(Matter),門口 利美,,—,,,ALO/a0A5h0000027PEzEAM_門口 利美
+a0A5h0000027PAeEAM,a0A,受任案件(Matter),門屋 康子,,—,,,ALO/a0A5h0000027PAeEAM_門屋 康子
+a0A5h0000027PGdEAM,a0A,受任案件(Matter),門 正憲,,—,,,ALO/a0A5h0000027PGdEAM_門 正憲
+a0A5h0000027PCpEAM,a0A,受任案件(Matter),関口 智子,,—,,,ALO/a0A5h0000027PCpEAM_関口 智子
+a0A5h0000057Xc4EAE,a0A,受任案件(Matter),関西設備工業株式会社,売主側アドバイザー,—,,,ALO/a0A5h0000057Xc4EAE_関西設備工業株式会社＿売主側アドバイザー
+a0A5h0000027PCxEAM,a0A,受任案件(Matter),阪本 志穂,,—,,,ALO/a0A5h0000027PCxEAM_阪本 志穂
+a0A5h0000028kWZEAY,a0A,受任案件(Matter),阿曽百合子,損害賠償請求事件(第二事故),○,浅井,受任案件,ALO/a0A5h0000028kWZEAY_阿曽百合子＿損害賠償請求事件(第二事故)
+a0A5h0000026yOyEAI,a0A,受任案件(Matter),阿曽 百合子,損害賠償請求事件(交通)→控訴事件,○,浅井,受任案件,ALO/a0A5h0000026yOyEAI_阿曽 百合子＿損害賠償請求事件(交通)→控訴事件
+a0A5h0000027PAQEA2,a0A,受任案件(Matter),阿曽 百合子,,○,浅井,受任案件,ALO/a0A5h0000027PAQEA2_阿曽 百合子
+a0A5h0000027PFgEAM,a0A,受任案件(Matter),陶アン,,—,,,ALO/a0A5h0000027PFgEAM_陶アン
+a0A5h000008wpjiEAA,a0A,受任案件(Matter),株式会社隈元建設,株式譲渡契約書レビュー,○,浅井,受任案件,ALO/a0A5h000008wpjiEAA_株式会社隈元建設＿株式譲渡契約書レビュー
+a0A5h00000P8wlpEAB,a0A,受任案件(Matter),隈元建設,売掛代金請求事件(vs広和建設),○,浅井,受任案件,ALO/a0A5h00000P8wlpEAB_隈元建設＿売掛代金請求事件(vs広和建設)
+a0ARA00000K70kX2AR,a0A,受任案件(Matter),隈元建設,松尾充晃対応,○,浅井,受任案件,ALO/a0ARA00000K70kX2AR_隈元建設＿松尾充晃対応
+a0A5h0000027P9zEAE,a0A,受任案件(Matter),青木 茂,,—,,,ALO/a0A5h0000027P9zEAE_青木 茂
+a0A5h000006d2PWEAY,a0A,受任案件(Matter),青田 奈恵,損害賠償請求(交通)事件※電話会議,—,,,ALO/a0A5h000006d2PWEAY_青田 奈恵＿損害賠償請求(交通)事件※電話会議
+a0A5h0000027PAkEAM,a0A,受任案件(Matter),飯島 里子,,—,,,ALO/a0A5h0000027PAkEAM_飯島 里子
+a0A5h00000L0lXwEAJ,a0A,受任案件(Matter),飯田佳江・白石幸江・水谷明江,相続放棄申述申立等,—,,,ALO/a0A5h00000L0lXwEAJ_飯田佳江・白石幸江・水谷明江＿相続放棄申述申立等
+a0A5h0000027PEqEAM,a0A,受任案件(Matter),駒井 裕美,,—,,,ALO/a0A5h0000027PEqEAM_駒井 裕美
+a0A5h0000027PBSEA2,a0A,受任案件(Matter),高倉 未央,,—,,,ALO/a0A5h0000027PBSEA2_高倉 未央
+a0A5h0000027PArEAM,a0A,受任案件(Matter),高岡 清隆,,—,,,ALO/a0A5h0000027PArEAM_高岡 清隆
+a0A5h0000027PCjEAM,a0A,受任案件(Matter),高岸 友希,,—,,,ALO/a0A5h0000027PCjEAM_高岸 友希
+a0A5h0000027PB9EAM,a0A,受任案件(Matter),高島 一億,,—,,,ALO/a0A5h0000027PB9EAM_高島 一億
+a0A5h0000027PBdEAM,a0A,受任案件(Matter),高島 麻紀,,—,,,ALO/a0A5h0000027PBdEAM_高島 麻紀
+a0A5h0000027P9fEAE,a0A,受任案件(Matter),高木 大地,,—,,,ALO/a0A5h0000027P9fEAE_高木 大地
+a0A5h0000027PANEA2,a0A,受任案件(Matter),高柳 和真,,—,,,ALO/a0A5h0000027PANEA2_高柳 和真
+a0A5h0000027PAWEA2,a0A,受任案件(Matter),高橋 恵,,—,,,ALO/a0A5h0000027PAWEA2_高橋 恵
+a0A5h0000027PFPEA2,a0A,受任案件(Matter),高橋 義幸,,—,,,ALO/a0A5h0000027PFPEA2_高橋 義幸
+a0A5h0000027P9gEAE,a0A,受任案件(Matter),高田 儀人,,—,,,ALO/a0A5h0000027P9gEAE_高田 儀人
+a0A5h0000027P8aEAE,a0A,受任案件(Matter),高田 喜市,,—,,,ALO/a0A5h0000027P8aEAE_高田 喜市
+a0A5h0000027PD8EAM,a0A,受任案件(Matter),高野 美代子,,—,,,ALO/a0A5h0000027PD8EAM_高野 美代子
+a0A5h0000027PFGEA2,a0A,受任案件(Matter),株式会社魚倖,,—,,,ALO/a0A5h0000027PFGEA2_株式会社魚倖
+a0A5h0000027P8DEAU,a0A,受任案件(Matter),鶴山 良子,,—,,,ALO/a0A5h0000027P8DEAU_鶴山 良子
+a0A5h0000027P9eEAE,a0A,受任案件(Matter),鹿取 治子,,—,,,ALO/a0A5h0000027P9eEAE_鹿取 治子
+a0A5h0000027PFUEA2,a0A,受任案件(Matter),鹿野産業株式会社,,—,,,ALO/a0A5h0000027PFUEA2_鹿野産業株式会社
+a0A5h0000027CTEEA2,a0A,受任案件(Matter),龍村美術織物,合意書締結協議,○,浅井,受任案件,ALO/a0A5h0000027CTEEA2_龍村美術織物＿合意書締結協議
+a0A5h00000BMNQVEA5,a0A,受任案件(Matter),株式会社龍村美術織物,対エステックサービス株式会社,○,浅井,受任案件,ALO/a0A5h00000BMNQVEA5_株式会社龍村美術織物＿対エステックサービス株式会社
+a0ARA00000MN2R32AL,a0A,受任案件(Matter),龍村美術織物,売掛金回収事件,○,浅井,受任案件,ALO/a0ARA00000MN2R32AL_龍村美術織物＿売掛金回収事件
+a0A5h0000027PAwEAM,a0A,受任案件(Matter),野 寛三,,—,,,ALO/a0A5h0000027PAwEAM_野 寛三
+a0DRA00000n615F2AQ,a0D,相談(Consultation),AI’m株式会社,契約書レビュー,○,浅井,相談,ALO/a0DRA00000n615F2AQ_AI’m株式会社＿契約書レビュー
+a0DRA00000rYhLm2AK,a0D,相談(Consultation),atelier EGON（アトリエエゴン）_経営改善支援,,—,,,ALO/a0DRA00000rYhLm2AK_atelier EGON（アトリエエゴン）_経営改善支援
+a0D5h00000HNPYAEA5,a0D,相談(Consultation),株式会社Fastlife,交通事故相談,○,浅井,相談,ALO/a0D5h00000HNPYAEA5_株式会社Fastlife＿交通事故相談
+a0DJ2000000UK2JMAW,a0D,相談(Consultation),FTコーポレーション,債権回収,—,,,ALO/a0DJ2000000UK2JMAW_FTコーポレーション＿債権回収
+a0DJ2000006de08MAA,a0D,相談(Consultation),GAGAネイル(妹尾輪),法律相談,—,,,ALO/a0DJ2000006de08MAA_GAGAネイル(妹尾輪)＿法律相談
+a0DJ20000033piMMAQ,a0D,相談(Consultation),GENOVA,損害賠償請求事件,○,浅井,相談,ALO/a0DJ20000033piMMAQ_GENOVA＿損害賠償請求事件
+a0DRA00000usfHF2AY,a0D,相談(Consultation),GNP,労務相談,○,浅井,相談,ALO/a0DRA00000usfHF2AY_GNP＿労務相談
+a0DRA00000NUUUs2AP,a0D,相談(Consultation),HIRAKUホールディングス,事業再生(私的整理),○,浅井,受任案件,ALO/a0DRA00000NUUUs2AP_HIRAKUホールディングス＿事業再生(私的整理)
+a0DRA00000fxtGz2AI,a0D,相談(Consultation),株式会社KIZUKI,廃業支援,○,浅井,相談,ALO/a0DRA00000fxtGz2AI_株式会社KIZUKI＿廃業支援
+a0DJ2000004GMBbMAO,a0D,相談(Consultation),株式会社Lead,債務整理相談,—,,,ALO/a0DJ2000004GMBbMAO_株式会社Lead＿債務整理相談
+a0DJ2000004GMCKMA4,a0D,相談(Consultation),株式会社Lead(岩野寛志),債務整理相談,—,,,ALO/a0DJ2000004GMCKMA4_株式会社Lead(岩野寛志)＿債務整理相談
+a0D5h00000J8705EAB,a0D,相談(Consultation),株式会社NKテック,事業清算,—,,,ALO/a0D5h00000J8705EAB_株式会社NKテック＿事業清算
+a0DJ2000000VF7WMAW,a0D,相談(Consultation),OLD AND NEWこと古谷勝,破産管財人事件,—,,,ALO/a0DJ2000000VF7WMAW_OLD AND NEWこと古谷勝＿破産管財人事件
+a0DRA00000w5ULq2AM,a0D,相談(Consultation),合同会社ONE_法律相談,,—,,,ALO/a0DRA00000w5ULq2AM_合同会社ONE_法律相談
+a0D5h00000Exp7ZEAR,a0D,相談(Consultation),Oriental株式会社,事業譲渡契約,○,浅井,受任案件,ALO/a0D5h00000Exp7ZEAR_Oriental株式会社＿事業譲渡契約
+a0DRA00000vh4SX2AY,a0D,相談(Consultation),Rosnes_法律相談,,—,,,ALO/a0DRA00000vh4SX2AY_Rosnes_法律相談
+a0DJ2000000VZ0JMAW,a0D,相談(Consultation),SINCEL社,かね正グループ＿継続的契約の解消,○,浅井,受任案件,ALO/a0DJ2000000VZ0JMAW_SINCEL社＿かね正グループ＿継続的契約の解消
+a0DJ2000006dJ5dMAE,a0D,相談(Consultation),SOh株式会社,M&A(売り手側廃業支援),○,浅井,相談,ALO/a0DJ2000006dJ5dMAE_SOh株式会社＿M&A(売り手側廃業支援)
+a0D5h00000HLfJPEA1,a0D,相談(Consultation),株式会社tobufune_発信者情報開示請求事件,,—,,,ALO/a0D5h00000HLfJPEA1_株式会社tobufune_発信者情報開示請求事件
+a0DJ2000004F80aMAC,a0D,相談(Consultation),いしざきながこ,任意後見監督人,—,,,ALO/a0DJ2000004F80aMAC_いしざきながこ＿任意後見監督人
+a0DRA00000m5Ybh2AE,a0D,相談(Consultation),か,門泰之＿退職・損害賠償対応,—,,,ALO/a0DRA00000m5Ybh2AE_か＿門泰之＿退職・損害賠償対応
+a0DRA00000m4r0U2AQ,a0D,相談(Consultation),き,キラエリ・モアテス＿宿泊施設運営相談,—,,,ALO/a0DRA00000m4r0U2AQ_き＿キラエリ・モアテス＿宿泊施設運営相談
+a0DJ2000004FyG8MAK,a0D,相談(Consultation),ことほぎ,法律相談,○,浅井,受任案件,ALO/a0DJ2000004FyG8MAK_ことほぎ＿法律相談
+a0DJ2000000VTeNMAW,a0D,相談(Consultation),じょうけ,債務整理相談,○,浅井,相談,ALO/a0DJ2000000VTeNMAW_じょうけ＿債務整理相談
+a0DJ2000004FkDQMA0,a0D,相談(Consultation),株式会社つえ屋,債務整理,○,浅井,相談,ALO/a0DJ2000004FkDQMA0_株式会社つえ屋＿債務整理
+a0D5h000007EtjLEAS,a0D,相談(Consultation),どうぶつ病院京都株式会社,,—,,,ALO/a0D5h000007EtjLEAS_どうぶつ病院京都株式会社
+a0DJ20000035zj6MAA,a0D,相談(Consultation),ひとつむり,企業法務,○,浅井,受任案件,ALO/a0DJ20000035zj6MAA_ひとつむり＿企業法務
+a0D5h00000HKUYaEAP,a0D,相談(Consultation),有限会社ふしみや,法律相談,—,,,ALO/a0D5h00000HKUYaEAP_有限会社ふしみや＿法律相談
+a0DRA00000m5ZKr2AM,a0D,相談(Consultation),や,山中司法書士 事業承継案件,—,,,ALO/a0DRA00000m5ZKr2AM_や＿山中司法書士 事業承継案件
+a0D5h00000M8DZiEAN,a0D,相談(Consultation),株式会社ゆめ工房,ECサイト契約書相談,○,浅井,相談,ALO/a0D5h00000M8DZiEAN_株式会社ゆめ工房＿ECサイト契約書相談
+a0DJ2000000VoofMAC,a0D,相談(Consultation),らくよう総合研究所,売掛金回収,—,,,ALO/a0DJ2000000VoofMAC_らくよう総合研究所＿売掛金回収
+a0DRA00000witvR2AQ,a0D,相談(Consultation),アズシステム株式会社_支援専門家業務,,—,,,ALO/a0DRA00000witvR2AQ_アズシステム株式会社_支援専門家業務
+a0DJ2000004F0D8MAK,a0D,相談(Consultation),アダチ,民事再生スポンサー支援,—,,,ALO/a0DJ2000004F0D8MAK_アダチ＿民事再生スポンサー支援
+a0DJ2000002C4d5MAC,a0D,相談(Consultation),アドライフ京都,債務整理相談,○,浅井,受任案件,ALO/a0DJ2000002C4d5MAC_アドライフ京都＿債務整理相談
+a0DRA00000moiBt2AI,a0D,相談(Consultation),ウイングサポート,企業法務,○,浅井,受任案件,ALO/a0DRA00000moiBt2AI_ウイングサポート＿企業法務
+a0DRA00000wWeov2AC,a0D,相談(Consultation),エイミック株式会社_法律相談,,—,,,ALO/a0DRA00000wWeov2AC_エイミック株式会社_法律相談
+a0D5h000007BEFIEA4,a0D,相談(Consultation),株式会社エフ・ツー,,—,,,ALO/a0D5h000007BEFIEA4_株式会社エフ・ツー
+a0D5h00000J8QuUEAV,a0D,相談(Consultation),株式会社オークウエルネスサービス(債権者浅井悠太),,○,浅井,相談,ALO/a0D5h00000J8QuUEAV_株式会社オークウエルネスサービス(債権者浅井悠太)
+a0D5h00000J8KqcEAF,a0D,相談(Consultation),株式会社カードックオオニシ,私的整理,—,,,ALO/a0D5h00000J8KqcEAF_株式会社カードックオオニシ＿私的整理
+a0DJ2000004E8RIMA0,a0D,相談(Consultation),株式会社コウリョウ,,○,浅井,受任案件,ALO/a0DJ2000004E8RIMA0_株式会社コウリョウ
+a0D5h000002odEJEAY,a0D,相談(Consultation),株式会社サントル,企業法務,—,,,ALO/a0D5h000002odEJEAY_株式会社サントル＿企業法務
+a0D5h0000061EKeEAM,a0D,相談(Consultation),株式会社シマプリ,事業清算・保証解除,—,,,ALO/a0D5h0000061EKeEAM_株式会社シマプリ＿事業清算・保証解除
+a0DJ2000000U6Z0MAK,a0D,相談(Consultation),株式会社シンコー住研(旧サーモネット株式会社),債権回収,○,浅井,受任案件,ALO/a0DJ2000000U6Z0MAK_株式会社シンコー住研(旧サーモネット株式会社)＿債権回収
+a0DRA00000cSLmo2AG,a0D,相談(Consultation),スプリード,従業員対応,○,浅井,相談,ALO/a0DRA00000cSLmo2AG_スプリード＿従業員対応
+a0DRA00000EG9FN2A1,a0D,相談(Consultation),スペシャル・エアー・サービス,経営相談,○,浅井,受任案件,ALO/a0DRA00000EG9FN2A1_スペシャル・エアー・サービス＿経営相談
+a0DJ2000004DTQjMAO,a0D,相談(Consultation),株式会社ソーケン,M&A,—,,,ALO/a0DJ2000004DTQjMAO_株式会社ソーケン＿M&A
+a0DRA00000O5IMg2AN,a0D,相談(Consultation),ソーケンM&A@千葉,,○,浅井,受任案件,ALO/a0DRA00000O5IMg2AN_ソーケンM&A@千葉
+a0DJ2000000UNLUMA4,a0D,相談(Consultation),テスト,,—,,,ALO/a0DJ2000000UNLUMA4_テスト
+a0D5h00000DXgQMEA1,a0D,相談(Consultation),株式会社トータルコミュニケーション,,—,,,ALO/a0D5h00000DXgQMEA1_株式会社トータルコミュニケーション
+a0DJ2000004FElKMAW,a0D,相談(Consultation),有限会社ナガノ精巧,相続放棄相談,—,,,ALO/a0DJ2000004FElKMAW_有限会社ナガノ精巧＿相続放棄相談
+a0D5h0000060sXPEAY,a0D,相談(Consultation),ノーブルトレーダース株式会社,不動産売買,—,,,ALO/a0D5h0000060sXPEAY_ノーブルトレーダース株式会社＿不動産売買
+a0DJ2000006dSsYMAU,a0D,相談(Consultation),ハウスゲート,労務相談,○,浅井,相談,ALO/a0DJ2000006dSsYMAU_ハウスゲート＿労務相談
+a0D5h000007AqWGEA0,a0D,相談(Consultation),株式会社ハッピーフィールド,新事業・契約書作成,—,,,ALO/a0D5h000007AqWGEA0_株式会社ハッピーフィールド＿新事業・契約書作成
+a0DRA00000PAztR2AT,a0D,相談(Consultation),ハナフル,団体交渉,○,浅井,受任案件,ALO/a0DRA00000PAztR2AT_ハナフル＿団体交渉
+a0DRA00000tJfFu2AK,a0D,相談(Consultation),フォトユーモア株式会社_労務相談,,—,,,ALO/a0DRA00000tJfFu2AK_フォトユーモア株式会社_労務相談
+a0D5h0000060sY0EAI,a0D,相談(Consultation),株式会社フーズクリエイトMITSUYA,債務整理,—,,,ALO/a0D5h0000060sY0EAI_株式会社フーズクリエイトMITSUYA＿債務整理
+a0D5h000002HPUAEA4,a0D,相談(Consultation),株式会社ミックス,法律相談,○,浅井,相談,ALO/a0D5h000002HPUAEA4_株式会社ミックス＿法律相談
+a0D5h0000047wHbEAI,a0D,相談(Consultation),株式会社ヤナコ計測,,—,,,ALO/a0D5h0000047wHbEAI_株式会社ヤナコ計測
+a0D5h00000LE2y3EAD,a0D,相談(Consultation),株式会社リベックス,法人事業再生計画策定支援,—,,,ALO/a0D5h00000LE2y3EAD_株式会社リベックス＿法人事業再生計画策定支援
+a0D5h00000511xoEAA,a0D,相談(Consultation),レアラ サンプル,,—,,,ALO/a0D5h00000511xoEAA_レアラ サンプル
+a0D5h00000HMCbGEAX,a0D,相談(Consultation),ワールドラベル株式会社,少数株主対応 法律相談,—,,,ALO/a0D5h00000HMCbGEAX_ワールドラベル株式会社＿少数株主対応 法律相談
+a0D5h00000DXNvHEAX,a0D,相談(Consultation),株式会社一杢,,—,,,ALO/a0D5h00000DXNvHEAX_株式会社一杢
+a0DJ20000036WVJMA2,a0D,相談(Consultation),三山口保彦,詐欺被害事件(情報商材被害対策),—,,,ALO/a0DJ20000036WVJMA2_三山口保彦＿詐欺被害事件(情報商材被害対策)
+a0DRA00000E8bqL2AR,a0D,相談(Consultation),三菱地所株式会社,損害賠償請求事件,○,浅井,相談,ALO/a0DRA00000E8bqL2AR_三菱地所株式会社＿損害賠償請求事件
+a0DJ2000000UM0cMAG,a0D,相談(Consultation),中村英里,相続相談＿法テラス,—,,,ALO/a0DJ2000000UM0cMAG_中村英里＿相続相談＿法テラス
+a0DJ20000036okeMAA,a0D,相談(Consultation),中村貴子,相続相談(遺言・相続センター),—,,,ALO/a0DJ20000036okeMAA_中村貴子＿相続相談(遺言・相続センター)
+a0DRA00000tJ32Y2AS,a0D,相談(Consultation),中瀬 充,法律相談,○,浅井,受任案件,ALO/a0DRA00000tJ32Y2AS_中瀬 充＿法律相談
+a0D5h00000J7BvlEAF,a0D,相談(Consultation),中西光一,相続放棄,—,,,ALO/a0D5h00000J7BvlEAF_中西光一＿相続放棄
+a0DJ2000004FwTQMA0,a0D,相談(Consultation),株式会社丸二,企業法務,—,,,ALO/a0DJ2000004FwTQMA0_株式会社丸二＿企業法務
+a0DRA00000tacez2AA,a0D,相談(Consultation),久世博志_住居侵入・不同意わいせつ未遂,,—,,,ALO/a0DRA00000tacez2AA_久世博志_住居侵入・不同意わいせつ未遂
+a0DRA00000KqPej2AF,a0D,相談(Consultation),久住呂博信,クレジット・サラ金法律相談(京都弁護士会),○,武市,相談,ALO/a0DRA00000KqPej2AF_久住呂博信＿クレジット・サラ金法律相談(京都弁護士会)
+a0DJ2000000UG6LMAW,a0D,相談(Consultation),久保浩二,損害賠償請求事件(交通事故),○,浅井,受任案件,ALO/a0DJ2000000UG6LMAW_久保浩二＿損害賠償請求事件(交通事故)
+a0DRA00000nrORN2A2,a0D,相談(Consultation),久保田真琴_債務整理相談(法テラス),,—,,,ALO/a0DRA00000nrORN2A2_久保田真琴_債務整理相談(法テラス)
+a0D5h000004gCHVEA2,a0D,相談(Consultation),株式会社亀匠,債務整理,—,,,ALO/a0D5h000004gCHVEA2_株式会社亀匠＿債務整理
+a0D5h000001R3pHEAS,a0D,相談(Consultation),事業承継事件,,—,,,ALO/a0D5h000001R3pHEAS_事業承継事件
+a0D5h000001R3qoEAC,a0D,相談(Consultation),事業承継勉強会,,—,,,ALO/a0D5h000001R3qoEAC_事業承継勉強会
+a0D5h000007BLssEAG,a0D,相談(Consultation),五和工業株式会社,,○,浅井,相談,ALO/a0D5h000007BLssEAG_五和工業株式会社
+a0DJ20000036olIMAQ,a0D,相談(Consultation),五百井恵,相続相談(遺言・相続センター),—,,,ALO/a0DJ20000036olIMAQ_五百井恵＿相続相談(遺言・相続センター)
+a0DJ2000004FhRwMAK,a0D,相談(Consultation),京ノ,「ごはん日和」事業買取スキーム,○,浅井,受任案件,ALO/a0DJ2000004FhRwMAK_京ノ＿「ごはん日和」事業買取スキーム
+a0DJ200000335iuMAA,a0D,相談(Consultation),京都第一ホテル,弁護士照会対応相談,—,,,ALO/a0DJ200000335iuMAA_京都第一ホテル＿弁護士照会対応相談
+a0DRA00000E10dp2AB,a0D,相談(Consultation),株式会社京都高雄倶楽部,事業整理相談,○,浅井,受任案件,ALO/a0DRA00000E10dp2AB_株式会社京都高雄倶楽部＿事業整理相談
+a0DRA00000Kpg9l2AB,a0D,相談(Consultation),今井秀一,クレジット・サラ金法律相談(京都弁護士会),○,武市,受任案件,ALO/a0DRA00000Kpg9l2AB_今井秀一＿クレジット・サラ金法律相談(京都弁護士会)
+a0D5h000001QuYqEAK,a0D,相談(Consultation),今西正二,損害賠償請求事件(交通事故),—,,,ALO/a0D5h000001QuYqEAK_今西正二＿損害賠償請求事件(交通事故)
+a0DJ2000000UV2mMAG,a0D,相談(Consultation),佐々木径子,詐欺被害事件,—,,,ALO/a0DJ2000000UV2mMAG_佐々木径子＿詐欺被害事件
+a0DJ2000000VV20MAG,a0D,相談(Consultation),佐藤幹展,大麻取締法違反(当番弁護),—,,,ALO/a0DJ2000000VV20MAG_佐藤幹展＿大麻取締法違反(当番弁護)
+a0DJ2000006dYZVMA2,a0D,相談(Consultation),佐藤沙紀,パワハラ相談(法テラス),○,武市,相談,ALO/a0DJ2000006dYZVMA2_佐藤沙紀＿パワハラ相談(法テラス)
+a0DJ2000004FcHfMAK,a0D,相談(Consultation),保川和子,交通事故,—,,,ALO/a0DJ2000004FcHfMAK_保川和子＿交通事故
+a0D5h00000J8MnoEAF,a0D,相談(Consultation),有限会社公建,会社整理,—,,,ALO/a0D5h00000J8MnoEAF_有限会社公建＿会社整理
+a0D5h00000J77NCEAZ,a0D,相談(Consultation),内田龍一郎,不同意性交渉＿当番弁護,—,,,ALO/a0D5h00000J77NCEAZ_内田龍一郎＿不同意性交渉＿当番弁護
+a0DJ2000004EoQaMAK,a0D,相談(Consultation),初田久子,債務整理(法テラス),—,,,ALO/a0DJ2000004EoQaMAK_初田久子＿債務整理(法テラス)
+a0DRA00000TIqIn2AL,a0D,相談(Consultation),前田トヨ,損害賠償請求事件,○,浅井,受任案件,ALO/a0DRA00000TIqIn2AL_前田トヨ＿損害賠償請求事件
+a0D5h000007B4IeEAK,a0D,相談(Consultation),株式会社創尋,,—,,,ALO/a0D5h000007B4IeEAK_株式会社創尋
+a0DJ2000000UzLvMAK,a0D,相談(Consultation),千田鈴子,交通事故相談,○,浅井,受任案件,ALO/a0DJ2000000UzLvMAK_千田鈴子＿交通事故相談
+a0DJ2000000Vz3oMAC,a0D,相談(Consultation),千賀優作,損害賠償請求法律相談,—,,,ALO/a0DJ2000000Vz3oMAC_千賀優作＿損害賠償請求法律相談
+a0DJ2000000UBIJMA4,a0D,相談(Consultation),南橋いずみ,詐欺被害事件,○,武市,受任案件,ALO/a0DJ2000000UBIJMA4_南橋いずみ＿詐欺被害事件
+a0DRA00000MBCVq2AP,a0D,相談(Consultation),原本成實,クレジット・サラ金法律相談(京都弁護士会),○,武市,受任案件,ALO/a0DRA00000MBCVq2AP_原本成實＿クレジット・サラ金法律相談(京都弁護士会)
+a0D5h000002EZwKEAW,a0D,相談(Consultation),株式会社吉川印刷工業所,,○,浅井,相談,ALO/a0D5h000002EZwKEAW_株式会社吉川印刷工業所
+a0DRA00000kLrej2AC,a0D,相談(Consultation),吉村幸夫,犯罪被害者相談,○,武市,相談,ALO/a0DRA00000kLrej2AC_吉村幸夫＿犯罪被害者相談
+a0DJ20000033pk8MAA,a0D,相談(Consultation),國村伸子,債務整理(法テラス),—,,,ALO/a0DJ20000033pk8MAA_國村伸子＿債務整理(法テラス)
+a0DRA00000SDWht2AH,a0D,相談(Consultation),國賀久統,法律相談(法テラス),○,武市,相談,ALO/a0DRA00000SDWht2AH_國賀久統＿法律相談(法テラス)
+a0D5h000001QpQSEA0,a0D,相談(Consultation),執筆,,—,,,ALO/a0D5h000001QpQSEA0_執筆
+a0DRA00000t5Hv02AE,a0D,相談(Consultation),大安 宜子_相続相談,,—,,,ALO/a0DRA00000t5Hv02AE_大安 宜子_相続相談
+a0DRA00000cizbN2AQ,a0D,相談(Consultation),大平建設株式会社,廃業支援,○,浅井,相談,ALO/a0DRA00000cizbN2AQ_大平建設株式会社＿廃業支援
+a0D5h000002GpGmEAK,a0D,相談(Consultation),大野有里子様,著作権侵害事件,—,,,ALO/a0D5h000002GpGmEAK_大野有里子様＿著作権侵害事件
+a0DRA00000MBBTL2A5,a0D,相談(Consultation),大黒真悟,クレジット・サラ金法律相談(京都弁護士会),○,武市,相談,ALO/a0DRA00000MBBTL2A5_大黒真悟＿クレジット・サラ金法律相談(京都弁護士会)
+a0DRA00000EDnhE2AT,a0D,相談(Consultation),奈良中央水産,経営者保証ガイドライン,—,,,ALO/a0DRA00000EDnhE2AT_奈良中央水産＿経営者保証ガイドライン
+a0D5h000001RgFlEAK,a0D,相談(Consultation),奈良協議会 抜本案件,,—,,,ALO/a0D5h000001RgFlEAK_奈良協議会 抜本案件
+a0D5h0000045c3EEAQ,a0D,相談(Consultation),契約書内容検討,,—,,,ALO/a0D5h0000045c3EEAQ_契約書内容検討
+a0DJ2000004EoPNMA0,a0D,相談(Consultation),奥原 蒼,債務整理(法テラス),—,,,ALO/a0DJ2000004EoPNMA0_奥原 蒼＿債務整理(法テラス)
+a0D5h000007B7vCEAS,a0D,相談(Consultation),奥村英二,,—,,,ALO/a0D5h000007B7vCEAS_奥村英二
+a0DRA00000bSBrG2AW,a0D,相談(Consultation),宇都宮,債務整理相談,—,,,ALO/a0DRA00000bSBrG2AW_宇都宮＿債務整理相談
+a0D5h000007AsL4EAK,a0D,相談(Consultation),宗教法人延福寺,金銭トラブル(ひまわりほっとダイヤル),—,,,ALO/a0D5h000007AsL4EAK_宗教法人延福寺＿金銭トラブル(ひまわりほっとダイヤル)
+a0DJ2000000VVPLMA4,a0D,相談(Consultation),小林悠眞,窃盗事件＿当番弁護,—,,,ALO/a0DJ2000000VVPLMA4_小林悠眞＿窃盗事件＿当番弁護
+a0DRA00000nqbs62AA,a0D,相談(Consultation),小野暖人_システム開発費損害賠償請求,,—,,,ALO/a0DRA00000nqbs62AA_小野暖人_システム開発費損害賠償請求
+a0DJ2000000VWcnMAG,a0D,相談(Consultation),小野里紗,情報商材被害相談,—,,,ALO/a0DJ2000000VWcnMAG_小野里紗＿情報商材被害相談
+a0DJ200000345RjMAI,a0D,相談(Consultation),山元之大,法律相談,—,,,ALO/a0DJ200000345RjMAI_山元之大＿法律相談
+a0DRA00000GdN1x2AF,a0D,相談(Consultation),山口スミ子,任意整理(法テラス),—,,,ALO/a0DRA00000GdN1x2AF_山口スミ子＿任意整理(法テラス)
+a0D5h000002HAZaEAO,a0D,相談(Consultation),有限会社山口工務店,法律相談,—,,,ALO/a0D5h000002HAZaEAO_有限会社山口工務店＿法律相談
+a0D5h000001TBiREAW,a0D,相談(Consultation),山口幸樹,離婚事件,○,浅井,相談,ALO/a0D5h000001TBiREAW_山口幸樹＿離婚事件
+a0D5h00000KyLp7EAF,a0D,相談(Consultation),山口朝実,欠陥住宅京都ネット相談,—,,,ALO/a0D5h00000KyLp7EAF_山口朝実＿欠陥住宅京都ネット相談
+a0D5h00000DXntfEAD,a0D,相談(Consultation),山宗実業株式会社,,—,,,ALO/a0D5h00000DXntfEAD_山宗実業株式会社
+a0D5h00000M9DQDEA3,a0D,相談(Consultation),山本幹也,詐欺被害事件,—,,,ALO/a0D5h00000M9DQDEA3_山本幹也＿詐欺被害事件
+a0DRA00000Hnu7J2AR,a0D,相談(Consultation),山本晋久,交通事故(LAC),○,浅井,受任案件,ALO/a0DRA00000Hnu7J2AR_山本晋久＿交通事故(LAC)
+a0DRA00000ZnqVy2AJ,a0D,相談(Consultation),有限会社山本梱包,ひまわりホットダイヤル,○,浅井,相談,ALO/a0DRA00000ZnqVy2AJ_有限会社山本梱包＿ひまわりホットダイヤル
+a0DJ20000036yADMAY,a0D,相談(Consultation),山本莉央,薬機法違反(国選弁護),—,,,ALO/a0DJ20000036yADMAY_山本莉央＿薬機法違反(国選弁護)
+a0DRA00000GdW0P2AV,a0D,相談(Consultation),山端 啓,パワハラ相談(法テラス),○,武市,相談,ALO/a0DRA00000GdW0P2AV_山端 啓＿パワハラ相談(法テラス)
+a0DJ2000006de0wMAA,a0D,相談(Consultation),岡田製作所(岡田準一),法律相談,—,,,ALO/a0DJ2000006de0wMAA_岡田製作所(岡田準一)＿法律相談
+a0DJ2000000W8NLMA0,a0D,相談(Consultation),岩崎 健,詐欺被害事件,—,,,ALO/a0DJ2000000W8NLMA0_岩崎 健＿詐欺被害事件
+a0DRA00000Upys52AB,a0D,相談(Consultation),岩鼻モータース,,○,浅井,受任案件,ALO/a0DRA00000Upys52AB_岩鼻モータース
+a0DJ2000004FExQMAW,a0D,相談(Consultation),島内正広,損害賠償等請求事件,○,浅井,受任案件,ALO/a0DJ2000004FExQMAW_島内正広＿損害賠償等請求事件
+a0D5h00000F5WjpEAF,a0D,相談(Consultation),川島宏昌,傷害事件(当番弁護),—,,,ALO/a0D5h00000F5WjpEAF_川島宏昌＿傷害事件(当番弁護)
+a0DJ20000036yBQMAY,a0D,相談(Consultation),川野 寛,暴行(当番弁護),—,,,ALO/a0DJ20000036yBQMAY_川野 寛＿暴行(当番弁護)
+a0DJ20000033pjjMAA,a0D,相談(Consultation),工藤妙恵,詐欺被害(法テラス),—,,,ALO/a0DJ20000033pjjMAA_工藤妙恵＿詐欺被害(法テラス)
+a0DJ2000002ChNFMA0,a0D,相談(Consultation),工藤有加,相談,—,,,ALO/a0DJ2000002ChNFMA0_工藤有加＿相談
+a0DJ2000006dHhtMAE,a0D,相談(Consultation),平和熔工所,M&Aバイサイド支援,—,,,ALO/a0DJ2000006dHhtMAE_平和熔工所＿M&Aバイサイド支援
+a0DRA00000KqT412AF,a0D,相談(Consultation),広瀬健一,クレジット・サラ金法律相談(京都弁護士会),○,武市,相談,ALO/a0DRA00000KqT412AF_広瀬健一＿クレジット・サラ金法律相談(京都弁護士会)
+a0D5h000001R0FYEA0,a0D,相談(Consultation),廃業支援,,—,,,ALO/a0D5h000001R0FYEA0_廃業支援
+a0D5h0000044dsXEAQ,a0D,相談(Consultation),弓場一樹,,○,浅井,相談,ALO/a0D5h0000044dsXEAQ_弓場一樹
+a0DRA00000tKZ0M2AW,a0D,相談(Consultation),社会医療法人 弘仁会 大島病院_病院幹事,,—,,,ALO/a0DRA00000tKZ0M2AW_社会医療法人 弘仁会 大島病院_病院幹事
+a0DJ2000002CIDsMAO,a0D,相談(Consultation),後藤佳子,詐欺被害事件(情報商材被害対策),—,,,ALO/a0DJ2000002CIDsMAO_後藤佳子＿詐欺被害事件(情報商材被害対策)
+a0D5h000007ED2aEAG,a0D,相談(Consultation),德永 涼太・聖摩,相続,—,,,ALO/a0D5h000007ED2aEAG_德永 涼太・聖摩＿相続
+a0D5h00000F5MnlEAF,a0D,相談(Consultation),志田 充,交通事故,○,浅井,受任案件,ALO/a0D5h00000F5MnlEAF_志田 充＿交通事故
+a0D5h000000oHtNEAU,a0D,相談(Consultation),成年後見人(財産管理),,—,,,ALO/a0D5h000000oHtNEAU_成年後見人(財産管理)
+a0D5h000007Ey3sEAC,a0D,相談(Consultation),株式会社成研,,○,浅井,受任案件,ALO/a0D5h000007Ey3sEAC_株式会社成研
+a0D5h000001R0yyEAC,a0D,相談(Consultation),損害賠償請求(交通),,—,,,ALO/a0D5h000001R0yyEAC_損害賠償請求(交通)
+a0D5h000001Qb28EAC,a0D,相談(Consultation),損害賠償請求(訴訟,,—,,,ALO/a0D5h000001Qb28EAC_損害賠償請求(訴訟
+a0D5h000000oK0QEAU,a0D,相談(Consultation),損害賠償請求事件,,—,,,ALO/a0D5h000000oK0QEAU_損害賠償請求事件
+a0D5h000000oK0VEAU,a0D,相談(Consultation),損害賠償請求事件,,—,,,ALO/a0D5h000000oK0VEAU_損害賠償請求事件
+a0D5h000001QQ94EAG,a0D,相談(Consultation),損害賠償請求事件,,—,,,ALO/a0D5h000001QQ94EAG_損害賠償請求事件
+a0D5h000001RUOXEA4,a0D,相談(Consultation),損害賠償請求事件,,—,,,ALO/a0D5h000001RUOXEA4_損害賠償請求事件
+a0DJ20000033pjtMAA,a0D,相談(Consultation),新田信介,債務整理(法テラス),—,,,ALO/a0DJ20000033pjtMAA_新田信介＿債務整理(法テラス)
+a0D5h0000050pxfEAA,a0D,相談(Consultation),株式会社日本の窓,不当利得返還請求,—,,,ALO/a0D5h0000050pxfEAA_株式会社日本の窓＿不当利得返還請求
+a0DJ2000000VBDSMA4,a0D,相談(Consultation),星野翼,情報商材被害相談,—,,,ALO/a0DJ2000000VBDSMA4_星野翼＿情報商材被害相談
+a0DRA00000t5wYM2AY,a0D,相談(Consultation),服部 功_相続相談,,—,,,ALO/a0DRA00000t5wYM2AY_服部 功_相続相談
+a0D5h0000060cCFEAY,a0D,相談(Consultation),木佐貫広子,法律相談,—,,,ALO/a0D5h0000060cCFEAY_木佐貫広子＿法律相談
+a0DRA00000usBr42AE,a0D,相談(Consultation),木村 千絵_法律相談,,—,,,ALO/a0DRA00000usBr42AE_木村 千絵_法律相談
+a0D5h000001SLXwEAO,a0D,相談(Consultation),杉本大生,損害賠償請求事件,—,,,ALO/a0D5h000001SLXwEAO_杉本大生＿損害賠償請求事件
+a0DJ2000004D8niMAC,a0D,相談(Consultation),杉本浩二,債務整理(法テラス),—,,,ALO/a0DJ2000004D8niMAC_杉本浩二＿債務整理(法テラス)
+a0D5h00000EyU1YEAV,a0D,相談(Consultation),杉本麻千子,法律相談,—,,,ALO/a0D5h00000EyU1YEAV_杉本麻千子＿法律相談
+a0D5h000007BH8aEAG,a0D,相談(Consultation),東洋化学株式会社,M&A,○,浅井,受任案件,ALO/a0D5h000007BH8aEAG_東洋化学株式会社＿M&A
+a0DJ2000004G4cwMAC,a0D,相談(Consultation),松林 慧,住居侵入・窃盗未遂事件(国選弁護),—,,,ALO/a0DJ2000004G4cwMAC_松林 慧＿住居侵入・窃盗未遂事件(国選弁護)
+a0DRA00000pITCh2AO,a0D,相談(Consultation),松永知佳_和解あっせん申立（京都弁護士会）,,—,,,ALO/a0DRA00000pITCh2AO_松永知佳_和解あっせん申立（京都弁護士会）
+a0DRA00000iUfpD2AS,a0D,相談(Consultation),林 昆興,当番弁護(詐欺事件),—,,,ALO/a0DRA00000iUfpD2AS_林 昆興＿当番弁護(詐欺事件)
+a0D5h0000044jCAEAY,a0D,相談(Consultation),有限会社林衣料,,—,,,ALO/a0D5h0000044jCAEAY_有限会社林衣料
+a0DJ2000006dHTpMAM,a0D,相談(Consultation),柴田愛架,生命・身体犯(犯罪被害者支援委員会),—,,,ALO/a0DJ2000006dHTpMAM_柴田愛架＿生命・身体犯(犯罪被害者支援委員会)
+a0DJ200000330iBMAQ,a0D,相談(Consultation),栁瀬和子,相続相談,—,,,ALO/a0DJ200000330iBMAQ_栁瀬和子＿相続相談
+a0DJ2000002CIFlMAO,a0D,相談(Consultation),栗林星奈,ストーカー相談(犯罪被害者支援委員会),—,,,ALO/a0DJ2000002CIFlMAO_栗林星奈＿ストーカー相談(犯罪被害者支援委員会)
+a0D5h0000046dpbEAA,a0D,相談(Consultation),株式会社森井電機,,—,,,ALO/a0D5h0000046dpbEAA_株式会社森井電機
+a0DRA00000DGZoj2AH,a0D,相談(Consultation),森田秋也,傷害(当番弁護),—,,,ALO/a0DRA00000DGZoj2AH_森田秋也＿傷害(当番弁護)
+a0DRA00000Jck0V2AR,a0D,相談(Consultation),森田貴之,あっせん補助(京都弁護士会),—,,,ALO/a0DRA00000Jck0V2AR_森田貴之＿あっせん補助(京都弁護士会)
+a0DRA00000r45tp2AA,a0D,相談(Consultation),横井真也_債務整理相談,,—,,,ALO/a0DRA00000r45tp2AA_横井真也_債務整理相談
+a0DJ2000004FPpsMAG,a0D,相談(Consultation),横尾研一,相続相談(遺言・相続センター),○,武市,受任案件,ALO/a0DJ2000004FPpsMAG_横尾研一＿相続相談(遺言・相続センター)
+a0D5h00000617JtEAI,a0D,相談(Consultation),横山久美,退店金支払い請求,—,,,ALO/a0D5h00000617JtEAI_横山久美＿退店金支払い請求
+a0DRA00000iU2342AC,a0D,相談(Consultation),樺山義仁,犯罪被害者相談,—,,,ALO/a0DRA00000iU2342AC_樺山義仁＿犯罪被害者相談
+a0DRA00000KqLEX2A3,a0D,相談(Consultation),永井二郎,クレジット・サラ金法律相談(京都弁護士会),—,,,ALO/a0DRA00000KqLEX2A3_永井二郎＿クレジット・サラ金法律相談(京都弁護士会)
+a0DJ2000000ULygMAG,a0D,相談(Consultation),油田秀盛,自己破産(法テラス),—,,,ALO/a0DJ2000000ULygMAG_油田秀盛＿自己破産(法テラス)
+a0DJ2000006dVxpMAE,a0D,相談(Consultation),津村和孝,相続相談,○,武市,受任案件,ALO/a0DJ2000006dVxpMAE_津村和孝＿相続相談
+a0DRA00000v8s7F2AQ,a0D,相談(Consultation),浅山美紗_法律相談,,—,,,ALO/a0DRA00000v8s7F2AQ_浅山美紗_法律相談
+a0DJ2000000UOC0MAO,a0D,相談(Consultation),浜田学園,M&A,○,浅井,相談,ALO/a0DJ2000000UOC0MAO_浜田学園＿M&A
+a0DRA00000rTg722AC,a0D,相談(Consultation),渡邊成作（株式会社KIZUKI）,債務整理相談,—,,,ALO/a0DRA00000rTg722AC_渡邊成作（株式会社KIZUKI）＿債務整理相談
+a0DRA00000SDHCb2AP,a0D,相談(Consultation),濵﨑七生,法律相談(法テラス),○,武市,相談,ALO/a0DRA00000SDHCb2AP_濵﨑七生＿法律相談(法テラス)
+a0DRA00000vnlub2AA,a0D,相談(Consultation),瀧 謙司_和解あっせん申立事件,,—,,,ALO/a0DRA00000vnlub2AA_瀧 謙司_和解あっせん申立事件
+a0DRA00000HmNtN2AV,a0D,相談(Consultation),生田知花,交通事故,○,浅井,相談,ALO/a0DRA00000HmNtN2AV_生田知花＿交通事故
+a0DRA00000oanGk2AI,a0D,相談(Consultation),田中八千代_欠陥住宅京都ネット,,—,,,ALO/a0DRA00000oanGk2AI_田中八千代_欠陥住宅京都ネット
+a0DJ2000004DWu0MAG,a0D,相談(Consultation),有限会社田中外士夫商店,法律相談,○,浅井,受任案件,ALO/a0DJ2000004DWu0MAG_有限会社田中外士夫商店＿法律相談
+a0DJ20000035va5MAA,a0D,相談(Consultation),田中舞,京都情報商材被害対策弁護団相談案件,—,,,ALO/a0DJ20000035va5MAA_田中舞＿京都情報商材被害対策弁護団相談案件
+a0D5h000005ApsrEAC,a0D,相談(Consultation),田畑さん,損害賠償請求事件,—,,,ALO/a0D5h000005ApsrEAC_田畑さん＿損害賠償請求事件
+a0DRA00000Sk8362AB,a0D,相談(Consultation),畑中いく子,損害賠償請求事件(交通事故),○,浅井,受任案件,ALO/a0DRA00000Sk8362AB_畑中いく子＿損害賠償請求事件(交通事故)
+a0D5h000002HCPJEA4,a0D,相談(Consultation),目片 淳治,株主総会取締役会対応,—,,,ALO/a0D5h000002HCPJEA4_目片 淳治＿株主総会取締役会対応
+a0DJ2000006dYZaMAM,a0D,相談(Consultation),相原梨乃,債務整理(法テラス),—,,,ALO/a0DJ2000006dYZaMAM_相原梨乃＿債務整理(法テラス)
+a0DRA00000GvyRF2AZ,a0D,相談(Consultation),石原浩二朗,建造物侵入・窃盗未遂,○,武市,相談,ALO/a0DRA00000GvyRF2AZ_石原浩二朗＿建造物侵入・窃盗未遂
+a0D5h000001R3pbEAC,a0D,相談(Consultation),破産管財事件,,—,,,ALO/a0D5h000001R3pbEAC_破産管財事件
+a0D5h00000F4guAEAR,a0D,相談(Consultation),神野苑香,法律相談,—,,,ALO/a0D5h00000F4guAEAR_神野苑香＿法律相談
+a0DJ2000004FVYPMA4,a0D,相談(Consultation),福井国安,傷害事件(当番弁護),—,,,ALO/a0DJ2000004FVYPMA4_福井国安＿傷害事件(当番弁護)
+a0DRA00000bi1kf2AA,a0D,相談(Consultation),福永孝文,法律相談,○,浅井,受任案件/相談,ALO/a0DRA00000bi1kf2AA_福永孝文＿法律相談
+a0D5h000007BH2EEAW,a0D,相談(Consultation),秋山祐二,交通事故,—,,,ALO/a0D5h000007BH2EEAW_秋山祐二＿交通事故
+a0D5h000002HBW3EAO,a0D,相談(Consultation),立石好子,離婚予備相談,○,浅井,相談,ALO/a0D5h000002HBW3EAO_立石好子＿離婚予備相談
+a0DJ2000000UM0SMAW,a0D,相談(Consultation),筒井敦子,慰謝料請求(法テラス),—,,,ALO/a0DJ2000000UM0SMAW_筒井敦子＿慰謝料請求(法テラス)
+a0D5h000001R3nfEAC,a0D,相談(Consultation),自己破産申立事件,,—,,,ALO/a0D5h000001R3nfEAC_自己破産申立事件
+a0D5h000001R3nuEAC,a0D,相談(Consultation),自己破産申立事件,,—,,,ALO/a0D5h000001R3nuEAC_自己破産申立事件
+a0D5h000001RH9hEAG,a0D,相談(Consultation),自己破産申立事件,,—,,,ALO/a0D5h000001RH9hEAG_自己破産申立事件
+a0D5h00000HLmJbEAL,a0D,相談(Consultation),有限会社舞鶴アポロ,法律相談,○,浅井,相談,ALO/a0D5h00000HLmJbEAL_有限会社舞鶴アポロ＿法律相談
+a0D5h000002nROVEA2,a0D,相談(Consultation),株式会社花萬,,—,,,ALO/a0D5h000002nROVEA2_株式会社花萬
+a0D5h00000M8eHkEAJ,a0D,相談(Consultation),若宮酒造,事業承継相談,—,,,ALO/a0D5h00000M8eHkEAJ_若宮酒造＿事業承継相談
+a0D5h00000HLm99EAD,a0D,相談(Consultation),蒋 雅鑫,交通事故,—,,,ALO/a0D5h00000HLm99EAD_蒋 雅鑫＿交通事故
+a0D5h00000LFKgKEAX,a0D,相談(Consultation),藤井祐介,詐欺被害事件,—,,,ALO/a0D5h00000LFKgKEAX_藤井祐介＿詐欺被害事件
+a0D5h00000HNDDKEA5,a0D,相談(Consultation),被相続人水野英子相続人,相続相談,—,,,ALO/a0D5h00000HNDDKEA5_被相続人水野英子相続人＿相続相談
+a0DJ2000004EwDYMA0,a0D,相談(Consultation),西井和也・由紀子,住宅ローン抵当権相談,○,浅井,受任案件,ALO/a0DJ2000004EwDYMA0_西井和也・由紀子＿住宅ローン抵当権相談
+a0D5h00000ExjhaEAB,a0D,相談(Consultation),西 実,,○,浅井,相談,ALO/a0D5h00000ExjhaEAB_西 実
+a0DJ20000036ok5MAA,a0D,相談(Consultation),西村雄三,相続相談(遺言・相続センター),—,,,ALO/a0DJ20000036ok5MAA_西村雄三＿相続相談(遺言・相続センター)
+a0D5h0000046boIEAQ,a0D,相談(Consultation),見澤一道_交通事故,,—,,,ALO/a0D5h0000046boIEAQ_見澤一道_交通事故
+a0DRA00000PMso92AD,a0D,相談(Consultation),谷垣絵理,養育費請求事件,○,浅井,相談,ALO/a0DRA00000PMso92AD_谷垣絵理＿養育費請求事件
+a0D5h000002mg40EAA,a0D,相談(Consultation),谷板金 事業承継・再生,,—,,,ALO/a0D5h000002mg40EAA_谷板金 事業承継・再生
+a0D5h00000Ey64UEAR,a0D,相談(Consultation),有限会社豊和,,—,,,ALO/a0D5h00000Ey64UEAR_有限会社豊和
+a0DJ2000002DtbjMAC,a0D,相談(Consultation),赤堀純子,詐欺被害事件(情報商材被害対策),—,,,ALO/a0DJ2000002DtbjMAC_赤堀純子＿詐欺被害事件(情報商材被害対策)
+a0D5h000001R2BLEA0,a0D,相談(Consultation),車両引渡等請求事件,,—,,,ALO/a0D5h000001R2BLEA0_車両引渡等請求事件
+a0DRA00000G9QV72AN,a0D,相談(Consultation),進藤美沙,金銭貸借相談(駅前センター夜間法律相談),○,武市,相談,ALO/a0DRA00000G9QV72AN_進藤美沙＿金銭貸借相談(駅前センター夜間法律相談)
+a0D5h00000F5ea0EAB,a0D,相談(Consultation),酒井商事株式会社,法律相談,—,,,ALO/a0D5h00000F5ea0EAB_酒井商事株式会社＿法律相談
+a0DRA00000WHj4j2AD,a0D,相談(Consultation),里井真由美,欠陥住宅京都ネット相談,○,武市,受任案件,ALO/a0DRA00000WHj4j2AD_里井真由美＿欠陥住宅京都ネット相談
+a0DJ20000033mDWMAY,a0D,相談(Consultation),鈴木稔,不動産相続相談,—,,,ALO/a0DJ20000033mDWMAY_鈴木稔＿不動産相続相談
+a0D5h00000EyTRyEAN,a0D,相談(Consultation),鋸崎 明,道路交通法違反(当番弁護),—,,,ALO/a0D5h00000EyTRyEAN_鋸崎 明＿道路交通法違反(当番弁護)
+a0DJ20000036omaMAA,a0D,相談(Consultation),長谷川結,相続相談(遺言・相続センター),—,,,ALO/a0DJ20000036omaMAA_長谷川結＿相続相談(遺言・相続センター)
+a0D5h00000M89XPEAZ,a0D,相談(Consultation),門田真知子,詐欺被害事件,—,,,ALO/a0D5h00000M89XPEAZ_門田真知子＿詐欺被害事件
+a0DJ20000036U91MAE,a0D,相談(Consultation),阪口卓人・麻耶子,欠陥住宅京都ネット相談,—,,,ALO/a0DJ20000036U91MAE_阪口卓人・麻耶子＿欠陥住宅京都ネット相談
+a0D5h00000HLDidEAH,a0D,相談(Consultation),陳 東海・文通,少数株主売却交渉事件,○,浅井,相談,ALO/a0D5h00000HLDidEAH_陳 東海・文通＿少数株主売却交渉事件
+a0D5h0000060STpEAM,a0D,相談(Consultation),飯島直人(東海電工株式会社),離婚等請求事件,○,浅井,相談,ALO/a0D5h0000060STpEAM_飯島直人(東海電工株式会社)＿離婚等請求事件
+a0DRA00000G9NsD2AV,a0D,相談(Consultation),高梨由郁,離縁相談(駅前センター夜間法律相談),○,武市,相談,ALO/a0DRA00000G9NsD2AV_高梨由郁＿離縁相談(駅前センター夜間法律相談)
+a0DJ2000000UzWMMA0,a0D,相談(Consultation),髙橋典子,相続放棄(遺言・相続センター),—,,,ALO/a0DJ2000000UzWMMA0_髙橋典子＿相続放棄(遺言・相続センター)
+a0DRA00000s39Nq2AI,a0D,相談(Consultation),有限会社鹿野物産_廃業支援,,—,,,ALO/a0DRA00000s39Nq2AI_有限会社鹿野物産_廃業支援
+a0D5h000004gHjNEAU,a0D,相談(Consultation),龍村美術織物,ライセンス契約書レビュー,○,浅井,受任案件,ALO/a0D5h000004gHjNEAU_龍村美術織物＿ライセンス契約書レビュー
+a1s5h000000x4VAAAY,a1s,研修・活動,20211022 京都協議会 経営者保証GL研修,,—,,,ALO/a1s5h000000x4VAAAY_20211022 京都協議会 経営者保証GL研修
+a1s5h000000x99cAAA,a1s,研修・活動,20211209京都税理士会伏見支部 事業再生セミナー,,—,,,ALO/a1s5h000000x99cAAA_20211209京都税理士会伏見支部 事業再生セミナー
+a1s5h000000x9DuAAI,a1s,研修・活動,2022商工会議所 コンプラ研修,,—,,,ALO/a1s5h000000x9DuAAI_2022商工会議所 コンプラ研修
+a1s5h000004p1b9AAA,a1s,研修・活動,20230901経営者保証ガイドライン(@徳島弁護士会),,—,,,ALO/a1s5h000004p1b9AAA_20230901経営者保証ガイドライン(@徳島弁護士会)
+a1s5h0000029oZ1AAI,a1s,研修・活動,20230906商工会議所 契約書セミナー(ゼロから学ぶ),,—,,,ALO/a1s5h0000029oZ1AAI_20230906商工会議所 契約書セミナー(ゼロから学ぶ)
+a1s5h000003fJpgAAE,a1s,研修・活動,2023商工会議所個別会員向(光和電業)コンプラ研修,,—,,,ALO/a1s5h000003fJpgAAE_2023商工会議所個別会員向(光和電業)コンプラ研修
+a1sRA000005wCalYAE,a1s,研修・活動,20241008全国本部アドバイザー弁護士向け研修,,—,,,ALO/a1sRA000005wCalYAE_20241008全国本部アドバイザー弁護士向け研修
+a1sRA000002y9NRYAY,a1s,研修・活動,20250428,各種契約に関する事務基準(京都商工会議所),—,,,ALO/a1sRA000002y9NRYAY_20250428＿各種契約に関する事務基準(京都商工会議所)
+a1sRA000002bfvtYAA,a1s,研修・活動,20250929,事業再生勉強会(京都府中小企業活性化協議会),—,,,ALO/a1sRA000002bfvtYAA_20250929＿事業再生勉強会(京都府中小企業活性化協議会)
+a1sRA000002IwQzYAK,a1s,研修・活動,20251001,債権執行・執行官執行の実務(事務員研修)＿京都弁護士会,—,,,ALO/a1sRA000002IwQzYAK_20251001＿債権執行・執行官執行の実務(事務員研修)＿京都弁護士会
+a1sRA000002bh4rYAA,a1s,研修・活動,20251015,民事保全担保取消学習会(京都弁護士会事務員研修),—,,,ALO/a1sRA000002bh4rYAA_20251015＿民事保全担保取消学習会(京都弁護士会事務員研修)
+a1sRA000002bgOvYAI,a1s,研修・活動,20251017,中小企業経営改善計画策定支援研修,—,,,ALO/a1sRA000002bgOvYAI_20251017＿中小企業経営改善計画策定支援研修
+a1sRA000002GAS5YAO,a1s,研修・活動,20251022,AIによる弁護士業務改善＿信和会,—,,,ALO/a1sRA000002GAS5YAO_20251022＿AIによる弁護士業務改善＿信和会
+a1sRA000003DJCnYAO,a1s,研修・活動,20251024,若手税理士との交流会,—,,,ALO/a1sRA000003DJCnYAO_20251024＿若手税理士との交流会
+a1sRA0000021U1JYAU,a1s,研修・活動,20251027,京都信用保証協会セミナー(企業内不祥事),—,,,ALO/a1sRA0000021U1JYAU_20251027＿京都信用保証協会セミナー(企業内不祥事)
+a1sRA000002bcGTYAY,a1s,研修・活動,20251105,第73回全税共チャリティーゴルフコンペ,—,,,ALO/a1sRA000002bcGTYAY_20251105＿第73回全税共チャリティーゴルフコンペ
+a1sRA000002rtTRYAY,a1s,研修・活動,20251111,ハラスメント研修(御池総合法律事務所),—,,,ALO/a1sRA000002rtTRYAY_20251111＿ハラスメント研修(御池総合法律事務所)
+a1sRA000002y9AXYAY,a1s,研修・活動,20251111,わかば勉強会,—,,,ALO/a1sRA000002y9AXYAY_20251111＿わかば勉強会
+a1sRA000003FX6nYAG,a1s,研修・活動,20251118,中堅管財人育成研修(京都弁護士会),—,,,ALO/a1sRA000003FX6nYAG_20251118＿中堅管財人育成研修(京都弁護士会)
+a1sRA000002JokjYAC,a1s,研修・活動,20251127,第37回近畿弁護士連合会大会「若手弁護士カンファレンス」＿近畿弁護士会連合会,—,,,ALO/a1sRA000002JokjYAC_20251127＿第37回近畿弁護士連合会大会「若手弁護士カンファレンス」＿近畿弁護士会連合会
+a1sRA000003FWvVYAW,a1s,研修・活動,20251203,第2回事業再生勉強会(乾武田公認会計士事務所),—,,,ALO/a1sRA000003FWvVYAW_20251203＿第2回事業再生勉強会(乾武田公認会計士事務所)
+a1sRA000003K50DYAS,a1s,研修・活動,20251205,倒産処理に関する近畿弁護士連合会菅内各単位会との意見交換会,—,,,ALO/a1sRA000003K50DYAS_20251205＿倒産処理に関する近畿弁護士連合会菅内各単位会との意見交換会
+a1sRA000002UhuQYAS,a1s,研修・活動,20251209,令和7年度管財人等協議会,—,,,ALO/a1sRA000002UhuQYAS_20251209＿令和7年度管財人等協議会
+a1sRA000003Tis1YAC,a1s,研修・活動,20251213,第78期司法修習生・第79期司法修習予定者及び若手弁護士等に対する採用情報説明会,—,,,ALO/a1sRA000003Tis1YAC_20251213＿第78期司法修習生・第79期司法修習予定者及び若手弁護士等に対する採用情報説明会
+a1sRA000002gsyvYAA,a1s,研修・活動,20251216,中小企業に対する法律相談業務の基本研修(京都弁護士会ひまわりホットダイヤル),—,,,ALO/a1sRA000002gsyvYAA_20251216＿中小企業に対する法律相談業務の基本研修(京都弁護士会ひまわりホットダイヤル)
+a1sRA000004YXTtYAO,a1s,研修・活動,20260116,基礎から学ぶ「契約」の基本(京都商工会議所),—,,,ALO/a1sRA000004YXTtYAO_20260116＿基礎から学ぶ「契約」の基本(京都商工会議所)
+a1sRA000003mzQrYAI,a1s,研修・活動,20260131,会計不正にかかる会計上及び法務上の論点解説(公認会計士協会・滋賀弁護士会共催),—,,,ALO/a1sRA000003mzQrYAI_20260131＿会計不正にかかる会計上及び法務上の論点解説(公認会計士協会・滋賀弁護士会共催)
+a1sRA0000063j8PYAQ,a1s,研修・活動,20260210,取得時効と境界,—,,,ALO/a1sRA0000063j8PYAQ_20260210＿取得時効と境界
+a1sRA0000063jDFYAY,a1s,研修・活動,20260306,JLA勉強会福井,—,,,ALO/a1sRA0000063jDFYAY_20260306＿JLA勉強会福井
+a1sRA000006UYvFYAW,a1s,研修・活動,20260306_TMS勉強会（武市弁護士）,,—,,,ALO/a1sRA000006UYvFYAW_20260306_TMS勉強会（武市弁護士）
+a1sRA00000685ALYAY,a1s,研修・活動,20260319_第3回事業再生勉強会,,—,,,ALO/a1sRA00000685ALYAY_20260319_第3回事業再生勉強会
+a1sRA000005xlzJYAQ,a1s,研修・活動,20260325,アクトアモーレゴルフコンペ,—,,,ALO/a1sRA000005xlzJYAQ_20260325＿アクトアモーレゴルフコンペ
+a1sRA000006Pe8TYAS,a1s,研修・活動,20260403_東京大阪四会倒産法部シンポジウム,,—,,,ALO/a1sRA000006Pe8TYAS_20260403_東京大阪四会倒産法部シンポジウム
+a1sRA000006n7PtYAI,a1s,研修・活動,20260422_事業再生ファイナンスについて（三菱UFJ銀行）,,—,,,ALO/a1sRA000006n7PtYAI_20260422_事業再生ファイナンスについて（三菱UFJ銀行）
+a1sRA00000449gjYAA,a1s,研修・活動,20260430敷島住宅コンプラ研修,,—,,,ALO/a1sRA00000449gjYAA_20260430敷島住宅コンプラ研修
+a1sRA000007AncvYAC,a1s,研修・活動,20260511_倒産法制等検討委員会,,—,,,ALO/a1sRA000007AncvYAC_20260511_倒産法制等検討委員会
+a1sRA000007QVTxYAO,a1s,研修・活動,20260520_京都信用保証協会_糠谷幸裕様来所,,—,,,ALO/a1sRA000007QVTxYAO_20260520_京都信用保証協会_糠谷幸裕様来所
+a1sRA000007Rv1NYAS,a1s,研修・活動,20260522_倒産処理に関する近畿弁護士連合会菅内各単位会との意見交換会,,—,,,ALO/a1sRA000007Rv1NYAS_20260522_倒産処理に関する近畿弁護士連合会菅内各単位会との意見交換会
+a1sRA000007U5XhYAK,a1s,研修・活動,20260527_第62回中部倒産実務研究会_倒産手続における労働者・労働債権の処遇および問題点,,—,,,ALO/a1sRA000007U5XhYAK_20260527_第62回中部倒産実務研究会_倒産手続における労働者・労働債権の処遇および問題点
+a1sRA000006UZCzYAO,a1s,研修・活動,20260527_第84回アクトアモーレゴルフコンペ,,—,,,ALO/a1sRA000006UZCzYAO_20260527_第84回アクトアモーレゴルフコンペ
+a1sRA000002VtWvYAK,a1s,研修・活動,AIシステム導入検討,,—,,,ALO/a1sRA000002VtWvYAK_AIシステム導入検討
+a1sRA000002HVSrYAO,a1s,研修・活動,AIセミナー(@松本慎太郎税理士事務所ほか),,—,,,ALO/a1sRA000002HVSrYAO_AIセミナー(@松本慎太郎税理士事務所ほか)
+a1sRA000001pZw1YAE,a1s,研修・活動,ALO,AIセミナー,—,,,ALO/a1sRA000001pZw1YAE_ALO＿AIセミナー
+a1s5h000002Fh2rAAC,a1s,研修・活動,FATF(ファトフ),,—,,,ALO/a1s5h000002Fh2rAAC_FATF(ファトフ)
+a1s5h000000xNmBAAU,a1s,研修・活動,JHONAN 内部通報窓口関係業務,,—,,,ALO/a1s5h000000xNmBAAU_JHONAN 内部通報窓口関係業務
+a1s5h000000Z3zWAAS,a1s,研修・活動,JLA(ジャパンリーガルアライアンス),,—,,,ALO/a1s5h000000Z3zWAAS_JLA(ジャパンリーガルアライアンス)
+a1s5h000000x4EQAAY,a1s,研修・活動,QA個人債務整理本,石川先生,—,,,ALO/a1s5h000000x4EQAAY_QA個人債務整理本＿石川先生
+a1s5h0000029oQKAAY,a1s,研修・活動,【森・浅井】経営者保証GL研修 @ 札幌研修,,—,,,ALO/a1s5h0000029oQKAAY_【森・浅井】経営者保証GL研修 @ 札幌研修
+a1sRA000005wCnVYAU,a1s,研修・活動,け,契約書・業務フローに関する研修(京都商工会議所),—,,,ALO/a1sRA000005wCnVYAU_け＿契約書・業務フローに関する研修(京都商工会議所)
+a1sRA000005wCp7YAE,a1s,研修・活動,せ,全倒ネット書籍執筆,—,,,ALO/a1sRA000005wCp7YAE_せ＿全倒ネット書籍執筆
+a1sRA000005wCvZYAU,a1s,研修・活動,ち,中小企業大学校(中小企業基盤整備機構),—,,,ALO/a1sRA000005wCvZYAU_ち＿中小企業大学校(中小企業基盤整備機構)
+a1s5h000000Z4E5AAK,a1s,研修・活動,ひまわりほっとダイヤル,,—,,,ALO/a1s5h000000Z4E5AAK_ひまわりほっとダイヤル
+a1s5h000000xFg6AAE,a1s,研修・活動,わかば経営会計勉強会,,—,,,ALO/a1s5h000000xFg6AAE_わかば経営会計勉強会
+a1s5h000000xBMvAAM,a1s,研修・活動,アドバイザー弁護士向け研修会・意見交換会,,—,,,ALO/a1s5h000000xBMvAAM_アドバイザー弁護士向け研修会・意見交換会
+a1sJ20000058yVvIAI,a1s,研修・活動,インターン・エクスターン受入,,—,,,ALO/a1sJ20000058yVvIAI_インターン・エクスターン受入
+a1s5h0000029omdAAA,a1s,研修・活動,中信サクセスクラブ 事業承継セミナー,,—,,,ALO/a1s5h0000029omdAAA_中信サクセスクラブ 事業承継セミナー
+a1s5h000002J21hAAC,a1s,研修・活動,中堅管財人研修20221028,,—,,,ALO/a1s5h000002J21hAAC_中堅管財人研修20221028
+a1sRA000002eUCjYAM,a1s,研修・活動,中堅管財人研修20251118,,—,,,ALO/a1sRA000002eUCjYAM_中堅管財人研修20251118
+a1s5h000004pj17AAA,a1s,研修・活動,事務員採用※こっちは使わない,,—,,,ALO/a1s5h000004pj17AAA_事務員採用※こっちは使わない
+a1s5h000002J44xAAC,a1s,研修・活動,事務員雇用案件,,—,,,ALO/a1s5h000002J44xAAC_事務員雇用案件
+a1s5h000000x4VKAAY,a1s,研修・活動,事務所改善提案,,—,,,ALO/a1s5h000000x4VKAAY_事務所改善提案
+a1s5h000000x4VFAAY,a1s,研修・活動,事務所日常業務,,—,,,ALO/a1s5h000000x4VFAAY_事務所日常業務
+a1s5h000000xX7KAAU,a1s,研修・活動,事業再生と債権管理 連載企画(ベイマリン＋京都),,—,,,ALO/a1s5h000000xX7KAAU_事業再生と債権管理 連載企画(ベイマリン＋京都)
+a1s5h000000xNhyAAE,a1s,研修・活動,五十川さん 紛議調停 2021年度(紛)第9号,,—,,,ALO/a1s5h000000xNhyAAE_五十川さん 紛議調停 2021年度(紛)第9号
+a1sJ2000005BAEtIAO,a1s,研修・活動,公益財団法人交通文化振興財団京都鉄道博物館オーダーメイド研修,,—,,,ALO/a1sJ2000005BAEtIAO_公益財団法人交通文化振興財団京都鉄道博物館オーダーメイド研修
+a1s5h000000xLQOAA2,a1s,研修・活動,京都DGL研修,,—,,,ALO/a1s5h000000xLQOAA2_京都DGL研修
+a1s5h000004MUFAAA4,a1s,研修・活動,京都商工会議所コンプライアンス研修(京都青果合同株式会社),,—,,,ALO/a1s5h000004MUFAAA4_京都商工会議所コンプライアンス研修(京都青果合同株式会社)
+a1s5h000000x9DpAAI,a1s,研修・活動,京都商工会議所 セミナー(コンプライアンス研修),,—,,,ALO/a1s5h000000x9DpAAI_京都商工会議所 セミナー(コンプライアンス研修)
+a1sRA000002X5NxYAK,a1s,研修・活動,京都商工会議所 契約書・業務フローに関する研修20251217,,—,,,ALO/a1sRA000002X5NxYAK_京都商工会議所 契約書・業務フローに関する研修20251217
+a1sRA000006LsmjYAC,a1s,研修・活動,京都商工会議所青年部,,—,,,ALO/a1sRA000006LsmjYAC_京都商工会議所青年部
+a1sRA000002HdrpYAC,a1s,研修・活動,京都弁護士会採用情報説明会,,—,,,ALO/a1sRA000002HdrpYAC_京都弁護士会採用情報説明会
+a1s5h000003KkcHAAS,a1s,研修・活動,保証制度改革,,—,,,ALO/a1s5h000003KkcHAAS_保証制度改革
+a1s5h000000x4EPAAY,a1s,研修・活動,個人事業本執筆,野村先生,—,,,ALO/a1s5h000000x4EPAAY_個人事業本執筆＿野村先生
+a1s5h000000x99XAAQ,a1s,研修・活動,倒産手続勉強会 @京都地裁5民,,—,,,ALO/a1s5h000000x99XAAQ_倒産手続勉強会 @京都地裁5民
+a1s5h000000x6UrAAI,a1s,研修・活動,全倒ネット京都大会,,—,,,ALO/a1s5h000000x6UrAAI_全倒ネット京都大会
+a1s5h000006v3y0AAA,a1s,研修・活動,全倒ネット廃業型私的整理QA執筆,,—,,,ALO/a1s5h000006v3y0AAA_全倒ネット廃業型私的整理QA執筆
+a1s5h000003qjNfAAI,a1s,研修・活動,全倒ネット近畿地区第15回研修会(滋賀)プログラム20230603,,—,,,ALO/a1s5h000003qjNfAAI_全倒ネット近畿地区第15回研修会(滋賀)プログラム20230603
+a1s5h000005OybPAAS,a1s,研修・活動,全国倒産処理弁護士ネットワーク,,—,,,ALO/a1s5h000005OybPAAS_全国倒産処理弁護士ネットワーク
+a1s5h000000x6hPAAQ,a1s,研修・活動,公認会計士会との事業再生勉強会,,—,,,ALO/a1s5h000000x6hPAAQ_公認会計士会との事業再生勉強会
+a1sJ2000005oJe4IAE,a1s,研修・活動,北海道包括外部監査人(補助者就任),,—,,,ALO/a1sJ2000005oJe4IAE_北海道包括外部監査人(補助者就任)
+a1s5h000000Z4E0AAK,a1s,研修・活動,受講済研修,,—,,,ALO/a1s5h000000Z4E0AAK_受講済研修
+a1s5h000000x8qvAAA,a1s,研修・活動,同志社ローAAゼミ,,—,,,ALO/a1s5h000000x8qvAAA_同志社ローAAゼミ
+a1s5h000002J3qsAAC,a1s,研修・活動,商工会議所 新入社員研修,,—,,,ALO/a1s5h000002J3qsAAC_商工会議所 新入社員研修
+a1sRA000005wCxBYAU,a1s,研修・活動,執筆,事業再生研究機構(経営者保証の実践),—,,,ALO/a1sRA000005wCxBYAU_執筆＿事業再生研究機構(経営者保証の実践)
+a1sRA000005wESjYAM,a1s,研修・活動,執筆,全倒ネット廃業型私的整理QA執筆,—,,,ALO/a1sRA000005wESjYAM_執筆＿全倒ネット廃業型私的整理QA執筆
+a1sRA000005wEcPYAU,a1s,研修・活動,執筆,廃業型私的整理QA100,—,,,ALO/a1sRA000005wEcPYAU_執筆＿廃業型私的整理QA100
+a1s5h000000x8mTAAQ,a1s,研修・活動,大阪 弁護士・会計士の合同勉強会,,—,,,ALO/a1s5h000000x8mTAAQ_大阪 弁護士・会計士の合同勉強会
+a1s5h000000x465AAA,a1s,研修・活動,契約審査手続マニュアル執筆 山田先生,,—,,,ALO/a1s5h000000x465AAA_契約審査手続マニュアル執筆 山田先生
+a1s5h000002J49KAAS,a1s,研修・活動,実践GL,,—,,,ALO/a1s5h000002J49KAAS_実践GL
+a1s5h000002J4AXAA0,a1s,研修・活動,実践フォーラム続編,,—,,,ALO/a1s5h000002J4AXAA0_実践フォーラム続編
+a1s5h000002J3qxAAC,a1s,研修・活動,日弁連 倒産法制検討委員会 実務対応チーム,,—,,,ALO/a1s5h000002J3qxAAC_日弁連 倒産法制検討委員会 実務対応チーム
+a1s5h0000029omiAAA,a1s,研修・活動,日弁連 倒産法制等検討委員会 (執筆+セミナー),,—,,,ALO/a1s5h0000029omiAAA_日弁連 倒産法制等検討委員会 (執筆+セミナー)
+a1s5h000002J1ouAAC,a1s,研修・活動,朝日新聞取材,,—,,,ALO/a1s5h000002J1ouAAC_朝日新聞取材
+a1s5h000005BclXAAS,a1s,研修・活動,森・浅井経営者保証GL研修,,—,,,ALO/a1s5h000005BclXAAS_森・浅井経営者保証GL研修
+a1s5h000000x6hQAAQ,a1s,研修・活動,民事委員会,,—,,,ALO/a1s5h000000x6hQAAQ_民事委員会
+a1sJ2000005oLpIIAU,a1s,研修・活動,法曹久敬会,,—,,,ALO/a1sJ2000005oLpIIAU_法曹久敬会
+a1sJ2000003BzidIAC,a1s,研修・活動,研修,ニチコン(下請法研修),—,,,ALO/a1sJ2000003BzidIAC_研修＿ニチコン(下請法研修)
+a1sJ2000005oLV3IAM,a1s,研修・活動,研修,ウィズネス＿コンプライアンス研修(滋賀栗東区役所),—,,,ALO/a1sJ2000005oLV3IAM_研修＿ウィズネス＿コンプライアンス研修(滋賀栗東区役所)
+a1sRA000005wCsLYAU,a1s,研修・活動,研修,近畿地区巡回研修会,—,,,ALO/a1sRA000005wCsLYAU_研修＿近畿地区巡回研修会
+a1sRA000005wDMzYAM,a1s,研修・活動,研修,ALO事務所内勉強会,—,,,ALO/a1sRA000005wDMzYAM_研修＿ALO事務所内勉強会
+a1sRA000005wEZBYA2,a1s,研修・活動,研修,中小企業再生支援セミナー,—,,,ALO/a1sRA000005wEZBYA2_研修＿中小企業再生支援セミナー
+a1sRA000005wF5RYAU,a1s,研修・活動,研修,大阪弁護士会eラーニング,—,,,ALO/a1sRA000005wF5RYAU_研修＿大阪弁護士会eラーニング
+a1sRA000005wCqjYAE,a1s,研修・活動,研修_20251125_中小企業活性化全国本部_令和7年度アドバイザー弁護士研修,,—,,,ALO/a1sRA000005wCqjYAE_研修_20251125_中小企業活性化全国本部_令和7年度アドバイザー弁護士研修
+a1s5h000000x8qgAAA,a1s,研修・活動,破産ストーリー本執筆,,—,,,ALO/a1s5h000000x8qgAAA_破産ストーリー本執筆
+a1s5h000000xWmMAAU,a1s,研修・活動,管財人等協議会,,—,,,ALO/a1s5h000000xWmMAAU_管財人等協議会
+a1s5h000002J4ASAA0,a1s,研修・活動,経営者保証改革実践研究会,,—,,,ALO/a1s5h000002J4ASAA0_経営者保証改革実践研究会
+a1s5h000000x6dCAAQ,a1s,研修・活動,近弁連意見交換会,,—,,,ALO/a1s5h000000x6dCAAQ_近弁連意見交換会
+a1s5h000000xY7uAAE,a1s,研修・活動,電子帳簿保存法セミナー,,—,,,ALO/a1s5h000000xY7uAAE_電子帳簿保存法セミナー
