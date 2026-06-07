@@ -5,15 +5,18 @@ gate: DDTOCLEGALREF
 source_hash: sha256:15f3025b29619e60330d05738e51147a692f9f8651b919f4bf23b7c21ff45ff1
 supersedes: null
 result_expected_filename: 20260606_toclegalref_v0.1_DDTOCLEGALREF_RESULT.md
-status: draft   # ← まだ queued ではない。Box to_gpt/ には未配置（owner 承認後に配置）
+status: queued   # ← 投函済（2026-06-06）。Box to_gpt/ に配置 (file_id=2269713772194)
 ---
 
-# ⚠ DRAFT — まだ投函していません（リポジトリ内ステージのみ）
+# ✅ SUBMITTED — Box to_gpt/ に投函済（gate=DDTOCLEGALREF）
 
-この REQUEST は **Project-codex リポジトリ内に用意した投函レディ草案**です。
-Box `handoffs/gpt_ometsuke/to_gpt/` には**配置していません**。投函は owner 承認後。
+owner 明示承認（「回して！」）のうえ投函しました。
+- 現物: Box `docs/alo/DD-TOCLEGALREF-001_toc_legal_ref_draft_v0.1.md` (file_id=2269729051059)
+- REQUEST: Box `handoffs/gpt_ometsuke/to_gpt/20260606_toclegalref_v0.1_DDTOCLEGALREF_REQUEST.md` (file_id=2269713772194)
+- 重複チェック済（to_gpt/ に同 topic+gate 無し）／source_hash=本リポジトリ版 DD の sha256
+- GPT Pro お目付け役の RESULT は Box `from_gpt/..._RESULT.md`（先頭行 `DDTOCLEGALREF_<LABEL>`）で受領予定
 
-## 投函前チェックリスト（PROTOCOL v0.2 準拠）
+> 以下は投函前チェックリスト（記録用・全て充足済）。
 - [ ] 親 **DD-LAWTIME-001 が accepted**（本 DD は depends_on。親未accept での投函は順序違反）
 - [ ] **現物を Box `docs/alo/` にアップロード**（`DD-TOCLEGALREF_draft_v0.1.md`）。DDCASESOURCE は現物 Box 不在で blocked になった → 同じ轍を踏まない
 - [ ] `source_hash` を Box 上の現物の実 sha256 と一致させる（現値 = 本リポジトリ版の sha256）
