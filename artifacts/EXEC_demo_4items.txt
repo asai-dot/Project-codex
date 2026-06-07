@@ -1,0 +1,124 @@
+$ alo-gpt-audit close-all --apply
+============================================================
+# close-all (APPLY) — /tmp/tmp8u7gibk8/gpt_ometsuke
+  MOVED 20260605_claudehead_v1.1_DDCLAUDEHEAD_REQUEST.md -> processed/
+  LEDGER append: 20260605_claudehead_v1.1_DDCLAUDEHEAD [DDCLAUDEHEAD_PASS_WITH_NOTES] returned
+    created card: patch_queue/20260605_claudehead_v1.1_DDCLAUDEHEAD_CARD.md
+  MOVED 20260605_quasijudicial_v0.4_DDCASESOURCE_REQUEST.md -> processed/
+  LEDGER append: 20260605_quasijudicial_v0.4_DDCASESOURCE [DDCASESOURCE_NEED_MORE] returned
+    created card: material_queue/20260605_quasijudicial_v0.4_DDCASESOURCE_CARD.md
+  MOVED 20260605_statusregistry_v0.1_DDSTATUS_REQUEST.md -> processed/
+  LEDGER append: 20260605_statusregistry_v0.1_DDSTATUS [DDSTATUS_MODIFY_REQUIRED] returned
+    created card: patch_queue/20260605_statusregistry_v0.1_DDSTATUS_CARD.md
+  MOVED 20260606_legaldb_v0.5_DESIGN_REQUEST.md -> processed/
+  LEDGER append: 20260606_legaldb_v0.5_DESIGN [DESIGN_MODIFY_REQUIRED] returned
+    created card: patch_queue/20260606_legaldb_v0.5_DESIGN_CARD.md
+
+移動しない (理由付き):
+  [missing_result] 20260607_lawtime_v0.2_DDLAWTIME: no RESULT found
+  [missing_result] 20260607_toclegalref_v0.2_DDTOCLEGALREF: no RESULT found
+
+
+$ alo-gpt-audit close-all --apply (再実行 = idempotency 確認)
+============================================================
+# close-all (APPLY) — /tmp/tmp8u7gibk8/gpt_ometsuke
+answered_not_processed なし。退避対象は 0 件。
+
+移動しない (理由付き):
+  [missing_result] 20260607_lawtime_v0.2_DDLAWTIME: no RESULT found
+  [missing_result] 20260607_toclegalref_v0.2_DDTOCLEGALREF: no RESULT found
+
+
+$ alo-gpt-audit status AFTER
+============================================================
+# audit lane status — /tmp/tmp8u7gibk8/gpt_ometsuke
+to_gpt 直下 active REQUEST 総数 : 2
+  answered_not_processed (要 close): 0
+  missing_result (未回答 / GPT待ち) : 2
+  bad_label (移動しない)            : 0
+  skipped (superseded/cancelled)    : 0
+旧式 *_REQUEST.processed.md (要 relocate): 0
+
+  [missing_result] 20260607_lawtime_v0.2_DDLAWTIME
+  [missing_result] 20260607_toclegalref_v0.2_DDTOCLEGALREF
+
+
+$ alo-gpt-audit action-queue
+============================================================
+# action-queue (reflected:false) — 4 件
+Claude が次に何をすべきか:
+
+● 20260605_claudehead_v1.1_DDCLAUDEHEAD  [DDCLAUDEHEAD_PASS_WITH_NOTES]
+    next_action : patch  (loop_state=returned)
+    blocking    : ['第二Anthropicをhand/capacityと明記', 'head落ち時のfallback pathを明記']
+    do          : [DDCLAUDEHEAD] MODIFY: GPT 指摘を patch に反映し新 version で再投函する。 blocking: 第二Anthropicをhand/capacityと明記; head落ち時のfallback pathを明記
+
+● 20260605_statusregistry_v0.1_DDSTATUS  [DDSTATUS_MODIFY_REQUIRED]
+    next_action : patch  (loop_state=returned)
+    do          : [DDSTATUS] MODIFY: GPT 指摘を patch に反映し新 version で再投函する。
+
+● 20260606_legaldb_v0.5_DESIGN  [DESIGN_MODIFY_REQUIRED]
+    next_action : patch  (loop_state=returned)
+    do          : [DESIGN] MODIFY: GPT 指摘を patch に反映し新 version で再投函する。
+
+● 20260605_quasijudicial_v0.4_DDCASESOURCE  [DDCASESOURCE_NEED_MORE]
+    next_action : required_materials  (loop_state=returned)
+    missing     : ['DD-CASE-SOURCE-CASEID_v0.4_closure_20260604.md', 'alo_source_registry_seed_v0.1_20260604.jsonl', 'registry_negative_test.py']
+    do          : [DDCASESOURCE] NEED_MORE: 資料を補充して再投函する。 不足: DD-CASE-SOURCE-CASEID_v0.4_closure_20260604.md; alo_source_registry_seed_v0.1_20260604.jsonl; registry_negative_test.py
+
+
+
+$ alo-gpt-audit owner-digest
+============================================================
+# Owner 5行サマリ — 4 件
+
+監査: claudehead / 20260605_claudehead_v1.1_DDCLAUDEHEAD
+結論: PASS_WITH_NOTES
+理由: (RESULT本文参照)
+次アクション: Claude が patch 作成
+Owner確認: 判断必要 (blocking あり)
+---
+監査: statusregistry / 20260605_statusregistry_v0.1_DDSTATUS
+結論: MODIFY_REQUIRED
+理由: lifecycleを7語に限定 / statusをrow_dispositionへ改名
+次アクション: Claude が patch 作成
+Owner確認: 不要
+---
+監査: legaldb / 20260606_legaldb_v0.5_DESIGN
+結論: MODIFY_REQUIRED
+理由: 海外先例over-reachを抑制 / stable_anchor_id mintを定義
+次アクション: Claude が patch 作成
+Owner確認: 不要
+---
+監査: quasijudicial / 20260605_quasijudicial_v0.4_DDCASESOURCE
+結論: NEED_MORE
+理由: (RESULT本文参照)
+次アクション: Claude が資料補充して再投函
+Owner確認: 不要
+---
+
+
+$ alo-gpt-audit reflect statusregistry --apply
+============================================================
+REFLECTED 20260605_statusregistry_v0.1_DDSTATUS -> loop_state=reflected
+
+
+$ alo-gpt-audit action-queue (reflect 後)
+============================================================
+# action-queue (reflected:false) — 3 件
+Claude が次に何をすべきか:
+
+● 20260605_claudehead_v1.1_DDCLAUDEHEAD  [DDCLAUDEHEAD_PASS_WITH_NOTES]
+    next_action : patch  (loop_state=returned)
+    blocking    : ['第二Anthropicをhand/capacityと明記', 'head落ち時のfallback pathを明記']
+    do          : [DDCLAUDEHEAD] MODIFY: GPT 指摘を patch に反映し新 version で再投函する。 blocking: 第二Anthropicをhand/capacityと明記; head落ち時のfallback pathを明記
+
+● 20260606_legaldb_v0.5_DESIGN  [DESIGN_MODIFY_REQUIRED]
+    next_action : patch  (loop_state=returned)
+    do          : [DESIGN] MODIFY: GPT 指摘を patch に反映し新 version で再投函する。
+
+● 20260605_quasijudicial_v0.4_DDCASESOURCE  [DDCASESOURCE_NEED_MORE]
+    next_action : required_materials  (loop_state=returned)
+    missing     : ['DD-CASE-SOURCE-CASEID_v0.4_closure_20260604.md', 'alo_source_registry_seed_v0.1_20260604.jsonl', 'registry_negative_test.py']
+    do          : [DDCASESOURCE] NEED_MORE: 資料を補充して再投函する。 不足: DD-CASE-SOURCE-CASEID_v0.4_closure_20260604.md; alo_source_registry_seed_v0.1_20260604.jsonl; registry_negative_test.py
+
