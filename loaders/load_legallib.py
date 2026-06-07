@@ -1,5 +1,5 @@
 """
-load_legallib.py — legallib → biblio 取込ローダ（ドラフト）
+load_legallib.py — legallib → biblio 取込ローダ（ドラフト v0.5）
 
 Pattern: load_bencom.py 踏襲（asai-biblio-ingest）
 Target:  Supabase biblio スキーマ（nixfjmwxmgugiiuqfuym）
@@ -7,21 +7,17 @@ Source:  ~/alo-ai/work/legallib_dl/*.json  (2,751 books + 422 journals)
 
 取込順（FK順厳守）: authors → bib_records → bib_authors → bib_toc
 
-TODO (フィールド名確認 — 実物 1 冊の JSON で確認後に修正):
-  FIELD_TITLE       = "title"         # ← article parser instruction で確認済
-  FIELD_ISBN        = "isbn"          # ← 要確認
-  FIELD_AUTHOR      = "author"        # ← 要確認 (単数/複数/リスト?)
-  FIELD_PUBLISHER   = "publisher"     # ← 要確認
-  FIELD_PUB_YEAR    = "pub_year"      # ← 要確認 (int? or "publication_date"?)
-  FIELD_CONTENT_TYPE = "content_type" # ← article parser instruction で確認済
-  TOC_TEXT          = "t"             # ← v0.4 plan 記載。要確認 ("t" or "label"?)
-  TOC_PAGE          = "p"             # ← 要確認 ("p" or "print_page"?)
-  TOC_LEVEL         = "level"         # ← article parser instruction で確認済
+フィールド名のゆらぎ対策（v0.5）:
+  legallib 生JSON の実キー名が未確定なため、候補キーを優先順で総当たりする
+  「多変種エイリアス＋自動検出」方式にした。実物1冊が来たら `--inspect` で
+  検出結果を確認するだけでよい（盲目的な編集が不要）。
+  下の *_KEYS が候補集合。実物確認後、必要なら候補の先頭を実キーに寄せる。
 
 実行例:
-  python load_legallib.py --dry-run --limit 5
+  python load_legallib.py --inspect --limit 3      # 検出されたキー名を表示（DB触らない）
+  python load_legallib.py --dry-run --limit 5      # 射影結果の件数だけ確認
   python load_legallib.py --source-dir ~/alo-ai/work/legallib_dl
-  python load_legallib.py  # 全件 upsert (冪等)
+  python load_legallib.py                          # 全件 upsert (冪等)
 """
 
 from __future__ import annotations
@@ -36,7 +32,11 @@ import unicodedata
 from pathlib import Path
 from typing import Any
 
-from supabase import create_client, Client
+try:
+    from supabase import create_client, Client
+except ImportError:  # --inspect / --dry-run は supabase 無しでも動かせるように
+    create_client = None  # type: ignore
+    Client = Any  # type: ignore
 
 # ─── 設定 ──────────────────────────────────────────────────────────────────────
 
@@ -44,24 +44,52 @@ DEFAULT_SOURCE_DIR = Path.home() / "alo-ai" / "work" / "legallib_dl"
 SOURCE_NAME = "legal-library"
 BATCH_SIZE = 500
 
-# TODO: 実物 JSON で確認後に修正
-FIELD_TITLE = "title"
-FIELD_ISBN = "isbn"
-FIELD_AUTHOR = "author"        # 複数著者の場合リスト or "/"区切り文字列の可能性あり
-FIELD_PUBLISHER = "publisher"
-FIELD_PUB_YEAR = "pub_year"    # int or "publication_date" "YYYY-MM-DD" 形式の可能性あり
-FIELD_CONTENT_TYPE = "content_type"  # "book" or "journal"
-TOC_TEXT = "t"       # toc node のテキストフィールド
-TOC_PAGE = "p"       # toc node のページ番号フィールド (int or null)
-TOC_LEVEL = "level"  # toc node の階層レベル (int)
+# 候補キー（優先順）。実物JSONのキー名がどれであっても拾えるようにする。
+# 生 legallib_dl と 正規化後フォーマットの両系統を許容。
+TITLE_KEYS = ("title", "book_title", "name", "書名")
+ISBN_KEYS = ("isbn", "isbn13", "isbn_13", "ISBN")
+AUTHOR_KEYS = ("author", "authors", "creator", "creators", "著者", "responsibility")
+PUBLISHER_KEYS = ("publisher", "publisher_name", "出版社", "出版者")
+PUB_YEAR_KEYS = ("pub_year", "year", "publication_year")
+PUB_DATE_KEYS = ("publication_date", "published_at", "pub_date", "date", "出版年月日")
+CONTENT_TYPE_KEYS = ("content_type", "type", "kind", "doc_type")
+BOOK_ID_KEYS = ("book_id", "id", "legallib_book_id", "bookId")
+SOURCE_URL_KEYS = ("url", "source_url", "book_url", "legallib_url")
+TOC_KEYS = ("toc", "toc_nodes", "tableOfContents", "contents")
+
+# TOC ノード内のキー候補
+TOC_TEXT_KEYS = ("t", "text", "label", "title", "heading")
+TOC_PAGE_KEYS = ("p", "page", "print_page", "pdf_page", "page_start")
+TOC_LEVEL_KEYS = ("level", "l", "depth")
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger(__name__)
 
 
+# ─── キー解決ヘルパー ───────────────────────────────────────────────────────────
+
+def pick(d: dict, keys: tuple[str, ...], default: Any = None) -> Any:
+    """候補キーを優先順に探し、最初に非None/非空で見つかった値を返す。"""
+    for k in keys:
+        if k in d and d[k] not in (None, "", []):
+            return d[k]
+    return default
+
+
+def pick_key(d: dict, keys: tuple[str, ...]) -> str | None:
+    """どの候補キーが実際にヒットしたか（キー名）を返す。--inspect 用。"""
+    for k in keys:
+        if k in d and d[k] not in (None, "", []):
+            return k
+    return None
+
+
+
 # ─── Supabase 接続 ─────────────────────────────────────────────────────────────
 
 def get_client() -> Client:
+    if create_client is None:
+        raise SystemExit("supabase パッケージが無い。pip install supabase（--inspect/--dry-run は不要）")
     url = os.environ["SUPABASE_URL"]
     key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
     schema = os.environ.get("SUPABASE_SCHEMA", "biblio")
@@ -101,14 +129,21 @@ def extract_authors(raw: dict) -> list[str]:
     """
     著者名のリストを返す。
     bencom 方針: 複合著者は分割しない（1著者エンティティとして保持）。
-    TODO: legallib の author フィールドが文字列か配列かによって調整が必要。
+    str / list / [{name:...}] のいずれの形でも拾えるようにする。
     """
-    author_val = raw.get(FIELD_AUTHOR, "")
+    author_val = pick(raw, AUTHOR_KEYS)
     if not author_val:
         return []
     if isinstance(author_val, list):
-        # リスト形式の場合: そのまま使用
-        return [str(a).strip() for a in author_val if str(a).strip()]
+        out = []
+        for a in author_val:
+            if isinstance(a, dict):
+                name = pick(a, ("name", "foaf:name", "full_name", "氏名"))
+                if name:
+                    out.append(str(name).strip())
+            elif str(a).strip():
+                out.append(str(a).strip())
+        return out
     # 文字列形式: 単一著者として扱う（bencom 方針 = 分割しない）
     return [str(author_val).strip()] if str(author_val).strip() else []
 
@@ -116,19 +151,17 @@ def extract_authors(raw: dict) -> list[str]:
 # ─── pub_year 抽出 ─────────────────────────────────────────────────────────────
 
 def extract_pub_year(raw: dict) -> int | None:
-    """出版年を int で返す。"""
-    val = raw.get(FIELD_PUB_YEAR)
+    """出版年を int で返す。pub_year 系 → publication_date 系（先頭4桁）の順で解決。"""
+    val = pick(raw, PUB_YEAR_KEYS)
     if val is None:
-        # TODO: "publication_date" フィールドがある場合はこちらを使う
-        pub_date = raw.get("publication_date", "")
+        pub_date = pick(raw, PUB_DATE_KEYS)
         if pub_date:
-            try:
-                return int(str(pub_date)[:4])
-            except (ValueError, TypeError):
-                pass
+            m = re.search(r"\d{4}", str(pub_date))
+            if m:
+                return int(m.group())
         return None
     try:
-        return int(val)
+        return int(str(val)[:4])
     except (ValueError, TypeError):
         return None
 
@@ -138,34 +171,37 @@ def extract_pub_year(raw: dict) -> int | None:
 def extract_toc_nodes(raw: dict) -> list[dict]:
     """
     legallib raw JSON から bib_toc 行リストを生成。
-    bib_toc はフラット: (bib_id, ordinal[0始まり], level, page, text)
-    親/toc_node_id は持たない。
+    bib_toc はフラット: (bib_id, ordinal[0始まり], level, page, text)。親/toc_node_id は持たない。
+    生 legallib_dl と正規化後フォーマットの両系統のキー名を許容する。
     """
-    toc = raw.get("toc", [])
-    if not toc:
+    toc = pick(raw, TOC_KEYS, default=[])
+    if not isinstance(toc, list) or not toc:
         return []
 
     rows = []
     for i, node in enumerate(toc):
-        text = node.get(TOC_TEXT, "")
+        if not isinstance(node, dict):
+            continue
+        text = pick(node, TOC_TEXT_KEYS)
         if not text:
             continue
-        level = node.get(TOC_LEVEL)
-        # TODO: "l" フィールドとの優先順位確認。現在は level を優先。
-        if level is None:
-            level = node.get("l")
-        if level is None:
+
+        level = pick(node, TOC_LEVEL_KEYS, default=1)
+        try:
+            level = int(level)
+        except (ValueError, TypeError):
             level = 1
 
-        page = node.get(TOC_PAGE)
-        # TODO: "print_page" or "pdf_page" フィールドの確認
-        if page is None:
-            page = node.get("print_page") or node.get("pdf_page")
+        page = pick(node, TOC_PAGE_KEYS)
+        try:
+            page = int(page) if page is not None else None
+        except (ValueError, TypeError):
+            page = None
 
         rows.append({
-            "ordinal": i,       # 0始まり・配列位置
-            "level": int(level),
-            "page": int(page) if page is not None else None,
+            "ordinal": i,       # 0始まり・配列位置（locator。anchorではない＝v0.5 §B）
+            "level": level,
+            "page": page,
             "text": str(text),
         })
     return rows
@@ -173,28 +209,36 @@ def extract_toc_nodes(raw: dict) -> list[dict]:
 
 # ─── bib_record 構築 ───────────────────────────────────────────────────────────
 
-def build_bib_record(book_id: str, raw: dict) -> dict:
-    isbn = raw.get(FIELD_ISBN) or None
-    title = raw.get(FIELD_TITLE, "")
-    pub_year = extract_pub_year(raw)
+def resolve_book_id(path: Path, raw: dict) -> str:
+    """book_id を解決。raw 内の id 系キー優先、無ければファイル名 stem。"""
+    return str(pick(raw, BOOK_ID_KEYS, default=path.stem))
+
+
+def build_bib_record(book_id: str, raw: dict, path: Path) -> dict:
+    isbn = pick(raw, ISBN_KEYS)
+    title = pick(raw, TITLE_KEYS, default="")
+    responsibility = pick(raw, AUTHOR_KEYS)
+    if isinstance(responsibility, (list, dict)):
+        responsibility = "; ".join(extract_authors(raw)) or None
 
     # form_type: 書籍は BOOK 統一（PERIODICAL は次スコープ）
-    content_type = raw.get(FIELD_CONTENT_TYPE, "book")
-    form_type = "PERIODICAL" if content_type == "journal" else "BOOK"
+    content_type = str(pick(raw, CONTENT_TYPE_KEYS, default="book")).lower()
+    form_type = "PERIODICAL" if content_type in ("journal", "periodical", "magazine") else "BOOK"
+
+    source_url = pick(raw, SOURCE_URL_KEYS, default=f"https://legal-library.jp/books/{book_id}")
 
     return {
         "bib_id": make_bib_id(book_id),
-        "title": title,
-        "publisher": raw.get(FIELD_PUBLISHER) or None,
-        "pub_year": pub_year,
+        "title": str(title),
+        "publisher": pick(raw, PUBLISHER_KEYS),
+        "pub_year": extract_pub_year(raw),
         "isbn": isbn,
-        "responsibility": raw.get(FIELD_AUTHOR) or None,
+        "responsibility": responsibility,
         "source": SOURCE_NAME,
         "form_type": form_type,
         "raw": raw,
         "source_hash": make_source_hash(raw),
-        # TODO: legallib の書籍 URL フォーマット確認
-        "source_url": f"https://legal-library.jp/books/{book_id}",
+        "source_url": source_url,
     }
 
 
@@ -212,10 +256,44 @@ def batch_upsert(client: Client, table: str, rows: list[dict], on_conflict: str,
     return len(rows)
 
 
+# ─── inspect（実物JSONのキー名を検出して表示・DB不要） ────────────────────────────
+
+def inspect(source_dir: Path, limit: int | None) -> None:
+    """実物JSON数件から、どの候補キーが実際にヒットするかを表示する。
+    実物が来たらまずこれを流し、検出が期待どおりか確認する（盲目編集を回避）。"""
+    json_files = sorted(source_dir.glob("*.json"))[: (limit or 3)]
+    if not json_files:
+        raise SystemExit(f"JSON が無い: {source_dir}")
+
+    for path in json_files:
+        with path.open(encoding="utf-8") as f:
+            raw = json.load(f)
+        print(f"\n=== {path.name} ===")
+        print(f"  top-level keys: {sorted(raw.keys()) if isinstance(raw, dict) else type(raw)}")
+        if not isinstance(raw, dict):
+            print("  (配列ルート＝TOCのみのファイルの可能性。生 legallib_dl ではないかも)")
+            continue
+        print(f"  title       <- {pick_key(raw, TITLE_KEYS)!r}  = {str(pick(raw, TITLE_KEYS))[:60]!r}")
+        print(f"  book_id     <- {pick_key(raw, BOOK_ID_KEYS)!r} (無ければ stem={path.stem!r})")
+        print(f"  isbn        <- {pick_key(raw, ISBN_KEYS)!r}  = {pick(raw, ISBN_KEYS)!r}")
+        print(f"  author      <- {pick_key(raw, AUTHOR_KEYS)!r} -> {extract_authors(raw)[:3]}")
+        print(f"  publisher   <- {pick_key(raw, PUBLISHER_KEYS)!r}  = {pick(raw, PUBLISHER_KEYS)!r}")
+        print(f"  pub_year    <- year:{pick_key(raw, PUB_YEAR_KEYS)!r} date:{pick_key(raw, PUB_DATE_KEYS)!r} -> {extract_pub_year(raw)}")
+        print(f"  content_type<- {pick_key(raw, CONTENT_TYPE_KEYS)!r}  = {pick(raw, CONTENT_TYPE_KEYS)!r}")
+        toc = pick(raw, TOC_KEYS, default=[])
+        print(f"  toc key     <- {pick_key(raw, TOC_KEYS)!r}  len={len(toc) if isinstance(toc, list) else 'N/A'}")
+        if isinstance(toc, list) and toc and isinstance(toc[0], dict):
+            n = toc[0]
+            print(f"    node keys : {sorted(n.keys())}")
+            print(f"    text <- {pick_key(n, TOC_TEXT_KEYS)!r} / page <- {pick_key(n, TOC_PAGE_KEYS)!r} / level <- {pick_key(n, TOC_LEVEL_KEYS)!r}")
+        nodes = extract_toc_nodes(raw)
+        print(f"  -> extract_toc_nodes: {len(nodes)} 行 (例: {nodes[0] if nodes else None})")
+
+
 # ─── メイン処理 ───────────────────────────────────────────────────────────────
 
 def load(source_dir: Path, dry_run: bool, limit: int | None, book_only: bool) -> None:
-    client = get_client()
+    client = None if dry_run else get_client()
 
     json_files = sorted(source_dir.glob("*.json"))
     if limit:
@@ -236,14 +314,19 @@ def load(source_dir: Path, dry_run: bool, limit: int | None, book_only: bool) ->
             skipped += 1
             continue
 
-        content_type = raw.get(FIELD_CONTENT_TYPE, "book")
-        if book_only and content_type != "book":
+        if not isinstance(raw, dict):
+            log.warning(f"skip {path.name}: ルートが dict でない（TOCのみファイル?）")
+            skipped += 1
             continue
 
-        book_id = path.stem  # ファイル名（拡張子除く）= legallib 内部 book_id
+        content_type = str(pick(raw, CONTENT_TYPE_KEYS, default="book")).lower()
+        if book_only and content_type not in ("book", ""):
+            continue
+
+        book_id = resolve_book_id(path, raw)
 
         # bib_record
-        bib_rec = build_bib_record(book_id, raw)
+        bib_rec = build_bib_record(book_id, raw, path)
         all_bib_records.append(bib_rec)
 
         # authors + bib_authors
@@ -300,6 +383,7 @@ def main() -> None:
         default=DEFAULT_SOURCE_DIR,
         help=f"legallib JSON フォルダ (default: {DEFAULT_SOURCE_DIR})",
     )
+    parser.add_argument("--inspect", action="store_true", help="実物JSONのキー名検出を表示（DB不要）")
     parser.add_argument("--dry-run", action="store_true", help="DB 書き込みなし")
     parser.add_argument("--limit", type=int, default=None, help="処理ファイル数上限")
     parser.add_argument(
@@ -309,6 +393,10 @@ def main() -> None:
 
     if not args.source_dir.exists():
         raise SystemExit(f"source-dir が存在しません: {args.source_dir}")
+
+    if args.inspect:
+        inspect(source_dir=args.source_dir, limit=args.limit)
+        return
 
     load(
         source_dir=args.source_dir,
