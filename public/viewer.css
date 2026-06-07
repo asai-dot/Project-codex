@@ -24,6 +24,7 @@ main { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 14px; 
 
 .result { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; }
 .result:hover { border-color: #cdd3da; }
+.result.sel { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
 .result .landing { font-size: 15px; font-weight: 600; cursor: pointer; }
 .result .landing:hover { color: var(--accent); }
 .result .crumb { color: var(--muted); font-size: 12px; margin: 3px 0 8px; }

@@ -3,6 +3,8 @@
 
 let SOURCES = [];
 let SOURCE_BY_ID = {};
+let RESULT_CARDS = [];   // 検索結果カード（キーボード操作用）
+let SEL = -1;            // 選択中インデックス
 
 const $ = (s, r) => (r || document).querySelector(s);
 const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
@@ -56,10 +58,13 @@ async function doSearch() {
   const res = await fetch('/api/search?q=' + encodeURIComponent(q)).then(r => r.json());
   body.innerHTML = '';
   if (!res.results.length) { body.innerHTML = `<p class="hint">「${q}」に一致する章節は見つかりませんでした。</p>`; return; }
-  const head = el('p', 'hint', `「${res.q}」 ${res.results.length}件 — 上位ほど着地精度が高い順`);
+  const head = el('p', 'hint', `「${res.q}」 ${res.results.length}件 — 上位ほど着地精度が高い順（↑↓で選択・Enterで開く）`);
   body.appendChild(head);
+  RESULT_CARDS = []; SEL = -1;
   res.results.forEach(r => {
     const card = el('div', 'result');
+    card.dataset.bookId = r.book_id;
+    RESULT_CARDS.push(card);
     const landing = el('div', 'landing', r.landing);
     landing.title = 'この本の目次・全図書館リンクを開く';
     landing.onclick = () => openBook(r.book_id);
@@ -76,6 +81,16 @@ async function doSearch() {
     card.append(landing, crumb, renderLinks(r.links));
     body.appendChild(card);
   });
+}
+
+/* 検索結果のキーボード選択（↑↓で移動・Enterで開く） */
+function selectResult(i) {
+  if (!RESULT_CARDS.length) return;
+  if (SEL >= 0 && RESULT_CARDS[SEL]) RESULT_CARDS[SEL].classList.remove('sel');
+  SEL = Math.max(0, Math.min(RESULT_CARDS.length - 1, i));
+  const card = RESULT_CARDS[SEL];
+  card.classList.add('sel');
+  card.scrollIntoView({ block: 'nearest' });
 }
 
 /* ---- 書誌・目次詳細 ---- */
@@ -211,6 +226,14 @@ async function init() {
     legend.appendChild(item);
   });
   $('#go').onclick = doSearch;
-  $('#q').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+  $('#q').addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); selectResult(SEL + 1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); selectResult(SEL - 1); }
+    else if (e.key === 'Enter') {
+      // 選択中の結果があればその本を開く。無ければ検索を実行。
+      if (SEL >= 0 && RESULT_CARDS[SEL]) { e.preventDefault(); openBook(RESULT_CARDS[SEL].dataset.bookId); }
+      else doSearch();
+    }
+  });
 }
 init();
