@@ -35,6 +35,7 @@ gpt_ometsuke/
 ## インストール / 実行
 
 依存なし (Python 3.9+)。root は Box Drive 同期パスを指す。
+実 Box で回す手順は **`RUNBOOK_macCC.md`** (Mac 単一書き手向け) を参照。
 
 ```bash
 export ALO_GPT_AUDIT_ROOT="$HOME/Library/CloudStorage/Box-Box/.../gpt_ometsuke"
