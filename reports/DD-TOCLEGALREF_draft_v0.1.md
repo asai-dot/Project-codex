@@ -71,3 +71,27 @@
 
 - **changelog**:
   - v0.1 (2026-06-06): 初版草案。35_link_layer/31_case_layer/30_law_layer/DD-LAWTIME 精読後。新スキーマ新設を棄却し alo_edges 供給に確定。**未投函（承認後に gpt_ometsuke へ）**。
+
+---
+
+## 付録A. 推奨決定（producer 側の既定値 / owner ratify 待ち）
+
+open_issues のうち producer 側で既定にできるものを以下に確定（DB 反映は承認後）:
+
+| # | 論点 | **推奨既定** | 根拠 |
+|---|---|---|---|
+| 4 | 供給 tier | **high + medium を供給**（weight 1.0 / 0.7 で区別）、low は除外 | low に誤検出が集中（医療法人→医療法 等）。high=条番号あり・medium=語境界ありは実害なし。serving 側で weight≥1.0 に絞る運用は別途可 |
+| 2 | `bencom-library` の alo_source_priority | **priority=50（後位）/ conflict_policy=`append` / is_canonical=false** | D1-Law(1)等の一次ソースを上書きしない。文献由来の補助エッジは追記型が安全 |
+| 1 | `src_uri` | **`alo:work:bencom:{bib_id}` を暫定採用**、32_literature_layer の work URI への解決は backfill タスク | work 同定は文献層の責務。producer は安定 ID で先行し後解決 |
+| 5 | as_of 粒度 | **`pub_year`（年）を as_of_date proxy** | bib_records に月日が無い。DD-LAWTIME accept 後に精緻化 |
+
+owner/SE 判断が必須で producer 既定にしない項目: #3 weight 自動算出ルール, #6 判例同定規則, #7 GPT クロスレビュー gate。
+
+## 付録B. 投函ステータス（gpt_ometsuke）
+
+- 本 DD は **未投函**。投函レディの REQUEST は `reports/gpt_ometsuke/20260606_toclegalref_v0.1_DDTOCLEGALREF_REQUEST.md`（リポジトリ内・**Box 未配置**）。
+- 投函の前提条件（推奨・順序）:
+  1. 親 **DD-LAWTIME-001 が accepted** になる（本 DD は depends_on）。
+  2. 本 DD 現物を Box `docs/alo/` にアップロード（DDCASESOURCE が「現物 Box 不在」で blocked になった轍を踏まない）。
+  3. REQUEST front-matter の `status: draft → queued`、`source_hash` を実 sha256 で確定。
+  4. `to_gpt/` に重複が無いか確認（PROTOCOL v0.2 重複投函禁止）してから配置。
