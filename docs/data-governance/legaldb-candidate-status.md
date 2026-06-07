@@ -8,10 +8,11 @@
 > 解除条件が古い DESIGN 結果に固定されないよう、**現在の設計ゲート結果**をここで追う
 > （GPT IMPL監査 note 5）。後続の DESIGN_RESULT が出たら必ず更新する。
 
-- **current_design_gate_result**: `from_gpt/20260607_legaldb_v0.5.1_DESIGN_RESULT.md`
-- **判定**: `DESIGN_MODIFY_REQUIRED`（v0.5 より大幅改善。grand schema を撤回し既存
-  `legal_source_object` / `legal_source_object_identifier` / candidate relation /
-  promotion queue に再接地。F2/F6/F7 はほぼクローズ）
+- **current_design_gate_result**: `from_gpt/20260607_legaldb_v0.5.1_DESIGN_RESULT.md` = `DESIGN_MODIFY_REQUIRED`
+  → **v0.6 を投函（差分監査中）**: `to_gpt/20260607_legaldb_v0.6_DESIGN_REQUEST.md`。v0.6 は v0.5.1 §3 の
+  「DD-LAWTIME v0.2.1 accepted」という**証跡なき自己申告を撤回**し、F4 を**実在・監査済**の DD-LAWTIME
+  v0.2(PASS_WITH_NOTES)／v0.2.1(投函) に張り替え、treatment の claim_support 物理化・over-reach 抑制を追加。
+- **判定（v0.5.1）**: `DESIGN_MODIFY_REQUIRED`（唯一の核心ブロッカーは F4 = DD-LAWTIME 依存の未検証）。
 - **未PASSの核心**: F4 が前提とする **DD-LAWTIME v0.2.1 accepted の証跡が監査レーンで未確認**
   （既存 `DDLAWTIME_MODIFY_REQUIRED` と矛盾）。よってブロック継続。
 - **命名の含意**: v0.5.1 は本体テーブル名を既存ALOスキーマ（`legal_source_object` 系）へ寄せた。
@@ -67,13 +68,14 @@ GPT が挙げた v0.5.1 / v0.6 必須パッチを反映し、owner ratify を得
 
 8. **DD-LAWTIME の accept**（F4 の本丸）。**事実確認の結果、v0.5.1 が前提とした「v0.2.1 accepted」は存在しなかった**
    （accepted レーン上の結果は v0.1 = `DDLAWTIME_MODIFY_REQUIRED` のみ）。
-   - 対応: v0.1 監査の必須修正7点を反映した **DD-LAWTIME-001 v0.2 を起票・投函 → 再監査で
-     `DDLAWTIME_PASS_WITH_NOTES`（2026-06-07, `from_gpt/20260607_lawtime_v0.2_DDLAWTIME_RESULT.md`）**。
-     必須7点は設計上クローズ。**F4 の設計依存はクローズ扱い可**（owner ratify 候補）。
-   - 残（production DDL/backfill 前）: **owner(浅井) ratify** ＋ 実装前小修正 **N1–N4**
-     （N1: `fn_resolve_work_revision_at` に lineage 有効期間フィルタ／N2: merge/split の event 粒度／
-     N3: full_revision 等は confidence で抑え reviewed/confirmed のみ authoritative／N4: `temporal_caveat` の CHECK 値域）。
-   - したがって F4 は **設計クローズ・実装/ratify 待ち**。legaldb 昇格は引き続きブロック（v0.6 と ratify 完了まで）。
+   - 対応: v0.1 の必須7点を反映した **DD-LAWTIME v0.2 → `DDLAWTIME_PASS_WITH_NOTES`**（approval_queue 済・ratify 候補）。
+   - **N1–N4 ＋ v0.5.1 が参照していた richer 構造を統合した DD-LAWTIME v0.2.1 を投函**
+     （`to_gpt/20260607_lawtime_v0.2.1_DDLAWTIME_REQUEST.md`, 差分監査中）。
+   - **重要（phantom-accept の摘発）**: v0.5.1 §3 の「DD-LAWTIME v0.2.1 は 2026-06-05 accepted」は
+     **監査レーンに証跡が無い自己申告**だった（実在は v0.1=MODIFY と v0.2=PASS のみ）。v0.6 で撤回し、
+     依存先を実在・監査済ラインへ確定。
+   - したがって F4 は **設計クローズ（v0.2 PASS）・v0.2.1 差分監査＋owner ratify＋実装ゲート待ち**。
+     legaldb 昇格は v0.6 design accept ＋ ratify 完了まで引き続きブロック。
 9. **anchor 責務分界の DDL 明文化**: opaque ULID `anchor_id`(不変主キў) と
    `stable_locator_key`(表示/互換 locator) の責務を分け、新規 mint 経路を一本化、merge/split が
    既存 `UNIQUE(source_object_uri, anchor_type, stable_locator_key)` と衝突しない DDL を示す。
