@@ -93,6 +93,11 @@ def run(nodes_path: str, egov_path: str | None, out_dir: str) -> dict:
             for e in edges if e["weight"] == 0.7),
         "gate_toc_case_candidate_review_required": all(
             c["review_required"] and c.get("matched_case_uri") is None for c in cands),
+        # --- v0.2 RESULT 追加 gate (#5) ---
+        "gate_claim_support_all_false_for_toc_signal": all(
+            e["source_role"] == "toc_signal" and e["claim_support_eligible"] is False
+            for e in edges),
+        "gate_dedup_no_duplicate_candidate": len(edge_keys) == len(edges),
     }
 
     summary = {

@@ -22,7 +22,9 @@
     "gate_toc_edge_semantics_quarantined": true,
     "gate_toc_assertion_mode_no_vendor_implicit": true,
     "gate_toc_medium_quarantined": true,
-    "gate_toc_case_candidate_review_required": true
+    "gate_toc_case_candidate_review_required": true,
+    "gate_claim_support_all_false_for_toc_signal": true,
+    "gate_dedup_no_duplicate_candidate": true
   },
   "all_gates_pass": true,
   "schema_version": "DDTOCLEGALREF v0.2"

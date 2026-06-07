@@ -64,6 +64,23 @@
 `alo_edge_evidence_export.jsonl` / `alo_pointers_export.jsonl`(再現性フィールド付) /
 `alo_case_ref_candidates.jsonl`(25, review_required) / `alo_edges_export_summary.json`(all_gates_pass=true)。
 
+## §5.5 GPT お目付け役 v0.2 評定（2026-06-07）と production-promotion gate
+
+**`DDTOCLEGALREF_PASS_WITH_NOTES` / accepted_now: yes (design candidate) / owner_ratify: yes_with_notes**
+（RESULT: `from_gpt/20260607_toclegalref_v0.2_DDTOCLEGALREF_RESULT.md`）。
+required_patches 1–9 は全 **CLOSED**（一部 CLOSED_WITH_NOTE）。**ratify 前の必須修正なし**。
+ratify 対象は「v0.2 design」であり即 production 投入ではない。production promotion 前に下記を閉じる:
+
+| # | note | 状態 |
+|---|---|---|
+| 1 (A1) | MCP/UI/export 上で弱い表示名を使う（`interprets` は candidate でも強く見える） | **済**: edge に `display_relation="toc_mentions_statute"` を付与。出口は弱関係名で表示 |
+| 2 (A2) | DD-LAWTIME ratify 後の temporal backfill 条件を明記 | **明記（下記）**: ①DD-LAWTIME accept design ratify ②lawtime production resolver gate pass ③`as_of_basis='publication_year_proxy'` へ変換 ④backfill 行は review 済まで `claim_support_eligible=false` 維持 |
+| 3 (A3) | medium quarantine 解除条件を gold set precision で定義 | **明記**: reviewed gold set で sampled precision ≥ 0.95（production candidate export）/ ≥ 0.98（auto promotion）。数値は SE 確定 |
+| 4 (A4) | dedup_key の version 粒度を patch でなく policy/major に | **済**: dedup_key は `extraction_policy_id=toc_legal_ref@1` を使用。full `extractor_version` は provenance のみ |
+| 5 | 追加 gate 2 本 | **済**: `gate_claim_support_all_false_for_toc_signal` / `gate_dedup_no_duplicate_candidate`（producer 自己検査 12 gate 全 PASS） |
+
+**owner ratify メモ（RESULT §5 準拠）**: TOC 由来リンクは candidate `toc_signal`・claim_support 不適格、判例は canonical case URI 解決まで edge 化しない。production promotion には medium 閾値・source_priority 確定値・DD-LAWTIME resolver gate・canonical work/case URI 解決レーンが必要。
+
 ## §6 changelog
 - v0.2 (2026-06-07): GPT お目付け役 `DDTOCLEGALREF_MODIFY_REQUIRED` の required_patches 1–9 +
   proposed gates を反映。edge を candidate signal 化、assertion_mode=implicit+extraction_method、

@@ -23,8 +23,10 @@ from __future__ import annotations
 import hashlib
 import unicodedata
 
-EXTRACTOR_VERSION = "legal_links@0.2"
+EXTRACTOR_VERSION = "legal_links@0.2"      # full patch version → provenance のみ
+EXTRACTION_POLICY_ID = "toc_legal_ref@1"   # 意味の安定単位 → dedup_key（A4: patch増殖を防ぐ）
 PARSER_VERSION = "alo_edges@0.2"
+DISPLAY_RELATION_STATUTE = "toc_mentions_statute"   # A1: 出口での弱い表示名
 
 _TIER_WEIGHT = {"high": 1.000, "medium": 0.700}
 _TIER_ROLLOUT = {"high": "initial", "medium": "quarantine_sample_required"}
@@ -91,7 +93,7 @@ def transform_node_links(node: dict, links: list[dict]) -> dict:
                 continue
             dst_uri = _nfc(lk["uri"])
             dedup_key = "|".join([bib_id, dst_uri, EDGE_TYPE_STATUTE, node_key,
-                                  span_hash, EXTRACTOR_VERSION])
+                                  span_hash, EXTRACTION_POLICY_ID])
             if dedup_key in seen_edges:
                 continue
             seen_edges.add(dedup_key)
@@ -107,6 +109,7 @@ def transform_node_links(node: dict, links: list[dict]) -> dict:
                 # --- semantics（R-01: candidate 隔離）---
                 "edge_type": EDGE_TYPE_STATUTE,
                 "edge_semantics_status": "candidate",
+                "display_relation": DISPLAY_RELATION_STATUTE,   # A1: 出口は弱い関係名
                 # --- assertion（R-02）---
                 "assertion_mode": ASSERTION_MODE,
                 "extraction_method": EXTRACTION_METHOD,
