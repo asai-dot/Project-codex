@@ -97,14 +97,22 @@ psql "$DATABASE_URL" -f loaders/sanity_checks.sql   # または Supabase SQL エ
 
 ---
 
-## 5. 番頭への handoff（報告）
+## 5. 番頭への handoff（報告）= GPT 再監査 PASS の6点を満たす形で出す
 
-`~/alo-ai/work/legallib_dl/REPORT_legallib_inspect_<YYYYMMDD>.md` を起票し、最低限：
-- Phase 0: 検出キー表（フィールド→実キー名）、ローダ修正差分、dry-run 件数（books/journals/toc）
-- 必要なら **書籍・雑誌 各1冊の生JSON top-level keys を貼付**（リモート Claude が plan/loader を最終ロックするため）
-- L1 self-verify 各項目の pass/fail
-- Phase 1 を実行した場合: sanity_checks 結果 + 冪等確認
-- 判断ログ（§6）
+`~/alo-ai/work/legallib_dl/REPORT_legallib_inspect_<YYYYMMDD>.md` を起票。
+**INGEST_RESULT(NEED_MORE) が PASS_WITH_NOTES へ上げる条件＝下記6点をこの報告で充足させる**こと：
+1. **legallib raw JSON 3サンプルの全文**（通常書籍1 / 巻末索引あり1 / TOC深い1）を貼付
+2. **確定 mapping table**（top-level: title/author/publisher/isbn/pub_year/content_type/book_id・
+   TOC: text/page/level・index: 索引語キー）← `--inspect` 出力から確定
+3. `--dry-run --limit 3` の**出力例**（実コンソール）
+4. （Phase 1 実行時）既存 asai-bookshelf/bencom に**差分0** test の結果（sanity `⑪` 前後突合）
+5. （Phase 1 実行時）**再実行 diff 0**（sanity `⑥` 二回突合）
+6. 著者**誤統合0**の初期ID戦略の確認（per-occurrence 既定。sanity `⑩` が0行）
+- 加えて: ローダ修正差分（`*_KEYS` を触ったら）、L1 self-verify pass/fail、判断ログ（§6）
+- 報告先: Mac ローカル ＋ Box `CODEX/handoff/`（実シークレットは貼らない）
+
+> ↑この6点が揃えば、リモート Claude が plan を v0.5.2 として `supersedes:
+> 20260606_legallibbiblio_v0.5_INGEST` で `to_gpt/` へ差分再投函し PASS を取りにいく。
 
 報告先: 上記 Mac ローカル ＋ Box `CODEX/handoff/` に同名でアップロード（実シークレットは貼らない）。
 

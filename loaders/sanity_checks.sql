@@ -85,3 +85,64 @@ WHERE isbn IS NOT NULL
 GROUP BY isbn
 HAVING COUNT(DISTINCT source) > 1
 LIMIT 20;
+
+-- ============================================================================
+-- 以下、GPT 監査 INGEST_RESULT（NEED_MORE）の指摘に対応する追加チェック
+-- ============================================================================
+
+-- ⑨ 重複candidate レポート（Finding 3: 統合はしないが「観測」はする）
+--    legal-library × 他source の ISBN一致を duplicate candidate として可視化。
+--    「重複投入事故」と人間が誤認しないための観測。統合は authority 層で promotion 制。
+SELECT
+  ll.isbn,
+  ll.bib_id          AS legallib_bib_id,
+  ll.title           AS legallib_title,
+  other.source       AS other_source,
+  other.bib_id       AS other_bib_id,
+  other.title        AS other_title
+FROM biblio.bib_records ll
+JOIN biblio.bib_records other
+  ON ll.isbn = other.isbn
+ AND other.source <> 'legal-library'
+WHERE ll.source = 'legal-library'
+  AND ll.isbn IS NOT NULL
+ORDER BY ll.isbn
+LIMIT 50;
+
+-- ⑩ 著者 誤統合0（Finding 2 / 監査観点5）:
+--    per-occurrence モードでは author_id が出現ごとに一意なので、
+--    1 author_id が複数 bib にまたがって紐づくことは無い（=構造的に誤統合0）。
+--    下記が 0 行なら per-occurrence の不変条件を満たす。
+--    （dedup モードを使った場合はこのクエリで意図的統合の範囲を必ず目視すること）
+SELECT
+  ba.author_id,
+  COUNT(DISTINCT ba.bib_id) AS distinct_bib_count,
+  array_agg(DISTINCT ba.bib_id) AS bibs
+FROM biblio.bib_authors ba
+WHERE ba.bib_id LIKE 'LEGALLIB:%'
+  AND ba.author_id LIKE 'LEGALLIB-AUTH:%'
+GROUP BY ba.author_id
+HAVING COUNT(DISTINCT ba.bib_id) > 1
+LIMIT 20;
+
+-- ⑪ 既存 source 非改変 transaction test（Finding 7）:
+--    取込の前後で本クエリの結果（行ハッシュ集計）が一致すれば asai-bookshelf/bencom は無変更。
+--    取込「前」に一度実行して値を控え、取込「後」に再実行して突合する。
+SELECT
+  source,
+  COUNT(*)                                   AS rows,
+  md5(string_agg(bib_id, ',' ORDER BY bib_id)) AS bibid_set_hash,
+  COALESCE(SUM(length(title)), 0)            AS title_len_sum
+FROM biblio.bib_records
+WHERE source IN ('asai-bookshelf', 'bencom-library')
+GROUP BY source
+ORDER BY source;
+
+-- ⑫ TOC drift 検知の足場（Finding 4）:
+--    再取得で source_hash が変わった bib を洗い出す運用の起点。
+--    （source_hash は raw の sha256。前回値との突合は ingest_job 台帳側で行う想定。）
+SELECT bib_id, source_hash, updated_at
+FROM biblio.bib_records
+WHERE source = 'legal-library'
+ORDER BY updated_at DESC
+LIMIT 20;

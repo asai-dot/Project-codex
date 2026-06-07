@@ -111,10 +111,19 @@ def normalize_author_key(name: str) -> str:
     return normalized
 
 
-def make_author_id(name: str) -> str:
+def make_author_id(name: str, book_id: str, ordinal: int, mode: str = "per-occurrence") -> str:
+    """著者IDを生成。
+    mode='per-occurrence'（既定・GPT監査 INGEST_RESULT Finding 2 推奨）:
+        出現ごとに一意 = biblio 内で別人を絶対に統合しない（誤統合0を構造保証）。
+        normalized_key は別カラムに保持し、横断同定は authority 層で candidate→reviewed→promoted。
+    mode='dedup'（オプトイン）:
+        md5(normalized) で source-local 名寄せ。同姓同名を統合し得るので誤統合0 gate を要確認。
+    """
     key = normalize_author_key(name)
     digest = hashlib.md5(key.encode()).hexdigest()
-    return f"LEGALLIB-AUTH:{digest}"
+    if mode == "dedup":
+        return f"LEGALLIB-AUTH:{digest}"
+    return f"LEGALLIB-AUTH:{book_id}:{ordinal}:{digest[:8]}"
 
 
 def make_source_hash(raw: dict) -> str:
@@ -292,7 +301,8 @@ def inspect(source_dir: Path, limit: int | None) -> None:
 
 # ─── メイン処理 ───────────────────────────────────────────────────────────────
 
-def load(source_dir: Path, dry_run: bool, limit: int | None, book_only: bool) -> None:
+def load(source_dir: Path, dry_run: bool, limit: int | None, book_only: bool,
+         author_id_mode: str = "per-occurrence") -> None:
     client = None if dry_run else get_client()
 
     json_files = sorted(source_dir.glob("*.json"))
@@ -329,22 +339,21 @@ def load(source_dir: Path, dry_run: bool, limit: int | None, book_only: bool) ->
         bib_rec = build_bib_record(book_id, raw, path)
         all_bib_records.append(bib_rec)
 
-        # authors + bib_authors
-        for author_name in extract_authors(raw):
-            author_id = make_author_id(author_name)
+        # authors + bib_authors（ordinal は著者順を反映＝旧来 0 固定のバグを修正）
+        for idx, author_name in enumerate(extract_authors(raw)):
+            author_id = make_author_id(author_name, book_id, idx, mode=author_id_mode)
             if author_id not in all_authors:
-                norm_key = normalize_author_key(author_name)
                 all_authors[author_id] = {
                     "author_id": author_id,
                     "name": author_name,
                     "source": SOURCE_NAME,
-                    "normalized_key": norm_key,
+                    "normalized_key": normalize_author_key(author_name),
                 }
             all_bib_authors.append({
                 "bib_id": bib_rec["bib_id"],
                 "author_id": author_id,
                 "role": "creator",
-                "ordinal": 0,
+                "ordinal": idx,
             })
 
         # bib_toc
@@ -389,6 +398,10 @@ def main() -> None:
     parser.add_argument(
         "--book-only", action="store_true", help="content_type==book のみ処理（雑誌除外）"
     )
+    parser.add_argument(
+        "--author-id-mode", choices=("per-occurrence", "dedup"), default="per-occurrence",
+        help="著者ID戦略。per-occurrence=誤統合0を構造保証（既定）/ dedup=md5名寄せ（要誤統合確認）",
+    )
     args = parser.parse_args()
 
     if not args.source_dir.exists():
@@ -403,6 +416,7 @@ def main() -> None:
         dry_run=args.dry_run,
         limit=args.limit,
         book_only=args.book_only,
+        author_id_mode=args.author_id_mode,
     )
 
 
