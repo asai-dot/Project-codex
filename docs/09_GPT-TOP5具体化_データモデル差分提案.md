@@ -196,3 +196,5 @@ ALTER TABLE dynamic_alo.activity ADD COLUMN IF NOT EXISTS non_matter_type dynami
 6. gate追加: 「confirmed aliasに根拠あり／rejected・superseded は training除外／auto-confirm閾値違反0」を nightly check に。
 
 > 本書は提案。確定は本体owner。実装は本体の `案件紐付け作業_20260520/` レーンで行うのが正本。
+
+> **本体レーンへハンドオフ済み（2026-06-07）**: 上記差分を `案件紐付け作業_20260520/HANDOFF_FROM_CODEX_caselink_P2DDL_candidate_v0.1_20260607.md`（Box file 2270024510224）として投入。P2 DDLへの採否は本体owner判断。本docs/09は説明レイヤーとして同期する。
