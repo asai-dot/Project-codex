@@ -1,13 +1,10 @@
 {
-  "name": "project-codex-toc-search",
+  "name": "project-codex-kg",
   "version": "0.1.0",
   "private": true,
-  "description": "事務所ライブラリ横断検索/RAG — 124k+ TOCノードを章節横断検索し、書名・章節・ページに着地。4図書館（自炊PDF/ベンコム/リーガルライブラリ/物理本）を1ビューワーから横断。",
+  "description": "知識グラフ — 文献↔判例↔法令の引用グラフ＋RAG。判例の正本キー/3層着地、引用採取、被覆率検証。ビューワーは別ブランチ claude/toc-search-rag-tLcyb / PR #6。",
   "scripts": {
-    "start": "node server/server.js",
-    "test": "node tests/deeplink.test.js && python3 tests/test_case_lane.py",
-    "build-index": "python3 scripts/build_toc_search_index.py"
+    "test": "python3 tests/test_case_lane.py"
   },
-  "engines": { "node": ">=16" },
   "license": "UNLICENSED"
 }
