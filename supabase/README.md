@@ -44,6 +44,9 @@ landing へ生データ投入
 
 ## 重要な不変条件
 
-- prod に入るのは `quality_status='clean'` のみ（CHECK 制約で保証）。
+- prod に入るのは `quality_status='clean'` のみ（CHECK 制約で保証）。加えて来歴
+  （`validated_at/validated_by/gate_run_id/row_hash/source`）が NOT NULL で揃っていること。
 - prod への直接 INSERT/UPDATE/DELETE は anon/authenticated から剥奪済み。
+- **`service_role` は CHECK/RLS/権限をバイパスできる**ため、prod 書込は「CI のマイグレーション適用＋
+  PR レビュー」経由のみとし、手元から `service_role` で直接書き込まない（運用ゲート）。
 - DB は常にこのディレクトリから再構築可能に保つ（手修正は必ずマイグレーション化）。

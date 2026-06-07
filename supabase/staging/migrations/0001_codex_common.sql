@@ -30,6 +30,7 @@ begin
       add column if not exists ingested_by   text               not null default current_user,
       add column if not exists validated_at  timestamptz,
       add column if not exists validated_by  text,
+      add column if not exists gate_run_id   text,
       add column if not exists quality_status codex.quality_status not null default 'unverified',
       add column if not exists row_hash      text,
       add column if not exists version       integer            not null default 1,

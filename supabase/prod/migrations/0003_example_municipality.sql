@@ -43,6 +43,16 @@ alter table prod.municipality
   alter column prefecture_name  set not null,
   alter column city_name        set not null;
 
+-- clean-only CHECK は「必要条件」であって十分条件ではない（GPT IMPL監査 note 2）。
+-- prod へ入る行は来歴が揃っていることを物理的に要求する：誰がいつ検査し(validated_*)、
+-- どの検査実行か(gate_run_id)、内容ハッシュ(row_hash)、出所(source) を NOT NULL とする。
+alter table prod.municipality
+  alter column source        set not null,
+  alter column validated_at  set not null,
+  alter column validated_by  set not null,
+  alter column gate_run_id   set not null,
+  alter column row_hash      set not null;
+
 -- 書込ロックダウン: RLS 有効化、読取ポリシーのみ。書込ポリシーなし＝書込拒否。
 -- service_role はRLSをバイパスするため、マイグレーション(下記INSERT)は通る。
 alter table prod.municipality enable row level security;
@@ -64,12 +74,16 @@ revoke insert, update, delete on prod.municipality from anon, authenticated;
 -- ----------------------------------------------------------------------------
 insert into prod.municipality
   (muni_code, prefecture_code, prefecture_name, city_name, city_kana,
-   valid_from, source, source_ref, validated_at, validated_by, quality_status, version)
+   valid_from, source, source_ref, validated_at, validated_by, gate_run_id, row_hash,
+   quality_status, version)
 values
   ('011002', '01', '北海道', '札幌市', 'サッポロシ', '1947-04-17',
-   'e-gov:全国地方公共団体コード', 'sample-seed', now(), 'promotion:sample', 'clean', 1),
+   'e-gov:全国地方公共団体コード', 'sample-seed', now(), 'promotion:sample', 'seed:codexgov-sample',
+   codex.stable_hash('011002','01','北海道','札幌市','サッポロシ','1947-04-17', null), 'clean', 1),
   ('131016', '13', '東京都', '千代田区', 'チヨダク', '1947-08-15',
-   'e-gov:全国地方公共団体コード', 'sample-seed', now(), 'promotion:sample', 'clean', 1),
+   'e-gov:全国地方公共団体コード', 'sample-seed', now(), 'promotion:sample', 'seed:codexgov-sample',
+   codex.stable_hash('131016','13','東京都','千代田区','チヨダク','1947-08-15', null), 'clean', 1),
   ('271004', '27', '大阪府', '大阪市', 'オオサカシ', '1956-09-01',
-   'e-gov:全国地方公共団体コード', 'sample-seed', now(), 'promotion:sample', 'clean', 1)
+   'e-gov:全国地方公共団体コード', 'sample-seed', now(), 'promotion:sample', 'seed:codexgov-sample',
+   codex.stable_hash('271004','27','大阪府','大阪市','オオサカシ','1956-09-01', null), 'clean', 1)
 on conflict (muni_code) do nothing;

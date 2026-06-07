@@ -3,13 +3,29 @@
 判例・法令・文献DB（legaldb）の本体スキーマを、本ガバナンスの landing/staging/prod の型で
 起こした。ただし **現状は candidate であり、staging/prod への昇格は物理的にブロックしている。**
 
+## current_design_gate_result（最新の設計ゲート結果を常にここで追跡）
+
+> 解除条件が古い DESIGN 結果に固定されないよう、**現在の設計ゲート結果**をここで追う
+> （GPT IMPL監査 note 5）。後続の DESIGN_RESULT が出たら必ず更新する。
+
+- **current_design_gate_result**: `from_gpt/20260607_legaldb_v0.5.1_DESIGN_RESULT.md`
+- **判定**: `DESIGN_MODIFY_REQUIRED`（v0.5 より大幅改善。grand schema を撤回し既存
+  `legal_source_object` / `legal_source_object_identifier` / candidate relation /
+  promotion queue に再接地。F2/F6/F7 はほぼクローズ）
+- **未PASSの核心**: F4 が前提とする **DD-LAWTIME v0.2.1 accepted の証跡が監査レーンで未確認**
+  （既存 `DDLAWTIME_MODIFY_REQUIRED` と矛盾）。よってブロック継続。
+- **命名の含意**: v0.5.1 は本体テーブル名を既存ALOスキーマ（`legal_source_object` 系）へ寄せた。
+  本リポジトリ `0005` の候補テーブル名（`legal_work` 系）は**暫定**で、解除時に突き合わせる。
+  candidate＝ブロック中ゆえ prod への実害はない。
+
 ## なぜブロックするか
 
-- 出所: `STATIC_DB_INTEGRATION_PLAN v0.5`（番頭/Mac CC 提案・ratify 前 draft）
+- 出所: `STATIC_DB_INTEGRATION_PLAN v0.5`（番頭/Mac CC 提案・ratify 前 draft）→ v0.5.1 で改訂中。
 - 独立監査（別family = GPT Pro お目付け役）の判定:
-  **`DESIGN_MODIFY_REQUIRED`**（`from_gpt/20260606_legaldb_v0.5_DESIGN_RESULT.md`）
+  **`DESIGN_MODIFY_REQUIRED`**（v0.5: `20260606_legaldb_v0.5_DESIGN_RESULT.md` →
+  v0.5.1: `20260607_legaldb_v0.5.1_DESIGN_RESULT.md`、いずれも未PASS）
 - 監査の核心: 方向は是だが、**研究示唆を accepted schema と誤読して実装するのは事故**。
-  owner ratify と v0.6 必須パッチの前に本番投入してはならない。
+  owner ratify と必須パッチの前に本番投入してはならない。
 
 これは本ガバナンスの原則そのもの（clean-only / candidate≠truth / 昇格前レビュー）の適用例。
 **構造は用意するが、ゲートは閉じている。**
@@ -47,5 +63,20 @@ GPT が挙げた v0.5.1 / v0.6 必須パッチを反映し、owner ratify を得
 6. over-reach ラベル（research-backed / primary-verified / grey-lit / design-synthesis）付与
 7. 判例自然キー・文献巻号頁キー・法令 stable_anchor の collision/再現性テスト
 
-上記が揃ったら、`landing.promote_legaldb_to_staging()` を例外送出から本実装（検査＋昇格）へ
+### v0.5.1 監査で追加された必須パッチ（current_design_gate_result 由来）
+
+8. **DD-LAWTIME v0.2.1 accepted の証跡提示**（Box ID・owner ratify・GPT result 先頭行）。
+   提示できなければ F4 を「未閉/BLOCKED」として本文修正。
+9. **anchor 責務分界の DDL 明文化**: opaque ULID `anchor_id`(不変主キў) と
+   `stable_locator_key`(表示/互換 locator) の責務を分け、新規 mint 経路を一本化、merge/split が
+   既存 `UNIQUE(source_object_uri, anchor_type, stable_locator_key)` と衝突しない DDL を示す。
+10. **treatment の claim_support 物理化**: 「`treatment_status <> reviewed` の edge は
+    claim_support view に出さない」を DB の view / CHECK / gate で物理化（文書規約だけにしない）。
+11. **claim_confidence ラベルのサンプル適用**: research-backed / primary-verified / grey-lit /
+    design-synthesis を各主張に最低限付与し、design-synthesis が確定スキーマに固定されないことを示す。
+12. **collision gate の仕様明記**: gate_id だけでなく、合格条件と対象テーブルを明記。
+
+上記（1–12）が揃ったら、`landing.promote_legaldb_to_staging()` を例外送出から本実装（検査＋昇格）へ
 差し替え、staging→prod の昇格マイグレーションを PR レビューに乗せる。
+**昇格時には staging 側で FK / NOT NULL / unique / resolved-only を必ず閉じる**（landing の緩さを
+clean target に持ち込まない。GPT IMPL監査 note 3）。

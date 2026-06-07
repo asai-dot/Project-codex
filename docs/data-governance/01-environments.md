@@ -39,6 +39,19 @@
 
 詳細な GRANT/RLS は `supabase/prod/migrations/` を参照。
 
+### service_role の扱い（GPT IMPL監査 note 1）
+
+CHECK / RLS / 権限剥奪は `anon` / `authenticated` には効くが、**`service_role` は原理上これらを
+バイパスできる**。したがって「綺麗なものしか入らない」の最後の砦は、技術ではなく**運用ゲート**で
+締める。次を鉄則とする。
+
+- **prod への書込は「CI のマイグレーション適用」経由のみ。** 手元スクリプトやコンソールから
+  `service_role` で直接 `INSERT/UPDATE/DELETE` しない。
+- `service_role` の鍵は CI の secret に限定保管し、ローカル/携帯/自動投入には配布しない。
+- prod に触れる変更は必ず PR レビュー（門番②）を通す。レビューなしの prod 書込は規約違反とする。
+
+これにより「service_role なら何でも入る」という抜け道を、運用上塞ぐ。
+
 ## 命名規則
 
 - スキーマ: 小文字スネークケース（`landing` / `staging` / `prod`）。
