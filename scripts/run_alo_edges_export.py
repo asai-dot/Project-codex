@@ -64,10 +64,36 @@ def run(nodes_path: str, egov_path: str | None, out_dir: str) -> dict:
     p_ptr = dump("alo_pointers_export.jsonl", pointers)
     p_cand = dump("alo_case_ref_candidates.jsonl", cands)
 
-    # Gate-5 自己検査: 全エッジに evidence が付くこと
-    edge_keys = {(e["src_uri"], e["dst_uri"], e["edge_type"], e["valid_from"]) for e in edges}
-    evid_keys = {(e["_src_uri"], e["_dst_uri"], e["_edge_type"], e["_valid_from"]) for e in evidence}
-    orphan_edges = len(edge_keys - evid_keys)
+    # --- gate 自己検査（DDTOCLEGALREF v0.2 proposed gates）---
+    edge_keys = {e["dedup_key"] for e in edges}
+    evid_keys = {e["_dedup_key"] for e in evidence}
+    rollout = {"initial": 0, "quarantine_sample_required": 0}
+    for e in edges:
+        rollout[e["rollout_status"]] = rollout.get(e["rollout_status"], 0) + 1
+
+    gates = {
+        "gate_toc_edges_have_evidence_pointer": len(edge_keys - evid_keys) == 0,
+        "gate_toc_low_tier_not_exported": all(e["weight"] in (1.0, 0.7) for e in edges),
+        "gate_toc_no_case_edge_without_canonical_case_uri": len(edges) == 0 or all(
+            e["dst_type"] == "statute" for e in edges),  # 判例は edge 化しない
+        "gate_toc_pub_year_not_used_as_exact_asof": all(e["valid_from"] is None for e in edges),
+        "gate_toc_no_temporal_resolution_before_lawtime_accept": all(
+            e["resolved_law_revision_id"] is None and e["temporal_status"] is None
+            and e["claim_support_eligible"] is False for e in edges),
+        "gate_toc_src_uri_not_marked_canonical_until_resolved": all(
+            e["src_uri_status"] == "provisional" and e["canonical_work_uri"] is None
+            for e in edges),
+        "gate_toc_edge_semantics_quarantined": all(
+            e["edge_semantics_status"] == "candidate" for e in edges),
+        "gate_toc_assertion_mode_no_vendor_implicit": all(
+            e["assertion_mode"] == "implicit" and e["assertion_confidence"] is None
+            for e in edges),
+        "gate_toc_medium_quarantined": all(
+            e["rollout_status"] == "quarantine_sample_required"
+            for e in edges if e["weight"] == 0.7),
+        "gate_toc_case_candidate_review_required": all(
+            c["review_required"] and c.get("matched_case_uri") is None for c in cands),
+    }
 
     summary = {
         "nodes": n_nodes,
@@ -77,15 +103,12 @@ def run(nodes_path: str, egov_path: str | None, out_dir: str) -> dict:
         "case_ref_candidates": len(cands),
         "skipped_low_conf": skipped_low,
         "edge_type_breakdown": {"interprets": len(edges)},
-        "gate5_orphan_edges": orphan_edges,
-        "constraints_enforced": [
-            "edge_type∈{interprets,evaluates}",
-            "assertion_mode=vendor_implicit",
-            "assertion_confidence=NULL (llm only)",
-            "weight=tier(high1.0/med0.7); low excluded",
-            "Gate-5 evidence required",
-        ],
+        "rollout_breakdown": rollout,
+        "gates": gates,
+        "all_gates_pass": all(gates.values()),
+        "schema_version": "DDTOCLEGALREF v0.2",
     }
+    orphan_edges = 0 if gates["gate_toc_edges_have_evidence_pointer"] else 1
     with open(os.path.join(out_dir, "alo_edges_export_summary.json"), "w", encoding="utf-8") as fh:
         json.dump(summary, fh, ensure_ascii=False, indent=2)
     summary["_paths"] = [p_edges, p_evid, p_ptr, p_cand]
@@ -100,8 +123,8 @@ def main():
     args = ap.parse_args()
     s = run(args.nodes, args.egov, args.out)
     print(json.dumps({k: v for k, v in s.items() if k != "_paths"}, ensure_ascii=False, indent=2))
-    assert s["gate5_orphan_edges"] == 0, "Gate-5 violation: edge without evidence"
-    print("Gate-5: PASS (0 orphan edges)")
+    assert s["all_gates_pass"], f"gate violation: {[k for k,v in s['gates'].items() if not v]}"
+    print("ALL GATES: PASS")
 
 
 if __name__ == "__main__":
