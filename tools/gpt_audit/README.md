@@ -3,6 +3,9 @@
 GPT Pro 目付け役 監査レーン (`gpt_ometsuke/`) の **行き・帰り・完了処理**を機械化する単一書き手 CLI。
 設計書: `GPT_PRO_AUDIT_LANE_DESIGN_v0.2_20260606.md` (Box file_id 2269085336900) の実装。
 
+> 設計仕様 v0.3（語彙アライン + 反映キュー）は [`docs/GPT_PRO_AUDIT_LANE_DESIGN_v0.3_20260607.md`](docs/GPT_PRO_AUDIT_LANE_DESIGN_v0.3_20260607.md)。
+> 正本は Box (`gpt_ometsuke/`, file_id 2269736541410)。本リポジトリのものは mirror。
+
 ## 中核ルール
 
 > `to_gpt/` 直下は、GPT がまだ答えていない REQUEST だけにする。
