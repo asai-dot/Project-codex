@@ -15,13 +15,17 @@ scripts/pipeline_probe.py  ← 実ファイルシステムを走査して snapsh
 scripts/pipeline_dashboard.py ← manifest+snapshot から status を導出し MD/HTML 描画
 ```
 
-- **status**: `done ✅` / `in_progress 🔄` / `waiting ⏳`(GPT/OCR 戻り待ち) /
+- **runtime_status**: `done ✅` / `in_progress 🔄` / `waiting ⏳`(GPT/OCR 戻り待ち) /
   `blocked ⛔`(依存未完で入れない) / `todo ⬜` / `error ❗`。
+  これは **実行・運用状態**の軸であり、DD-STATUS-REGISTRY の artifact lifecycle
+  （draft/candidate/accepted/canonical…）とは**別軸**（混同しないこと）。
 - **probe 種別**:
   - `count` — glob 件数 vs `expected`（取得率。「出せてない/未取得」）。
-  - `exists` — 成果物の有無。
+  - `exists` — 成果物の有無（% は出さず `有/無/一部` 表示）。
   - `roundtrip` — `sent`(例 `to_gpt/*REQUEST`) と `returned`(`from_gpt/*RESULT`) を
-    キーで突合。`pending`(戻ってない) / `stale`(古いまま戻らない=詰まり) / `orphan`。
+    **front-matter の `request_id` / `result_expected_filename` を優先**して突合（無ければ
+    filename stem fallback）。`pending`(戻ってない) / `stale`(古いまま戻らない=詰まり) / `orphan`。
+  - `orphan` — `scan` glob にあって `declared` globs に無い「未宣言成果物」を出す（manifest ドリフト検知）。
 
 ## 使い方
 
@@ -59,3 +63,20 @@ snapshot は純データなので、**日次でコミットして差分を見れ
 - `roundtrip` のキー化は既定で末尾 `REQUEST/RESULT/RESPONSE…` を落として突合。
   特殊命名は probe の `key_pattern`(正規表現, group1) で上書き可。
 - `stale` の閾値は probe の `max_age_hours`（既定 24h）。
+
+## v0.2（GPT DDPROGRESS 監査反映）
+
+GPT Pro DD レビュー（`from_gpt/20260606_codexprogress_v0.1_DDPROGRESS_RESULT.md`）の
+判定は **`DDPROGRESS_PASS_WITH_NOTES`**（方向性は採用可・独立した「観測 dashboard」
+として扱う）。指摘6点を v0.2 で反映:
+
+1. **runtime_status 命名**: lifecycle 軸と混同しないよう `runtime_status` と明示し、表に脚注。
+2. **roundtrip キーの堅牢化**: front-matter `request_id` / `result_expected_filename` 優先突合。
+   版差（v0.1↔v0.2）・再投函・別名 RESULT でも誤対応しない。stale 基準も front-matter
+   `submitted_at/created_at` → `request_id` 先頭日付 → mtime の順で確度の高い時刻を採用。
+3. **manifest 検証**: `validate_manifest()` が duplicate id / unknown dependency / cycle /
+   unknown root / invalid probe type を検出。`pipeline_probe.py` は probe 前に検証し、
+   壊れていれば走らせない（exit 1）。dashboard はエラーをバナー表示。
+4. **orphan probe**: 未宣言成果物（manifest が拾っていない handoff 等）を炙り出す。
+5. **exists-only の % 廃止**: 連続 % ではなく `有/無/一部` を表示（誤誘導回避）。
+6. **snapshot メタ**: `generated_at_jst` / `manifest_hash` / `probe_version` を付与。

@@ -56,9 +56,28 @@ def _has_waiting(results: list[dict], now: int) -> tuple[bool, int]:
             waiting = True
             max_age = r.get("max_age_hours", 24) * 3600
             for p in r.get("pending", []):
-                if now - p.get("sent_mtime", now) > max_age:
+                basis = p.get("sent_epoch", p.get("sent_mtime", now))  # v0.2: front-matter優先
+                if now - basis > max_age:
                     stale += 1
     return waiting, stale
+
+
+def _has_count(results: list[dict]) -> bool:
+    return any(r.get("type") == "count" for r in results)
+
+
+def _progress_cell(row: dict) -> str:
+    """exists-only/roundtrip は誤誘導する % を出さず present/待ち表示 (GPT 指摘#5)。"""
+    results = row["probes"]
+    if _has_count(results):
+        return f"`{_bar(row['ratio'])}` {int(row['ratio']*100)}%"
+    kinds = {r.get("type") for r in results}
+    if kinds <= {"exists", "orphan"} and results:
+        done = sum(1 for r in results if r.get("done"))
+        return "有" if done == len(results) else ("一部" if done else "無")
+    if "roundtrip" in kinds:
+        return "完" if row["status"] == "done" else "待ち"
+    return "—"
 
 
 def derive(manifest: dict, snapshot: dict, now: int | None = None) -> list[dict]:
@@ -117,8 +136,13 @@ def _probe_summary(results: list[dict]) -> str:
         elif r["type"] == "exists":
             parts.append(f"{r['label']} {'有' if r['done'] else '無'}")
         elif r["type"] == "roundtrip":
+            orphan = f" 孤{r['orphan_count']}" if r.get("orphan_count") else ""
             parts.append(f"{r['label']} 戻{r['returned']}/送{r['sent']}"
-                         f"(未{r['pending_count']})")
+                         f"(未{r['pending_count']}){orphan}")
+        elif r["type"] == "orphan":
+            parts.append(f"{r['label']} 未宣言{r['orphan_count']}/{r['scan_count']}")
+        elif "error" in r:
+            parts.append(f"{r.get('label', '?')} ❗{r['error']}")
     return ", ".join(parts)
 
 
@@ -130,11 +154,25 @@ def render_markdown(manifest: dict, rows: list[dict], snapshot: dict) -> str:
     waiting = [r for r in rows if r["status"] == "waiting"]
     ready = [r for r in rows if r["status"] == "todo" and not r["unmet_deps"]]
 
+    when = snapshot.get("generated_at_jst") or snapshot.get("collected_at", "?")
+    mhash = (snapshot.get("manifest_hash") or "")[:18]
     out = [
         f"# {manifest.get('title', 'パイプライン進捗')}",
         "",
-        f"_収集: {snapshot.get('collected_at', '?')} / roots: {_roots_str(snapshot)}_",
+        f"_収集: {when} / probe v{snapshot.get('probe_version', '?')} / "
+        f"manifest {mhash} / roots: {_roots_str(snapshot)}_",
         "",
+        "> 状態は **runtime_status（実行・運用状態）**。DD-STATUS-REGISTRY の "
+        "artifact lifecycle（draft/candidate/accepted/canonical…）とは別軸。",
+        "",
+    ]
+    errs = snapshot.get("manifest_errors") or []
+    if errs:
+        out.append("## ⚠ manifest エラー（描画は参考値）")
+        out.append("")
+        out.extend(f"- {e}" for e in errs)
+        out.append("")
+    out += [
         "## サマリ",
         "",
         "  ".join(f"{_ICON[s]}{s} {counts.get(s, 0)}"
@@ -173,10 +211,9 @@ def render_markdown(manifest: dict, rows: list[dict], snapshot: dict) -> str:
         out.append("|---|---|---|---|---|---|")
         for r in rs:
             icon = _ICON[r["status"]]
-            bar = f"`{_bar(r['ratio'])}` {int(r['ratio']*100)}%"
             deps = ", ".join(r["deps"]) if r["deps"] else "—"
-            out.append(f"| {icon} | {r['title']} | {bar} | {_probe_summary(r['probes']) or '—'} "
-                       f"| {deps} | {r['owner']} |")
+            out.append(f"| {icon} | {r['title']} | {_progress_cell(r)} | "
+                       f"{_probe_summary(r['probes']) or '—'} | {deps} | {r['owner']} |")
         out.append("")
 
     # roundtrip の未戻り明細。
@@ -198,20 +235,26 @@ def render_markdown(manifest: dict, rows: list[dict], snapshot: dict) -> str:
 def render_html(manifest: dict, rows: list[dict], snapshot: dict) -> str:
     color = {"done": "#2e7d32", "in_progress": "#1565c0", "waiting": "#ef6c00",
              "blocked": "#c62828", "todo": "#9e9e9e", "error": "#6a1b9a"}
+    errs = snapshot.get("manifest_errors") or []
     cells = []
     for r in rows:
         c = color[r["status"]]
-        pct = int(r["ratio"] * 100)
+        has_count = _has_count(r["probes"])
+        # exists/roundtrip は連続%にしない (binary present)。GPT 指摘#5。
+        pct = int(r["ratio"] * 100) if has_count else (100 if r["status"] == "done" else 0)
+        prog = _progress_cell(r)
         cells.append(
             f'<div class="card" style="border-left:6px solid {c}">'
             f'<div class="hd"><span class="ic">{_ICON[r["status"]]}</span>'
-            f'<b>{r["title"]}</b> <span class="tk">{r["track"]}/{r["owner"]}</span></div>'
+            f'<b>{r["title"]}</b> <span class="tk">{r["track"]}/{r["owner"]} · {prog}</span></div>'
             f'<div class="bar"><div class="fill" style="width:{pct}%;background:{c}"></div></div>'
             f'<div class="meta">{_probe_summary(r["probes"]) or "—"}'
             + (f' · 依存待ち: {", ".join(r["unmet_deps"])}' if r["unmet_deps"] else "")
             + (f' · ⚠stale {r["stale"]}' if r["stale"] else "")
             + "</div></div>"
         )
+    err_html = ("<div class='err'>⚠ manifest エラー: "
+                + "; ".join(errs) + "</div>") if errs else ""
     return (
         "<!doctype html><meta charset='utf-8'>"
         f"<title>{manifest.get('title','pipeline')}</title>"
@@ -220,9 +263,15 @@ def render_html(manifest: dict, rows: list[dict], snapshot: dict) -> str:
         "box-shadow:0 1px 3px rgba(0,0,0,.1)}.hd{margin-bottom:6px}.ic{margin-right:6px}"
         ".tk{color:#888;font-size:.8em;margin-left:6px}.bar{height:8px;background:#eee;"
         "border-radius:4px;overflow:hidden}.fill{height:100%}.meta{color:#555;"
-        "font-size:.85em;margin-top:6px}</style>"
+        "font-size:.85em;margin-top:6px}"
+        ".err{background:#fdecea;color:#c62828;padding:8px 12px;border-radius:6px;margin:8px 0}"
+        ".fn{color:#888;font-size:.8em}</style>"
         f"<h1>{manifest.get('title','pipeline')}</h1>"
-        f"<p>収集: {snapshot.get('collected_at','?')} / roots: {_roots_str(snapshot)}</p>"
+        f"<p>収集: {snapshot.get('generated_at_jst', snapshot.get('collected_at','?'))} / "
+        f"probe v{snapshot.get('probe_version','?')} / roots: {_roots_str(snapshot)}</p>"
+        "<p class='fn'>状態は runtime_status（実行・運用状態）。artifact lifecycle"
+        "（draft/candidate/accepted/canonical…）とは別軸。</p>"
+        + err_html
         + "".join(cells)
     )
 

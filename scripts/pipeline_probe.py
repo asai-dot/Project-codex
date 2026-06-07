@@ -1,16 +1,21 @@
-"""パイプライン進捗の probe ランナー + 状態コレクタ.
+"""パイプライン進捗の probe ランナー + 状態コレクタ (v0.2).
 
 実ファイルシステム (Box 同期 / ~/alo-ai 等) を走査し、各ステージの「実状態」を
 小さな snapshot.json に落とす。重い走査は Mac 側で実行し、snapshot だけを
 本リポジトリへ戻せば web 側でダッシュボード描画・差分追跡ができる。
 
+ここで言う status は **runtime_status（実行・運用状態）** であり、
+DD-STATUS-REGISTRY の artifact lifecycle（draft/candidate/accepted/canonical…）
+とは別軸。混同しないこと（GPT DDPROGRESS 監査 v0.1 指摘#2）。
+
 probe 種別:
   * count     : glob 件数 vs expected (取得率)。「出せてない/未取得」を見る。
-  * exists    : glob にマッチが 1 つでもあるか (成果物の有無)。
-  * roundtrip : 送信 (例 to_gpt/*REQUEST) と 戻り (from_gpt/*RESULT) を
-                キーで突合。pending(戻ってない) / orphan(送信なしの戻り) /
-                stale(古いまま戻らない=詰まり) を出す。「GPT数が戻ってない/
-                待ってる」を見る。
+  * exists    : glob にマッチが 1 つでもあるか (成果物の有無。% は出さない)。
+  * roundtrip : 送信(REQUEST)/戻り(RESULT) を **front-matter の request_id /
+                result_expected_filename を優先**して突合 (v0.2)。pending(未戻り)
+                / orphan(送信なしの戻り) / stale(古い未戻り=詰まり) を出す。
+  * orphan    : scan glob にあって declared globs に無い「未宣言成果物」を出す
+                (manifest ドリフト検知。v0.2 追加)。
 
 snapshot は純データ (status 判定は dashboard 側)。冪等・stdlib のみ。
 """
@@ -18,13 +23,19 @@ snapshot は純データ (status 判定は dashboard 側)。冪等・stdlib の�
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import time
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-# roundtrip のキー化: 末尾の役割サフィックスを落として送信/戻りを同一キーに。
+PROBE_VERSION = "0.2"
+_JST = timezone(timedelta(hours=9))
+VALID_PROBE_TYPES = frozenset({"count", "exists", "roundtrip", "orphan"})
+
+# roundtrip stem fallback: 末尾の役割サフィックスを落として送信/戻りを同一キーに。
 _RT_SUFFIX = re.compile(
     r"[_\-]?(request|result|response|reply|answer|req|res|out|in|送信|戻り|依頼|回答)$",
     re.IGNORECASE,
@@ -32,15 +43,116 @@ _RT_SUFFIX = re.compile(
 
 
 def _glob(root: Path, pattern: str) -> list[Path]:
-    # pathlib.glob は ** もサポート。隠し対策は不要。
     return sorted(p for p in root.glob(pattern) if p.is_file())
 
 
-def _roundtrip_key(stem: str, key_pattern: str | None) -> str:
+def _stem_key(stem: str, key_pattern: str | None) -> str:
     if key_pattern:
         m = re.search(key_pattern, stem)
         return m.group(1) if m else stem
     return _RT_SUFFIX.sub("", stem)
+
+
+def _read_front_matter(path: Path) -> dict[str, str]:
+    """先頭 ``---`` ブロックの ``key: value`` を素朴に取り出す (stdlib, YAML不要)。"""
+    fm: dict[str, str] = {}
+    try:
+        with path.open(encoding="utf-8") as f:
+            first = f.readline()
+            if first.strip() != "---":
+                return fm
+            for line in f:
+                if line.strip() == "---":
+                    break
+                if ":" in line:
+                    k, _, v = line.partition(":")
+                    v = v.strip()
+                    if " #" in v:  # 行末コメントを落とす
+                        v = v.split(" #", 1)[0].strip()
+                    fm[k.strip()] = v
+    except Exception:
+        return {}
+    return fm
+
+
+def _age_epoch(fm: dict[str, str], rid: str, path: Path) -> tuple[int, str]:
+    """stale 判定の基準時刻。front-matter > request_id 日付 > mtime の順で確度高。"""
+    for key in ("submitted_at", "created_at", "recorded_at"):
+        val = fm.get(key)
+        if val:
+            try:
+                return int(datetime.fromisoformat(val.replace("Z", "+00:00"))
+                           .timestamp()), f"front_matter:{key}"
+            except ValueError:
+                pass
+    if len(rid) >= 8 and rid[:8].isdigit():
+        try:
+            d = datetime.strptime(rid[:8], "%Y%m%d").replace(tzinfo=_JST)
+            return int(d.timestamp()), "request_id_date"
+        except ValueError:
+            pass
+    return int(path.stat().st_mtime), "mtime"
+
+
+def _roundtrip(root: Path, probe: dict, label: str) -> dict:
+    kp = probe.get("key_pattern")
+    sent = _glob(root, probe["sent"])
+    returned = _glob(root, probe["returned"])
+
+    # 戻り側のマッチトークン (request_id / 実ファイル名 / stem キー)。
+    ret_request_ids: set[str] = set()
+    ret_names: set[str] = set()
+    ret_stem_keys: set[str] = set()
+    for p in returned:
+        fm = _read_front_matter(p)
+        if fm.get("request_id"):
+            ret_request_ids.add(fm["request_id"])
+        ret_names.add(p.name)
+        ret_stem_keys.add(_stem_key(p.stem, kp))
+
+    def is_matched(rid: str, expected: str | None) -> bool:
+        return (rid in ret_request_ids
+                or rid in ret_stem_keys
+                or bool(expected and expected in ret_names))
+
+    sent_rids: set[str] = set()
+    sent_expected: set[str] = set()
+    pending: list[dict] = []
+    seen: set[str] = set()
+    for p in sent:
+        fm = _read_front_matter(p)
+        rid = fm.get("request_id") or _stem_key(p.stem, kp)
+        if rid in seen:
+            continue
+        seen.add(rid)
+        expected = fm.get("result_expected_filename")
+        sent_rids.add(rid)
+        if expected:
+            sent_expected.add(expected)
+        if not is_matched(rid, expected):
+            epoch, basis = _age_epoch(fm, rid, p)
+            pending.append({"key": rid, "sent_file": p.name, "expected_result": expected,
+                            "sent_epoch": epoch, "age_basis": basis})
+
+    # orphan: どの sent にも対応しない戻り。
+    orphan = []
+    for p in returned:
+        fm = _read_front_matter(p)
+        rid = fm.get("request_id") or _stem_key(p.stem, kp)
+        if rid in sent_rids or p.name in sent_expected:
+            continue
+        orphan.append(p.name)
+
+    pending.sort(key=lambda x: x["sent_epoch"])
+    cap = probe.get("detail_cap", 50)
+    return {
+        "type": "roundtrip", "label": label,
+        "sent": len(seen), "returned": len(returned),
+        "pending_count": len(pending), "pending": pending[:cap],
+        "orphan_count": len(orphan), "orphan": sorted(orphan)[:cap],
+        "max_age_hours": probe.get("max_age_hours", 24),
+        "done": len(pending) == 0 and len(seen) > 0,
+    }
 
 
 def run_probe(root: Path, probe: dict) -> dict:
@@ -60,43 +172,92 @@ def run_probe(root: Path, probe: dict) -> dict:
 
     if ptype == "exists":
         files = _glob(root, probe["path"])
+        # % は出さない: 成果物の有無のみ (GPT 指摘#5)。
         return {
             "type": "exists", "label": label, "path": probe["path"],
-            "match_count": len(files), "done": bool(files),
+            "present": bool(files), "match_count": len(files), "done": bool(files),
         }
 
     if ptype == "roundtrip":
-        kp = probe.get("key_pattern")
-        sent = _glob(root, probe["sent"])
-        returned = _glob(root, probe["returned"])
-        sent_keys: dict[str, Path] = {}
-        for p in sent:
-            sent_keys.setdefault(_roundtrip_key(p.stem, kp), p)
-        ret_keys = {_roundtrip_key(p.stem, kp) for p in returned}
+        return _roundtrip(root, probe, label)
 
-        pending = []
-        for key, p in sent_keys.items():
-            if key not in ret_keys:
-                pending.append({"key": key, "sent_file": p.name,
-                                "sent_mtime": int(p.stat().st_mtime)})
-        orphan = sorted(ret_keys - set(sent_keys))
-        # snapshot を小さく保つため pending は古い順に上限件数だけ詳細保持。
-        pending.sort(key=lambda x: x["sent_mtime"])
+    if ptype == "orphan":
+        scan = _glob(root, probe["scan"])
+        declared: set[Path] = set()
+        for g in probe.get("declared", []):
+            declared.update(_glob(root, g))
+        orphans = [p.name for p in scan if p not in declared]
         cap = probe.get("detail_cap", 50)
         return {
-            "type": "roundtrip", "label": label,
-            "sent": len(sent_keys), "returned": len(ret_keys),
-            "pending_count": len(pending), "pending": pending[:cap],
-            "orphan_count": len(orphan), "orphan": orphan[:cap],
-            "max_age_hours": probe.get("max_age_hours", 24),
-            "done": len(pending) == 0 and len(sent_keys) > 0,
+            "type": "orphan", "label": label,
+            "scan_count": len(scan), "declared_count": len(declared),
+            "orphan_count": len(orphans), "orphan": sorted(orphans)[:cap],
+            "done": len(orphans) == 0,
         }
 
     return {"type": ptype, "label": label, "error": f"unknown probe type: {ptype}"}
 
 
+# --- manifest 検証 (GPT 指摘#4) -------------------------------------------
+
+def validate_manifest(manifest: dict) -> list[str]:
+    """duplicate id / unknown dependency / cycle / unknown root / invalid probe を検出。"""
+    errors: list[str] = []
+    stages = manifest.get("stages", [])
+    ids = [s.get("id") for s in stages]
+    valid_roots = set(manifest.get("roots", {})) | {"default"}
+
+    seen: set[str] = set()
+    for sid in ids:
+        if not sid:
+            errors.append("stage に id が無い")
+        elif sid in seen:
+            errors.append(f"duplicate stage id: {sid}")
+        seen.add(sid)
+
+    id_set = set(ids)
+    graph: dict[str, list[str]] = {}
+    for s in stages:
+        sid = s.get("id")
+        deps = s.get("depends_on", [])
+        graph[sid] = deps
+        for d in deps:
+            if d not in id_set:
+                errors.append(f"unknown dependency: {sid} -> {d}")
+        for pr in s.get("probes", []):
+            if pr.get("type") not in VALID_PROBE_TYPES:
+                errors.append(f"invalid probe type in {sid}: {pr.get('type')}")
+            rk = pr.get("root", "default")
+            if rk not in valid_roots:
+                errors.append(f"unknown root in {sid}: {rk}")
+
+    # cycle 検出 (DFS, 3色)。
+    WHITE, GRAY, BLACK = 0, 1, 2
+    color = {sid: WHITE for sid in graph}
+
+    def visit(n: str, path: list[str]) -> None:
+        color[n] = GRAY
+        for m in graph.get(n, []):
+            if m not in color:
+                continue
+            if color[m] == GRAY:
+                errors.append(f"cycle: {' -> '.join(path + [n, m])}")
+            elif color[m] == WHITE:
+                visit(m, path + [n])
+        color[n] = BLACK
+
+    for sid in graph:
+        if color.get(sid) == WHITE:
+            visit(sid, [])
+    return errors
+
+
+def _manifest_hash(manifest: dict) -> str:
+    blob = json.dumps(manifest, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return "sha256:" + hashlib.sha256(blob).hexdigest()
+
+
 def collect(roots: dict[str, Path] | Path, manifest: dict) -> dict:
-    # 単一 Path も許容 (default ルートとして扱う)。
     if isinstance(roots, Path):
         roots = {"default": roots}
 
@@ -108,9 +269,13 @@ def collect(roots: dict[str, Path] | Path, manifest: dict) -> dict:
     for stage in manifest.get("stages", []):
         results = [run_probe(resolve(pr), pr) for pr in stage.get("probes", [])]
         stages_out[stage["id"]] = {"probes": results}
+
     return {
-        "collected_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "generated_at_jst": datetime.now(_JST).strftime("%Y-%m-%dT%H:%M:%S%z"),
         "collected_epoch": int(time.time()),
+        "probe_version": PROBE_VERSION,
+        "manifest_hash": _manifest_hash(manifest),
+        "manifest_errors": validate_manifest(manifest),
         "roots": {k: str(v) for k, v in roots.items()},
         "manifest_version": manifest.get("version"),
         "stages": stages_out,
@@ -145,6 +310,15 @@ def main(argv: list[str] | None = None) -> int:
         ap.error("--root を最低 1 つ指定 (例: --root /path または --root alo=/path)")
     roots = parse_roots(args.root)
     manifest = load_manifest(Path(args.manifest))
+
+    # GPT 指摘#4: probe 前に manifest を検証し、壊れていれば走らせない。
+    errors = validate_manifest(manifest)
+    if errors:
+        for e in errors:
+            print(f"  ❌ manifest: {e}", file=__import__("sys").stderr)
+        print("manifest validation FAILED", file=__import__("sys").stderr)
+        return 1
+
     snap = collect(roots, manifest)
     Path(args.out).write_text(json.dumps(snap, ensure_ascii=False, indent=1),
                               encoding="utf-8")

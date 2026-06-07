@@ -15,7 +15,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from pipeline_dashboard import derive, render_html, render_markdown  # noqa: E402
-from pipeline_probe import collect, parse_roots, run_probe  # noqa: E402
+from pipeline_probe import (  # noqa: E402
+    collect, parse_roots, run_probe, validate_manifest,
+)
 
 _PASS = 0
 _FAIL = 0
@@ -106,12 +108,76 @@ def test_status_derivation(tmp: Path) -> None:
     check("<!doctype html>" in html and "E" in html, "html 生成")
 
 
+def test_roundtrip_frontmatter(tmp: Path) -> None:
+    # v0.2: front-matter request_id / result_expected_filename を優先突合。
+    sent = tmp / "to_gpt"; ret = tmp / "from_gpt"
+    sent.mkdir(); ret.mkdir()
+    # REQUEST: stem を消しても RESULT 名と一致しない (別名)。front-matter で繋ぐ。
+    (sent / "20260606_codexprogress_v0.1_DDPROGRESS_REQUEST.md").write_text(
+        "---\nrequest_id: 20260606_codexprogress_v0.1_DDPROGRESS\n"
+        "result_expected_filename: weird_named_result.md\n---\n本文", encoding="utf-8")
+    (ret / "weird_named_result.md").write_text("結果", encoding="utf-8")  # 別名でも expected で一致
+    # 版違いは別キー (誤対応しない): v0.2 REQUEST は戻り無し → pending。
+    (sent / "20260606_codexprogress_v0.2_DDPROGRESS_REQUEST.md").write_text(
+        "---\nrequest_id: 20260606_codexprogress_v0.2_DDPROGRESS\n---\n本文", encoding="utf-8")
+    # orphan: どの送信にも対応しない戻り。
+    (ret / "20260601_ghost_RESULT.md").write_text("---\nrequest_id: 20260601_ghost\n---\n",
+                                                  encoding="utf-8")
+
+    r = run_probe(tmp, {"type": "roundtrip", "sent": "to_gpt/*.md", "returned": "from_gpt/*.md"})
+    check(r["sent"] == 2, "送信 2 (v0.1, v0.2)")
+    check(r["pending_count"] == 1, "v0.2 のみ未戻り (別名 RESULT は expected で一致)")
+    check(r["pending"][0]["key"] == "20260606_codexprogress_v0.2_DDPROGRESS", "pending=v0.2")
+    check(r["pending"][0]["age_basis"].startswith("request_id_date"), "age 基準=request_id日付")
+    check(r["orphan_count"] == 1 and r["orphan"] == ["20260601_ghost_RESULT.md"], "孤児戻り検出")
+
+
+def test_manifest_validation() -> None:
+    bad = {
+        "roots": {"a": "x"},
+        "stages": [
+            {"id": "S1", "depends_on": ["NOPE"], "probes": [{"type": "exists", "root": "a", "path": "p"}]},
+            {"id": "S1", "probes": [{"type": "weird", "path": "p"}]},   # dup id + invalid type
+            {"id": "S2", "depends_on": ["S3"], "probes": [{"type": "exists", "root": "zzz", "path": "p"}]},
+            {"id": "S3", "depends_on": ["S2"], "probes": []},            # S2<->S3 cycle
+        ],
+    }
+    errs = validate_manifest(bad)
+    joined = " | ".join(errs)
+    check(any("duplicate stage id: S1" in e for e in errs), "重複 id 検出")
+    check(any("unknown dependency: S1 -> NOPE" in e for e in errs), "未知依存 検出")
+    check("invalid probe type" in joined and "weird" in joined, "不正 probe type 検出")
+    check("unknown root" in joined and "zzz" in joined, "未知 root 検出")
+    check(any(e.startswith("cycle:") for e in errs), "循環依存 検出")
+
+
+def test_orphan_probe(tmp: Path) -> None:
+    h = tmp / "handoff"; h.mkdir()
+    (h / "report.md").write_text("x", encoding="utf-8")
+    (h / "stray.md").write_text("x", encoding="utf-8")  # 未宣言
+    r = run_probe(tmp, {"type": "orphan", "scan": "handoff/*.md",
+                        "declared": ["handoff/report.md"]})
+    check(r["orphan_count"] == 1 and r["orphan"] == ["stray.md"], "未宣言成果物のみ orphan")
+    check(not r["done"], "orphan あり→未完")
+
+
+def test_snapshot_metadata(tmp: Path) -> None:
+    manifest = {"roots": {"r": "x"}, "tracks": {},
+                "stages": [{"id": "A", "track": "t", "probes": [{"type": "exists", "root": "r", "path": "p"}]}]}
+    snap = collect({"r": tmp}, manifest)
+    check(snap["probe_version"] == "0.2", "probe_version")
+    check(snap["manifest_hash"].startswith("sha256:"), "manifest_hash")
+    check("+0900" in snap["generated_at_jst"], "JST タイムスタンプ")
+    check(snap["manifest_errors"] == [], "正常 manifest はエラー無し")
+
+
 def test_real_manifest_smoke() -> None:
     # 同梱 manifest が parse でき、空 root でも例外なく描画できる。
     import tempfile
 
     manifest = json.loads((Path(__file__).resolve().parents[1]
                            / "pipeline" / "pipeline.json").read_text(encoding="utf-8"))
+    check(validate_manifest(manifest) == [], "同梱 manifest は検証エラー無し")
     with tempfile.TemporaryDirectory() as td:
         roots = parse_roots([f"bookdx={td}", f"alo={td}", f"repo={td}"])
         snap = collect(roots, manifest)
@@ -128,11 +194,13 @@ def test_real_manifest_smoke() -> None:
 def main() -> int:
     import tempfile
 
-    for t in [test_probes, test_roundtrip, test_status_derivation]:
+    fs_tests = [test_probes, test_roundtrip, test_status_derivation,
+                test_roundtrip_frontmatter, test_orphan_probe, test_snapshot_metadata]
+    for t in fs_tests:
         print(f"• {t.__name__}")
         with tempfile.TemporaryDirectory() as td:
             t(Path(td))
-    for t in [test_real_manifest_smoke]:
+    for t in [test_manifest_validation, test_real_manifest_smoke]:
         print(f"• {t.__name__}")
         t()
     print(f"\n{_PASS} passed, {_FAIL} failed")

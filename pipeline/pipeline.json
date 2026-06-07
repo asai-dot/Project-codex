@@ -9,7 +9,8 @@
   },
   "tracks": {
     "static": "静的DB (蔵書 canonical / BookDX)",
-    "dynamic": "動的DB (ALOナレッジ / matter / Gmail / lawtime)"
+    "dynamic": "動的DB (ALOナレッジ / matter / Gmail / lawtime)",
+    "ops": "運用・ドリフト検知"
   },
   "stages": [
     {
@@ -109,6 +110,15 @@
       "track": "dynamic", "owner": "mac", "depends_on": [],
       "probes": [{"type": "exists", "root": "alo", "path": "cc_work_logs/*matter-id-resolution*complete*.md", "label": "完了ログ"}],
       "note": "rounds 1-3 など。probe は実ログ名に合わせて更新。"
+    },
+    {
+      "id": "manifest_drift_handoff",
+      "title": "handoff ドリフト検知 (未宣言成果物)",
+      "track": "ops", "owner": "web", "depends_on": [],
+      "probes": [{"type": "orphan", "root": "repo", "scan": "handoff/**/*.md",
+        "declared": ["handoff/legallib_dryrun_*/report.md", "handoff/*/*RESULT*.md"],
+        "label": "handoff"}],
+      "note": "manifest が拾っていない handoff 成果物を炙り出す (v0.2 orphan probe)。declared は実体に合わせて更新。"
     }
   ]
 }
