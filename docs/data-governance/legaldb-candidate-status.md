@@ -65,8 +65,11 @@ GPT が挙げた v0.5.1 / v0.6 必須パッチを反映し、owner ratify を得
 
 ### v0.5.1 監査で追加された必須パッチ（current_design_gate_result 由来）
 
-8. **DD-LAWTIME v0.2.1 accepted の証跡提示**（Box ID・owner ratify・GPT result 先頭行）。
-   提示できなければ F4 を「未閉/BLOCKED」として本文修正。
+8. **DD-LAWTIME の accept**（F4 の本丸）。**事実確認の結果、v0.5.1 が前提とした「v0.2.1 accepted」は存在しなかった**
+   （accepted レーン上の結果は v0.1 = `DDLAWTIME_MODIFY_REQUIRED` のみ）。
+   - 対応: v0.1 監査の必須修正7点を反映した **DD-LAWTIME-001 v0.2 を起票し、監査レーンへ投函済み**
+     （2026-06-07, `to_gpt/20260607_lawtime_v0.2_DDLAWTIME_REQUEST.md`, gate=DDLAWTIME, AUDIT-LAWTIME-002）。
+   - 残: GPT result `DDLAWTIME_PASS(_WITH_NOTES)` ＋ owner ratify を得るまで F4 は **未閉/BLOCKED** のまま。
 9. **anchor 責務分界の DDL 明文化**: opaque ULID `anchor_id`(不変主キў) と
    `stable_locator_key`(表示/互換 locator) の責務を分け、新規 mint 経路を一本化、merge/split が
    既存 `UNIQUE(source_object_uri, anchor_type, stable_locator_key)` と衝突しない DDL を示す。
