@@ -1,6 +1,7 @@
 ### DD-TOCLEGALREF-001 v0.2: 蔵書目次(bib_toc)由来の条文・判例参照を link layer(alo_edges) に **candidate signal** として供給する
 
-> **id**: `DD-TOCLEGALREF-001` / **version**: v0.2 / **status**: candidate
+> **id**: `DD-TOCLEGALREF-001` / **version**: v0.2 / **status**: **ratified (design)**
+> **ratified_by**: 浅井 (owner) / **ratified_at**: 2026-06-07 / **gate**: DDTOCLEGALREF_PASS_WITH_NOTES
 > **supersedes_review**: v0.1 (gate DDTOCLEGALREF → `DDTOCLEGALREF_MODIFY_REQUIRED`, 2026-06-07)
 > **recorded_at**: 2026-06-07 / **owner**: 浅井 / **author**: Project-codex Fork 4 (claude-code remote)
 > v0.1 の方向性（新スキーマを作らず alo_edges に供給）は GPT お目付け役に**支持**された。

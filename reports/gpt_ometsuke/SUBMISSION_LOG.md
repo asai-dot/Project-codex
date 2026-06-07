@@ -9,7 +9,8 @@
 - 判定: `PASS_WITH_NOTES` / accepted_now=yes(design) / owner_ratify=yes_with_notes / **ratify前必須修正なし**。
 - required_patches 1–9 全 CLOSED。production-promotion note 5点のうち #1(display_relation)/#4(dedup=extraction_policy_id)/#5(gate2本) をコード反映、#2/#3 を DD §5.5 に明記。
 - producer 自己検査 **12 gate 全 PASS**（実データ 600 ノード, interprets 49=initial43/quarantine6, case 25）。
-- 次: 浅井さん owner ratify（DD §5.5 メモ）。production promotion は別タスク（medium閾値/source_priority/DD-LAWTIME resolver/canonical URI 解決レーン）。
+- **owner ratify 確定（2026-06-07, 浅井）**: DD-TOCLEGALREF-001 v0.2 = **ratified (design)**。TOC由来リンクは candidate `toc_signal`・claim_support 不適格、判例は canonical case URI 解決まで edge化しない、を design として確定。
+- production promotion は別タスク（medium閾値/source_priority確定値/DD-LAWTIME resolver gate/canonical work・case URI 解決レーン）。DB書込みは promotion 実装後。
 
 - v0.2 は v0.1 の required_patches 1–9 + proposed gates を反映（`reports/DD-TOCLEGALREF_draft_v0.2.md`）。
 - producer 10 gate 全 PASS（実データ 600 ノード, interprets 49 = initial 43 / quarantine 6, case candidate 25）。
