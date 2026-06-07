@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from pipeline_dashboard import derive, render_html, render_markdown  # noqa: E402
 from pipeline_probe import (  # noqa: E402
-    collect, parse_roots, run_probe, validate_manifest,
+    ManifestError, collect, parse_roots, run_probe, validate_manifest,
 )
 
 _PASS = 0
@@ -165,7 +165,7 @@ def test_snapshot_metadata(tmp: Path) -> None:
     manifest = {"roots": {"r": "x"}, "tracks": {},
                 "stages": [{"id": "A", "track": "t", "probes": [{"type": "exists", "root": "r", "path": "p"}]}]}
     snap = collect({"r": tmp}, manifest)
-    check(snap["probe_version"] == "0.2", "probe_version")
+    check(snap["probe_version"] == "0.2.1", "probe_version")
     check(snap["manifest_hash"].startswith("sha256:"), "manifest_hash")
     check("+0900" in snap["generated_at_jst"], "JST タイムスタンプ")
     check(snap["manifest_errors"] == [], "正常 manifest はエラー無し")
@@ -191,11 +191,127 @@ def test_real_manifest_smoke() -> None:
         check(manifest["title"] in md, "実 manifest 描画 OK")
 
 
+def test_roundtrip_duplicate_request_id(tmp: Path) -> None:
+    # N2: 同一 request_id の重複送信を silent dedupe せず surface する。
+    sent = tmp / "to_gpt"; ret = tmp / "from_gpt"
+    sent.mkdir(); ret.mkdir()
+    (sent / "20260607_dup_a_REQUEST.md").write_text(
+        "---\nrequest_id: 20260607_dup\n---\n", encoding="utf-8")
+    (sent / "20260607_dup_b_REQUEST.md").write_text(
+        "---\nrequest_id: 20260607_dup\n---\n", encoding="utf-8")  # 同一 rid (重複投函)
+    (sent / "20260607_solo_REQUEST.md").write_text(
+        "---\nrequest_id: 20260607_solo\n---\n", encoding="utf-8")
+
+    r = run_probe(tmp, {"type": "roundtrip", "sent": "to_gpt/*.md",
+                        "returned": "from_gpt/*.md"})
+    check(r["sent"] == 2, "distinct rid は 2 (dup は 1 件に集約)")
+    check(r["duplicate_count"] == 1, "重複 rid を 1 件検出")
+    check(r["duplicate"][0]["key"] == "20260607_dup", "重複キー")
+    check(r["duplicate"][0]["files"] == ["20260607_dup_a_REQUEST.md",
+                                         "20260607_dup_b_REQUEST.md"],
+          "衝突した送信ファイル 2 件を列挙 (捨てない)")
+    check(r["pending_count"] == 2, "未戻りは distinct rid ぶん (dup と solo)")
+
+    # dashboard が重複を明示する (silent でない)。
+    manifest = {"tracks": {"t": "T"}, "stages": [
+        {"id": "R", "title": "R", "track": "t",
+         "probes": [{"type": "roundtrip", "sent": "to_gpt/*.md",
+                     "returned": "from_gpt/*.md"}]}]}
+    snap = collect(tmp, manifest)
+    rows = derive(manifest, snap)
+    md = render_markdown(manifest, rows, snap)
+    check("重複 request_id" in md and "20260607_dup" in md, "markdown に重複明細")
+    check("重1" in md, "サマリに 重1 表示")
+
+
+def test_collect_refuses_invalid_manifest(tmp: Path) -> None:
+    # N1: collect() 自体が不正 manifest を既定で拒否 (両経路の単一ソース)。
+    bad = {"roots": {"a": "x"}, "stages": [
+        {"id": "S1", "depends_on": ["NOPE"],
+         "probes": [{"type": "exists", "root": "a", "path": "p"}]},
+        {"id": "S1", "probes": []},  # duplicate id
+    ]}
+    raised = False
+    try:
+        collect({"a": tmp}, bad)
+    except ManifestError as e:
+        raised = True
+        check(any("unknown dependency" in err for err in e.errors)
+              and any("duplicate stage id" in err for err in e.errors),
+              "ManifestError.errors に検証指摘を保持")
+    check(raised, "不正 manifest で collect は既定で拒否 (ManifestError)")
+
+    # refuse_on_invalid=False では収集し manifest_errors に記録 (degraded 観測)。
+    snap = collect({"a": tmp}, bad, refuse_on_invalid=False)
+    check(snap["manifest_errors"], "force 時はエラーを記録しつつ収集")
+
+    # 正常 manifest は当然通る。
+    ok = {"roots": {"a": "x"}, "stages": [
+        {"id": "A", "probes": [{"type": "exists", "root": "a", "path": "p"}]}]}
+    check(collect({"a": tmp}, ok)["manifest_errors"] == [], "正常 manifest は素通り")
+
+
+def test_probe_main_refuses_invalid(tmp: Path) -> None:
+    # N1: pipeline_probe.py main() の一括収集経路。
+    import contextlib
+    import io
+
+    from pipeline_probe import main as probe_main
+
+    mpath = tmp / "bad.json"
+    mpath.write_text(json.dumps({"stages": [
+        {"id": "A", "probes": []}, {"id": "A", "probes": []}]}), encoding="utf-8")
+    out = tmp / "snap.json"
+    err = io.StringIO()
+    with contextlib.redirect_stderr(err):
+        rc = probe_main(["--manifest", str(mpath), "--root", str(tmp),
+                         "--out", str(out)])
+    check(rc == 1, "probe main も不正 manifest で exit 1")
+    check("duplicate stage id" in err.getvalue(), "stderr に検証エラー")
+    check(not out.exists(), "拒否時は snapshot を書かない")
+
+
+def test_dashboard_root_path_refuses_invalid(tmp: Path) -> None:
+    # N1 本丸: dashboard --root の収集+描画一発実行も検証拒否が効く。
+    import contextlib
+    import io
+
+    from pipeline_dashboard import main as dash_main
+
+    mpath = tmp / "bad.json"
+    mpath.write_text(json.dumps({"stages": [
+        {"id": "A", "depends_on": ["B"], "probes": []},
+        {"id": "A", "probes": []}]}), encoding="utf-8")  # dup id + unknown dep
+    out_md = tmp / "o.md"
+    err = io.StringIO()
+    with contextlib.redirect_stderr(err):
+        rc = dash_main(["--manifest", str(mpath), "--root", str(tmp),
+                        "--out-md", str(out_md)])
+    check(rc == 1, "dashboard --root も不正 manifest で exit 1 (N1)")
+    check("manifest validation FAILED" in err.getvalue(), "stderr に検証失敗")
+    check(not out_md.exists(), "拒否時は出力を書かない")
+
+    # --snapshot 経路 (収集しない) は従来どおりバナー表示で描画は通す。
+    snap = collect(tmp, {"roots": {}, "tracks": {}, "stages": [
+        {"id": "A", "track": "t", "probes": []}]}, refuse_on_invalid=False)
+    snap["manifest_errors"] = ["duplicate stage id: A"]  # 外部 snapshot を模す
+    spath = tmp / "snap.json"
+    spath.write_text(json.dumps(snap, ensure_ascii=False), encoding="utf-8")
+    mpath.write_text(json.dumps({"tracks": {"t": "T"}, "stages": [
+        {"id": "A", "title": "A", "track": "t", "probes": []}]}), encoding="utf-8")
+    out_md2 = tmp / "o2.md"
+    rc2 = dash_main(["--manifest", str(mpath), "--snapshot", str(spath),
+                     "--out-md", str(out_md2)])
+    check(rc2 == 0 and out_md2.exists(), "--snapshot 経路は収集しないので描画は通る")
+
+
 def main() -> int:
     import tempfile
 
     fs_tests = [test_probes, test_roundtrip, test_status_derivation,
-                test_roundtrip_frontmatter, test_orphan_probe, test_snapshot_metadata]
+                test_roundtrip_frontmatter, test_orphan_probe, test_snapshot_metadata,
+                test_roundtrip_duplicate_request_id, test_collect_refuses_invalid_manifest,
+                test_probe_main_refuses_invalid, test_dashboard_root_path_refuses_invalid]
     for t in fs_tests:
         print(f"• {t.__name__}")
         with tempfile.TemporaryDirectory() as td:

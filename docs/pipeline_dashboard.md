@@ -49,6 +49,12 @@ python scripts/pipeline_dashboard.py --manifest pipeline/pipeline.json \
 
 snapshot は純データなので、**日次でコミットして差分を見れば進捗の動き**も追える。
 
+> **manifest 検証は両経路で効く（v0.2.1 / N1）**: 上の「収集」も「収集+描画を一発で」も
+> 内部で `collect()` を通る。`collect()` 自体が不正 manifest（重複 id / 未知依存 / 循環 /
+> 未知 root / 不正 probe type）を**既定で拒否**（`ManifestError` → exit 1, 出力は書かない）
+> ので、どちらの入口でも壊れた地図のまま走らない。既存 snapshot を渡す `--snapshot` 経路は
+> 収集しないため、`manifest_errors` をバナー表示するだけ（描画は参考値）。
+
 ## マニフェストの育て方
 
 `pipeline/pipeline.json` が「地図」。stage を足す・`expected` や `path` を実環境に
@@ -80,3 +86,18 @@ GPT Pro DD レビュー（`from_gpt/20260606_codexprogress_v0.1_DDPROGRESS_RESUL
 4. **orphan probe**: 未宣言成果物（manifest が拾っていない handoff 等）を炙り出す。
 5. **exists-only の % 廃止**: 連続 % ではなく `有/無/一部` を表示（誤誘導回避）。
 6. **snapshot メタ**: `generated_at_jst` / `manifest_hash` / `probe_version` を付与。
+
+## v0.2.1（v0.2 差分再監査 N1/N2 クローズ）
+
+GPT Pro の v0.2 差分再監査は **`DDPROGRESS_PASS_WITH_NOTES`**（F1/F2/F3/F5/F6 = CLOSED、
+F4 = PARTIAL）。F4 の穴2点を v0.2.1 で閉じた:
+
+- **N1（検証ゲートの分岐漏れ）**: v0.2 では `pipeline_probe.py main()` だけが probe 前に
+  `validate_manifest()`→拒否していたが、`pipeline_dashboard.py --root` の**収集+描画一発実行は
+  `collect()` を直接呼ぶため検証拒否が効かなかった**。doc が「収集+描画を一発で」と案内している
+  以上これは実害。修正は **`collect()` 自体を manifest 不正時に拒否（`refuse_on_invalid=True`
+  既定 → `ManifestError`）** にして、両経路を**単一ソース**で塞いだ。`main()` 側の重複検証は撤去。
+  観測目的で壊れた manifest でも走らせたい場合のみ `collect(..., refuse_on_invalid=False)`。
+- **N2（重複 request_id の silent dedupe）**: roundtrip で同一 `request_id` の重複送信を
+  黙って捨てていた。`duplicate` / `duplicate_count` として surface し、dashboard は
+  サマリに `重{n}`、明細に「⚠ 重複 request_id」セクションを出す（件数自体は distinct のまま）。
