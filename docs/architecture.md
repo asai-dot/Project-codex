@@ -77,6 +77,13 @@ OUT=~/Box/.../app/data/toc_search_index_v2.json python3 scripts/build_toc_search
    BOOKS_JSON=~/Box/.../app/data/books.json OUT=data/book_links.json python3 scripts/generate_book_links.py --dry-run
    ```
    フィールド揺れ（canonical v1 / legacy）は候補パス総当りで吸収。実データに合わせ `CANDIDATES` を調整。
+   **スケール実証済み**（合成データ・`npm run scale`）: 5,206冊／173k+ノードで 索引構築 約3秒・26MB、
+   server ロード 0.8秒（全ノードの正規化前計算込み）、全件走査の最遅クエリ 84ms／RSS 326MB。
+   server はデータパスを環境変数で差せる（コピー不要で Box 生成索引を直接配信）:
+   ```bash
+   INDEX_PATH=~/Box/.../toc_search_index_v2.json BOOK_LINKS_PATH=data/book_links.json \
+   TOC_DIR=~/Box/.../app/data/toc PDF_BASE=~/Box/.../し＿自炊書籍データ npm start
+   ```
 3. **③ 埋め込み + RAG**: `schema/supabase_schema.sql` を alo-connect か asai-dot's Project に適用し、
    `toc_nodes` を投入 → `embedding`（pgvector）→「事務所ライブラリに聞く」アシスタント。回答は必ず
    引用ハンドル（書名・章節・ページ・各図書館deeplink）付きで返す。

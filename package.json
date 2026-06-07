@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "test": "node tests/deeplink.test.js && node tests/search.test.js",
+    "scale": "node tests/scale_test.js",
     "build-index": "python3 scripts/build_toc_search_index.py"
   },
   "engines": { "node": ">=16" },

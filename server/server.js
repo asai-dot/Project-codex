@@ -27,10 +27,13 @@ const Search = require('../src/search.js');
 
 const PORT = parseInt(process.env.PORT || '3100', 10);
 const REPO = path.resolve(__dirname, '..');
-const DATA_DIR = path.join(REPO, 'data');
-const CONFIG_DIR = path.join(REPO, 'config');
+// データの所在は環境変数で上書き可（本番は Box 生成のインデックスを直接指せる）。
+const DATA_DIR = process.env.DATA_DIR || path.join(REPO, 'data');
+const CONFIG_DIR = process.env.CONFIG_DIR || path.join(REPO, 'config');
 const PUBLIC_DIR = path.join(REPO, 'public');
-const TOC_DIR = path.join(DATA_DIR, 'toc');
+const TOC_DIR = process.env.TOC_DIR || path.join(DATA_DIR, 'toc');
+const INDEX_PATH = process.env.INDEX_PATH || path.join(DATA_DIR, 'toc_search_index.json');
+const BOOK_LINKS_PATH = process.env.BOOK_LINKS_PATH || path.join(DATA_DIR, 'book_links.json');
 // 自炊PDFの原本ベース（本番は Box『し＿自炊書籍データ』。未設定ならPDF配信は無効）
 const PDF_BASE = process.env.PDF_BASE || '';
 
@@ -40,8 +43,8 @@ function readJson(p, fallback) {
 
 // --- 起動時ロード ---
 let SOURCES = (readJson(path.join(CONFIG_DIR, 'library_sources.json'), { sources: [] }).sources) || [];
-let INDEX = readJson(path.join(DATA_DIR, 'toc_search_index.json'), { books: {} });
-let BOOK_LINKS = (readJson(path.join(DATA_DIR, 'book_links.json'), { links: {} }).links) || {};
+let INDEX = readJson(INDEX_PATH, { books: {} });
+let BOOK_LINKS = (readJson(BOOK_LINKS_PATH, { links: {} }).links) || {};
 let BOOKS = (function () {
   const raw = readJson(path.join(DATA_DIR, 'books.json'), { books: [] });
   const list = raw.books || raw;
@@ -54,7 +57,7 @@ let BOOKS = (function () {
 })();
 
 function reloadBookLinks() {
-  BOOK_LINKS = (readJson(path.join(DATA_DIR, 'book_links.json'), { links: {} }).links) || {};
+  BOOK_LINKS = (readJson(BOOK_LINKS_PATH, { links: {} }).links) || {};
 }
 
 // 起動時に全ノードへ正規化キーを前計算（124k+ノードでも検索ごとの再正規化を避ける）。
@@ -215,7 +218,7 @@ const server = http.createServer((req, res) => {
       const { book_id, source_id, print_page, viewer_page, book_key, folder, file, location } = payload;
       if (!book_id || !source_id) return sendJson(res, { error: 'book_id and source_id required' }, 400);
       const offset = Deeplink.computeOffset(Number(print_page), Number(viewer_page));
-      const file_path = path.join(DATA_DIR, 'book_links.json');
+      const file_path = BOOK_LINKS_PATH;
       const doc = readJson(file_path, { links: {} });
       doc.links = doc.links || {};
       const entry = Object.assign({}, doc.links[book_id] && doc.links[book_id][source_id]);
