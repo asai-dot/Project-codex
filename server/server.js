@@ -23,6 +23,7 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const Deeplink = require('../src/deeplink.js');
+const Search = require('../src/search.js');
 
 const PORT = parseInt(process.env.PORT || '3100', 10);
 const REPO = path.resolve(__dirname, '..');
@@ -56,20 +57,37 @@ function reloadBookLinks() {
   BOOK_LINKS = (readJson(path.join(DATA_DIR, 'book_links.json'), { links: {} }).links) || {};
 }
 
+// 起動時に全ノードへ正規化キーを前計算（124k+ノードでも検索ごとの再正規化を避ける）。
+function precomputeIndex(index) {
+  let n = 0;
+  for (const book of Object.values((index && index.books) || {})) {
+    for (const node of book.nodes || []) {
+      node._n = Search.normalize(node.t);          // タイトル正規化（空白保持）
+      node._lk = Search.looseKey(node.t);          // タイトル空白無視
+      node._np = Search.normalize(node.path);      // 章節パス正規化
+      node._lpk = Search.looseKey(node.path);      // 章節パス空白無視
+      n++;
+    }
+  }
+  return n;
+}
+precomputeIndex(INDEX);
+
 // --- 検索 ---
-function scoreNode(node, q) {
-  const t = (node.t || '').toLowerCase();
-  const pathStr = (node.path || '').toLowerCase();
-  if (!t) return 0;
-  let s = 0;
-  if (t === q) s = 100;
-  else if (t.startsWith(q)) s = 80;
-  else if (t.includes(q)) s = 60;
-  else if (pathStr.includes(q)) s = 40;
-  else return 0;
+// 正規化済みクエリ(nq=空白保持 / lq=空白無視)でノードを採点。match は当たった箇所。
+function scoreNode(node, nq, lq) {
+  if (!node._n) return null;
+  let s, match;
+  if (node._n === nq) { s = 100; match = 'title'; }
+  else if (node._n.startsWith(nq)) { s = 80; match = 'title'; }
+  else if (node._n.includes(nq)) { s = 60; match = 'title'; }
+  else if (lq && node._lk.includes(lq)) { s = 50; match = 'title_loose'; }
+  else if (node._np.includes(nq)) { s = 40; match = 'path'; }
+  else if (lq && node._lpk.includes(lq)) { s = 30; match = 'path_loose'; }
+  else return null;
   if (node.p != null) s += 5;          // ページがある＝着地できる
   s += Math.max(0, 4 - (node.d || 1)); // 浅い見出しを微優先
-  return s;
+  return { s, match };
 }
 
 function landingLabel(book, node) {
@@ -79,14 +97,15 @@ function landingLabel(book, node) {
 }
 
 function search(q, limit) {
-  q = (q || '').toLowerCase().trim();
-  if (!q) return [];
+  const nq = Search.normalize((q || '').trim());
+  const lq = Search.looseKey((q || '').trim());
+  if (!nq) return [];
   const results = [];
   for (const [bookId, book] of Object.entries(INDEX.books || {})) {
     for (const node of book.nodes || []) {
-      const s = scoreNode(node, q);
-      if (s > 0) {
-        results.push({ book_id: bookId, title: book.title, isbn: book.isbn, score: s, node });
+      const hit = scoreNode(node, nq, lq);
+      if (hit) {
+        results.push({ book_id: bookId, title: book.title, isbn: book.isbn, score: hit.s, match: hit.match, node });
       }
     }
   }
@@ -96,6 +115,7 @@ function search(q, limit) {
     title: r.title,
     isbn: r.isbn,
     score: r.score,
+    match: r.match,
     node: { t: r.node.t, p: r.node.p, path: r.node.path, id: r.node.id, src: r.node.src, depth: r.node.d },
     landing: landingLabel({ title: r.title }, Object.assign({ book_id: r.book_id }, r.node)),
     links: Deeplink.resolveAll(SOURCES, BOOK_LINKS[r.book_id] || {}, r.node.p),

@@ -5,7 +5,7 @@
   "description": "事務所ライブラリ横断検索/RAG — 124k+ TOCノードを章節横断検索し、書名・章節・ページに着地。4図書館（自炊PDF/ベンコム/リーガルライブラリ/物理本）を1ビューワーから横断。",
   "scripts": {
     "start": "node server/server.js",
-    "test": "node tests/deeplink.test.js",
+    "test": "node tests/deeplink.test.js && node tests/search.test.js",
     "build-index": "python3 scripts/build_toc_search_index.py"
   },
   "engines": { "node": ">=16" },

@@ -66,6 +66,13 @@ async function doSearch() {
     const crumb = el('div', 'crumb');
     crumb.append(document.createTextNode(`${r.node.path || r.node.t}`));
     const src = el('span', 'src', r.node.src); crumb.appendChild(src);
+    // 一致箇所の明示: 章節タイトルに直接当たらず親パス経由で出たヒットを説明
+    if (r.match && r.match !== 'title') {
+      const label = r.match.indexOf('path') === 0 ? '章節パス一致' : 'ゆるい一致';
+      const tag = el('span', 'matchtag', label);
+      tag.title = r.match === 'title_loose' ? '空白などを無視して一致' : 'この見出しの上位パスに一致';
+      crumb.appendChild(tag);
+    }
     card.append(landing, crumb, renderLinks(r.links));
     body.appendChild(card);
   });
