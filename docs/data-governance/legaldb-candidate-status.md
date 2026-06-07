@@ -67,9 +67,13 @@ GPT が挙げた v0.5.1 / v0.6 必須パッチを反映し、owner ratify を得
 
 8. **DD-LAWTIME の accept**（F4 の本丸）。**事実確認の結果、v0.5.1 が前提とした「v0.2.1 accepted」は存在しなかった**
    （accepted レーン上の結果は v0.1 = `DDLAWTIME_MODIFY_REQUIRED` のみ）。
-   - 対応: v0.1 監査の必須修正7点を反映した **DD-LAWTIME-001 v0.2 を起票し、監査レーンへ投函済み**
-     （2026-06-07, `to_gpt/20260607_lawtime_v0.2_DDLAWTIME_REQUEST.md`, gate=DDLAWTIME, AUDIT-LAWTIME-002）。
-   - 残: GPT result `DDLAWTIME_PASS(_WITH_NOTES)` ＋ owner ratify を得るまで F4 は **未閉/BLOCKED** のまま。
+   - 対応: v0.1 監査の必須修正7点を反映した **DD-LAWTIME-001 v0.2 を起票・投函 → 再監査で
+     `DDLAWTIME_PASS_WITH_NOTES`（2026-06-07, `from_gpt/20260607_lawtime_v0.2_DDLAWTIME_RESULT.md`）**。
+     必須7点は設計上クローズ。**F4 の設計依存はクローズ扱い可**（owner ratify 候補）。
+   - 残（production DDL/backfill 前）: **owner(浅井) ratify** ＋ 実装前小修正 **N1–N4**
+     （N1: `fn_resolve_work_revision_at` に lineage 有効期間フィルタ／N2: merge/split の event 粒度／
+     N3: full_revision 等は confidence で抑え reviewed/confirmed のみ authoritative／N4: `temporal_caveat` の CHECK 値域）。
+   - したがって F4 は **設計クローズ・実装/ratify 待ち**。legaldb 昇格は引き続きブロック（v0.6 と ratify 完了まで）。
 9. **anchor 責務分界の DDL 明文化**: opaque ULID `anchor_id`(不変主キў) と
    `stable_locator_key`(表示/互換 locator) の責務を分け、新規 mint 経路を一本化、merge/split が
    既存 `UNIQUE(source_object_uri, anchor_type, stable_locator_key)` と衝突しない DDL を示す。
