@@ -1,0 +1,31 @@
+{
+  "nodes": 213,
+  "statute_edges": 139,
+  "edge_evidence": 139,
+  "pointers": 161,
+  "case_ref_candidates": 22,
+  "skipped_low_conf": 13,
+  "edge_type_breakdown": {
+    "interprets": 139
+  },
+  "rollout_breakdown": {
+    "initial": 33,
+    "quarantine_sample_required": 106
+  },
+  "gates": {
+    "gate_toc_edges_have_evidence_pointer": true,
+    "gate_toc_low_tier_not_exported": true,
+    "gate_toc_no_case_edge_without_canonical_case_uri": true,
+    "gate_toc_pub_year_not_used_as_exact_asof": true,
+    "gate_toc_no_temporal_resolution_before_lawtime_accept": true,
+    "gate_toc_src_uri_not_marked_canonical_until_resolved": true,
+    "gate_toc_edge_semantics_quarantined": true,
+    "gate_toc_assertion_mode_no_vendor_implicit": true,
+    "gate_toc_medium_quarantined": true,
+    "gate_toc_case_candidate_review_required": true,
+    "gate_claim_support_all_false_for_toc_signal": true,
+    "gate_dedup_no_duplicate_candidate": true
+  },
+  "all_gates_pass": true,
+  "schema_version": "DDTOCLEGALREF v0.2"
+}

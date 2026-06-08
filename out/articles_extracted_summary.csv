@@ -1,0 +1,5 @@
+journal_book_id,total_nodes,article_count,section_header_count,other_count,unknown_count,parse_rate
+305760,8,6,1,1,0,1.0000
+305761,10,8,1,1,0,1.0000
+305762,11,5,3,1,2,0.7143
+305763_nested,4,3,1,0,0,1.0000

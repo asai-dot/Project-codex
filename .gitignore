@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+# out/ (fixtures) と out_real/ (本番データ検証の curated 成果物) は追跡対象。
+# 大規模な本番フルスイープ出力のみ無視:
+/out_fullsweep/

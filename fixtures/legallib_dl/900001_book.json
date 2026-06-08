@@ -1,0 +1,9 @@
+{
+  "book_id": "900001",
+  "content_type": "book",
+  "title": "会社法コンメンタール（書籍・対象外）",
+  "toc": [
+    {"level": 1, "label": "第1章　総則", "print_page": 1},
+    {"level": 1, "label": "第2章　設立", "print_page": 30}
+  ]
+}

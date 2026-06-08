@@ -1,0 +1,33 @@
+# gpt_ometsuke 投函ログ — DD-TOCLEGALREF
+
+| 版 | request_id | gate | source_hash | Box REQUEST | Box 現物(docs/alo) | RESULT | 状態 |
+|---|---|---|---|---|---|---|---|
+| v0.1 | 20260606_toclegalref_v0.1_DDTOCLEGALREF | DDTOCLEGALREF | sha256:15f3025b… | file_id 2269713772194 → `processed/` 退避 | file_id 2269729051059 | **DDTOCLEGALREF_MODIFY_REQUIRED** (2026-06-07) | 監査済→v0.2へ |
+| v0.2 | 20260607_toclegalref_v0.2_DDTOCLEGALREF | DDTOCLEGALREF | sha256:d891b882… | file_id 2270226491058 → `processed` | file_id 2270223952678 | **DDTOCLEGALREF_PASS_WITH_NOTES** (file_id 2270358722334, 2026-06-07) | **accept(design)・owner ratify 可** |
+
+## v0.2 評定の取り込み（2026-06-07）
+- 判定: `PASS_WITH_NOTES` / accepted_now=yes(design) / owner_ratify=yes_with_notes / **ratify前必須修正なし**。
+- required_patches 1–9 全 CLOSED。production-promotion note 5点のうち #1(display_relation)/#4(dedup=extraction_policy_id)/#5(gate2本) をコード反映、#2/#3 を DD §5.5 に明記。
+- producer 自己検査 **12 gate 全 PASS**（実データ 600 ノード, interprets 49=initial43/quarantine6, case 25）。
+- **owner ratify 確定（2026-06-07, 浅井）**: DD-TOCLEGALREF-001 v0.2 = **ratified (design)**。TOC由来リンクは candidate `toc_signal`・claim_support 不適格、判例は canonical case URI 解決まで edge化しない、を design として確定。
+- production promotion は別タスク（medium閾値/source_priority確定値/DD-LAWTIME resolver gate/canonical work・case URI 解決レーン）。DB書込みは promotion 実装後。
+
+# gpt_ometsuke 投函ログ — DD-LINKBOOT（反復・文脈累積リンキング）
+
+| 版 | request_id | gate | source_hash | Box REQUEST | Box 現物(docs/alo) | RESULT | 状態 |
+|---|---|---|---|---|---|---|---|
+| v0.1 | 20260608_linkboot_v0.1_DDLINKBOOT | DDLINKBOOT | sha256:58295a49… | file_id 2271348102102 → processed | file_id 2271362783791 | **DDLINKBOOT_PASS_WITH_NOTES** (file_id 2271399507905, 2026-06-08) | **design accept・B prototype 可** |
+
+## v0.1 評定の取り込み（2026-06-08）
+- 判定: `PASS_WITH_NOTES` / accepted_now=yes(design) / prototype(B) 可 / production・claim_support=false / **ratify前に required_patches 7点を v0.1.1 か実装計画へ反映**。
+- 7パッチ要旨: anchor を seed_high/promoted_candidate/validated_promoted/invalidated に階層化／昇格物の次周prior減衰／subject_prior 式明記／promotion_evidence スキーマ明記／gold≥300 を book/law/cluster/FP型で層化／昇格後も initial+claim_support=false／明示 invalidate 手順。gate 10本提案。
+- **委譲（owner 指示 2026-06-08）**: v0.1.1 反映と B検証prototype は**別フォーク（worker, branch `claude/legal-library-metadata-impact-HBoXn`、拘束仕様 `docs/forks/DD-LINKBOOT-001_v0.1.1_and_B_plan.md`, WO `WO-linkboot-B-prototype-20260608_1500`）が担当**。本枝（journal-article-legal-linking-UaBnp）では重複作業せず、結果待ち。
+
+- owner 設計思想（固いものから確定→本・類似本の主題を文脈化→反復で高精度リンク派生）を機構化。DD-TOCLEGALREF v0.2 の medium 昇格条件の実装手段。
+- 実証根拠は `reports/PRECISION_VALIDATION_6000.md`（medium FP 7/10 が主題ミスマッチ本に集中、素朴書名一致は無効）。
+- RESULT は `from_gpt/20260608_linkboot_v0.1_DDLINKBOOT_RESULT.md`（先頭行 `DDLINKBOOT_<LABEL>`）で受領予定。DB書込みゼロ。
+
+- v0.2 は v0.1 の required_patches 1–9 + proposed gates を反映（`reports/DD-TOCLEGALREF_draft_v0.2.md`）。
+- producer 10 gate 全 PASS（実データ 600 ノード, interprets 49 = initial 43 / quarantine 6, case candidate 25）。
+- RESULT は Box `from_gpt/20260607_toclegalref_v0.2_DDTOCLEGALREF_RESULT.md`（先頭行 `DDTOCLEGALREF_<LABEL>`）で受領予定。
+- DB 書込みは依然ゼロ（accept + 法令/リンク層実装後）。
