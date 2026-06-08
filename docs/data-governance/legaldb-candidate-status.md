@@ -74,6 +74,10 @@ GPT が挙げた v0.5.1 / v0.6 必須パッチを反映し、owner ratify を得
      GPT は「未監査の自称 v0.2.1 を追認せず実監査ラインへ統合した判断は正しい」と是認。
      production DDL 前 notes P1–P5（article_path 明記／edge_id FK・gate／relation_type 正規化表／
      claim_support 導出 gate／merge・split event 整合 gate）は**設計受理を止めない**。
+   - **P1–P5 を反映した DD-LAWTIME v0.2.2（production-DDL パッチ）を投函**
+     （`to_gpt/20260607_lawtime_v0.2.2_DDLAWTIME_REQUEST.md`, 監査中）。実行可能 DDL で、ローカル
+     Postgres16 にて適用・two-tier CHECK・append-only トリガ・全ゲート（claim_support/unknown_asof/
+     no_current_law/event_consistency=0 件違反）・resolver(歴史版解決) を**実機検証済み**。
    - **重要（phantom-accept の摘発）**: v0.5.1 §3 の「DD-LAWTIME v0.2.1 は 2026-06-05 accepted」は
      **監査レーンに証跡が無い自己申告**だった（実在は v0.1=MODIFY と v0.2=PASS のみ）。v0.6 で撤回し、
      依存先を実在・監査済ラインへ確定。
