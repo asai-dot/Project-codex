@@ -82,6 +82,11 @@ def render_structure_md(manifest: dict, rows: list[dict]) -> list[str]:
             icon = _ICON[ru["status"]] if ru else "·"
             prog = f"{ru['done']}/{ru['total']} done" if ru else "—"
             out.append(f"| {icon} | {e.get('label', e.get('id', '?'))} | {prog} | {e.get('note', '')} |")
+            for s in e.get("subs", []):
+                sru = _rollup(rows_by_id, s.get("stages", []))
+                sicon = _ICON[sru["status"]] if sru else "·"
+                sprog = f"{sru['done']}/{sru['total']} done" if sru else "—"
+                out.append(f"| {sicon} | 　└ {s.get('label', s.get('id', '?'))} | {sprog} | {s.get('note', '')} |")
         out.append("")
     return out
 
@@ -92,25 +97,31 @@ def render_structure_html(manifest: dict, rows: list[dict]) -> str:
         return ""
     rows_by_id = {r["id"]: r for r in rows}
 
-    def chips(entries: list[dict]) -> str:
-        cs = []
+    def chip(e: dict, cls: str = "schip") -> str:
+        ru = _rollup(rows_by_id, e.get("stages", []))
+        c = _COLOR[ru["status"]] if ru else "#bdbdbd"
+        prog = f"{ru['done']}/{ru['total']}" if ru else "—"
+        note = (e.get("note", "") or "").replace('"', "'")
+        return (f'<span class="{cls}" title="{note}" style="border-left:4px solid {c}">'
+                f'{e.get("label", "?")} <b>{prog}</b></span>')
+
+    def block(entries: list[dict], with_subs: bool = False) -> str:
+        parts = []
         for e in entries:
-            ru = _rollup(rows_by_id, e.get("stages", []))
-            c = _COLOR[ru["status"]] if ru else "#bdbdbd"
-            prog = f"{ru['done']}/{ru['total']}" if ru else "—"
-            note = (e.get("note", "") or "").replace('"', "'")
-            cs.append(f'<span class="schip" title="{note}" style="border-left:4px solid {c}">'
-                      f'{e.get("label", "?")} <b>{prog}</b></span>')
-        return "".join(cs)
+            parts.append(chip(e))
+            if with_subs and e.get("subs"):
+                parts.append('<div class="subs">'
+                             + "".join(chip(s, "subchip") for s in e["subs"]) + '</div>')
+        return "".join(parts)
 
     return (
         '<div class="struct"><h2>🗺 全体構造（静的7 / 動的6 / 横断）</h2>'
         '<div class="sgrp"><div class="sttl">静的DB（7オブジェクト）</div>'
-        + chips(structure.get("static_objects", [])) + '</div>'
+        + block(structure.get("static_objects", []), with_subs=True) + '</div>'
         '<div class="sgrp"><div class="sttl">動的DB（6ソース系統）</div>'
-        + chips(structure.get("dynamic_sources", [])) + '</div>'
+        + block(structure.get("dynamic_sources", [])) + '</div>'
         '<div class="sgrp"><div class="sttl">横断層</div>'
-        + chips(structure.get("crosscutting", [])) + '</div></div>'
+        + block(structure.get("crosscutting", [])) + '</div></div>'
     )
 
 
@@ -363,7 +374,10 @@ def render_html(manifest: dict, rows: list[dict], snapshot: dict) -> str:
         "box-shadow:0 1px 3px rgba(0,0,0,.1)}.struct h2{margin:.2em 0 .4em;font-size:1.05em}"
         ".sgrp{margin:6px 0}.sttl{color:#666;font-size:.8em;margin-bottom:4px}"
         ".schip{display:inline-block;background:#fafafa;border:1px solid #eee;border-radius:4px;"
-        "padding:3px 8px;margin:3px 4px 3px 0;font-size:.85em}.schip b{color:#333}</style>"
+        "padding:3px 8px;margin:3px 4px 3px 0;font-size:.85em}.schip b{color:#333}"
+        ".subs{margin:1px 0 5px 20px}.subchip{display:inline-block;background:#fff;"
+        "border:1px solid #f0f0f0;border-radius:4px;padding:2px 7px;margin:2px 4px 2px 0;"
+        "font-size:.78em;color:#666}.subchip b{color:#444}</style>"
         f"<h1>{manifest.get('title','pipeline')}</h1>"
         f"<p>収集: {snapshot.get('generated_at_jst', snapshot.get('collected_at','?'))} / "
         f"probe v{snapshot.get('probe_version','?')} / roots: {_roots_str(snapshot)}</p>"

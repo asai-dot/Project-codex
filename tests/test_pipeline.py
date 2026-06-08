@@ -314,7 +314,10 @@ def test_structure_section(tmp: Path) -> None:
         "tracks": {"t": "T"},
         "structure": {
             "static_objects": [
-                {"id": "book", "label": "③ 文献", "stages": ["A", "B"]},
+                {"id": "book", "label": "③ 文献", "stages": ["A", "B"], "subs": [
+                    {"id": "meta", "label": "書誌メタ", "stages": ["A"]},
+                    {"id": "author", "label": "著者", "stages": [], "note": "外部WS#8"},
+                ]},
                 {"id": "law", "label": "① 法令", "stages": [], "note": "外部WS#8"},
             ],
             "dynamic_sources": [{"id": "sf", "label": "Ⓑ SF系", "stages": ["A"]}],
@@ -337,8 +340,11 @@ def test_structure_section(tmp: Path) -> None:
     check("🗺 全体構造" in md, "構造セクション見出し")
     check("③ 文献" in md and "1/2 done" in md, "文献 roll-up 表示")
     check("① 法令" in md and "外部WS#8" in md, "外部WS は — + メモ")
+    check("└ 書誌メタ" in md and "1/1 done" in md, "サブ 書誌メタ を割って roll-up")
+    check("└ 著者" in md, "サブ 著者 (stages無し→—)")
     html = render_html(manifest, rows, snap)
     check("schip" in html and "③ 文献" in html, "html 構造チップ描画")
+    check("subchip" in html and "書誌メタ" in html, "html サブチップ描画")
 
     # structure 無し manifest では構造セクションを出さない (後方互換)。
     bare = {"tracks": {"t": "T"}, "stages": manifest["stages"]}

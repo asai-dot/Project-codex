@@ -17,7 +17,12 @@
     "static_objects": [
       {"id": "law", "label": "① 法令", "stages": [], "note": "外部WS: 法令リンク#8 / 学陽e-Gov#2 / KG#11"},
       {"id": "case", "label": "② 判例", "stages": [], "note": "外部WS: KG#11 / 判例リンク#8 (引用グラフ)"},
-      {"id": "book", "label": "③ 文献", "stages": ["toc_baseline", "ndl_canonical", "legallib_fetch", "resolver", "legallib_join_dryrun", "legallib_review", "legallib_apply", "hastoc_reconcile", "toc_search_index", "defer_new"], "note": "書誌メタ・著者・詳細目次(TOC)・横断検索を内包"},
+      {"id": "book", "label": "③ 文献", "stages": ["toc_baseline", "ndl_canonical", "legallib_fetch", "resolver", "legallib_join_dryrun", "legallib_review", "legallib_apply", "hastoc_reconcile", "toc_search_index", "defer_new"], "note": "書誌メタ・著者・詳細目次(TOC)・横断検索を内包",
+        "subs": [
+          {"id": "book_meta", "label": "書誌メタ", "stages": ["ndl_canonical", "legallib_fetch", "resolver", "defer_new"], "note": "書誌レコード・NDL正本照合・ISBN突合・未収録退避"},
+          {"id": "book_toc", "label": "詳細目次(TOC)", "stages": ["toc_baseline", "legallib_join_dryrun", "legallib_review", "legallib_apply", "hastoc_reconcile", "toc_search_index"], "note": "TOC基盤・詳細TOC接合・hasToc整合・横断検索索引"},
+          {"id": "book_author", "label": "著者", "stages": [], "note": "外部WS: 著者正規化#8 (authority.person 名寄せ)"}
+        ]},
       {"id": "journal", "label": "④ 雑誌", "stages": ["legallib_article_parser"], "note": "論文entity・著者 (論文抽出#8)"},
       {"id": "vocab", "label": "⑤ 語彙", "stages": [], "note": "外部WS: 三点測量#2 / JLT着地#1"},
       {"id": "procedure", "label": "⑥ 手続", "stages": [], "note": "統合軸(横串): ①③⑦②を束ねる・未起票"},
