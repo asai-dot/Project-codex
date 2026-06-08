@@ -26,3 +26,12 @@ TOC ↔ e-gov 法令の相互リンク（引用グラフの芽）。
 - parse_rate ≥ 80%（hard）
 - 著者横断検索が成立
 - 法令リンクのサンプル目検
+
+## 関連 DD（TOC→法令リンクの精度設計）
+
+- **DD-LINKBOOT-001**（反復・文脈累積リンキング）: GPT 監査 `DDLINKBOOT_PASS_WITH_NOTES`(2026-06-08)・
+  owner ratify 方向。required_patches 7点を反映した v0.1.1＋B検証prototype計画は
+  [`DD-LINKBOOT-001_v0.1.1_and_B_plan.md`](./DD-LINKBOOT-001_v0.1.1_and_B_plan.md)。
+  canonical DD は Box `alo/`。high アンカーを主題化し medium を主題prior＋境界/外国ガードで昇格、
+  promoted precision ≥0.95（層化gold≥300）まで production 禁止・`claim_support_eligible=false` 維持。
+  上流 = DD-TOCLEGALREF v0.2、主入力 = legallib 詳細TOC（bib_toc 661K）。
