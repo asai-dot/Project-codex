@@ -15,8 +15,18 @@
   "structure": {
     "_comment": "DD 全体の正本構造 (docs/dd_index.md)。static_objects=7, dynamic_sources=6, crosscutting=4。各エントリの stages は runtime roll-up 用に既存ステージ id を参照 (空=外部WS/未起票で live 測定なし)。",
     "static_objects": [
-      {"id": "law", "label": "① 法令", "stages": [], "note": "外部WS: 法令リンク#8 / 学陽e-Gov#2 / KG#11"},
-      {"id": "case", "label": "② 判例", "stages": [], "note": "外部WS: KG#11 / 判例リンク#8 (引用グラフ)"},
+      {"id": "law", "label": "① 法令", "stages": [], "note": "外部WS: 法令リンク#8 / 学陽e-Gov#2 / KG#11",
+        "subs": [
+          {"id": "law_egov_def", "label": "e-Gov定義", "stages": [], "note": "e-Gov法令の定義語 534定義/13法令 (high216/med318)#8"},
+          {"id": "law_article_link", "label": "条文リンク", "stages": [], "note": "条文→e-Gov URI。学陽1,731リンク/326見出し・e-Gov条見出し4,367条#2"},
+          {"id": "law_mention", "label": "引用mention", "stages": [], "note": "DB全体 条文参照 mention 10,211 (枝番・漢数字・全角)#8"}
+        ]},
+      {"id": "case", "label": "② 判例", "stages": [], "note": "外部WS: KG#11 / 判例リンク#8 (引用グラフ)",
+        "subs": [
+          {"id": "case_spine", "label": "正本キー", "stages": [], "note": "和暦・事件番号・裁判所 (case_identity)#11"},
+          {"id": "case_citation", "label": "引用グラフ", "stages": [], "note": "case_citations 17,259件・被覆率40%→100%#11"},
+          {"id": "case_landing", "label": "着地/RAG", "stages": [], "note": "3層着地(内部PD→裁判所HTML→ベンコム)＋③RAG#11"}
+        ]},
       {"id": "book", "label": "③ 文献", "stages": ["toc_baseline", "ndl_canonical", "legallib_fetch", "resolver", "legallib_join_dryrun", "legallib_review", "legallib_apply", "hastoc_reconcile", "toc_search_index", "defer_new"], "note": "書誌メタ・著者・詳細目次(TOC)・横断検索を内包",
         "subs": [
           {"id": "book_meta", "label": "書誌メタ", "stages": ["ndl_canonical", "legallib_fetch", "resolver", "defer_new"], "note": "書誌レコード・NDL正本照合・ISBN突合・未収録退避"},
