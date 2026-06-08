@@ -305,13 +305,56 @@ def test_dashboard_root_path_refuses_invalid(tmp: Path) -> None:
     check(rc2 == 0 and out_md2.exists(), "--snapshot 経路は収集しないので描画は通る")
 
 
+def test_structure_section(tmp: Path) -> None:
+    # 全体構造セクション: structure 宣言を最上部に描き、live があれば roll-up。
+    from pipeline_dashboard import _rollup
+
+    (tmp / "a.json").write_text("[]", encoding="utf-8")  # A=done, B=todo
+    manifest = {
+        "tracks": {"t": "T"},
+        "structure": {
+            "static_objects": [
+                {"id": "book", "label": "③ 文献", "stages": ["A", "B"]},
+                {"id": "law", "label": "① 法令", "stages": [], "note": "外部WS#8"},
+            ],
+            "dynamic_sources": [{"id": "sf", "label": "Ⓑ SF系", "stages": ["A"]}],
+            "crosscutting": [{"id": "c3", "label": "C3 可視化", "stages": []}],
+        },
+        "stages": [
+            {"id": "A", "title": "A", "track": "t", "probes": [{"type": "exists", "path": "a.json"}]},
+            {"id": "B", "title": "B", "track": "t", "probes": [{"type": "exists", "path": "missing.json"}]},
+        ],
+    }
+    snap = collect(tmp, manifest)
+    rows = derive(manifest, snap)
+    rows_by_id = {r["id"]: r for r in rows}
+    ru = _rollup(rows_by_id, ["A", "B"])
+    check(ru["done"] == 1 and ru["total"] == 2 and ru["status"] == "in_progress",
+          "roll-up 1/2 done = in_progress")
+    check(_rollup(rows_by_id, []) is None, "stages 無しは roll-up None")
+
+    md = render_markdown(manifest, rows, snap)
+    check("🗺 全体構造" in md, "構造セクション見出し")
+    check("③ 文献" in md and "1/2 done" in md, "文献 roll-up 表示")
+    check("① 法令" in md and "外部WS#8" in md, "外部WS は — + メモ")
+    html = render_html(manifest, rows, snap)
+    check("schip" in html and "③ 文献" in html, "html 構造チップ描画")
+
+    # structure 無し manifest では構造セクションを出さない (後方互換)。
+    bare = {"tracks": {"t": "T"}, "stages": manifest["stages"]}
+    snap2 = collect(tmp, bare)
+    check("🗺 全体構造" not in render_markdown(bare, derive(bare, snap2), snap2),
+          "structure 無しならセクション無し")
+
+
 def main() -> int:
     import tempfile
 
     fs_tests = [test_probes, test_roundtrip, test_status_derivation,
                 test_roundtrip_frontmatter, test_orphan_probe, test_snapshot_metadata,
                 test_roundtrip_duplicate_request_id, test_collect_refuses_invalid_manifest,
-                test_probe_main_refuses_invalid, test_dashboard_root_path_refuses_invalid]
+                test_probe_main_refuses_invalid, test_dashboard_root_path_refuses_invalid,
+                test_structure_section]
     for t in fs_tests:
         print(f"• {t.__name__}")
         with tempfile.TemporaryDirectory() as td:

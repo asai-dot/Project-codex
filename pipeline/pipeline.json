@@ -12,6 +12,32 @@
     "dynamic": "動的DB (ALOナレッジ / matter / Gmail / lawtime)",
     "ops": "運用・ドリフト検知"
   },
+  "structure": {
+    "_comment": "DD 全体の正本構造 (docs/dd_index.md)。static_objects=7, dynamic_sources=6, crosscutting=4。各エントリの stages は runtime roll-up 用に既存ステージ id を参照 (空=外部WS/未起票で live 測定なし)。",
+    "static_objects": [
+      {"id": "law", "label": "① 法令", "stages": [], "note": "外部WS: 法令リンク#8 / 学陽e-Gov#2 / KG#11"},
+      {"id": "case", "label": "② 判例", "stages": [], "note": "外部WS: KG#11 / 判例リンク#8 (引用グラフ)"},
+      {"id": "book", "label": "③ 文献", "stages": ["toc_baseline", "ndl_canonical", "legallib_fetch", "resolver", "legallib_join_dryrun", "legallib_review", "legallib_apply", "hastoc_reconcile", "toc_search_index", "defer_new"], "note": "書誌メタ・著者・詳細目次(TOC)・横断検索を内包"},
+      {"id": "journal", "label": "④ 雑誌", "stages": ["legallib_article_parser"], "note": "論文entity・著者 (論文抽出#8)"},
+      {"id": "vocab", "label": "⑤ 語彙", "stages": [], "note": "外部WS: 三点測量#2 / JLT着地#1"},
+      {"id": "procedure", "label": "⑥ 手続", "stages": [], "note": "統合軸(横串): ①③⑦②を束ねる・未起票"},
+      {"id": "template", "label": "⑦ 書式", "stages": [], "note": "外部WS: 書式テンプレ構造化 tmplstruct (3,806件)"}
+    ],
+    "dynamic_sources": [
+      {"id": "google", "label": "Ⓐ Google系", "stages": [], "note": "Gmail案件ラベル (紐付け#3)"},
+      {"id": "salesforce", "label": "Ⓑ Salesforce系", "stages": ["matter_resolution"], "note": "案件 sf_id 背骨"},
+      {"id": "box", "label": "Ⓒ Box系", "stages": [], "note": "★LEALA フォルダ (紐付け#3)"},
+      {"id": "notta", "label": "Ⓓ notta(meetings)系", "stages": [], "note": "未起票 (コネクタ追加待ち)"},
+      {"id": "dialpad", "label": "Ⓔ ダイヤルパッド系", "stages": [], "note": "未起票 (コネクタ追加待ち)"},
+      {"id": "other", "label": "Ⓕ その他", "stages": ["lawtime_dd", "gpt_dd_roundtrip"], "note": "lawtime / GPT往復ナレッジ 等"}
+    ],
+    "crosscutting": [
+      {"id": "governance", "label": "C1 品質ガバナンス(Supabase)", "stages": [], "note": "#9 投入規律"},
+      {"id": "audit", "label": "C2 GPTお目付け監査レーン", "stages": [], "note": "#10/#12/#14 承認動線"},
+      {"id": "dashboard", "label": "C3 進捗可視化(/dd)", "stages": ["manifest_drift_handoff"], "note": "#15 本ダッシュボード"},
+      {"id": "team", "label": "C4 チーム/Codex運用", "stages": [], "note": "#13 作業規律"}
+    ]
+  },
   "stages": [
     {
       "id": "toc_baseline",

@@ -79,6 +79,15 @@ snapshot は純データなので、**日次でコミットして差分を見れ
 （`bookdx`/`alo`/`repo`）を指す。実ファイル名が分かったら `path` を実体へ寄せる
 （NDL レポート名・matter 完了ログ名など `note` に TODO を残してある）。
 
+## 全体構造セクション（最上部・dd_index 連動）
+
+ダッシュボード最上部に **DD 全体の正本構造**（`docs/dd_index.md` の 静的7オブジェクト /
+動的6ソース系統 / 横断4）を地図として描く。`pipeline.json` の `structure` ブロックで宣言し、
+各エントリの `stages`（既存ステージ id 参照）から runtime を **roll-up**（`done/total` と
+集約 status）。`stages` が空のオブジェクト（外部ワークストリーム・未起票・⑥手続=統合軸）は
+`—` ＋メモを表示。`structure` が無い manifest では本セクションを出さない（後方互換）。
+オブジェクト・系統を増やすときは `structure` に足し、live で測りたければ `stages` を張る。
+
 ## 設計メモ
 
 - stdlib のみ・決定的。snapshot に status を持たせず描画時に導出するので、
