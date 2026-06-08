@@ -63,8 +63,19 @@ TOC_TEXT_KEYS = ("t", "text", "label", "title", "heading")
 TOC_PAGE_KEYS = ("p", "page", "print_page", "pdf_page", "page_start")
 TOC_LEVEL_KEYS = ("level", "l", "depth")
 # 階層TOCの子ノード配列キー候補（詳細TOCを取りこぼさないため再帰する）
+# Phase 0.1 worker 実測で実キー = "children" 確定（候補先頭）。
 TOC_CHILD_KEYS = ("children", "child", "items", "nodes", "sub", "subnodes",
                   "subitems", "sections", "subsections", "childs")
+
+# content_type → biblio.form_type マッピング（Phase 0.1 実測の4種）
+CONTENT_TYPE_TO_FORM = {
+    "book": "BOOK",
+    "journal": "PERIODICAL",
+    "periodical": "PERIODICAL",
+    "magazine": "PERIODICAL",
+    "pubcom": "PUBCOM",      # 出版社系コンテンツ（要 authority 層での性質確定）
+    "material": "MATERIAL",  # 資料/書式系
+}
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -252,9 +263,11 @@ def build_bib_record(book_id: str, raw: dict, path: Path) -> dict:
     if isinstance(responsibility, (list, dict)):
         responsibility = "; ".join(extract_authors(raw)) or None
 
-    # form_type: 書籍は BOOK 統一（PERIODICAL は次スコープ）
+    # form_type: legallib content_type を忠実にマップ（Phase 0.1 実測で4種を確認）
+    #   book→BOOK / journal→PERIODICAL / pubcom→PUBCOM / material→MATERIAL
+    #   未知の content_type は大文字化して保全（raw にも content_type を保持）。
     content_type = str(pick(raw, CONTENT_TYPE_KEYS, default="book")).lower()
-    form_type = "PERIODICAL" if content_type in ("journal", "periodical", "magazine") else "BOOK"
+    form_type = CONTENT_TYPE_TO_FORM.get(content_type, content_type.upper() or "BOOK")
 
     source_url = pick(raw, SOURCE_URL_KEYS, default=f"https://legal-library.jp/books/{book_id}")
 

@@ -2,7 +2,9 @@
 -- v0.4 プラン §5 に対応。load_legallib.py 実行後に手動で流す。
 -- 対象: Supabase biblio スキーマ（search_path = biblio）
 
--- ① 件数確認: legallib bib_records が期待件数（書籍のみなら 2751 程度）
+-- ① 件数確認: legallib bib_records が期待件数
+--   Phase 0.1 実測: book 2,760(=BOOK) / journal 422(PERIODICAL) / pubcom 655(PUBCOM) / material 214(MATERIAL)
+--   Phase 1a は --book-only ＝ BOOK 2,760 のみ。bib_toc は book-only でも大規模（全体 dry-run で 661,141）。
 SELECT
   source,
   form_type,
