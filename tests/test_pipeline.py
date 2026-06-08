@@ -15,8 +15,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from pipeline_dashboard import derive, render_html, render_markdown  # noqa: E402
+from pipeline_dashboard import main as dashboard_main  # noqa: E402
 from pipeline_probe import (  # noqa: E402
-    collect, parse_roots, run_probe, validate_manifest,
+    ManifestError, collect, parse_roots, run_probe, validate_manifest,
 )
 
 _PASS = 0
@@ -171,6 +172,55 @@ def test_snapshot_metadata(tmp: Path) -> None:
     check(snap["manifest_errors"] == [], "正常 manifest はエラー無し")
 
 
+def test_collect_refuses_invalid(tmp: Path) -> None:
+    # N1: collect は不正 manifest で ManifestError を投げ、probe を回さない。
+    bad = {"roots": {"r": "x"},
+           "stages": [{"id": "A", "depends_on": ["NOPE"],
+                       "probes": [{"type": "exists", "root": "r", "path": "p"}]}]}
+    raised = False
+    try:
+        collect({"r": tmp}, bad)
+    except ManifestError as e:
+        raised = True
+        check(any("NOPE" in x for x in e.errors), "エラー内容に未知依存")
+    check(raised, "不正 manifest で collect は raise")
+    # refuse_on_errors=False なら snapshot を返す (manifest_errors 付き)。
+    snap = collect({"r": tmp}, bad, refuse_on_errors=False)
+    check(snap["manifest_errors"], "明示 False なら errors 同梱で返す")
+
+
+def test_dashboard_oneshot_refuses(tmp: Path) -> None:
+    # N1 本丸: dashboard --root 一発経路でも不正 manifest を probe 前に拒否。
+    bad_manifest = tmp / "bad.json"
+    bad_manifest.write_text(json.dumps({
+        "roots": {"r": "x"}, "tracks": {},
+        "stages": [
+            {"id": "X", "track": "t", "depends_on": ["Y"], "probes": []},
+            {"id": "X", "track": "t", "probes": [{"type": "bogus", "path": "p"}]},
+        ],
+    }), encoding="utf-8")
+    out = tmp / "out.md"
+    rc = dashboard_main(["--manifest", str(bad_manifest), "--root", str(tmp),
+                         "--out-md", str(out)])
+    check(rc == 1, "不正 manifest の one-shot は exit 1")
+    check(not out.exists(), "拒否時は出力を書かない")
+
+
+def test_duplicate_request_id(tmp: Path) -> None:
+    # N2: 同一 request_id の重複送信を silent dedupe せず表に出す。
+    sent = tmp / "to_gpt"; ret = tmp / "from_gpt"
+    sent.mkdir(); ret.mkdir()
+    (sent / "a_REQUEST.md").write_text(
+        "---\nrequest_id: 20260607_dup_DDX\n---\n", encoding="utf-8")
+    (sent / "a_resubmit_REQUEST.md").write_text(   # 同 request_id を再投函
+        "---\nrequest_id: 20260607_dup_DDX\nresult_expected_filename: other.md\n---\n",
+        encoding="utf-8")
+    r = run_probe(tmp, {"type": "roundtrip", "sent": "to_gpt/*.md", "returned": "from_gpt/*.md"})
+    check(r["duplicate_count"] == 1, "重複 request_id を 1 件検出")
+    check(r["duplicates"][0]["key"] == "20260607_dup_DDX", "重複キー")
+    check(r["duplicates"][0]["expected_conflict"] is True, "expected 不一致を検出")
+
+
 def test_real_manifest_smoke() -> None:
     # 同梱 manifest が parse でき、空 root でも例外なく描画できる。
     import tempfile
@@ -195,7 +245,9 @@ def main() -> int:
     import tempfile
 
     fs_tests = [test_probes, test_roundtrip, test_status_derivation,
-                test_roundtrip_frontmatter, test_orphan_probe, test_snapshot_metadata]
+                test_roundtrip_frontmatter, test_orphan_probe, test_snapshot_metadata,
+                test_collect_refuses_invalid, test_dashboard_oneshot_refuses,
+                test_duplicate_request_id]
     for t in fs_tests:
         print(f"• {t.__name__}")
         with tempfile.TemporaryDirectory() as td:

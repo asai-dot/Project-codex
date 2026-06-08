@@ -24,7 +24,9 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from pipeline_probe import collect, load_manifest, parse_roots  # noqa: E402
+from pipeline_probe import (  # noqa: E402
+    ManifestError, collect, load_manifest, parse_roots, print_manifest_errors,
+)
 
 
 def _roots_str(snapshot: dict) -> str:
@@ -137,8 +139,9 @@ def _probe_summary(results: list[dict]) -> str:
             parts.append(f"{r['label']} {'有' if r['done'] else '無'}")
         elif r["type"] == "roundtrip":
             orphan = f" 孤{r['orphan_count']}" if r.get("orphan_count") else ""
+            dup = f" 重{r['duplicate_count']}" if r.get("duplicate_count") else ""
             parts.append(f"{r['label']} 戻{r['returned']}/送{r['sent']}"
-                         f"(未{r['pending_count']}){orphan}")
+                         f"(未{r['pending_count']}){orphan}{dup}")
         elif r["type"] == "orphan":
             parts.append(f"{r['label']} 未宣言{r['orphan_count']}/{r['scan_count']}")
         elif "error" in r:
@@ -290,7 +293,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.snapshot:
         snapshot = json.loads(Path(args.snapshot).read_text(encoding="utf-8"))
     elif args.root:
-        snapshot = collect(parse_roots(args.root), manifest)
+        # N1: one-shot 経路でも collect() が probe 前に検証・拒否する。
+        try:
+            snapshot = collect(parse_roots(args.root), manifest)
+        except ManifestError as e:
+            print_manifest_errors(e.errors)
+            return 1
     else:
         ap.error("--snapshot か --root のどちらかが必要")
 

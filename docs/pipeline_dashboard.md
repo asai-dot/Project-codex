@@ -80,3 +80,19 @@ GPT Pro DD レビュー（`from_gpt/20260606_codexprogress_v0.1_DDPROGRESS_RESUL
 4. **orphan probe**: 未宣言成果物（manifest が拾っていない handoff 等）を炙り出す。
 5. **exists-only の % 廃止**: 連続 % ではなく `有/無/一部` を表示（誤誘導回避）。
 6. **snapshot メタ**: `generated_at_jst` / `manifest_hash` / `probe_version` を付与。
+
+## v0.2.1（DDPROGRESS v0.2 監査 PASS_WITH_NOTES の追修正）
+
+差分再監査（`from_gpt/20260607_codexprogress_v0.2_DDPROGRESS_RESULT.md`）は
+**`DDPROGRESS_PASS_WITH_NOTES`**（F1/F2/F3/F5/F6 CLOSED、F4 PARTIAL）。指摘を反映:
+
+- **N1（F4 を完全に閉じる）**: manifest 検証を `collect()` 自体に移し、不正なら
+  `ManifestError` を送出（`refuse_on_errors=True` 既定）。これにより
+  `pipeline_probe.py` だけでなく **`pipeline_dashboard.py --root` の一発経路でも
+  probe 前に拒否**（exit 1）。snapshot だけ描画したい場合のみ
+  `collect(..., refuse_on_errors=False)`。
+- **N2（重複 request_id）**: roundtrip は同一 `request_id` の再送信を silent dedupe
+  せず `duplicate_count` / `duplicates`（expected 不一致フラグ付き）で表に出す。
+- **N3（命名の正道）**: filename stem fallback は最後の逃げ道として残すが、正規運用は
+  front-matter `request_id` / `result_expected_filename` を正とする
+  （`.processed.md` 等の混在で stem 頼みは誤対応の元）。
