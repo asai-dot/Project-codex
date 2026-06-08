@@ -12,6 +12,16 @@
 - **owner ratify 確定（2026-06-07, 浅井）**: DD-TOCLEGALREF-001 v0.2 = **ratified (design)**。TOC由来リンクは candidate `toc_signal`・claim_support 不適格、判例は canonical case URI 解決まで edge化しない、を design として確定。
 - production promotion は別タスク（medium閾値/source_priority確定値/DD-LAWTIME resolver gate/canonical work・case URI 解決レーン）。DB書込みは promotion 実装後。
 
+# gpt_ometsuke 投函ログ — DD-LINKBOOT（反復・文脈累積リンキング）
+
+| 版 | request_id | gate | source_hash | Box REQUEST | Box 現物(docs/alo) | RESULT | 状態 |
+|---|---|---|---|---|---|---|---|
+| v0.1 | 20260608_linkboot_v0.1_DDLINKBOOT | DDLINKBOOT | sha256:58295a49… | file_id 2271348102102 (`to_gpt/`, queued) | file_id 2271362783791 | 受領待ち | **投函済・RESULT待ち** |
+
+- owner 設計思想（固いものから確定→本・類似本の主題を文脈化→反復で高精度リンク派生）を機構化。DD-TOCLEGALREF v0.2 の medium 昇格条件の実装手段。
+- 実証根拠は `reports/PRECISION_VALIDATION_6000.md`（medium FP 7/10 が主題ミスマッチ本に集中、素朴書名一致は無効）。
+- RESULT は `from_gpt/20260608_linkboot_v0.1_DDLINKBOOT_RESULT.md`（先頭行 `DDLINKBOOT_<LABEL>`）で受領予定。DB書込みゼロ。
+
 - v0.2 は v0.1 の required_patches 1–9 + proposed gates を反映（`reports/DD-TOCLEGALREF_draft_v0.2.md`）。
 - producer 10 gate 全 PASS（実データ 600 ノード, interprets 49 = initial 43 / quarantine 6, case candidate 25）。
 - RESULT は Box `from_gpt/20260607_toclegalref_v0.2_DDTOCLEGALREF_RESULT.md`（先頭行 `DDTOCLEGALREF_<LABEL>`）で受領予定。
