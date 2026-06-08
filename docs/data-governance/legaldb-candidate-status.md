@@ -69,8 +69,11 @@ GPT が挙げた v0.5.1 / v0.6 必須パッチを反映し、owner ratify を得
 8. **DD-LAWTIME の accept**（F4 の本丸）。**事実確認の結果、v0.5.1 が前提とした「v0.2.1 accepted」は存在しなかった**
    （accepted レーン上の結果は v0.1 = `DDLAWTIME_MODIFY_REQUIRED` のみ）。
    - 対応: v0.1 の必須7点を反映した **DD-LAWTIME v0.2 → `DDLAWTIME_PASS_WITH_NOTES`**（approval_queue 済・ratify 候補）。
-   - **N1–N4 ＋ v0.5.1 が参照していた richer 構造を統合した DD-LAWTIME v0.2.1 を投函**
-     （`to_gpt/20260607_lawtime_v0.2.1_DDLAWTIME_REQUEST.md`, 差分監査中）。
+   - **N1–N4 ＋ v0.5.1 が参照していた richer 構造を統合した DD-LAWTIME v0.2.1 → `DDLAWTIME_PASS_WITH_NOTES`**
+     （`from_gpt/20260607_lawtime_v0.2.1_DDLAWTIME_RESULT.md`, owner ratify 可）。N1–N4 全クローズ。
+     GPT は「未監査の自称 v0.2.1 を追認せず実監査ラインへ統合した判断は正しい」と是認。
+     production DDL 前 notes P1–P5（article_path 明記／edge_id FK・gate／relation_type 正規化表／
+     claim_support 導出 gate／merge・split event 整合 gate）は**設計受理を止めない**。
    - **重要（phantom-accept の摘発）**: v0.5.1 §3 の「DD-LAWTIME v0.2.1 は 2026-06-05 accepted」は
      **監査レーンに証跡が無い自己申告**だった（実在は v0.1=MODIFY と v0.2=PASS のみ）。v0.6 で撤回し、
      依存先を実在・監査済ラインへ確定。
