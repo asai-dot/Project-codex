@@ -1,20 +1,39 @@
-# tools/gpt_audit — GPT お目付け役 監査キュー v0.2 実装
+# tools/gpt_audit — CONSUMED ビュー (v0.3 監査レーンへの追加)
 
-`handoffs/gpt_ometsuke/` の状態管理を回す依存ゼロの Python CLI。
-仕様は [`../../handoffs/gpt_ometsuke/PROTOCOL.md`](../../handoffs/gpt_ometsuke/PROTOCOL.md)。
+GPT お目付け役監査レーンは Box の **v0.3 設計**が正本
+(`GPT_PRO_AUDIT_LANE_DESIGN_v0.3` / `_AUDIT_LEDGER.jsonl` / `_ACTION_QUEUE.md` / `alo-gpt-audit`)。
+ここに置くのは、その v0.3 に**唯一足りなかった派生ビュー**だけ。
+
+> GPT が試作した `GPT_OMETSUEKE_QUEUE_PROTOCOL_v0.2` は、調査の結果 v0.3 とほぼ同一概念だった。
+> v0.2 で唯一 v0.3 に無かったのが **CONSUMED (採用判断を 1 ファイルで追う) の発想**。
+> よって v0.2 を新規実装せず、その発想だけを v0.3 台帳の派生ビューとして取り込む。
+
+## ファイル
 
 | ファイル | 役割 |
 |---|---|
-| `queue.py` | CLI 本体（`build` / `report` / `check` / `append`）＋状態畳み込み・分類ロジック |
-| `seed_20260608.py` | `QUEUE_EVENTS.jsonl` を 2026-06-08 の実 25 件で初期化（一回限り） |
-| `test_queue.py` | `classify()` / closed 厳格化 / シード件数の単体テスト |
+| `consumed_view.py` | `_AUDIT_LEDGER.jsonl` → `handoffs/gpt_ometsuke/CONSUMED.md` を生成する派生ビュー |
+| `_AUDIT_LEDGER.snapshot.jsonl` | Box 正本台帳の CONSUMED 関連フィールドのミラー (2026-06-08)。既定入力 |
+| `test_consumed_view.py` | 単体テスト |
+
+## 使い方
 
 ```bash
-python3 tools/gpt_audit/queue.py report   # 件数分類（状態報告）
-python3 tools/gpt_audit/queue.py build    # EVENTS → QUEUE_INDEX.md / CONSUMED.md 再生成
-python3 tools/gpt_audit/queue.py check    # 生成物と EVENTS の不一致検出（CI 向け）
-python3 tools/gpt_audit/test_queue.py     # テスト
+# 既定 (スナップショット) から生成
+python3 tools/gpt_audit/consumed_view.py build
+
+# 本番: Box 同期の _AUDIT_LEDGER.jsonl を指す
+python3 tools/gpt_audit/consumed_view.py build --ledger /path/to/_AUDIT_LEDGER.jsonl
+
+# 生成物と台帳の一致を検証 (CI)
+python3 tools/gpt_audit/consumed_view.py check
+
+python3 tools/gpt_audit/test_consumed_view.py
 ```
 
-Box v0.3 レーンの `alo-gpt-audit` と同一概念（対応表は PROTOCOL.md §9）。
-`queue.py append` で EVENTS に 1 行足し、`build` で派生を再生成する運用。EVENTS の行は書き換えない。
+## 何をするビューか
+
+v0.3 台帳の `next_action_type` / `loop_state` / `reflected` を読み替えて、
+「GPT RESULT を Claude が読んだか・採用/不採用・反映したか」を 1 画面に集約する。
+**未反映 (`reflected:false`) を最上段**に出し、「読んだのに反映していない」を可視化する。
+新しい状態語彙や別の台帳は作らない。closed 判定など状態管理は v0.3 のまま。
