@@ -1,4 +1,4 @@
-"""パイプライン進捗の probe ランナー + 状態コレクタ (v0.2).
+"""パイプライン進捗の probe ランナー + 状態コレクタ (v0.2.1).
 
 実ファイルシステム (Box 同期 / ~/alo-ai 等) を走査し、各ステージの「実状態」を
 小さな snapshot.json に落とす。重い走査は Mac 側で実行し、snapshot だけを
@@ -13,11 +13,18 @@ probe 種別:
   * exists    : glob にマッチが 1 つでもあるか (成果物の有無。% は出さない)。
   * roundtrip : 送信(REQUEST)/戻り(RESULT) を **front-matter の request_id /
                 result_expected_filename を優先**して突合 (v0.2)。pending(未戻り)
-                / orphan(送信なしの戻り) / stale(古い未戻り=詰まり) を出す。
+                / orphan(送信なしの戻り) / stale(古い未戻り=詰まり) / duplicate
+                (同一 request_id の重複送信) を出す。
   * orphan    : scan glob にあって declared globs に無い「未宣言成果物」を出す
                 (manifest ドリフト検知。v0.2 追加)。
 
 snapshot は純データ (status 判定は dashboard 側)。冪等・stdlib のみ。
+
+v0.2.1 (GPT DDPROGRESS v0.2 再監査 N1/N2 クローズ):
+  * N1: manifest 検証→拒否を ``collect()`` 自体へ移し、probe/dashboard 両経路を
+        単一ソースで塞ぐ。不正 manifest は既定で ``ManifestError`` を送出。
+  * N2: roundtrip で同一 request_id の重複送信を silent dedupe せず ``duplicate``
+        として surface する (件数は distinct request_id のまま)。
 """
 
 from __future__ import annotations
@@ -26,12 +33,13 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 import time
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-PROBE_VERSION = "0.2"
+PROBE_VERSION = "0.2.1"
 _JST = timezone(timedelta(hours=9))
 VALID_PROBE_TYPES = frozenset({"count", "exists", "roundtrip", "orphan"})
 
@@ -118,13 +126,16 @@ def _roundtrip(root: Path, probe: dict, label: str) -> dict:
     sent_rids: set[str] = set()
     sent_expected: set[str] = set()
     pending: list[dict] = []
-    seen: set[str] = set()
+    # N2: rid -> 送信ファイル名リスト。突合は代表 (最初の) 1 件で行うが、
+    # 同一 request_id の重複送信は捨てずに集約して surface する。
+    seen: dict[str, list[str]] = {}
     for p in sent:
         fm = _read_front_matter(p)
         rid = fm.get("request_id") or _stem_key(p.stem, kp)
         if rid in seen:
+            seen[rid].append(p.name)  # 重複送信: 件数には数えず記録のみ
             continue
-        seen.add(rid)
+        seen[rid] = [p.name]
         expected = fm.get("result_expected_filename")
         sent_rids.add(rid)
         if expected:
@@ -143,6 +154,11 @@ def _roundtrip(root: Path, probe: dict, label: str) -> dict:
             continue
         orphan.append(p.name)
 
+    # N2: 同一 request_id に複数の送信ファイルが紐づくものを衝突として列挙。
+    duplicates = [{"key": rid, "files": sorted(files)}
+                  for rid, files in seen.items() if len(files) > 1]
+    duplicates.sort(key=lambda d: d["key"])
+
     pending.sort(key=lambda x: x["sent_epoch"])
     cap = probe.get("detail_cap", 50)
     return {
@@ -150,6 +166,7 @@ def _roundtrip(root: Path, probe: dict, label: str) -> dict:
         "sent": len(seen), "returned": len(returned),
         "pending_count": len(pending), "pending": pending[:cap],
         "orphan_count": len(orphan), "orphan": sorted(orphan)[:cap],
+        "duplicate_count": len(duplicates), "duplicate": duplicates[:cap],
         "max_age_hours": probe.get("max_age_hours", 24),
         "done": len(pending) == 0 and len(seen) > 0,
     }
@@ -257,9 +274,31 @@ def _manifest_hash(manifest: dict) -> str:
     return "sha256:" + hashlib.sha256(blob).hexdigest()
 
 
-def collect(roots: dict[str, Path] | Path, manifest: dict) -> dict:
+class ManifestError(ValueError):
+    """manifest 検証に失敗 (collect 既定で拒否)。``errors`` に個別の指摘を持つ。"""
+
+    def __init__(self, errors: list[str]):
+        self.errors = list(errors)
+        super().__init__("manifest validation failed:\n"
+                         + "\n".join(f"  - {e}" for e in self.errors))
+
+
+def collect(roots: dict[str, Path] | Path, manifest: dict, *,
+            refuse_on_invalid: bool = True) -> dict:
+    """manifest を probe して snapshot を返す。
+
+    N1: 検証→拒否はここ (単一ソース)。``pipeline_probe.main`` の一括収集も、
+    ``pipeline_dashboard.py --root`` の収集+描画一発実行も、どちらもこの関数を
+    通るので、不正 manifest は **既定で** ``ManifestError`` を送出して止める。
+    観測目的で壊れた manifest でも走らせたい場合のみ ``refuse_on_invalid=False``
+    を渡す (その場合 errors は snapshot の ``manifest_errors`` に記録される)。
+    """
     if isinstance(roots, Path):
         roots = {"default": roots}
+
+    errors = validate_manifest(manifest)
+    if errors and refuse_on_invalid:
+        raise ManifestError(errors)
 
     def resolve(probe: dict) -> Path:
         rk = probe.get("root", "default")
@@ -275,7 +314,7 @@ def collect(roots: dict[str, Path] | Path, manifest: dict) -> dict:
         "collected_epoch": int(time.time()),
         "probe_version": PROBE_VERSION,
         "manifest_hash": _manifest_hash(manifest),
-        "manifest_errors": validate_manifest(manifest),
+        "manifest_errors": errors,
         "roots": {k: str(v) for k, v in roots.items()},
         "manifest_version": manifest.get("version"),
         "stages": stages_out,
@@ -298,6 +337,13 @@ def load_manifest(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def print_manifest_error(err: ManifestError) -> None:
+    """ManifestError を stderr に整形出力 (probe/dashboard 両 CLI 共通)。"""
+    for e in err.errors:
+        print(f"  ❌ manifest: {e}", file=sys.stderr)
+    print("manifest validation FAILED", file=sys.stderr)
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="パイプライン状態コレクタ")
     ap.add_argument("--root", action="append", default=[], metavar="[NAME=]PATH",
@@ -311,15 +357,13 @@ def main(argv: list[str] | None = None) -> int:
     roots = parse_roots(args.root)
     manifest = load_manifest(Path(args.manifest))
 
-    # GPT 指摘#4: probe 前に manifest を検証し、壊れていれば走らせない。
-    errors = validate_manifest(manifest)
-    if errors:
-        for e in errors:
-            print(f"  ❌ manifest: {e}", file=__import__("sys").stderr)
-        print("manifest validation FAILED", file=__import__("sys").stderr)
+    # GPT 指摘#4 / N1: 検証→拒否は collect() の単一ソースに集約。
+    try:
+        snap = collect(roots, manifest)
+    except ManifestError as e:
+        print_manifest_error(e)
         return 1
 
-    snap = collect(roots, manifest)
     Path(args.out).write_text(json.dumps(snap, ensure_ascii=False, indent=1),
                               encoding="utf-8")
     print(f"collected {len(snap['stages'])} stages, roots={list(roots)} -> {args.out}")

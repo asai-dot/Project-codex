@@ -24,7 +24,9 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from pipeline_probe import collect, load_manifest, parse_roots  # noqa: E402
+from pipeline_probe import (  # noqa: E402
+    ManifestError, collect, load_manifest, parse_roots, print_manifest_error,
+)
 
 
 def _roots_str(snapshot: dict) -> str:
@@ -33,6 +35,83 @@ def _roots_str(snapshot: dict) -> str:
 
 _ICON = {"done": "✅", "waiting": "⏳", "in_progress": "🔄",
          "blocked": "⛔", "todo": "⬜", "error": "❗"}
+_COLOR = {"done": "#2e7d32", "in_progress": "#1565c0", "waiting": "#ef6c00",
+          "blocked": "#c62828", "todo": "#9e9e9e", "error": "#6a1b9a"}
+
+
+def _rollup(rows_by_id: dict, stage_ids: list[str]) -> dict | None:
+    """構造オブジェクトに紐づくステージ群の runtime 状態を 1 つに集約 (無ければ None)。"""
+    rs = [rows_by_id[s] for s in stage_ids if s in rows_by_id]
+    if not rs:
+        return None
+    total = len(rs)
+    done = sum(1 for r in rs if r["status"] == "done")
+    if any(r["status"] == "error" for r in rs):
+        st = "error"
+    elif done == total:
+        st = "done"
+    elif any(r["status"] == "waiting" for r in rs):
+        st = "waiting"
+    elif any(r["status"] in ("in_progress", "done") for r in rs):
+        st = "in_progress"
+    elif all(r["status"] == "blocked" for r in rs):
+        st = "blocked"
+    else:
+        st = "todo"
+    return {"status": st, "done": done, "total": total}
+
+
+def render_structure_md(manifest: dict, rows: list[dict]) -> list[str]:
+    """DD 全体構造 (docs/dd_index.md の 7×6×4) を最上部に描く。live があれば roll-up。"""
+    structure = manifest.get("structure")
+    if not structure:
+        return []
+    rows_by_id = {r["id"]: r for r in rows}
+    out = ["## 🗺 全体構造（静的7 / 動的6 / 横断）", "",
+           "> DD 全体の正本構造 (`docs/dd_index.md`)。進捗は live 測定のあるオブジェクトのみ "
+           "roll-up（`—` は外部ワークストリーム / 未起票で本パイプライン未測定）。", ""]
+    groups = [("■ 静的データベース（7オブジェクト）", structure.get("static_objects", [])),
+              ("■ 動的データベース（6ソース系統）", structure.get("dynamic_sources", [])),
+              ("■ 横断層", structure.get("crosscutting", []))]
+    for title, entries in groups:
+        if not entries:
+            continue
+        out += [f"**{title}**", "", "| | 区分 | 進捗 | メモ |", "|---|---|---|---|"]
+        for e in entries:
+            ru = _rollup(rows_by_id, e.get("stages", []))
+            icon = _ICON[ru["status"]] if ru else "·"
+            prog = f"{ru['done']}/{ru['total']} done" if ru else "—"
+            out.append(f"| {icon} | {e.get('label', e.get('id', '?'))} | {prog} | {e.get('note', '')} |")
+        out.append("")
+    return out
+
+
+def render_structure_html(manifest: dict, rows: list[dict]) -> str:
+    structure = manifest.get("structure")
+    if not structure:
+        return ""
+    rows_by_id = {r["id"]: r for r in rows}
+
+    def chips(entries: list[dict]) -> str:
+        cs = []
+        for e in entries:
+            ru = _rollup(rows_by_id, e.get("stages", []))
+            c = _COLOR[ru["status"]] if ru else "#bdbdbd"
+            prog = f"{ru['done']}/{ru['total']}" if ru else "—"
+            note = (e.get("note", "") or "").replace('"', "'")
+            cs.append(f'<span class="schip" title="{note}" style="border-left:4px solid {c}">'
+                      f'{e.get("label", "?")} <b>{prog}</b></span>')
+        return "".join(cs)
+
+    return (
+        '<div class="struct"><h2>🗺 全体構造（静的7 / 動的6 / 横断）</h2>'
+        '<div class="sgrp"><div class="sttl">静的DB（7オブジェクト）</div>'
+        + chips(structure.get("static_objects", [])) + '</div>'
+        '<div class="sgrp"><div class="sttl">動的DB（6ソース系統）</div>'
+        + chips(structure.get("dynamic_sources", [])) + '</div>'
+        '<div class="sgrp"><div class="sttl">横断層</div>'
+        + chips(structure.get("crosscutting", [])) + '</div></div>'
+    )
 
 
 def _probe_ratio(results: list[dict]) -> float:
@@ -137,8 +216,9 @@ def _probe_summary(results: list[dict]) -> str:
             parts.append(f"{r['label']} {'有' if r['done'] else '無'}")
         elif r["type"] == "roundtrip":
             orphan = f" 孤{r['orphan_count']}" if r.get("orphan_count") else ""
+            dup = f" 重{r['duplicate_count']}" if r.get("duplicate_count") else ""
             parts.append(f"{r['label']} 戻{r['returned']}/送{r['sent']}"
-                         f"(未{r['pending_count']}){orphan}")
+                         f"(未{r['pending_count']}){orphan}{dup}")
         elif r["type"] == "orphan":
             parts.append(f"{r['label']} 未宣言{r['orphan_count']}/{r['scan_count']}")
         elif "error" in r:
@@ -166,6 +246,7 @@ def render_markdown(manifest: dict, rows: list[dict], snapshot: dict) -> str:
         "artifact lifecycle（draft/candidate/accepted/canonical…）とは別軸。",
         "",
     ]
+    out += render_structure_md(manifest, rows)
     errs = snapshot.get("manifest_errors") or []
     if errs:
         out.append("## ⚠ manifest エラー（描画は参考値）")
@@ -229,12 +310,24 @@ def render_markdown(manifest: dict, rows: list[dict], snapshot: dict) -> str:
         out.extend(pend_lines)
         out.append("")
 
+    # N2: 同一 request_id の重複送信 (silent dedupe させず明示)。
+    dup_lines = []
+    for sid, sdata in snapshot.get("stages", {}).items():
+        for pr in sdata.get("probes", []):
+            if pr.get("type") == "roundtrip":
+                for d in pr.get("duplicate", []):
+                    dup_lines.append(f"- [{sid}] {d['key']} ← {', '.join(d['files'])}")
+    if dup_lines:
+        out.append("## ⚠ 重複 request_id (要 handoff 衛生)")
+        out.append("")
+        out.extend(dup_lines)
+        out.append("")
+
     return "\n".join(out) + "\n"
 
 
 def render_html(manifest: dict, rows: list[dict], snapshot: dict) -> str:
-    color = {"done": "#2e7d32", "in_progress": "#1565c0", "waiting": "#ef6c00",
-             "blocked": "#c62828", "todo": "#9e9e9e", "error": "#6a1b9a"}
+    color = _COLOR
     errs = snapshot.get("manifest_errors") or []
     cells = []
     for r in rows:
@@ -265,12 +358,18 @@ def render_html(manifest: dict, rows: list[dict], snapshot: dict) -> str:
         "border-radius:4px;overflow:hidden}.fill{height:100%}.meta{color:#555;"
         "font-size:.85em;margin-top:6px}"
         ".err{background:#fdecea;color:#c62828;padding:8px 12px;border-radius:6px;margin:8px 0}"
-        ".fn{color:#888;font-size:.8em}</style>"
+        ".fn{color:#888;font-size:.8em}"
+        ".struct{background:#fff;border-radius:6px;padding:10px 14px;margin:8px 0;"
+        "box-shadow:0 1px 3px rgba(0,0,0,.1)}.struct h2{margin:.2em 0 .4em;font-size:1.05em}"
+        ".sgrp{margin:6px 0}.sttl{color:#666;font-size:.8em;margin-bottom:4px}"
+        ".schip{display:inline-block;background:#fafafa;border:1px solid #eee;border-radius:4px;"
+        "padding:3px 8px;margin:3px 4px 3px 0;font-size:.85em}.schip b{color:#333}</style>"
         f"<h1>{manifest.get('title','pipeline')}</h1>"
         f"<p>収集: {snapshot.get('generated_at_jst', snapshot.get('collected_at','?'))} / "
         f"probe v{snapshot.get('probe_version','?')} / roots: {_roots_str(snapshot)}</p>"
         "<p class='fn'>状態は runtime_status（実行・運用状態）。artifact lifecycle"
         "（draft/candidate/accepted/canonical…）とは別軸。</p>"
+        + render_structure_html(manifest, rows)
         + err_html
         + "".join(cells)
     )
@@ -290,7 +389,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.snapshot:
         snapshot = json.loads(Path(args.snapshot).read_text(encoding="utf-8"))
     elif args.root:
-        snapshot = collect(parse_roots(args.root), manifest)
+        # N1: 収集+描画一発実行も collect() の検証→拒否ゲートを通す。
+        # 不正 manifest はここで弾き、出力を一切書かずに exit 1。
+        try:
+            snapshot = collect(parse_roots(args.root), manifest)
+        except ManifestError as e:
+            print_manifest_error(e)
+            return 1
     else:
         ap.error("--snapshot か --root のどちらかが必要")
 
