@@ -17,17 +17,19 @@ Box 側で実際に行った退避・台帳・action-queue 反映の記録を含
 | # | loop review の要求 | 実施 | 実体 |
 |---|---|---|---|
 | 1 | `to_gpt/` 直下 `.processed.md` を物理退避 | DONE | processed/ へ移動・`.processed` suffix 除去（7件）。processed/ 内の旧3件も正規名化 |
-| 2 | `_AUDIT_LEDGER` を実体化（全フィールド） | DONE | Box `_AUDIT_LEDGER.json`(2271020613373) + git `_AUDIT_LEDGER.generated.jsonl`（25件・全フィールド） |
+| 2 | `_AUDIT_LEDGER` を実体化（全フィールド） | DONE | Box `_AUDIT_LEDGER.jsonl`(2271040382325, 全フィールド) + lean `_AUDIT_LEDGER.lean.json`(2271020613373) + git `_AUDIT_LEDGER.jsonl`（25件） |
 | 3 | `action-queue` 出力を作る | DONE | Box `_ACTION_QUEUE.md`(2271025917499)。reflected:false=14件 |
 | 4 | `result_label → next_action_type` 固定 | DONE | CLI `NEXT_ACTION_BY_LABEL`：PASS/PWN=ratify, MODIFY=patch, NEED_MORE=required_materials, FAIL=reject |
 | 5 | from_gpt RESULT群を backfill（digest/rethink付き） | DONE | 25件すべてに owner_digest_5line + claude_rethink_prompt + loop_state |
 | 6 | dry-run/apply/idempotencyログ | DONE | 本書 §2-§3 |
 | 7 | 次回監査を `GPTQUEUELOOPIMPL_REQUEST` として再投函 | DONE | to_gpt/20260608_gptqueueloop_GPTQUEUELOOPIMPL_REQUEST.md |
 
-注: Box MCP は `.jsonl` 拡張子を書けないため、機械可読台帳は `_AUDIT_LEDGER.json`（配列形）で提供。
-旧 `_AUDIT_LEDGER.jsonl`(2269735330886) は description で superseded を明示し、
+注: Box MCP の upload は `.jsonl` を直接作れない（`.txt` に強制変換）が、`.txt` アップ →
+`update_file_properties` で `.jsonl` にリネームすることで本物の `_AUDIT_LEDGER.jsonl`(2271040382325,
+全フィールド) を実体化した。lean 派生は `_AUDIT_LEDGER.lean.json`(2271020613373)。
+旧 `_AUDIT_LEDGER.jsonl`(2269735330886) は `_AUDIT_LEDGER_superseded_20260607.jsonl` に退避し、
 backup を `ledger/_AUDIT_LEDGER_pre20260608_backup.jsonl`(2270958229506) に保全。
-全フィールド版 jsonl は git に常設（`tools/gpt_audit/_AUDIT_LEDGER.generated.jsonl`）。
+git 正本は `tools/gpt_audit/_AUDIT_LEDGER.jsonl`。
 
 ---
 
@@ -111,7 +113,7 @@ Ran 12 tests in 0.0xs
 OK
 ```
 
-action-queue（実台帳 `_AUDIT_LEDGER.json` 上、reflected:false=14件、patch→required_materials→ratify 順）:
+action-queue（実台帳 `_AUDIT_LEDGER.jsonl` 上、reflected:false=14件、patch→required_materials→ratify 順）:
 
 ```text
 # alo-gpt-audit action-queue (reflected:false = 未反映 = 監査未クローズ)

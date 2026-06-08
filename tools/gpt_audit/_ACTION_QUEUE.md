@@ -1,7 +1,7 @@
 # _ACTION_QUEUE — GPT監査 反映キュー（派生ビュー）
 
 - generated_at_jst: 2026-06-08
-- source: handoffs/gpt_ometsuke/_AUDIT_LEDGER.json (Box) / tools/gpt_audit/_AUDIT_LEDGER.generated.jsonl (git)
+- source: handoffs/gpt_ometsuke/_AUDIT_LEDGER.jsonl (Box, canonical) / tools/gpt_audit/_AUDIT_LEDGER.jsonl (git)
 - generator: tools/gpt_audit/backfill_seed_20260608.py + alo-gpt-audit action-queue
 - rule: GPT_PRO_AUDIT_LANE_DESIGN v0.3 §D / GPT_PRO_AUDIT_LOOP_RULE v0.1 §8,§11
 - 原則: `reflected:false` が残る限り監査は閉じていない。退避済み(processed)でも反映済みではない。

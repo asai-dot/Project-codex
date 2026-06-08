@@ -59,15 +59,17 @@ python3 tests/test_alo_gpt_audit.py    # 12件（TEST-1..6 + 補助）
 ## 台帳の実体（2026-06-08 backfill）
 
 - `backfill_seed_20260608.py` — from_gpt RESULT 全25件の機械生成 seed（全フィールド・provenance）。
-- `_AUDIT_LEDGER.generated.jsonl` — 上記の出力（全フィールド版 jsonl, git 正本）。
-- `_AUDIT_LEDGER.json` — Box 用の機械可読台帳（配列形・lean）。Box `_AUDIT_LEDGER.json`(2271020613373) と一致。
+- `_AUDIT_LEDGER.jsonl` — 上記の出力（全フィールド版・canonical）。Box `_AUDIT_LEDGER.jsonl`(2271040382325) と一致。
+- `_AUDIT_LEDGER.lean.json` — 派生 lean ビュー（機械フィールドのみ）。Box `_AUDIT_LEDGER.lean.json`(2271020613373) と一致。
 - `_ACTION_QUEUE.md` — 反映キュー派生ビュー（digest/rethink/blocking 付き）。Box(2271025917499) と一致。
 - `_VERIFY_20260608_GPTQUEUELOOPIMPL.md` — 検収ログ。Box(2271029433015) と一致。
 - `20260608_gptqueueloop_GPTQUEUELOOPIMPL_REQUEST.md` — GPT 再投函 REQUEST。Box to_gpt(2271031113115)。
 
-### Box の `.jsonl` 制約
+### Box の `.jsonl` 書込（txt→jsonl リネーム）
 
-Box MCP は `.jsonl` 拡張子を書けない（`json` は可）。このため Box 側の機械台帳は
-`_AUDIT_LEDGER.json`（配列形）で提供し、全フィールド版 jsonl は git に常設する。
-旧 Box `_AUDIT_LEDGER.jsonl`(2269735330886) は superseded 表示にし、backup を
-`ledger/_AUDIT_LEDGER_pre20260608_backup.jsonl`(2270958229506) に保全済み。
+Box MCP の `upload_file` は `.jsonl` を直接作れず `.txt` に強制変換し、`upload_file_version`
+も既存 `.jsonl` を更新できない。ただし `update_file_properties`（rename）は拡張子変更を許すため、
+**`.txt` でアップロード → `.jsonl` にリネーム**で本物の `.jsonl` を実体化できる。これにより
+canonical 機械台帳は設計通り `_AUDIT_LEDGER.jsonl`（全フィールド）で Box 上に存在する。
+旧 Box `_AUDIT_LEDGER.jsonl`(2269735330886) は `_AUDIT_LEDGER_superseded_20260607.jsonl` に退避、
+backup を `ledger/_AUDIT_LEDGER_pre20260608_backup.jsonl`(2270958229506) に保全済み。

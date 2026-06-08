@@ -539,7 +539,7 @@ def main():
     for e in sorted(entries, key=lambda x: x.request_id):
         out.append(json.dumps(asdict(e), ensure_ascii=False, sort_keys=True))
     text = "\n".join(out) + "\n"
-    target = Path(__file__).resolve().parent / "_AUDIT_LEDGER.generated.jsonl"
+    target = Path(__file__).resolve().parent / "_AUDIT_LEDGER.jsonl"
     target.write_text(text, encoding="utf-8")
     sys.stderr.write(f"wrote {len(entries)} entries -> {target}\n")
     print(text)
