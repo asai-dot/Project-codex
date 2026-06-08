@@ -47,3 +47,10 @@ slotに追加: `required, default_value?, normalization, display_format, example
 
 ## 7. 横展開ゲート（NOTE5）
 全件分類＋層化検証の precision/coverage/ambiguous_rate が出るまで **docx月30キュー確定・事務所PDF横展開は HOLD**。検証数値が基準を満たしたら docx_priority_score 上位から月30枠を開始。
+
+## 8. v0.3.1 パッチ（番頭独立検証 `VALIDATION_classify3806_v0.3.md` 反映）
+独立検証で「契約title・0条 → D 誤送＝12件」と docx_queue の同題重複を検出。決定論で修正:
+- **F1 契約title ガード**: `title =~ 契約書|協定書|合意書|Agreement|Contract` ∧ `title !~ 承諾|同意|誓約|通知|解除|解約|申入|連絡|説明` ∧ `archetype==D` ∧ `clause_count==0` → `archetype=A` / `source_fidelity=docx_required` / フラグ `contract_zero_clause_needs_docx`。理由: OCRは契約の条を落とすため「契約titleの0条」をD根拠にしない。
+- **F2 docx_queue 重複除去**: docx対象は同一/近似title（正規化後一致 or 先頭8字一致）を**代表1〜2件に畳む**。`docx_queue.csv` を別出力（tid,title,archetype,score,dup_group,representative_flag）。
+- **F3（任意）**: `同意書/承諾書/誓約書` 群は将来 D→短文slot(B) 再検討（本パッチでは据え置き）。
+出力: `classification_v0.3.1.jsonl` ＋ `docx_queue.csv`。クォータ消費0（無料OCR再分類）。
