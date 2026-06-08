@@ -46,11 +46,12 @@ BATCH_SIZE = 500
 
 # 候補キー（優先順）。実物JSONのキー名がどれであっても拾えるようにする。
 # 生 legallib_dl と 正規化後フォーマットの両系統を許容。
+# ※ 先頭は Phase 0（worker 実測 2026-06-08）で確定した実キー。
 TITLE_KEYS = ("title", "book_title", "name", "書名")
 ISBN_KEYS = ("isbn", "isbn13", "isbn_13", "ISBN")
-AUTHOR_KEYS = ("author", "authors", "creator", "creators", "著者", "responsibility")
+AUTHOR_KEYS = ("authors_raw", "author", "authors", "creator", "creators", "著者", "responsibility")
 PUBLISHER_KEYS = ("publisher", "publisher_name", "出版社", "出版者")
-PUB_YEAR_KEYS = ("pub_year", "year", "publication_year")
+PUB_YEAR_KEYS = ("pub_year_raw", "pub_year", "year", "publication_year")
 PUB_DATE_KEYS = ("publication_date", "published_at", "pub_date", "date", "出版年月日")
 CONTENT_TYPE_KEYS = ("content_type", "type", "kind", "doc_type")
 BOOK_ID_KEYS = ("book_id", "id", "legallib_book_id", "bookId")
@@ -61,6 +62,9 @@ TOC_KEYS = ("toc", "toc_nodes", "tableOfContents", "contents")
 TOC_TEXT_KEYS = ("t", "text", "label", "title", "heading")
 TOC_PAGE_KEYS = ("p", "page", "print_page", "pdf_page", "page_start")
 TOC_LEVEL_KEYS = ("level", "l", "depth")
+# 階層TOCの子ノード配列キー候補（詳細TOCを取りこぼさないため再帰する）
+TOC_CHILD_KEYS = ("children", "child", "items", "nodes", "sub", "subnodes",
+                  "subitems", "sections", "subsections", "childs")
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -177,43 +181,61 @@ def extract_pub_year(raw: dict) -> int | None:
 
 # ─── TOC 抽出 ─────────────────────────────────────────────────────────────────
 
+def _child_list(node: dict) -> list | None:
+    """ノード配下の子ノード配列を返す（最初に見つかった候補キー）。無ければ None。"""
+    for ck in TOC_CHILD_KEYS:
+        v = node.get(ck)
+        if isinstance(v, list) and v:
+            return v
+    return None
+
+
+def _walk_toc(nodes: list, depth: int, out: list[dict]) -> None:
+    """階層TOCを pre-order DFS でフラット化。
+    詳細TOC（ネストした子見出し）を取りこぼさず全ノードを ordinal 連番で展開する。
+    level は node の明示 level/depth を優先、無ければ再帰深さ（root直下=1）。"""
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        text = pick(node, TOC_TEXT_KEYS)
+
+        explicit = pick(node, TOC_LEVEL_KEYS)
+        try:
+            level = int(explicit) if explicit is not None else depth
+        except (ValueError, TypeError):
+            level = depth
+
+        if text:  # 見出しテキストを持つノードのみ行化（ordinal は行に対して連番）
+            page = pick(node, TOC_PAGE_KEYS)
+            try:
+                page = int(page) if page is not None else None
+            except (ValueError, TypeError):
+                page = None
+            out.append({
+                "ordinal": len(out),  # 0始まり連番（locator。anchorではない＝v0.5 §B）
+                "level": level,
+                "page": page,
+                "text": str(text),
+            })
+
+        children = _child_list(node)
+        if children:
+            _walk_toc(children, level + 1, out)
+
+
 def extract_toc_nodes(raw: dict) -> list[dict]:
     """
     legallib raw JSON から bib_toc 行リストを生成。
     bib_toc はフラット: (bib_id, ordinal[0始まり], level, page, text)。親/toc_node_id は持たない。
+    **階層TOCは再帰展開**（詳細TOCを取りこぼさない）。フラットTOCもそのまま動く。
     生 legallib_dl と正規化後フォーマットの両系統のキー名を許容する。
     """
     toc = pick(raw, TOC_KEYS, default=[])
     if not isinstance(toc, list) or not toc:
         return []
-
-    rows = []
-    for i, node in enumerate(toc):
-        if not isinstance(node, dict):
-            continue
-        text = pick(node, TOC_TEXT_KEYS)
-        if not text:
-            continue
-
-        level = pick(node, TOC_LEVEL_KEYS, default=1)
-        try:
-            level = int(level)
-        except (ValueError, TypeError):
-            level = 1
-
-        page = pick(node, TOC_PAGE_KEYS)
-        try:
-            page = int(page) if page is not None else None
-        except (ValueError, TypeError):
-            page = None
-
-        rows.append({
-            "ordinal": i,       # 0始まり・配列位置（locator。anchorではない＝v0.5 §B）
-            "level": level,
-            "page": page,
-            "text": str(text),
-        })
-    return rows
+    out: list[dict] = []
+    _walk_toc(toc, 1, out)
+    return out
 
 
 # ─── bib_record 構築 ───────────────────────────────────────────────────────────
@@ -295,8 +317,16 @@ def inspect(source_dir: Path, limit: int | None) -> None:
             n = toc[0]
             print(f"    node keys : {sorted(n.keys())}")
             print(f"    text <- {pick_key(n, TOC_TEXT_KEYS)!r} / page <- {pick_key(n, TOC_PAGE_KEYS)!r} / level <- {pick_key(n, TOC_LEVEL_KEYS)!r}")
+            # 階層TOCの暴露: どのキーが list 値（=子ノード配列候補）か、既知候補に当たるか
+            list_keys = [k for k, v in n.items() if isinstance(v, list) and v and isinstance(v[0], dict)]
+            print(f"    child(list of dict) keys on node0 : {list_keys}  / 既知候補ヒット: {pick_key(n, TOC_CHILD_KEYS)!r}")
         nodes = extract_toc_nodes(raw)
-        print(f"  -> extract_toc_nodes: {len(nodes)} 行 (例: {nodes[0] if nodes else None})")
+        levels = sorted({r['level'] for r in nodes})
+        top_len = len(toc) if isinstance(toc, list) else 0
+        print(f"  -> extract_toc_nodes: {len(nodes)} 行 (top-level配列={top_len}) / levels={levels}")
+        print(f"     例[0]: {nodes[0] if nodes else None}")
+        if len(nodes) > 1:
+            print(f"     例[深]: {next((r for r in nodes if r['level'] > 1), '（level>1 が出ていない＝ネスト未捕捉の疑い。上の child keys を確認）')}")
 
 
 # ─── メイン処理 ───────────────────────────────────────────────────────────────
