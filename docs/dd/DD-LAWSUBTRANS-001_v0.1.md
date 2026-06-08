@@ -1,0 +1,413 @@
+### DD-LAWSUBTRANS-001 v0.1: 法令改廃に伴う「実質的変更・解釈変遷」レイヤ（形式軸の上に乗る assertion overlay）
+
+> **id**: `DD-LAWSUBTRANS-001` / **version**: v0.1 / **status**: candidate
+> **gate**: `DDLAWSUBTRANS` / **owner**: 浅井 / **author**: Project-codex (claude-code remote)
+> **recorded_at**: 2026-06-08
+> **要旨**: DD-LAWTIME が解いた「法令の**形式的**時間軸（公布・施行・改正・廃止・版解決）」の上に、
+> 「その改廃によって**実質的意味**がどう変わったか／旧法理は生き残るか」を扱う層を新設する。
+> 本層は **事実テーブルではなく、出典付き・順位付きの主張(assertion)テーブル**であり、
+> 「改正あり ⇒ 実質変更あり」という短絡を**物理制約で禁止**し、MCP 出口で**断言しない**。
+
+- **depends_on**: `DD-LAWTIME-001 v0.2.1`（形式軸・PASS_WITH_NOTES, owner ratify 候補） /
+  `30_law_layer`（alo_statutes, law_succession_map, temporal_resolver） / `35_link_layer`(alo_edges) /
+  `31_case_layer` / `32_literature_layer` / `ALOデータ編成指針 v1.0`（L0–L3, resolution_log, raw-first）
+- **不変の核（5つ）**:
+  1. **形式と実質を分離する**。形式的改廃（lawtime）は実質変更の主張を**自動生成しない**。
+  2. 実質的変化・解釈変遷は **assertion（主張）** として持つ。**出典・帰属・確度・反証**を必須化する。
+  3. **真として自動確定しない**。`claim_support_eligible` は実質主張では既定 `false`。
+  4. **alive/dead の二値ではなく多軸**で持つ（formal × substantive × applicability × temporal_reach）。
+  5. **append-only**。再評価は破壊せず追記し、旧主張は `deprecated` に降格して保持する。
+
+---
+
+## §0. なぜ別 DD なのか（look-before-build：世界の収束解）
+
+DD-LAWTIME は「いつ公布/施行され、どの改正法令で、どの時点でどの条文が有効か」までを解いた。
+しかし「**その改正で“意味”が変わったのか／旧法理はなお妥当するのか**」は、法令時間軸の問題ではなく
+**法解釈の変遷をどうデータ化するか**の問題である。両者を同一テーブルに押し込むと、
+
+```
+法令データ上は改正あり  →（短絡）→  だから実質変更あり
+```
+
+という法律家として危険な推論を機械が固定化する。先行事例調査（REFERENCE_law_substantive_transition_prior_art.md）の
+結論は明確で、**「形式的改正の有無」と「実質的意味の変化」を構造的に分離し、後者を出典付き・順位付きの
+主張として持ち、真として自動確定しない**——これが国際的な収束解である。
+
+### 0.1 形式 vs 実質の分離は世界標準（典拠）
+
+| 標準/実務 | 形式(textual/formal) | 実質(substantive/semantic) |
+|---|---|---|
+| **Akoma Ntoso / OASIS LegalDocML** | `textualMod`(substitution/insertion/repeal/renumber/split/join) | **`meaningMod`/`scopeMod`/`efficacyMod`/`forceMod`/`legalSystemMod`** |
+| **ELI**(EU, v1.5＋ELI-I) | textual amendment / `eli:corrects`(法的変更なし) | non-textual / consequential change / `eli:amends`(実質) |
+| **英 legislation.gov.uk** | Textual amendment(F-notes) | **Non-textual/Editorial effect**＝「テキストを変えず意味・範囲・適用を変える」(C-notes) |
+| **米 US Code/OLRC** | textual amendment | Editorial Reclassification(テキスト不変) / positive vs prima facie |
+| **Citator**(Shepard's/KeyCite/BCite) | — | **"superseded by statute" を overruled と別カテゴリに隔離** |
+
+- **Palmirani の三分類**（改正は ①テキスト ②規範の射程(scope) ③力・効力・適用可能性の時間 のいずれかに作用）が共通の祖。
+- 英国は国家データとして「**テキスト不変だが意味・範囲・適用が変わった**」を別カテゴリ（non-textual effect）で実際に保持している。本 DD の問題意識は空想でなく実在の設計要件である。
+
+### 0.2 DD-LAWTIME 側に追記すべき境界宣言（本 DD と同時に効力発生）
+
+> **DD-LAWTIME v0.2.1 は、法令の形式的時間軸・版解決・改廃イベントの基盤に限る。
+> 改廃に伴う実質的変更、解釈変遷、立法担当者意図、旧法理の存続評価は、本 DD（DD-LAWSUBTRANS-001）
+> に切り出す。後続 AI は lawtime を見て「法令の有効性も実質解釈も全部解ける」と誤読してはならない。**
+
+---
+
+## §1. レイヤ位置づけ（ALO データ編成指針との整合）
+
+| ALO 層 | 本 DD の対象 |
+|---|---|
+| L0 Raw | 立案担当者解説/逐条解説/判例/論文/官報 の raw（既存 ext_* / bib 系を流用、本DDでは新設しない） |
+| L1 Canonical(薄い) | 同一性ハブは lawtime（`alo_law_work` / `alo_statutes`）に既存。本DDは新 canonical を作らない |
+| **L2 Curated Overlay** | **本 DD の中核**。`source_basis_json`/`confidence`/`generated_by` 思想の assertion 群 |
+| L3 Derived | MCP 出口の提示生成（§5）。raw/curated から再生成可能 |
+
+ALO データ編成指針の `resolution_log`（decision_type/basis/decision_confidence/decided_by）思想を、
+本 DD では **append-only の review-event（T6）** として具体化する。
+
+---
+
+## §2. 統制語彙（各値に先行事例の典拠を付す）
+
+### 2.1 `substantive_change_type`（条文×改正ペアの実質変化型）
+`no_substantive_change`（文言整理のみ。AKN textual-only / `eli:corrects`）/
+`wording_clarification`（明確化。立案担当者が「実質変更なし」と説明する典型）/
+`scope_expansion` / `scope_reduction`（AKN `scopeMod`）/
+`requirement_added` / `requirement_removed` / `requirement_changed` /
+`effect_changed`（法的効果）/ `subject_changed`（主体・義務者）/ `procedure_changed` /
+`efficacy_change`（停止・効力変動。AKN `efficacyMod` / Palmirani suspension）/
+`substantive_change_unspecified` / `disputed` / `unknown`
+
+### 2.2 `interpretation_transition_type`（解釈の変遷型）
+`interpretation_continues`（旧法理が新法下でも妥当）/ `interpretation_discontinued`（維持不能）/
+`interpretation_modified` / `interpretation_newly_established` / `interpretation_disputed` / `unknown`
+
+### 2.3 旧法存続 = 三軸＋効果方向（二値では足りない）
+- `formal_status`（**lawtime から継承するミラー値**。本DDは真の源でない）:
+  `in_force / repealed / expired / superseded / not_yet_in_force / annulled`
+- `substantive_status`: `continues / partially_continues / discontinued / transformed / disputed / unknown`
+- `applicability_scope`（**多値**）: `pending_cases / past_events / existing_contracts /
+  transitional_period / specific_industry / specific_procedure / none / unknown`
+- `temporal_reach`: `ex_nunc`（将来効・過去効果存続＝abrogation）/ `ex_tunc`（遡及＝annulment）/ `unknown`
+  （典拠: Governatori & Rotolo, *Logic J. IGPL* 18(1), 2010; Kelsen validity≠efficacy; Bulygin membership≠applicability）
+
+### 2.4 `asserted_by_source_type` と `source_tier`（立法担当者意図は重いが絶対でない）
+| source_type | tier | binding_weight | 備考 |
+|---|---|---|---|
+| `official_legal_data` | 1 | binding(formal) | 官報/改正法令/附則。**形式事実＝lawtime 側**。本DDでは参照のみ・再主張しない |
+| `legislative_drafter` | 2 | strong_persuasive | 立案担当者解説・一問一答 |
+| `ministry_commentary` | 2 | strong_persuasive | 所管庁逐条解説・通達 |
+| `legislative_record` | 2 | strong_persuasive | 国会審議録 |
+| `court` | 3 | strong_persuasive | 判例（適用場面での解釈結果） |
+| `scholar` | 4 | persuasive | 学説・論文 |
+| `treatise` | 4 | persuasive | 体系書・学者逐条解説 |
+| `practitioner` | 4 | persuasive | 実務書 |
+| `alo_internal` | 5 | observational | ALO 実務運用・内部メモ |
+
+**重要**: tier は「**形式事実と評価を混ぜない**」ための仕切りであり、tier 2(立案担当者)を**最終真実視しない**。
+tier 2 の「実質変更なし」主張に対し tier 3(判例)/tier 4(学説)が反対しうる（§2.5 dispute）。
+
+### 2.5 `assertion_status`（Wikidata rank＋ワークフロー）
+`observed`（機械検知＝textual_delta 有等）/ `candidate`（抽出・提案）/ `reviewed`（人手確認）/
+`accepted`（ALO として採用。ただし出典付き）/ `disputed`（競合主張あり）/ `deprecated`（より良い主張に降格・**削除しない**）
+
+### 2.6 `treatment_relation`（citator union：判例/学説が条文・法理を扱う関係）
+positive: `followed/applied/approved/relied_upon`｜neutral: `cited/considered/explained`｜
+caution: `distinguished/limited/questioned/criticized/called_into_doubt/declined_to_extend/followed_with_reservations/not_applied`｜
+negative: `overruled/abrogated/disapproved`｜**statutory: `superseded_by_statute`（隔離。形式変更≠実質的死）**
+
+---
+
+## §3. スキーマ設計（append-only / assertion + evidence + provenance）
+
+> URI/キー規約は lawtime に準拠: `law_id`=e-Gov 15桁, `law_revision_id`=e-Gov revision_id,
+> `article_path`=egov URI tail（例 `art:709`, `art:415:para:2:item:1`）。
+> これは lawtime P1 note（`fn_resolve_law_reference_at` が受ける `article_path_json` locator）との接続点。
+
+### T1. `alo_law_textual_delta`（**観測・形式の基盤**。Phase 2。実質主張ではない）
+```sql
+CREATE TABLE alo_law_textual_delta (
+  delta_id             bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  law_work_id          text NOT NULL REFERENCES alo_law_work(law_work_id),
+  law_id               text NOT NULL,
+  article_path         text NOT NULL,                 -- egov URI tail
+  from_law_revision_id text NOT NULL,                 -- alo_statutes.law_revision_id
+  to_law_revision_id   text NOT NULL,
+  delta_kind           text NOT NULL,                 -- AKN textualMod 準拠
+  text_changed         boolean NOT NULL,              -- false = 番号変更/移動のみ
+  similarity           numeric,                       -- 0..1 正規化編集類似度（NULL可）
+  diff_pointer         text,                          -- 差分 payload への pointer
+  detector_version     text NOT NULL,
+  source_snapshot_id   text NOT NULL,                 -- どの e-Gov 取込版で検出したか
+  known_from           timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT ck_delta_kind CHECK (delta_kind IN
+    ('substitution','insertion','repeal','renumber','relocate','split','join','no_change','unknown'))
+);
+CREATE INDEX alo_delta_work_art_idx ON alo_law_textual_delta(law_work_id, article_path);
+```
+> **textual_delta は「テキストが変わった/変わらない」という形式観測にすぎない。実質変化を主張しない。**
+> ここが実質軸への入口だが、§4 gate により自動昇格を禁止する。
+
+### T2. `alo_law_substantive_change_assertion`（**中核**）
+```sql
+CREATE TABLE alo_law_substantive_change_assertion (
+  assertion_id         bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  law_work_id          text NOT NULL REFERENCES alo_law_work(law_work_id),
+  article_path         text NOT NULL,
+  from_law_revision_id text,                          -- 全体改正等で NULL 可
+  to_law_revision_id   text,
+  related_delta_id     bigint REFERENCES alo_law_textual_delta(delta_id),  -- 形式基盤（任意）
+  change_type          text NOT NULL,                 -- §2.1
+  temporal_reach       text NOT NULL DEFAULT 'unknown',
+  asserted_by_source_type text NOT NULL,              -- §2.4
+  source_tier          smallint NOT NULL,             -- 1..5（source_type から導出・冗長保持）
+  evidence_pointer_id  bigint REFERENCES alo_law_interpretive_evidence(evidence_pointer_id),
+  confidence           text NOT NULL DEFAULT 'low',   -- low/medium/high（関連強度。真理確度ではない）
+  rank                 text NOT NULL DEFAULT 'normal',-- preferred/normal/deprecated（Wikidata式）
+  rank_reason          text,                          -- rank<>normal で必須（P2241/P7452 相当）
+  counter_assertion_id bigint REFERENCES alo_law_substantive_change_assertion(assertion_id),
+  valid_for_case_type  text,                          -- 適用場面の限定（任意）
+  applies_from         date,
+  applies_until        date,
+  claim_support_eligible boolean NOT NULL DEFAULT false,  -- 実質主張は既定 false
+  asserted_at          timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT ck_subchg_type CHECK (change_type IN
+    ('no_substantive_change','wording_clarification','scope_expansion','scope_reduction',
+     'requirement_added','requirement_removed','requirement_changed','effect_changed',
+     'subject_changed','procedure_changed','efficacy_change','substantive_change_unspecified',
+     'disputed','unknown')),
+  CONSTRAINT ck_subchg_reach  CHECK (temporal_reach IN ('ex_nunc','ex_tunc','unknown')),
+  CONSTRAINT ck_subchg_src    CHECK (asserted_by_source_type IN
+    ('official_legal_data','legislative_drafter','ministry_commentary','legislative_record',
+     'court','scholar','treatise','practitioner','alo_internal')),
+  CONSTRAINT ck_subchg_tier   CHECK (source_tier BETWEEN 1 AND 5),
+  CONSTRAINT ck_subchg_conf   CHECK (confidence IN ('low','medium','high')),
+  CONSTRAINT ck_subchg_rank   CHECK (rank IN ('preferred','normal','deprecated')),
+  CONSTRAINT ck_subchg_rankrsn CHECK (rank = 'normal' OR rank_reason IS NOT NULL),
+  -- 安全弁: claim_support は accepted・証拠あり・反証なし のときだけ（§4 で view/gate にも二重化）
+  CONSTRAINT ck_subchg_claim  CHECK (
+    claim_support_eligible = false
+    OR (evidence_pointer_id IS NOT NULL AND counter_assertion_id IS NULL))
+);
+CREATE INDEX alo_subchg_work_art_idx ON alo_law_substantive_change_assertion(law_work_id, article_path);
+```
+
+### T3. `alo_law_interpretation_transition`（解釈変遷を第一級に）
+```sql
+CREATE TABLE alo_law_interpretation_transition (
+  transition_id        bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  law_work_id          text NOT NULL REFERENCES alo_law_work(law_work_id),
+  article_path         text,
+  doctrine_label       text,                          -- 法理/解釈命題の短ラベル
+  transition_type      text NOT NULL,                 -- §2.2
+  before_revision_id   text,
+  after_revision_id    text,
+  interpretive_basis   text,                          -- 解釈規準/canon（Sartor 論証スキーム名を任意で）
+  treatment_relation   text,                          -- §2.6（判例/学説由来のとき）
+  asserted_by_source_type text NOT NULL,
+  source_tier          smallint NOT NULL,
+  evidence_pointer_id  bigint REFERENCES alo_law_interpretive_evidence(evidence_pointer_id),
+  assertion_status     text NOT NULL DEFAULT 'candidate',
+  confidence           text NOT NULL DEFAULT 'low',
+  counter_transition_id bigint REFERENCES alo_law_interpretation_transition(transition_id),
+  claim_support_eligible boolean NOT NULL DEFAULT false,
+  asserted_at          timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT ck_inttr_type CHECK (transition_type IN
+    ('interpretation_continues','interpretation_discontinued','interpretation_modified',
+     'interpretation_newly_established','interpretation_disputed','unknown')),
+  CONSTRAINT ck_inttr_treatment CHECK (treatment_relation IS NULL OR treatment_relation IN
+    ('followed','applied','approved','relied_upon','cited','considered','explained',
+     'distinguished','limited','questioned','criticized','called_into_doubt','declined_to_extend',
+     'followed_with_reservations','not_applied','overruled','abrogated','disapproved','superseded_by_statute')),
+  CONSTRAINT ck_inttr_src  CHECK (asserted_by_source_type IN
+    ('official_legal_data','legislative_drafter','ministry_commentary','legislative_record',
+     'court','scholar','treatise','practitioner','alo_internal')),
+  CONSTRAINT ck_inttr_tier CHECK (source_tier BETWEEN 1 AND 5),
+  CONSTRAINT ck_inttr_conf CHECK (confidence IN ('low','medium','high')),
+  CONSTRAINT ck_inttr_claim CHECK (
+    claim_support_eligible = false
+    OR (evidence_pointer_id IS NOT NULL AND counter_transition_id IS NULL))
+);
+```
+
+### T4. `alo_old_law_survival_assertion`（三軸）
+```sql
+CREATE TABLE alo_old_law_survival_assertion (
+  survival_id          bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  law_work_id          text NOT NULL REFERENCES alo_law_work(law_work_id),
+  article_path         text,
+  superseding_revision_id text,                       -- 形式的に廃止/置換した版
+  formal_status        text NOT NULL,                 -- lawtime からのミラー（§4 で整合 gate）
+  substantive_status   text NOT NULL,
+  applicability_scope  text[] NOT NULL DEFAULT '{}',  -- 多値
+  temporal_reach       text NOT NULL DEFAULT 'unknown',
+  basis_kind           text,                          -- savings_clause/transitional_provision/case_doctrine/practice
+  asserted_by_source_type text NOT NULL,
+  source_tier          smallint NOT NULL,
+  evidence_pointer_id  bigint REFERENCES alo_law_interpretive_evidence(evidence_pointer_id),
+  assertion_status     text NOT NULL DEFAULT 'candidate',
+  confidence           text NOT NULL DEFAULT 'low',
+  counter_survival_id  bigint REFERENCES alo_old_law_survival_assertion(survival_id),
+  claim_support_eligible boolean NOT NULL DEFAULT false,
+  asserted_at          timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT ck_surv_formal CHECK (formal_status IN
+    ('in_force','repealed','expired','superseded','not_yet_in_force','annulled')),
+  CONSTRAINT ck_surv_subst  CHECK (substantive_status IN
+    ('continues','partially_continues','discontinued','transformed','disputed','unknown')),
+  CONSTRAINT ck_surv_reach  CHECK (temporal_reach IN ('ex_nunc','ex_tunc','unknown')),
+  CONSTRAINT ck_surv_scope  CHECK (applicability_scope <@ ARRAY[
+    'pending_cases','past_events','existing_contracts','transitional_period',
+    'specific_industry','specific_procedure','none','unknown']::text[]),
+  CONSTRAINT ck_surv_src   CHECK (asserted_by_source_type IN
+    ('official_legal_data','legislative_drafter','ministry_commentary','legislative_record',
+     'court','scholar','treatise','practitioner','alo_internal')),
+  CONSTRAINT ck_surv_tier  CHECK (source_tier BETWEEN 1 AND 5),
+  CONSTRAINT ck_surv_conf  CHECK (confidence IN ('low','medium','high')),
+  CONSTRAINT ck_surv_claim CHECK (
+    claim_support_eligible = false
+    OR (evidence_pointer_id IS NOT NULL AND counter_survival_id IS NULL))
+);
+```
+
+### T5. `alo_law_interpretive_evidence`（証拠ポインタ。TOCLEGALREF 再現性パターン再利用）
+```sql
+CREATE TABLE alo_law_interpretive_evidence (
+  evidence_pointer_id  bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  source_type          text NOT NULL,                 -- §2.4 と同値域
+  source_uri           text,                          -- canonical or provisional pointer
+  source_record_key    text,                          -- bib_id / 事件番号 / 解説ID 等
+  locator              text,                          -- 頁/条/項
+  source_span_hash     text,                          -- 引用スパンの sha1（再現性）
+  quoted_text          text,                          -- 抜粋（citator 流儀: 出典が何と言ったかを示す）
+  parser_version       text,
+  retrieved_at         timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT ck_ev_src CHECK (source_type IN
+    ('official_legal_data','legislative_drafter','ministry_commentary','legislative_record',
+     'court','scholar','treatise','practitioner','alo_internal'))
+);
+```
+
+### T6. `alo_law_assertion_review_event`（append-only ライフサイクル＝編成指針 resolution_log の具体化）
+```sql
+CREATE TABLE alo_law_assertion_review_event (
+  review_id            bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  assertion_kind       text NOT NULL,                 -- substantive_change/interpretation_transition/old_law_survival
+  assertion_id         bigint NOT NULL,
+  new_status           text NOT NULL,                 -- §2.5
+  new_rank             text,                          -- preferred/normal/deprecated
+  reason               text NOT NULL,                 -- 機械可読な理由（Wikidata P2241/P7452 相当）
+  decided_by           text NOT NULL,                 -- extractor/curator/gpt_ometsuke/owner
+  decided_at           timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT ck_rev_kind   CHECK (assertion_kind IN
+    ('substantive_change','interpretation_transition','old_law_survival')),
+  CONSTRAINT ck_rev_status CHECK (new_status IN
+    ('observed','candidate','reviewed','accepted','disputed','deprecated')),
+  CONSTRAINT ck_rev_rank   CHECK (new_rank IS NULL OR new_rank IN ('preferred','normal','deprecated'))
+);
+```
+
+### append-only 強制（T1, T2, T3, T4, T6 の content 列は不変）
+```sql
+CREATE FUNCTION trg_subtrans_append_only() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN RAISE EXCEPTION '% is append-only (content immutable); record lifecycle via alo_law_assertion_review_event', TG_TABLE_NAME; END; $$;
+-- 各テーブルに BEFORE UPDATE OR DELETE トリガを張る。
+-- status/rank の変更は T6 への INSERT で表現し、現在値は §3.7 view で解決する。
+```
+> **設計判断（GPT お目付け役向け論点）**: lawtime の eval_event と同じ append-only 思想を踏襲しつつ、
+> Wikidata 式の「誤主張も削除せず deprecated 保持」を両立させるため、主張の**内容は不変**、
+> **ライフサイクル(status/rank)は append-only の review-event** で表す event-sourced 構成にした。
+> 現在 status/rank は最新 review-event を畳んだ view（下記）で解決する。
+
+### 3.7 現在状態 view（claim_support 判定の単一窓口）
+```sql
+CREATE VIEW v_subchg_current AS
+SELECT a.*,
+       COALESCE(r.new_status, 'candidate') AS current_status,
+       COALESCE(r.new_rank,  a.rank)       AS current_rank
+FROM alo_law_substantive_change_assertion a
+LEFT JOIN LATERAL (
+  SELECT new_status, new_rank FROM alo_law_assertion_review_event e
+  WHERE e.assertion_kind='substantive_change' AND e.assertion_id=a.assertion_id
+  ORDER BY e.decided_at DESC LIMIT 1
+) r ON true;
+-- interpretation_transition / old_law_survival も同型 view を持つ。
+```
+
+---
+
+## §4. 品質ゲート（§8 の落とし穴を物理/検査で封じる。lawtime D6 様式）
+
+| gate | 検証 | 合格 |
+|---|---|---|
+| `amendment_not_auto_substantive` | textual_delta のみを根拠に substantive_change が candidate 超の status を持たない（asserted_by_source_type が delta 検出器でなく実在の解釈源） | 0件 |
+| `substantive_requires_evidence` | current_status ∈ (reviewed,accepted) ⇒ evidence_pointer_id NOT NULL | 0件 |
+| `disputed_blocks_claim` | counter_*_id NOT NULL ⇒ claim_support_eligible=false かつ current_status='disputed' | 0件 |
+| `claim_support_requires_accepted` | claim_support_eligible=true ⇒ current_status='accepted' ∧ evidence あり ∧ counter なし ∧ from/to_revision が lawtime で解決 | 0件 |
+| `drafter_intent_not_sole_truth` | tier2(立案担当者) 単独の「no_substantive_change/continues」に tier3(court) の反対主張があれば accepted 不可（disputed 強制） | 0件 |
+| `old_law_survival_three_axis` | survival 行は formal_status・substantive_status・非空 applicability_scope を必ず持つ | 強制 |
+| `formal_status_consistent_with_lawtime` | survival.formal_status は lawtime resolver の出力と一致（形式軸に矛盾しない） | 0件 |
+| `no_substantive_without_resolved_lawtime` | from/to/superseding revision が lawtime（alo_statutes/succession）で解決可能 | 0件 |
+| `assertion_append_only_enforced` | T1–T4,T6 content 列の UPDATE/DELETE が拒否される | 強制 |
+| `rank_reason_present` | rank<>'normal' は rank_reason 必須（Wikidata P2241/P7452） | 強制 |
+
+---
+
+## §5. MCP 出口契約（断言しない・出典付き候補・conflict 提示）
+
+実証根拠: Stanford RegLab — 汎用 LLM の法令幻覚 69–88%、RAG 付き商用ツールでも 1/6〜1/3 が幻覚。
+→ **単一の答えを断言せず、出典付き候補を順位・反証ごと提示し、人間検証を必須**にする。
+
+```
+NG: 「旧法理は現在も有効です。」
+OK: 「形式的には〇年改正で当該条文が変更されています（lawtime: superseded）。
+     ただし立案担当者解説 A は『実質変更なし』と説明（tier2, evidence ptr）。
+     一方、文献 B はこの改正を要件変更と評価（tier4, evidence ptr）。
+     裁判例 C は旧法下の判断枠組みを改正後にも参照（tier3, treatment=followed）。
+     したがって実質的存続は reviewed candidate として扱うべきで、断定はできません。」
+```
+
+出力規則:
+1. **形式事実（lawtime）は機械提示してよい**（「当時有効」「〇年改正で superseded」まで）。
+2. **実質（本DD）は `claim_support_eligible=true`（accepted・証拠・反証なし）でも“候補”として提示**し、
+   tier・evidence・counter を併記する。`disputed` は必ず両論併記。
+3. 出力に出すのは `v_*_current` 経由。`deprecated` rank は既定で非表示（監査時のみ）。
+
+---
+
+## §6. 実装フェーズ（焦らず段階的に）
+
+| Phase | 内容 | 成果物 |
+|---|---|---|
+| **1（済）** | 形式的時間軸 | DD-LAWTIME v0.2.1 |
+| **2** | 条文テキスト差分（条・項・号の文言差分） | T1 `alo_law_textual_delta`（具体DDL・本DD） |
+| **3** | 立法資料・逐条解説・所管庁資料の接続 | drafter_intent assertion（T2 を tier2 源で投入） |
+| **4** | 判例・文献による実質変更/解釈評価 | T2/T3/T4 を tier3-4 源で投入、counter/dispute 形成 |
+| **5** | MCP 出口での安全利用 | §5 出力契約・`v_*_current`・断言禁止 |
+
+> Phase 2 は lawtime が「未着手」として持っていた P2（条文レベル差分）/`alo_amendment_effects` 構想を本DDが正式に引き取るもの。
+> Phase 3-4 のスキーマ(T2/T3/T4)は本DDで candidate 設計まで提示し、production DDL は §7 の通り別ゲート。
+
+---
+
+## §7. accept 条件（lawtime と同方針：design accept と production を分離）
+
+- **design accept**: GPT お目付け役 `DDLAWSUBTRANS_PASS / PASS_WITH_NOTES` 以上 ＋ owner ratify。
+- **production DDL は HOLD**: §4 全 gate が branch dry-run で実行可能・全 PASS になるまで物理化しない。
+- **依存**: DD-LAWTIME v0.2.1 の owner ratify 完了（formal_status ミラー・lawtime 整合 gate の前提）。
+- **境界宣言（§0.2）を lawtime ratify メモにも同時反映**すること。
+
+## §8. 監査観点（GPT お目付け役向け）
+1. 形式的改廃と実質的変更を**分離**できているか（gate `amendment_not_auto_substantive`）。
+2. 立法担当者意図を**重く扱うが絶対視していない**か（tier ＋ counter ＋ `drafter_intent_not_sole_truth`）。
+3. 旧法の**形式的失効と実質的存続を分けて**いるか（T4 三軸 ＋ `formal_status_consistent_with_lawtime`）。
+4. 判例・文献・行政解釈・逐条解説を **assertion** として持てるか（T2/T3/T5 ＋ tier）。
+5. MCP 出口で**断言せず**根拠付き候補として提示できるか（§5）。
+6. `claim_support` に使う条件を**安全側**に倒しているか（既定 false ＋ `claim_support_requires_accepted`）。
+7. append-only と Wikidata 式 deprecated 保持の**両立**設計（T6 event-sourced）は妥当か。
+
+## §9. changelog
+- v0.1 (2026-06-08): 初版。先行事例調査（REFERENCE_law_substantive_transition_prior_art.md）に基づき、
+  形式/実質分離原則・統制語彙・T1–T6 スキーマ・10 gate・MCP 出口契約・Phase 2-5 ロードマップを提示。
+  DB 書込みゼロ（design accept ＋ 層実装後）。
