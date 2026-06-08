@@ -49,6 +49,17 @@ python scripts/pipeline_dashboard.py --manifest pipeline/pipeline.json \
 
 snapshot は純データなので、**日次でコミットして差分を見れば進捗の動き**も追える。
 
+### 合言葉 `/dd` と日次収集（ワンクリック）
+
+- **見る側（どこでも）**: Claude セッションで `/dd`（または「DD全体の現状教えて」）と言うと、
+  コミット済み snapshot を描画して **HTML を画面に出し、サマリ＋要注目をチャットに要約**する。
+  定義は `.claude/commands/dd.md`。read-only 観測のみ。
+- **採る側（Mac）**: `scripts/dd_collect.command`（Finder ダブルクリック可）が
+  実フォルダを走査 → `pipeline/pipeline_snapshot.json`（tracked）へ採取 → 描画 → コミット。
+  `--push` で push まで、`--no-commit` で試走。root は `ALO_BOOKDX_ROOT` / `ALO_ALO_ROOT`
+  で上書き可（無い root のステージは todo 表示になるだけ）。
+  これを日次で回すと `/dd` が常に前日比つきの最新を出せる。
+
 > **manifest 検証は両経路で効く（v0.2.1 / N1）**: 上の「収集」も「収集+描画を一発で」も
 > 内部で `collect()` を通る。`collect()` 自体が不正 manifest（重複 id / 未知依存 / 循環 /
 > 未知 root / 不正 probe type）を**既定で拒否**（`ManifestError` → exit 1, 出力は書かない）

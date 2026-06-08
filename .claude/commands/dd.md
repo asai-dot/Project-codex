@@ -12,7 +12,9 @@ ALO の DD/パイプライン全体の現状を可視化して報告して。こ
 
 2. **snapshot を決める**（鮮度の源）。優先順位:
    - 引数 `$ARGUMENTS` にパスが渡っていればそれ。
-   - 無ければ `build/pipeline_snapshot.json`。
+   - 無ければ `build/pipeline_snapshot.json`（ローカルで直前に採取した最新）。
+   - 無ければ `pipeline/pipeline_snapshot.json`（`scripts/dd_collect.command` が
+     コミットする正規パス）。
    - それも無ければ、リポジトリにコミット済みの `*pipeline_snapshot*.json` を探す。
    - **どれも無ければ収集にフォールバック**（下の 3b）。
 
