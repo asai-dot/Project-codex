@@ -1,7 +1,7 @@
 # structure_profile v0.2 — 法律書式テンプレ「再復元可能」構造設計（30件実物逆算版）
 
 - **由来**: GPT お目付け監査 `DESIGN_MODIFY_REQUIRED`（v0.1）→ 実物30件(.jsonl, Box `material_queue/20260608_legallib_sample30`)をOCR逆算。
-- **status**: 提案（v0.2）。番頭の意味監査済 → GPT再監査へ。accepted は未。
+- **status**: GPT再監査 **DESIGN_PASS_WITH_NOTES**（2026-06-08, `from_gpt/20260608_tmplstruct_v0.2_DESIGN_RESULT.md`）＝設計候補として採用可・owner ratify可（条件付）・本番展開は未。NOTES は `archetype_classifier_spec_v0.3.md` に実装仕様化。次工程＝全3,806件 無料OCR分類。
 - **一行**: 書式は「読む文献(outline)」でなく「再生成できる型」。**復元単位＝アーキタイプ（定型span＋差込slot＋繰返group）**。formType/category は型に乗る**ラベル**にすぎない。
 
 ## 0. 30件実証で確定した事実（検収根拠）
