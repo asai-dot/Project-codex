@@ -23,8 +23,18 @@
           {"id": "book_toc", "label": "詳細目次(TOC)", "stages": ["toc_baseline", "legallib_join_dryrun", "legallib_review", "legallib_apply", "hastoc_reconcile", "toc_search_index"], "note": "TOC基盤・詳細TOC接合・hasToc整合・横断検索索引"},
           {"id": "book_author", "label": "著者", "stages": [], "note": "外部WS: 著者正規化#8 (authority.person 名寄せ)"}
         ]},
-      {"id": "journal", "label": "④ 雑誌", "stages": ["legallib_article_parser"], "note": "論文entity・著者 (論文抽出#8)"},
-      {"id": "vocab", "label": "⑤ 語彙", "stages": [], "note": "外部WS: 三点測量#2 / JLT着地#1"},
+      {"id": "journal", "label": "④ 雑誌", "stages": ["legallib_article_parser"], "note": "号・論文entity・著者 (論文抽出#8)",
+        "subs": [
+          {"id": "journal_issue", "label": "号(取得)", "stages": [], "note": "422号。取得は legallib_fetch (③書誌メタと共通の上流)"},
+          {"id": "journal_article", "label": "論文entity", "stages": ["legallib_article_parser"], "note": "号→{title,authors,参照} 分解 (article_parser#8)"},
+          {"id": "journal_author", "label": "著者", "stages": [], "note": "外部WS: 著者正規化#8 (③文献と共通)"}
+        ]},
+      {"id": "vocab", "label": "⑤ 語彙", "stages": [], "note": "外部WS: 三点測量#2 / JLT着地#1",
+        "subs": [
+          {"id": "vocab_jlt", "label": "JLT", "stages": [], "note": "JLT v19.0 権威見出し 3,869 / Box着地#1"},
+          {"id": "vocab_gakuyo", "label": "学陽", "stages": [], "note": "学陽 all_entries 2,684・554正規化#2"},
+          {"id": "vocab_yuhikaku", "label": "有斐閣", "stages": [], "note": "三点測量の第3源 (core 922)"}
+        ]},
       {"id": "procedure", "label": "⑥ 手続", "stages": [], "note": "統合軸(横串): ①③⑦②を束ねる・未起票"},
       {"id": "template", "label": "⑦ 書式", "stages": [], "note": "外部WS: 書式テンプレ構造化 tmplstruct (3,806件)"}
     ],
