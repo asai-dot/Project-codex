@@ -1,8 +1,10 @@
-### DD-LAWSUBTRANS-001 v0.1.1: 法令改廃に伴う「実質的変更・解釈変遷」レイヤ（形式軸の上に乗る assertion overlay）
+### DD-LAWSUBTRANS-001 v0.1.2: 法令改廃に伴う「実質的変更・解釈変遷」レイヤ（形式軸の上に乗る assertion overlay）
 
-> **id**: `DD-LAWSUBTRANS-001` / **version**: v0.1.1 / **status**: candidate
-> **supersedes_review**: v0.1（gate DDLAWSUBTRANS → `DDLAWSUBTRANS_PASS_WITH_NOTES`, 2026-06-08。
-> 設計採用可・owner ratify可(design)・production DDL は HOLD。本 v0.1.1 は指摘4点を反映）
+> **id**: `DD-LAWSUBTRANS-001` / **version**: v0.1.2 / **status**: candidate
+> **supersedes_review**: v0.1.1（gate DDLAWSUBTRANS → `DDLAWSUBTRANS_PASS_WITH_NOTES` ×2,
+> 2026-06-10。GPT Pro お目付け役＋GPT-5.5 Pro 再レビュー。v0.1 指摘4点すべて CLOSED、
+> 即時 blocker なし。本 v0.1.2 は production 前 Note A–D を §10 に明文化したのみ＝設計不変）
+> / v0.1（2026-06-08 PASS_WITH_NOTES, owner ratify可(design)）
 > **gate**: `DDLAWSUBTRANS` / **owner**: 浅井 / **author**: Project-codex (claude-code remote)
 > **recorded_at**: 2026-06-10
 > **要旨**: DD-LAWTIME が解いた「法令の**形式的**時間軸（公布・施行・改正・廃止・版解決）」の上に、
@@ -188,7 +190,11 @@ CREATE TABLE alo_law_substantive_change_assertion (
   valid_for_case_type  text,                          -- 適用場面の限定（任意）
   applies_from         date,
   applies_until        date,
-  claim_support_eligible boolean NOT NULL DEFAULT false,  -- 実質主張は既定 false
+  -- T2 は物理 assertion_status 列を持たない（設計意図, Note D）: 初期 status は
+  -- view 上 'candidate' とみなし、現在 status は T6 review-event を畳んだ §3.7 view で解決する。
+  -- claim_support_eligible は原則 view 導出（Note C）。物理列として保持する場合は
+  -- §4 gate `claim_support_consistent_with_view` で view 導出値との drift を検査する。
+  claim_support_eligible boolean NOT NULL DEFAULT false,  -- 実質主張は既定 false（原則 view 導出）
   asserted_at          timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT ck_subchg_type CHECK (change_type IN
     ('no_substantive_change','wording_clarification','scope_expansion','scope_reduction',
@@ -296,9 +302,12 @@ CREATE TABLE alo_law_interpretive_evidence (
   evidence_pointer_id  bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   source_type          text NOT NULL,                 -- §2.4 と同値域
   source_tier          smallint NOT NULL,             -- v0.1.1: 証拠側にも tier を冗長保持
+  -- Note A: 列は nullable のまま（candidate evidence では未確定があり得る）。
+  -- 完全性は DDL CHECK でなく gate `evidence_locator_complete` で、reviewed/accepted/
+  -- claim_support 対象の evidence に限定して NOT NULL 検査する（一律 NOT NULL にしない）。
   source_uri           text,                          -- canonical or provisional pointer
   source_record_key    text,                          -- bib_id / 事件番号 / 解説ID 等
-  locator              text,                          -- 頁/条/項（v0.1.1: 必須運用。gate で検査）
+  locator              text,                          -- 頁/条/項（reviewed/accepted で gate 必須）
   source_span_hash     text,                          -- 引用スパンの sha1（再現性）
   quoted_text          text,                          -- 抜粋（citator 流儀: 出典が何と言ったかを示す）
   parser_version       text,
@@ -365,9 +374,10 @@ LEFT JOIN LATERAL (
 | `amendment_not_auto_substantive` | textual_delta のみを根拠に substantive_change が candidate 超の status を持たない（asserted_by_source_type が delta 検出器でなく実在の解釈源） | 0件 |
 | `substantive_requires_evidence` | current_status ∈ (reviewed,accepted) ⇒ evidence_pointer_id NOT NULL | 0件 |
 | `disputed_blocks_claim` | counter_*_id NOT NULL ⇒ claim_support_eligible=false かつ current_status='disputed' | 0件 |
-| `claim_support_requires_accepted` | claim_support_eligible=true ⇒ current_status='accepted' ∧ disputed=false ∧ **evidence_count>=1** ∧ **未解決 counter なし** ∧ **lawtime_resolved=true**（from/to/superseding revision が lawtime で解決） | 0件 |
+| `claim_support_requires_accepted` | claim_support_eligible=true ⇒ current_status='accepted' ∧ disputed=false ∧ **evidence_count>=1** ∧ **未解決 counter なし** ∧ **lawtime_resolved=true**（from/to/superseding revision が lawtime で解決）。**Note B**: 当面は単一 `evidence_pointer_id IS NOT NULL` を evidence_count=1 とみなす。multi-evidence を許す場合は join table（`alo_law_assertion_evidence`）を新設し本 gate を count 化する。 | 0件 |
+| `claim_support_consistent_with_view` | **Note C**: `claim_support_eligible` を物理列として保持する場合、その値は §3.7 view が §4 条件から導出する値と一致する（保持しない＝view 導出のみなら本 gate は不要） | 0件 |
 | `accepted_requires_review_event` | current_status='accepted' ⇒ 当該 assertion に review_basis 非空の T6 review-event が存在（**tier の高さだけで accepted 化しない**） | 0件 |
-| `evidence_locator_complete` | reviewed/accepted の根拠 evidence は source_uri・source_type・source_tier・locator・source_span_hash・retrieved_at・parser_version を備える | 0件 |
+| `evidence_locator_complete` | **reviewed/accepted/claim_support 対象**の根拠 evidence は source_uri・source_type・source_tier・locator・source_span_hash・retrieved_at・parser_version を備える（**Note A**: DDL の一律 NOT NULL ではなく、本 gate SQL で対象を限定して検査。candidate evidence には適用しない） | 0件 |
 | `drafter_intent_not_sole_truth` | tier2(立案担当者) 単独の「no_substantive_change/continues」に tier3(court) の反対主張があれば accepted 不可（disputed 強制） | 0件 |
 | `old_law_survival_three_axis` | survival 行は formal_status・substantive_status・非空 applicability_scope を必ず持つ | 強制 |
 | `formal_status_consistent_with_lawtime` | survival.formal_status は lawtime resolved view の算出値と一致（**永続ミラーである以上 drift gate 必須**。原則は view からの都度算出） | 0件 |
@@ -433,7 +443,27 @@ OK: 「形式的には〇年改正で当該条文が変更されています（l
 6. `claim_support` に使う条件を**安全側**に倒しているか（既定 false ＋ `claim_support_requires_accepted`）。
 7. append-only と Wikidata 式 deprecated 保持の**両立**設計（T6 event-sourced）は妥当か。
 
+## §10. production 前条件（v0.1.1 監査 Note A–D。設計不変・実装時に閉じる）
+
+v0.1.1 は GPT Pro お目付け役＋GPT-5.5 Pro 再レビューで `DDLAWSUBTRANS_PASS_WITH_NOTES`（×2,
+2026-06-10）。v0.1 指摘4点は **CLOSED**、即時 blocker なし。以下は **production DDL 化の前**に
+閉じる条件であり、design は変えない。
+
+| Note | 内容 | 閉じ方（production 時） |
+|---|---|---|
+| **A** evidence locator gate の SQL 化 | T5 の locator 系列は nullable のまま。一律 NOT NULL にしない | gate `evidence_locator_complete` を、reviewed/accepted/claim_support 対象 evidence に限定した SQL で実装 |
+| **B** `evidence_count>=1` の算出 | 当面は単一 `evidence_pointer_id IS NOT NULL`=count1 | multi-evidence を許す時のみ join table `alo_law_assertion_evidence` を新設し gate を count 化 |
+| **C** `claim_support_eligible` の drift | 物理列は view 値と乖離しうる | 原則 §3.7 view 導出。物理列を残すなら gate `claim_support_consistent_with_view` を追加 |
+| **D** T2 の status 解決 | T2 は物理 `assertion_status` 列を持たず、現在値は T6 review-event を畳んだ view 解決 | 設計意図として明文化済（T2 コメント／本表）。初期 status は view 上 `candidate` |
+
+その他 production 前必須（§7 と重複）: §4 gates の実 SQL 化、lawtime resolved view の実体接続、
+DD-LAWTIME v0.2.x の production 確定（v0.2.2 は MODIFY_REQUIRED のため依存は v0.2.1 design に限定）。
+
 ## §9. changelog
+- v0.1.2 (2026-06-10): v0.1.1 監査（PASS_WITH_NOTES ×2）の production 前 Note A–D を §10 に明文化
+  し、T2 コメント・gate 表に反映（evidence_locator_complete を対象限定 SQL gate に、
+  新 gate `claim_support_consistent_with_view`、evidence_count 算出注記、T2 status は view 解決の旨）。
+  **設計は不変**（即時 blocker なしのため）。
 - v0.1.1 (2026-06-10): GPT お目付け役 `DDLAWSUBTRANS_PASS_WITH_NOTES`（2026-06-08）の指摘4点を反映。
   ①lawtime 依存を「v0.2.1 design＋resolved lawtime view まで」に再定義（v0.2.2 MODIFY_REQUIRED を
   前提にしない）、formal_status ミラーの drift gate 必須化。②source_tier（証拠の強さ）/
