@@ -125,8 +125,14 @@ procedure_type(spine)
 - **役割分担（訂正）**: **owner は手続を作らない・監査する。** 抽出(条文構造/TOC/裁判所HP)・突合・
   フロー図描画は番頭/機械。owner と GPT は「順序・分岐が権威資産と一致しているか」を確認するだけ。
 
-- **着手**: **既に条見出しを持つ 民事訴訟法 か 刑事訴訟法**をパイロットに、条文の章節構造から
-  flow skeleton を**抽出**（手作り不要・即材料あり）→ 実務書TOC を重ねる → 監査。検証後に横展開。
+- **実装（済）**: `scripts/procedure_flow.py`（load/validate/render、stdlib）＝手続フローを**保持・
+  検証・分岐つきフロー図描画**できる。各 node の `source`(出典) 必須で捏造を弾く。保管は
+  `pipeline/procedure_flow/<id>.json`（→ `_README.md`）。雛形 `commercial_share_issue.example.json`
+  で公開/非公開会社の**分岐が構造として保持できる**ことを実証（`status: scaffold_pre_audit`）。
+- **着手（推奨ソース）**: 段取り本 **「会社法実務スケジュール」**（分岐つき業務段取りの良書）を起点に、
+  その業務スケジュール（分岐・期限・必要書類・根拠条文）を抽出 → flow JSON 化（source にページ）。
+  条文(①/e-Gov・会社法は保有)・実務書TOC(③)・裁判所HP と突合（三点測量）→ owner/GPT 監査。
+  別ルート: 既に条見出しを持つ 民訴/刑訴 を条文構造から skeleton 抽出。いずれも**手作り不要**。
 
 ---
 
