@@ -1,0 +1,43 @@
+{
+  "run_id": "minpo_demo",
+  "assertions": 8,
+  "disputes": 2,
+  "review_events": 5,
+  "by_status": {
+    "candidate": 3,
+    "disputed": 5
+  },
+  "claim_support_eligible_count": 0,
+  "gates": {
+    "gate_disputed_blocks_claim": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_claim_support_requires_accepted": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_assembler_never_accepts": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_no_self_counter": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_dispute_two_sided": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_review_event_has_basis": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_disputed_has_dispute_and_counter": {
+      "pass": true,
+      "detail": "[]"
+    }
+  },
+  "all_gates_pass": true,
+  "db_writes": 0
+}
