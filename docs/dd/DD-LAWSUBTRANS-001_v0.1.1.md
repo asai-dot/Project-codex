@@ -1,15 +1,18 @@
-### DD-LAWSUBTRANS-001 v0.1: 法令改廃に伴う「実質的変更・解釈変遷」レイヤ（形式軸の上に乗る assertion overlay）
+### DD-LAWSUBTRANS-001 v0.1.1: 法令改廃に伴う「実質的変更・解釈変遷」レイヤ（形式軸の上に乗る assertion overlay）
 
-> **id**: `DD-LAWSUBTRANS-001` / **version**: v0.1 / **status**: candidate
+> **id**: `DD-LAWSUBTRANS-001` / **version**: v0.1.1 / **status**: candidate
+> **supersedes_review**: v0.1（gate DDLAWSUBTRANS → `DDLAWSUBTRANS_PASS_WITH_NOTES`, 2026-06-08。
+> 設計採用可・owner ratify可(design)・production DDL は HOLD。本 v0.1.1 は指摘4点を反映）
 > **gate**: `DDLAWSUBTRANS` / **owner**: 浅井 / **author**: Project-codex (claude-code remote)
-> **recorded_at**: 2026-06-08
+> **recorded_at**: 2026-06-10
 > **要旨**: DD-LAWTIME が解いた「法令の**形式的**時間軸（公布・施行・改正・廃止・版解決）」の上に、
 > 「その改廃によって**実質的意味**がどう変わったか／旧法理は生き残るか」を扱う層を新設する。
 > 本層は **事実テーブルではなく、出典付き・順位付きの主張(assertion)テーブル**であり、
 > 「改正あり ⇒ 実質変更あり」という短絡を**物理制約で禁止**し、MCP 出口で**断言しない**。
 
-- **depends_on**: `DD-LAWTIME-001 v0.2.1`（形式軸・PASS_WITH_NOTES, owner ratify 候補） /
-  `30_law_layer`（alo_statutes, law_succession_map, temporal_resolver） / `35_link_layer`(alo_edges) /
+- **depends_on**: `DD-LAWTIME-001 v0.2.1 design`（監査済 PASS_WITH_NOTES）＋ **resolved lawtime view まで**。
+  **lawtime v0.2.2 は MODIFY_REQUIRED のため、その production 実装を前提にしない**（GPT指摘 2026-06-08）。
+  / `30_law_layer`（alo_statutes, law_succession_map, temporal_resolver） / `35_link_layer`(alo_edges) /
   `31_case_layer` / `32_literature_layer` / `ALOデータ編成指針 v1.0`（L0–L3, resolution_log, raw-first）
 - **不変の核（5つ）**:
   1. **形式と実質を分離する**。形式的改廃（lawtime）は実質変更の主張を**自動生成しない**。
@@ -109,9 +112,20 @@ ALO データ編成指針の `resolution_log`（decision_type/basis/decision_con
 **重要**: tier は「**形式事実と評価を混ぜない**」ための仕切りであり、tier 2(立案担当者)を**最終真実視しない**。
 tier 2 の「実質変更なし」主張に対し tier 3(判例)/tier 4(学説)が反対しうる（§2.5 dispute）。
 
-### 2.5 `assertion_status`（Wikidata rank＋ワークフロー）
+### 2.5 `assertion_status`（Wikidata rank＋ワークフロー）と三概念の責務分離
 `observed`（機械検知＝textual_delta 有等）/ `candidate`（抽出・提案）/ `reviewed`（人手確認）/
 `accepted`（ALO として採用。ただし出典付き）/ `disputed`（競合主張あり）/ `deprecated`（より良い主張に降格・**削除しない**）
+
+**責務分離（v0.1.1, GPT指摘2反映）** — 三つは独立した概念であり、相互に自動導出しない:
+| 概念 | 意味 | 決め方 |
+|---|---|---|
+| `source_tier` | **証拠の強さ**（その出典が法解釈上どれだけ重いか） | 出典種別から機械付与 |
+| `assertion_status` | **ALO 内の処分**（観測→候補→確認→採用→係争→降格） | T6 review-event のみで遷移 |
+| `claim_support_eligible` | **出口利用可否**（MCP claim_support に出せるか） | §4 gate 条件から導出 |
+
+したがって **高 tier 資料（立案担当者解説等）であることだけを理由に accepted にしない**。
+`accepted` への遷移は tier を問わず **review_basis を持つ T6 review-event を必須**とする
+（gate `accepted_requires_review_event`）。
 
 ### 2.6 `treatment_relation`（citator union：判例/学説が条文・法理を扱う関係）
 positive: `followed/applied/approved/relied_upon`｜neutral: `cited/considered/explained`｜
@@ -149,6 +163,9 @@ CREATE INDEX alo_delta_work_art_idx ON alo_law_textual_delta(law_work_id, articl
 ```
 > **textual_delta は「テキストが変わった/変わらない」という形式観測にすぎない。実質変化を主張しない。**
 > ここが実質軸への入口だが、§4 gate により自動昇格を禁止する。
+> **ingest policy（v0.1.1 明文化）**: いかなる取込パイプラインも、textual_delta（または lawtime の
+> 改正イベント）の存在のみを根拠に T2/T3/T4 行を自動生成してはならない。実質 assertion の生成には
+> 実在の解釈源（§2.4 source_type）に基づく evidence pointer が必要。
 
 ### T2. `alo_law_substantive_change_assertion`（**中核**）
 ```sql
@@ -239,7 +256,9 @@ CREATE TABLE alo_old_law_survival_assertion (
   law_work_id          text NOT NULL REFERENCES alo_law_work(law_work_id),
   article_path         text,
   superseding_revision_id text,                       -- 形式的に廃止/置換した版
-  formal_status        text NOT NULL,                 -- lawtime からのミラー（§4 で整合 gate）
+  -- v0.1.1: formal_status は原則 lawtime resolved view から都度算出する。
+  -- 永続ミラー列として持つ場合は drift/consistency gate（§4）が必須。
+  formal_status        text NOT NULL,                 -- lawtime ミラー（gate 必須）
   substantive_status   text NOT NULL,
   applicability_scope  text[] NOT NULL DEFAULT '{}',  -- 多値
   temporal_reach       text NOT NULL DEFAULT 'unknown',
@@ -276,13 +295,15 @@ CREATE TABLE alo_old_law_survival_assertion (
 CREATE TABLE alo_law_interpretive_evidence (
   evidence_pointer_id  bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   source_type          text NOT NULL,                 -- §2.4 と同値域
+  source_tier          smallint NOT NULL,             -- v0.1.1: 証拠側にも tier を冗長保持
   source_uri           text,                          -- canonical or provisional pointer
   source_record_key    text,                          -- bib_id / 事件番号 / 解説ID 等
-  locator              text,                          -- 頁/条/項
+  locator              text,                          -- 頁/条/項（v0.1.1: 必須運用。gate で検査）
   source_span_hash     text,                          -- 引用スパンの sha1（再現性）
   quoted_text          text,                          -- 抜粋（citator 流儀: 出典が何と言ったかを示す）
   parser_version       text,
   retrieved_at         timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT ck_ev_tier CHECK (source_tier BETWEEN 1 AND 5),
   CONSTRAINT ck_ev_src CHECK (source_type IN
     ('official_legal_data','legislative_drafter','ministry_commentary','legislative_record',
      'court','scholar','treatise','practitioner','alo_internal'))
@@ -297,7 +318,7 @@ CREATE TABLE alo_law_assertion_review_event (
   assertion_id         bigint NOT NULL,
   new_status           text NOT NULL,                 -- §2.5
   new_rank             text,                          -- preferred/normal/deprecated
-  reason               text NOT NULL,                 -- 機械可読な理由（Wikidata P2241/P7452 相当）
+  review_basis         text NOT NULL,                 -- 判断根拠（accepted 化に必須。Wikidata P2241/P7452 相当）
   decided_by           text NOT NULL,                 -- extractor/curator/gpt_ometsuke/owner
   decided_at           timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT ck_rev_kind   CHECK (assertion_kind IN
@@ -344,10 +365,12 @@ LEFT JOIN LATERAL (
 | `amendment_not_auto_substantive` | textual_delta のみを根拠に substantive_change が candidate 超の status を持たない（asserted_by_source_type が delta 検出器でなく実在の解釈源） | 0件 |
 | `substantive_requires_evidence` | current_status ∈ (reviewed,accepted) ⇒ evidence_pointer_id NOT NULL | 0件 |
 | `disputed_blocks_claim` | counter_*_id NOT NULL ⇒ claim_support_eligible=false かつ current_status='disputed' | 0件 |
-| `claim_support_requires_accepted` | claim_support_eligible=true ⇒ current_status='accepted' ∧ evidence あり ∧ counter なし ∧ from/to_revision が lawtime で解決 | 0件 |
+| `claim_support_requires_accepted` | claim_support_eligible=true ⇒ current_status='accepted' ∧ disputed=false ∧ **evidence_count>=1** ∧ **未解決 counter なし** ∧ **lawtime_resolved=true**（from/to/superseding revision が lawtime で解決） | 0件 |
+| `accepted_requires_review_event` | current_status='accepted' ⇒ 当該 assertion に review_basis 非空の T6 review-event が存在（**tier の高さだけで accepted 化しない**） | 0件 |
+| `evidence_locator_complete` | reviewed/accepted の根拠 evidence は source_uri・source_type・source_tier・locator・source_span_hash・retrieved_at・parser_version を備える | 0件 |
 | `drafter_intent_not_sole_truth` | tier2(立案担当者) 単独の「no_substantive_change/continues」に tier3(court) の反対主張があれば accepted 不可（disputed 強制） | 0件 |
 | `old_law_survival_three_axis` | survival 行は formal_status・substantive_status・非空 applicability_scope を必ず持つ | 強制 |
-| `formal_status_consistent_with_lawtime` | survival.formal_status は lawtime resolver の出力と一致（形式軸に矛盾しない） | 0件 |
+| `formal_status_consistent_with_lawtime` | survival.formal_status は lawtime resolved view の算出値と一致（**永続ミラーである以上 drift gate 必須**。原則は view からの都度算出） | 0件 |
 | `no_substantive_without_resolved_lawtime` | from/to/superseding revision が lawtime（alo_statutes/succession）で解決可能 | 0件 |
 | `assertion_append_only_enforced` | T1–T4,T6 content 列の UPDATE/DELETE が拒否される | 強制 |
 | `rank_reason_present` | rank<>'normal' は rank_reason 必須（Wikidata P2241/P7452） | 強制 |
@@ -373,6 +396,9 @@ OK: 「形式的には〇年改正で当該条文が変更されています（l
 2. **実質（本DD）は `claim_support_eligible=true`（accepted・証拠・反証なし）でも“候補”として提示**し、
    tier・evidence・counter を併記する。`disputed` は必ず両論併記。
 3. 出力に出すのは `v_*_current` 経由。`deprecated` rank は既定で非表示（監査時のみ）。
+4. **`unknown` を出口根拠に使わない**（v0.1.1, GPT指摘3）: substantive_status / temporal_reach /
+   applicability_scope 等が `unknown` の行は、候補提示の**根拠**として用いず、提示する場合も
+   「未確認」である旨を明示する。
 
 ---
 
@@ -408,6 +434,14 @@ OK: 「形式的には〇年改正で当該条文が変更されています（l
 7. append-only と Wikidata 式 deprecated 保持の**両立**設計（T6 event-sourced）は妥当か。
 
 ## §9. changelog
+- v0.1.1 (2026-06-10): GPT お目付け役 `DDLAWSUBTRANS_PASS_WITH_NOTES`（2026-06-08）の指摘4点を反映。
+  ①lawtime 依存を「v0.2.1 design＋resolved lawtime view まで」に再定義（v0.2.2 MODIFY_REQUIRED を
+  前提にしない）、formal_status ミラーの drift gate 必須化。②source_tier（証拠の強さ）/
+  assertion_status（ALO内処分）/claim_support_eligible（出口利用可否）の責務分離を明文化、
+  高 tier 単独での accepted 化禁止（gate `accepted_requires_review_event`、T6 `review_basis` 必須）。
+  ③evidence locator 充実（source_tier 列追加、gate `evidence_locator_complete`）。
+  ④claim_support gate 強化（accepted ∧ disputed=false ∧ evidence_count>=1 ∧ 未解決 counter なし
+  ∧ lawtime_resolved=true）、`unknown` の出口根拠使用禁止、ingest 自動生成禁止の明文化。
 - v0.1 (2026-06-08): 初版。先行事例調査（REFERENCE_law_substantive_transition_prior_art.md）に基づき、
   形式/実質分離原則・統制語彙・T1–T6 スキーマ・10 gate・MCP 出口契約・Phase 2-5 ロードマップを提示。
   DB 書込みゼロ（design accept ＋ 層実装後）。
