@@ -1,0 +1,45 @@
+{
+  "run_id": "ichimon_minpo_2017",
+  "evidence_rows": 5,
+  "assertion_rows": 5,
+  "by_change_type": {
+    "no_substantive_change": 1,
+    "substantive_change_unspecified": 4
+  },
+  "gates": {
+    "gate_drafter_all_candidate_status": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_drafter_no_claim_support": {
+      "pass": true,
+      "detail": "claim_support leaked: []"
+    },
+    "gate_drafter_source_tier_2": {
+      "pass": true,
+      "detail": "non-tier-2 drafter source: []"
+    },
+    "gate_drafter_change_type_domain": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_drafter_assertion_has_evidence": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_drafter_change_requires_cue": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_no_high_confidence_from_rules": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_drafter_assertion_has_article_path": {
+      "pass": true,
+      "detail": "[]"
+    }
+  },
+  "all_gates_pass": true,
+  "db_writes": 0
+}
