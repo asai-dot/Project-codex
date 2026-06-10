@@ -50,11 +50,19 @@ def validate(rows: list[dict], expect: tuple[int, int, int] | None = None) -> di
         errors.append(f"legallib_book_id 空 {blank_book} 件")
 
     auto = [r for r in rows if r["bucket"] == "auto_accept"]
-    bad_isbn = [r["legallib_book_id"] for r in auto
-                if not r["isbn"] or not _ISBN13.match(r["isbn"])]
-    if bad_isbn:
-        warnings.append(
-            f"auto_accept で isbn 不正/空 {len(bad_isbn)} 件 (接合側で blocked)"
+    # DDJOIN F2(A): auto_accept ⇒ 有効ISBN必須を契約化。空/不正ISBN の auto_accept は
+    # 「対象なし(=defer_new で表現すべき)」と「契約違反」が混ざるため hard error。
+    auto_empty = [r["legallib_book_id"] for r in auto if not r["isbn"]]
+    auto_malformed = [r["legallib_book_id"] for r in auto
+                      if r["isbn"] and not _ISBN13.match(r["isbn"])]
+    if auto_empty:
+        errors.append(
+            f"auto_accept で ISBN 空 {len(auto_empty)} 件 — 対象なしは bucket=defer_new で表現せよ "
+            f"(F2契約: auto_accept⇒有効ISBN必須。例: {auto_empty[:5]})"
+        )
+    if auto_malformed:
+        errors.append(
+            f"auto_accept で ISBN 不正形式 {len(auto_malformed)} 件 (例: {auto_malformed[:5]})"
         )
 
     by_isbn: dict[str, set[str]] = defaultdict(set)
@@ -80,7 +88,8 @@ def validate(rows: list[dict], expect: tuple[int, int, int] | None = None) -> di
         "total": len(rows),
         "buckets": dict(buckets),
         "dup_book_ids": len(dup_books),
-        "auto_bad_isbn": len(bad_isbn),
+        "auto_empty_isbn": len(auto_empty),
+        "auto_malformed_isbn": len(auto_malformed),
         "isbn_collisions": len(isbn_collision),
         "book_multi_isbn": len(book_multi_isbn),
         "errors": errors,

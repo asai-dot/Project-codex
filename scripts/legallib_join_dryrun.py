@@ -39,6 +39,7 @@ bucket は ``auto_accept`` / ``human_review`` / ``defer_new`` のいずれか。
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from collections import Counter, defaultdict
@@ -53,8 +54,9 @@ from legallib_join_policy import (  # noqa: E402
     decide_join_action,
     existing_primary_source,
     load_policy,
+    protection_reason,
 )
-from legallib_to_canonical import convert_legallib_nodes  # noqa: E402
+from legallib_to_canonical import CONVERTER_VERSION, convert_legallib_nodes  # noqa: E402
 
 VALID_BUCKETS = {"auto_accept", "human_review", "defer_new"}
 _ISBN13 = __import__("re").compile(r"^97[89]\d{10}$")
@@ -120,6 +122,20 @@ def load_legallib_nodes(legallib_dir: Path, book_id: str) -> list[dict]:
             if isinstance(data.get(key), list):
                 return data[key]
     return []
+
+
+def legallib_raw_sha(legallib_dir: Path, book_id: str) -> str | None:
+    """legallib raw ファイルの sha256 (provenance / 監査追跡用)。"""
+    path = legallib_dir / f"{book_id}.json"
+    if not path.exists():
+        return None
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _titles_sha(nodes: list[dict]) -> str:
+    """ノード列のタイトル列から安定ハッシュ (old/new 比較用)。"""
+    blob = "\n".join((n.get("t") or n.get("label") or "") for n in nodes)
+    return "sha256:" + hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
 def read_existing_state(toc_dir: Path, isbn: str) -> tuple[str, list[dict] | None]:
@@ -230,6 +246,7 @@ def run_dryrun(
     # 自己完結バンドル (こちら側へ戻す引き継ぎ物。books.json/legallib_dir 不要)。
     overwrites_bundle: list[dict] = []  # overwrite_simple の旧+新
     review_bundle: list[dict] = []      # 保護衝突レビューの既存+候補
+    identity_review: list[dict] = []    # DDJOIN: ambiguous は identity 解決キューへ
 
     for r in resolver_rows:
         bucket = r["bucket"]
@@ -257,6 +274,11 @@ def run_dryrun(
             continue
         if bid in blocked:
             actions.append({"book_id": bid, "isbn": isbn, "action": blocked[bid]})
+            # DDJOIN 第3論点: ambiguous は「書かない」だけでなく identity 解決キューへ。
+            if blocked[bid].startswith("blocked_ambiguous"):
+                identity_review.append(
+                    {"book_id": bid, "isbn": isbn, "reason": blocked[bid]}
+                )
             continue
 
         raw_nodes = load_legallib_nodes(legallib_dir, bid)
@@ -265,15 +287,28 @@ def run_dryrun(
             continue
 
         warnings: list[str] = []
-        new_nodes = convert_legallib_nodes(raw_nodes, isbn, warnings=warnings)
+        new_nodes = convert_legallib_nodes(raw_nodes, isbn, book_id=bid, warnings=warnings)
         all_warnings.extend(warnings)
         if not new_nodes:
             actions.append({"book_id": bid, "isbn": isbn, "action": "skip_empty_after_convert"})
             continue
 
         action, ex_state, existing = decide_for_isbn(toc_dir, isbn, protected)
-        # unreadable は読めない以上 primary source も不明。
-        reason = "existing_unreadable" if ex_state == "unreadable" else "existing_protected"
+        # 保護理由を具体化 (F3: structurally_rich を含む)。unreadable は別扱い。
+        if ex_state == "unreadable":
+            reason = "existing_unreadable"
+        else:
+            reason = protection_reason(existing, protected_sources=protected) or "existing_protected"
+
+        # provenance (DDJOIN 第3論点): 後段の監査/再現で追跡できる lineage。
+        prov = {
+            "legallib_book_id": bid,
+            "resolver_confidence": r.get("confidence"),
+            "converter_version": CONVERTER_VERSION,
+            "source_sha256": legallib_raw_sha(legallib_dir, bid),
+            "new_titles_sha256": _titles_sha(new_nodes),
+            "old_titles_sha256": _titles_sha(existing) if existing else None,
+        }
 
         entry: dict[str, Any] = {
             "book_id": bid,
@@ -285,6 +320,7 @@ def run_dryrun(
             "existing_primary_source": (
                 existing_primary_source(existing, priority) if existing else None
             ),
+            "provenance": prov,
         }
 
         if action in WRITE_ACTIONS:
@@ -292,7 +328,7 @@ def run_dryrun(
             entry["node_delta"] = len(new_nodes) - (len(existing) if existing else 0)
             if action == "overwrite_simple":
                 overwrites_bundle.append(
-                    {"isbn": isbn, "book_id": bid,
+                    {"isbn": isbn, "book_id": bid, "provenance": prov,
                      "existing_nodes": existing or [], "new_nodes": new_nodes}
                 )
         elif action == "route_human_review":
@@ -305,7 +341,7 @@ def run_dryrun(
                 }
             )
             review_bundle.append(
-                {"isbn": isbn, "book_id": bid, "reason": reason,
+                {"isbn": isbn, "book_id": bid, "reason": reason, "provenance": prov,
                  "existing_primary_source": entry["existing_primary_source"],
                  "existing_nodes": existing or [], "candidate_nodes": new_nodes}
             )
@@ -332,6 +368,7 @@ def run_dryrun(
         "invariant_violations": invariant_violations,
         "overwrites_bundle": overwrites_bundle,
         "review_bundle": review_bundle,
+        "identity_review": identity_review,
     }
 
 
@@ -368,6 +405,10 @@ def write_report(result: dict[str, Any], out_dir: Path) -> None:
         "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in result["review_bundle"]),
         encoding="utf-8",
     )
+    (out_dir / "identity_review.jsonl").write_text(
+        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in result.get("identity_review", [])),
+        encoding="utf-8",
+    )
 
     counts = result["counts"]
     write_count = sum(counts.get(a, 0) for a in WRITE_ACTIONS)
@@ -386,6 +427,7 @@ def write_report(result: dict[str, Any], out_dir: Path) -> None:
         f"- 誤マージ blocked: {len(result['blocked'])} 件",
         f"- human_review 退避: {len(result['review_queue'])} 件",
         f"- defer_new staging: {len(result['defer_staging'])} 件",
+        f"- identity_review (ambiguous): {len(result.get('identity_review', []))} 件",
         f"- 変換 warning: {len(result['warnings'])} 件",
         f"- 不変条件違反 (保護対象への書き込み): {len(result['invariant_violations'])} 件"
         + ("  ✅ OK" if not result["invariant_violations"] else "  ❌ NG"),

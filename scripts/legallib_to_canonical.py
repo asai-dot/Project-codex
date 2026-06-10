@@ -40,6 +40,8 @@ from typing import Any, Iterable
 # 生成ノードの既定 source / status。
 DEFAULT_SOURCE = "legallib"
 DEFAULT_STATUS = "legallib"
+# 変換器バージョン (provenance)。1.1.0 = ネスト children 対応 + provenance 刻印。
+CONVERTER_VERSION = "1.1.0"
 
 # 入力ノードでタイトル / level / ページとして許容するキー (legallib 由来の
 # 表記揺れを吸収する。最初に見つかった非空の値を採用)。
@@ -111,19 +113,22 @@ def convert_legallib_nodes(
     *,
     source: str = DEFAULT_SOURCE,
     status: str = DEFAULT_STATUS,
+    book_id: str | None = None,
     warnings: list[str] | None = None,
 ) -> list[dict]:
     """legallib の生ノード列 → 本番 canonical ノード列。
 
     Args:
-        raw_nodes: legallib 1冊分の toc ノード (``{l,p,t,level}`` 系) の列。
+        raw_nodes: legallib 1冊分の toc ノード (``{level,label,pdf_page,children}`` 系)。
         isbn: 接合先 canonical 書籍の ISBN-13 (``toc_node_id`` の名前空間)。
         source: 生成ノードの ``toc_source``。
         status: 生成ノードの ``toc_status`` (既定 ``"legallib"`` = 非simple)。
+        book_id: legallib_book_id。provenance として各ノードに刻む (DDJOIN 第3論点)。
         warnings: None でなければ level 飛び等の警告を追記する。
 
     Returns:
-        本番ノード schema の dict のリスト (冪等・決定的)。
+        本番ノード schema の dict のリスト (冪等・決定的)。各ノードに
+        ``legallib_book_id`` / ``converter_version`` の lineage を付与。
 
     変換は決定的: 同じ入力からは常に同じ出力 (順序保存、連番固定)。
     """
@@ -194,6 +199,9 @@ def convert_legallib_nodes(
             "page_start": page,
             "toc_source": source,
             "toc_status": status,
+            # provenance (DDJOIN 第3論点): どの legallib 由来か・どの変換器版か。
+            "legallib_book_id": book_id,
+            "converter_version": CONVERTER_VERSION,
         }
         out.append(node)
         stack.append(

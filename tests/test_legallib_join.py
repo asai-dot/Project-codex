@@ -24,9 +24,12 @@ from legallib_join_dryrun import detect_mismerge, run_dryrun, _demo_inputs  # no
 from legallib_join_policy import (  # noqa: E402
     WRITE_ACTIONS,
     decide_join_action,
+    is_structurally_rich,
     load_policy,
+    protection_reason,
 )
 from legallib_to_canonical import (  # noqa: E402
+    CONVERTER_VERSION,
     convert_legallib_nodes,
     to_canonical_bib_extra_toc,
 )
@@ -94,6 +97,56 @@ def test_nested_children() -> None:
     check(by_t["▼総論"]["parent_toc_node_id"] == by_t["Ⅱ"]["toc_node_id"], "▼総論の親=Ⅱ")
     check(by_t["Ⅰ"]["page_start"] == 2 and by_t["▼総論"]["page_start"] == 17, "pdf_page 転載")
     check(by_t["別紙2"]["parent_toc_node_id"] == "", "別紙2 はトップ")
+
+
+def test_provenance_stamp() -> None:
+    # DDJOIN 第3論点: 変換ノードに legallib_book_id / converter_version を刻む。
+    nodes = convert_legallib_nodes(
+        [{"level": 1, "label": "X", "pdf_page": 3}], "9784000000010", book_id="L42")
+    check(nodes[0]["legallib_book_id"] == "L42", "legallib_book_id 刻印")
+    check(nodes[0]["converter_version"] == CONVERTER_VERSION, "converter_version 刻印")
+
+
+def test_structural_guard() -> None:
+    # DDJOIN F3: status=simple でも構造(depth>1/parent/page/階層path)があれば保護。
+    rich = [
+        {"toc_source": "bencom", "toc_status": "simple", "depth": 1,
+         "parent_toc_node_id": "", "toc_path_id": "c01", "page_start": 3},
+        {"toc_source": "bencom", "toc_status": "simple", "depth": 2,
+         "parent_toc_node_id": "x", "toc_path_id": "c01-s01", "page_start": 5},
+    ]
+    check(is_structurally_rich(rich), "depth>1/parent/page → rich")
+    check(protection_reason(rich) == "structurally_rich", "保護理由=structurally_rich")
+    check(decide_join_action(rich) == "route_human_review", "構造ありsimpleは上書きしない")
+
+    # フラット・ページ無し simple は従来どおり昇格上書き。
+    flat = [{"toc_source": "openbd", "toc_status": "simple", "depth": 1,
+             "parent_toc_node_id": "", "toc_path_id": "c01", "page_start": None}]
+    check(not is_structurally_rich(flat), "フラットpage無は非rich")
+    check(decide_join_action(flat) == "overwrite_simple", "フラットsimpleは昇格上書き")
+
+    # ページだけ持つフラット simple も保護側 (GPT: page あり→保護)。
+    paged = [{"toc_source": "openbd", "toc_status": "simple", "depth": 1,
+              "parent_toc_node_id": "", "toc_path_id": "c01", "page_start": 12}]
+    check(decide_join_action(paged) == "route_human_review", "ページ付きsimpleは保護")
+
+
+def test_identity_review_queue() -> None:
+    # DDJOIN 第3論点: ambiguous は identity_review キューへ流す。
+    import tempfile
+
+    policy = load_policy(None)
+    with tempfile.TemporaryDirectory() as td:
+        _, legallib_dir, toc_dir, known = _demo_inputs(Path(td))
+        rows = [
+            {"legallib_book_id": "X", "isbn": "9784000000010", "bucket": "auto_accept"},
+            {"legallib_book_id": "Y", "isbn": "9784000000010", "bucket": "auto_accept"},
+        ]
+        res = run_dryrun(rows, legallib_dir, toc_dir, known, policy)
+        idr = {r["book_id"] for r in res["identity_review"]}
+        check(idr == {"X", "Y"}, "曖昧ISBNの両 book_id が identity_review へ")
+        check(all(r["reason"].startswith("blocked_ambiguous") for r in res["identity_review"]),
+              "理由は blocked_ambiguous")
 
 
 def test_level_jump_clamp() -> None:
@@ -344,6 +397,9 @@ def main() -> int:
     tests = [
         test_parent_reconstruction,
         test_nested_children,
+        test_provenance_stamp,
+        test_structural_guard,
+        test_identity_review_queue,
         test_level_jump_clamp,
         test_deterministic,
         test_empty_and_projection,

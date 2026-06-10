@@ -82,6 +82,17 @@ def test_validate_resolver() -> None:
     check(r3["ok"] and any("件数が期待と不一致" in w for w in r3["warnings"]),
           "件数不一致は warning")
 
+    # DDJOIN F2(A): auto_accept + 空ISBN は hard error (defer_new で表現せよ)。
+    f2 = [{"legallib_book_id": "Z", "isbn": "", "bucket": "auto_accept"}]
+    r4 = validate(f2)
+    check(not r4["ok"] and r4["auto_empty_isbn"] == 1, "auto_accept+空ISBN は error")
+    check(any("defer_new" in e for e in r4["errors"]), "エラー文に defer_new 誘導")
+    # 重複 book_id は warning (本体が ambiguous_book で処理)。
+    dup = [{"legallib_book_id": "D", "isbn": "9784000000010", "bucket": "auto_accept"},
+           {"legallib_book_id": "D", "isbn": "9784000000027", "bucket": "auto_accept"}]
+    r5 = validate(dup)
+    check(r5["ok"] and any("重複" in w for w in r5["warnings"]), "重複book_idはwarning(F4)")
+
 
 def test_inspect_legallib_dir() -> None:
     with tempfile.TemporaryDirectory() as td:

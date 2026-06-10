@@ -97,22 +97,61 @@ def is_already_legallib(existing_nodes: list[dict]) -> bool:
     return any(n.get("toc_source") == LEGALLIB_SOURCE for n in existing_nodes)
 
 
+def is_structurally_rich(existing_nodes: list[dict]) -> bool:
+    """既存 TOC が「構造を持つ」か (DDJOIN F3: toc_status 単独依存の穴を塞ぐ)。
+
+    `toc_status=="simple"` でも、実態が階層化/ページ付きの既存 TOC は上書きしない。
+    判定: depth>1 / parent_toc_node_id あり / toc_path_id に階層区切り (. または -) /
+    page_start or p を持つ — のいずれかがあれば「リッチ」。
+    例: bencom 104ノード・3階層・ページ付きが status=simple のケースを保護する。
+    """
+    if not existing_nodes:
+        return False
+    for n in existing_nodes:
+        depth = n.get("depth") or n.get("l") or 1
+        try:
+            if int(depth) > 1:
+                return True
+        except (TypeError, ValueError):
+            pass
+        if n.get("parent_toc_node_id"):
+            return True
+        path = n.get("toc_path_id") or ""
+        if "." in path or "-" in path:
+            return True
+        if n.get("page_start") is not None or n.get("p") is not None:
+            return True
+    return False
+
+
+def protection_reason(
+    existing_nodes: list[dict],
+    *,
+    protected_sources: frozenset[str] = PROTECTED_SOURCES,
+) -> str | None:
+    """既存が保護対象なら理由文字列、非保護なら None。
+
+    保護対象 = 非simpleノードを含む / 保護ソースを含む / 構造を持つ(F3)。
+    """
+    if not existing_nodes:
+        return None
+    if not is_all_simple(existing_nodes):
+        return "non_simple_status"
+    srcs = {n.get("toc_source") for n in existing_nodes}
+    if srcs & set(protected_sources):
+        return "protected_source"
+    if is_structurally_rich(existing_nodes):
+        return "structurally_rich"  # DDJOIN F3: simple ラベルでも構造あり → 保護
+    return None
+
+
 def existing_is_protected(
     existing_nodes: list[dict],
     *,
     protected_sources: frozenset[str] = PROTECTED_SOURCES,
 ) -> bool:
-    """既存 TOC が「保護対象」か。
-
-    保護対象 = 非 simple ノードを 1 つでも含む、または保護ソースを含む。
-    保護対象なら legallib は **絶対に上書きしない** (→ human_review へ)。
-    """
-    if not existing_nodes:
-        return False
-    if not is_all_simple(existing_nodes):
-        return True
-    srcs = {n.get("toc_source") for n in existing_nodes}
-    return bool(srcs & set(protected_sources))
+    """既存 TOC が「保護対象」か。保護対象なら legallib は **絶対に上書きしない**。"""
+    return protection_reason(existing_nodes, protected_sources=protected_sources) is not None
 
 
 # --- 接合判定 (1 件分) -------------------------------------------------------
@@ -163,6 +202,8 @@ __all__ = [
     "existing_primary_source",
     "is_all_simple",
     "is_already_legallib",
+    "is_structurally_rich",
+    "protection_reason",
     "existing_is_protected",
     "decide_join_action",
 ]
