@@ -144,3 +144,24 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA bookdx
 -- 検証クエリ（migration後に手動確認推奨）:
 --   SELECT has_schema_privilege('anon','bookdx','USAGE');          -- false 期待
 --   SELECT has_schema_privilege('authenticated','bookdx','USAGE'); -- false 期待
+
+-- ============================================================================
+-- 多層防御: RLS（grant隔離に加えた第2層）。Owner 判断で適用済み 2026-06-10。
+-- ポリシーは bookdx_readonly(SELECT) / bookdx_loader(ALL) のみ。anon/authenticated は
+-- ポリシー無し＝遮断（かつ schema usage も無し）。所有者/postgres/service_role は
+-- RLS をバイパスするため migration・管理は通る。
+-- ============================================================================
+ALTER TABLE bookdx.load_run   ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookdx.holdings   ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookdx.candidates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookdx.tag_domain ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY ro_select ON bookdx.load_run   FOR SELECT TO bookdx_readonly USING (true);
+CREATE POLICY ro_select ON bookdx.holdings   FOR SELECT TO bookdx_readonly USING (true);
+CREATE POLICY ro_select ON bookdx.candidates FOR SELECT TO bookdx_readonly USING (true);
+CREATE POLICY ro_select ON bookdx.tag_domain FOR SELECT TO bookdx_readonly USING (true);
+
+CREATE POLICY loader_all ON bookdx.load_run   FOR ALL TO bookdx_loader USING (true) WITH CHECK (true);
+CREATE POLICY loader_all ON bookdx.holdings   FOR ALL TO bookdx_loader USING (true) WITH CHECK (true);
+CREATE POLICY loader_all ON bookdx.candidates FOR ALL TO bookdx_loader USING (true) WITH CHECK (true);
+CREATE POLICY loader_all ON bookdx.tag_domain FOR ALL TO bookdx_loader USING (true) WITH CHECK (true);
