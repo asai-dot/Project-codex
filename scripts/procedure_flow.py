@@ -94,6 +94,10 @@ def render_text(flow: dict) -> str:
             bits.append(f"⏱{n['期限']}")
         if n.get("必要書類"):
             bits.append("📄" + "・".join(n["必要書類"]))
+        if n.get("書式"):
+            forms = [f.get("名称", str(f)) if isinstance(f, dict) else str(f)
+                     for f in n["書式"]]
+            bits.append("📝書式:" + "・".join(forms))
         return " ".join(bits)
 
     def walk(nid: str, depth: int, cond: str | None) -> None:
