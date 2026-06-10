@@ -1,0 +1,30 @@
+{
+  "version": 0.1,
+  "_comment": "⑥手続の背骨(spine)＝手続類型の正本リスト(ドラフト)。設計方針は docs/dd_procedure_design.md。各類型に4面(法令/文献/書式/判例)を crosswalk で後から張る。law_id は e-Gov 法令ID(gakuyo_law_index 等で後埋め)。aliases は書式formType・書名との突合用。**浅井先生の補正前提**: 類型の過不足・名称・根拠法令・行政手続の扱いを直す。",
+  "procedure_types": [
+    {"id": "civil_ordinary_litigation", "系統": "民事·訴訟", "name": "通常訴訟", "根拠法令": ["民事訴訟法"], "law_id": [], "aliases": ["本訴", "民事訴訟", "訴え提起", "訴状"]},
+    {"id": "civil_small_claims", "系統": "民事·訴訟", "name": "少額訴訟", "根拠法令": ["民事訴訟法"], "law_id": [], "aliases": ["少額"]},
+    {"id": "civil_bill_check", "系統": "民事·訴訟", "name": "手形・小切手訴訟", "根拠法令": ["民事訴訟法"], "law_id": [], "aliases": ["手形訴訟", "小切手訴訟"]},
+    {"id": "civil_demand", "系統": "民事·訴訟", "name": "支払督促", "根拠法令": ["民事訴訟法"], "law_id": [], "aliases": ["督促", "仮執行宣言"]},
+    {"id": "civil_mediation", "系統": "民事·非訟", "name": "民事調停", "根拠法令": ["民事調停法"], "law_id": [], "aliases": ["調停"]},
+    {"id": "civil_nonlitigation", "系統": "民事·非訟", "name": "非訟事件", "根拠法令": ["非訟事件手続法"], "law_id": [], "aliases": ["非訟"]},
+    {"id": "civil_preservation", "系統": "民事·保全執行", "name": "民事保全", "根拠法令": ["民事保全法"], "law_id": [], "aliases": ["仮差押", "仮処分", "保全"]},
+    {"id": "civil_execution", "系統": "民事·保全執行", "name": "民事執行", "根拠法令": ["民事執行法"], "law_id": [], "aliases": ["強制執行", "担保権実行", "競売", "財産開示", "差押"]},
+    {"id": "insolvency_bankruptcy", "系統": "民事·倒産", "name": "破産", "根拠法令": ["破産法"], "law_id": [], "aliases": ["破産申立", "管財"]},
+    {"id": "insolvency_civil_rehab", "系統": "民事·倒産", "name": "民事再生", "根拠法令": ["民事再生法"], "law_id": [], "aliases": ["再生", "個人再生"]},
+    {"id": "insolvency_corp_reorg", "系統": "民事·倒産", "name": "会社更生", "根拠法令": ["会社更生法"], "law_id": [], "aliases": ["更生"]},
+    {"id": "insolvency_special_liquidation", "系統": "民事·倒産", "name": "特別清算", "根拠法令": ["会社法"], "law_id": [], "aliases": ["特別清算"]},
+    {"id": "family_adjudication", "系統": "民事·家事", "name": "家事審判", "根拠法令": ["家事事件手続法"], "law_id": [], "aliases": ["審判", "後見", "相続放棄", "遺産分割審判"]},
+    {"id": "family_mediation", "系統": "民事·家事", "name": "家事調停", "根拠法令": ["家事事件手続法"], "law_id": [], "aliases": ["離婚調停", "家事調停"]},
+    {"id": "family_personal_status", "系統": "民事·家事", "name": "人事訴訟", "根拠法令": ["人事訴訟法"], "law_id": [], "aliases": ["離婚訴訟", "認知", "人訴"]},
+    {"id": "commercial_nonlitigation", "系統": "民事·商事", "name": "商事・会社非訟", "根拠法令": ["会社法", "非訟事件手続法"], "law_id": [], "aliases": ["会社非訟", "株主総会検査役", "新株発行", "減資"]},
+    {"id": "labor_tribunal", "系統": "民事·労働", "name": "労働審判", "根拠法令": ["労働審判法"], "law_id": [], "aliases": ["労働審判"]},
+    {"id": "admin_litigation", "系統": "行政", "name": "行政訴訟", "根拠法令": ["行政事件訴訟法"], "law_id": [], "aliases": ["取消訴訟", "抗告訴訟", "国家賠償"], "_note": "行政手続を spine に含めるか先生判断"},
+    {"id": "criminal_investigation", "系統": "刑事", "name": "捜査", "根拠法令": ["刑事訴訟法"], "law_id": [], "aliases": ["逮捕", "勾留", "弁護人選任", "接見"]},
+    {"id": "criminal_trial", "系統": "刑事", "name": "公判", "根拠法令": ["刑事訴訟法"], "law_id": [], "aliases": ["起訴", "公判", "保釈", "証拠調べ"]},
+    {"id": "criminal_summary", "系統": "刑事", "name": "略式手続", "根拠法令": ["刑事訴訟法"], "law_id": [], "aliases": ["略式命令"]},
+    {"id": "criminal_appeal", "系統": "刑事", "name": "上訴", "根拠法令": ["刑事訴訟法"], "law_id": [], "aliases": ["控訴", "上告"]},
+    {"id": "criminal_retrial", "系統": "刑事", "name": "再審", "根拠法令": ["刑事訴訟法"], "law_id": [], "aliases": ["再審請求"]},
+    {"id": "juvenile", "系統": "刑事", "name": "少年保護事件", "根拠法令": ["少年法"], "law_id": [], "aliases": ["少年", "保護処分", "審判"]}
+  ]
+}
