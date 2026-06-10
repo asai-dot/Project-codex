@@ -109,6 +109,13 @@ procedure_type(spine)
      「破産法コンメンタール」「民事保全の実務」の目次は手続ステップに沿う。同手続に重ねて肉付け。
   3. **裁判所HP の手続案内＝公式フロー図**（②判例の3層着地と同じ harvest 路線で取得可）。
 
+- **詳細TOC源の実査（重要）**: 書誌は2源 — **bencom-library（弁護士ドットコムライブラリー）3,802冊**は
+  **綺麗な詳細TOCを Supabase `biblio.bib_toc` に保有（OCR不要）**、**asai-bookshelf（自炊）6,524冊**は
+  OCRノイズ大。`会社法実務スケジュール`（新日本法規）は **bencom 外＝自炊のみ**（OCR荒い）。リーガル
+  ライブラリーは当DB未取込。→ **パイロットは bencom 収録の手続本（clean TOC）を優先**。
+  例: 「商業登記全書／7 組織再編の手続〈第3版〉」は**株式交付の11ステップをページ付きで保有** →
+  `pipeline/procedure_flow/commercial_share_delivery.json`（`status: extracted_toc`）に実フロー化済。
+
 - **組み立て**: 手続法の章節条(骨格) ＋ 実務書TOC(肉) ＋ 裁判所HP(公式) を `procedure_id` で突合して
   flow を**生成**。法的確度は**複数権威資産の一致**(条文×実務書×裁判所HP)で担保＝**三点測量流**。
 
