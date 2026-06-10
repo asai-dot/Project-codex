@@ -42,7 +42,9 @@ def validate(rows: list[dict], expect: tuple[int, int, int] | None = None) -> di
     book_counts = Counter(r["legallib_book_id"] for r in rows if r["legallib_book_id"])
     dup_books = [b for b, c in book_counts.items() if c > 1]
     if dup_books:
-        errors.append(f"legallib_book_id 重複 {len(dup_books)} 件 (例: {dup_books[:5]})")
+        # 重複 book_id は本体 detect_mismerge が blocked_ambiguous_book として
+        # 安全に処理する設計なので、preflight では hard error にせず warning。
+        warnings.append(f"legallib_book_id 重複 {len(dup_books)} 件 (→接合で blocked_ambiguous_book。例: {dup_books[:5]})")
     blank_book = sum(1 for r in rows if not r["legallib_book_id"])
     if blank_book:
         errors.append(f"legallib_book_id 空 {blank_book} 件")

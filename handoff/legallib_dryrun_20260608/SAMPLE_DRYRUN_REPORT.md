@@ -56,3 +56,34 @@
 1. **F2/F3/F4 は owner/resolver 判断**（GPT DD に回す候補）。特に F3（toc_status ラベリング）は接合の安全性に直結。
 2. **Mac で全 43 行＋実 books.json の完全ドライラン**を実行し、本レポートの近似部分（missing_isbn / create 区別、全 overwrite/review 件数）を確定。F1 修正後の converter で再取得すると legallib 側のノード数が実数（children 含む）になる点に注意。
 3. 確定後、承認 ISBN を `--only-isbns` で `legallib_join_apply.py --commit`。
+
+---
+
+## 6. ワーカー全数実行 (commit 4a7bea1) との突合 — 追加修正
+
+Mac ワーカーが同時に**全 2,760 行の実ドライラン**を実施 (`report.md`/`actions.jsonl`/
+`overwrites_bundle.jsonl` 等)。結果: blocked_bad_isbn 95 / create 215 / overwrite_simple 1525 /
+route_human_review 309 / defer_staging 616、不変条件違反 0。両者の発見を突合し、**ワーカーが
+手作業 WA で回避した2点を本セッションでコード修正**した:
+
+- **Obs-2【修正】U+2028 で JSONL loader が破壊**: `_load_jsonl` の `splitlines()` が
+  法律文中の U+2028 を改行扱いし `JSONDecodeError`。→ `split("\n")` に変更
+  (U+2028/2029/0085 を踏まない)。回帰テスト追加。
+- **Obs-3【修正】resolver schema 不一致**: 実体は `{legallib_id, isbn, tier, score}`。
+  `load_resolver` を `legallib_id`/`tier`/`score` も吸収するよう拡張。これで Mac 側の
+  symlink/normalize WA 無しで実 resolver 出力を直接読める。
+- **F4【修正】**: `validate_resolver` の重複 book_id を error→warning (本体が
+  blocked_ambiguous_book で処理するため)。
+
+### 重要: ワーカー全数結果は **converter ネスト修正(F1)前**に生成
+- `4a7bea1` の `overwrites_bundle.jsonl` の proposed ノードは、**children を取りこぼした
+  旧 converter**で生成されている (各書籍トップレベルのみ)。→ legallib の深い目次が反映
+  されていない。**F1 修正後の converter で全数ドライランを再実行**し、overwrites_bundle を
+  作り直す必要がある (本適用前の必須再実行)。
+- なお action 振り分け (create/overwrite/review/blocked/defer) 自体は既存 toc と ISBN で
+  決まるため F1 の影響を受けない (proposed の中身ノードのみが影響)。
+
+## 7. web 側で確定した修正一覧 (PR #5)
+- `flatten_nodes()` 追加 (F1) / `_load_jsonl` U+2028 安全化 (Obs-2) /
+  `load_resolver` schema 吸収 (Obs-3) / `validate_resolver` dup→warning (F4) /
+  `inspect_legallib_dir` 再帰集計。テスト 162 checks 緑。

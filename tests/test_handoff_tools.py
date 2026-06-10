@@ -33,6 +33,30 @@ def check(cond: bool, msg: str) -> None:
         print(f"  ❌ FAIL: {msg}")
 
 
+def test_loader_u2028_and_schema() -> None:
+    # Mac 実データで判明: U+2028 で splitlines() が行を壊す / 実 schema は
+    # {legallib_id, isbn, tier, score}。loader が両方吸収できること。
+    from legallib_join_dryrun import load_resolver
+
+    with tempfile.TemporaryDirectory() as td:
+        p = Path(td) / "r.jsonl"
+        u2028 = chr(0x2028)  # 法律文の罠 (例「秘密保持契約書」近傍)
+        line1 = json.dumps({"legallib_id": "B1", "isbn": "9784000000010",
+                            "tier": "auto_accept", "score": 0.9,
+                            "title": f"秘密保持{u2028}契約書"}, ensure_ascii=False)
+        line2 = json.dumps({"legallib_id": "B2", "isbn": "", "tier": "defer_new",
+                            "score": 0.4}, ensure_ascii=False)
+        nl = chr(10)
+        p.write_text(line1 + nl + line2 + nl, encoding="utf-8")
+        rows = load_resolver(p)
+        check(len(rows) == 2, "U+2028 を含んでも2行として読める (splitlines罠回避)")
+        check(rows[0]["legallib_book_id"] == "B1", "legallib_id を id として吸収")
+        check(rows[0]["bucket"] == "auto_accept", "tier を bucket として吸収")
+        check(rows[0]["confidence"] == 0.9, "score を confidence として吸収")
+        check(rows[1]["bucket"] == "defer_new", "2行目 bucket")
+
+
+
 def test_validate_resolver() -> None:
     good = [
         {"legallib_book_id": "A", "isbn": "9784000000010", "bucket": "auto_accept"},
@@ -143,6 +167,7 @@ def test_triage() -> None:
 
 def main() -> int:
     for t in [
+        test_loader_u2028_and_schema,
         test_validate_resolver,
         test_inspect_legallib_dir,
         test_bundles_emitted,

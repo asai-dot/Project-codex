@@ -63,8 +63,12 @@ _ISBN13 = __import__("re").compile(r"^97[89]\d{10}$")
 # --- 入出力ヘルパ -----------------------------------------------------------
 
 def _load_jsonl(path: Path) -> list[dict]:
+    # NB: str.splitlines() は U+2028/U+2029/U+0085 等でも改行扱いし、法律文中の
+    # U+2028 (例「秘密保持契約書」近傍) で JSONL の行を壊す (ALO 既知の罠)。
+    # JSONL は \n 区切りなので split("\n") のみで割る。
     rows = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+    text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+    for line in text.split("\n"):
         line = line.strip()
         if line:
             rows.append(json.loads(line))
@@ -82,14 +86,22 @@ def load_resolver(path: Path) -> list[dict]:
     rows = _load_csv(path) if path.suffix.lower() == ".csv" else _load_jsonl(path)
     norm = []
     for r in rows:
+        # 実 resolver の schema 揺れを吸収: id は legallib_id, bucket は tier,
+        # confidence は score でも可 (Mac 実体は {legallib_id, isbn, tier, score})。
+        conf = r.get("confidence")
+        if conf is None:
+            conf = r.get("score")
         norm.append(
             {
                 "legallib_book_id": str(
-                    r.get("legallib_book_id") or r.get("book_id") or ""
+                    r.get("legallib_book_id") or r.get("book_id")
+                    or r.get("legallib_id") or ""
                 ).strip(),
                 "isbn": str(r.get("isbn") or "").strip(),
-                "bucket": str(r.get("bucket") or r.get("decision") or "").strip(),
-                "confidence": r.get("confidence"),
+                "bucket": str(
+                    r.get("bucket") or r.get("tier") or r.get("decision") or ""
+                ).strip(),
+                "confidence": conf,
             }
         )
     return norm
