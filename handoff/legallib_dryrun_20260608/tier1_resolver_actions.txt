@@ -1,0 +1,55 @@
+ book_id       bucket           isbn  tool_action                  expected               match
+----------------------------------------------------------------------------------------------------
+  412000  auto_accept  9784324114926  POLICY(needs toc/legallib)   create                 →Tier2
+  263015  auto_accept  9784803724950  POLICY(needs toc/legallib)   create                 →Tier2
+  208733  auto_accept  9784788289796  POLICY(needs toc/legallib)   create                 →Tier2
+  463709  auto_accept  9784766430745  POLICY(needs toc/legallib)   create                 →Tier2
+  315803  auto_accept  9784906929931  POLICY(needs toc/legallib)   create                 →Tier2
+  296547  auto_accept  9784803700138  POLICY(needs toc/legallib)   create                 →Tier2
+  138930  auto_accept  9784130311908  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+  208152  auto_accept  9784641243026  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+  257205  auto_accept  9784797282665  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+  262517  auto_accept  9784797255676  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+  346015  auto_accept  9784589042873  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+  387100  auto_accept  9784539730218  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+    5632  auto_accept  9784817844057  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+  319621  auto_accept  9784539727447  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+  110627  auto_accept  9784897613925  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+  236870  auto_accept  9784384049183  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+  380875  auto_accept  9784865563443  POLICY(needs toc/legallib)   overwrite_simple       →Tier2
+  363694  auto_accept  9784417015222  POLICY(needs toc/legallib)   route_human_review     →Tier2
+  355477  auto_accept  9784865564877  POLICY(needs toc/legallib)   route_human_review     →Tier2
+  180845  auto_accept  9784535521063  POLICY(needs toc/legallib)   route_human_review     →Tier2
+  451674  auto_accept  9784641046429  POLICY(needs toc/legallib)   route_human_review     →Tier2
+   58835  auto_accept  9784788284821  POLICY(needs toc/legallib)   route_human_review     →Tier2
+  355062  auto_accept        (empty)  blocked_bad_isbn             defer_staging          ✗DIVERGE
+   72945  auto_accept        (empty)  blocked_bad_isbn             defer_staging          ✗DIVERGE
+  250067  auto_accept        (empty)  blocked_bad_isbn             defer_staging          ✗DIVERGE
+  185908  auto_accept        (empty)  blocked_bad_isbn             defer_staging          ✗DIVERGE
+  292812  auto_accept        (empty)  blocked_bad_isbn             blocked_bad_isbn       OK
+  210974  auto_accept        (empty)  blocked_bad_isbn             blocked_bad_isbn       OK
+  353568 human_review  9784539726372  route_human_review           route_human_review     OK
+  239028 human_review  9784535515048  route_human_review           route_human_review     OK
+  354730 human_review  9784539729960  route_human_review           route_human_review     OK
+  349999 human_review  9784897614311  route_human_review           route_human_review     OK
+  274386 human_review  9784766429183  route_human_review           route_human_review     OK
+    5051    defer_new  9784817843036  defer_staging                defer_staging          OK
+  262766    defer_new        (empty)  defer_staging                defer_staging          OK
+  238779    defer_new        (empty)  defer_staging                defer_staging          OK
+  426525    defer_new        (empty)  defer_staging                defer_staging          OK
+  117516  auto_accept  9784000000007  POLICY(needs toc/legallib)   skip_idempotent        →Tier2
+  115441  auto_accept  9789999990001  blocked_missing_isbn         blocked_missing_isbn   OK
+  321779  auto_accept  9784326349999  blocked_ambiguous_isbn       blocked_ambiguous_isbn OK
+  250565  auto_accept  9784326349999  blocked_ambiguous_isbn       blocked_ambiguous_isbn OK
+  224420  auto_accept  9784326341111  blocked_ambiguous_book       blocked_ambiguous_book OK
+  224420  auto_accept  9784326342222  blocked_ambiguous_book       blocked_ambiguous_book OK
+
+=== resolver側サマリ ===
+一致(OK)=16  乖離(DIVERGE)=4  Tier2送り(policy要)=23
+tool action 内訳: {'POLICY(needs toc/legallib)': 23, 'blocked_bad_isbn': 6, 'route_human_review': 5, 'defer_staging': 4, 'blocked_missing_isbn': 1, 'blocked_ambiguous_isbn': 2, 'blocked_ambiguous_book': 2}
+
+=== 乖離の明細 ===
+  book 355062 isbn=(empty): tool=blocked_bad_isbn  expected=defer_staging
+  book 72945 isbn=(empty): tool=blocked_bad_isbn  expected=defer_staging
+  book 250067 isbn=(empty): tool=blocked_bad_isbn  expected=defer_staging
+  book 185908 isbn=(empty): tool=blocked_bad_isbn  expected=defer_staging

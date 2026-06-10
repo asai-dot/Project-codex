@@ -55,6 +55,29 @@ def _first_present(node: dict, keys: Iterable[str]) -> Any:
     return None
 
 
+def flatten_nodes(raw_nodes: list[dict]) -> list[dict]:
+    """ネストした legallib TOC (``children`` 木) を pre-order で平坦化する。
+
+    実 legallib STEP A の TOC は ``{level, label, pdf_page, children:[...]}`` の
+    **木構造**。フラットな列ではない。子を ``children`` から再帰収集し、各ノードの
+    ``level`` を保ったまま出現順に並べる。フラット入力 (children 無し) はそのまま。
+    """
+    out: list[dict] = []
+
+    def walk(nodes: list) -> None:
+        for n in nodes:
+            if not isinstance(n, dict):
+                continue
+            out.append(n)
+            kids = n.get("children")
+            if isinstance(kids, list) and kids:
+                walk(kids)
+
+    walk(raw_nodes)
+    return out
+
+
+
 def _coerce_title(node: dict) -> str:
     value = _first_present(node, _TITLE_KEYS)
     if value is None:
@@ -104,6 +127,9 @@ def convert_legallib_nodes(
 
     変換は決定的: 同じ入力からは常に同じ出力 (順序保存、連番固定)。
     """
+    # 0) ネスト (children 木) を pre-order で平坦化してから処理。
+    raw_nodes = flatten_nodes(raw_nodes)
+
     # 1) タイトルが取れないノードは捨てる (空ノードは木を壊す)。
     parsed: list[tuple[int, str, int | None]] = []
     for raw in raw_nodes:
@@ -201,6 +227,7 @@ def to_canonical_bib_extra_toc(nodes: list[dict]) -> list[dict]:
 __all__ = [
     "DEFAULT_SOURCE",
     "DEFAULT_STATUS",
+    "flatten_nodes",
     "convert_legallib_nodes",
     "to_canonical_bib_extra_toc",
 ]

@@ -74,6 +74,28 @@ def test_parent_reconstruction() -> None:
     check("9784000000010:toc:003" in by_path["c01.01.01"]["toc_node_id"], "連番 toc_node_id")
 
 
+def test_nested_children() -> None:
+    # 実 legallib は children でネストした木 (sample dryrun で判明)。
+    # children を再帰平坦化し、level から木を再構築できること。
+    raw = [
+        {"level": 1, "label": "別紙1", "pdf_page": 1, "children": [
+            {"level": 2, "label": "Ⅰ", "pdf_page": 2, "children": []},
+            {"level": 2, "label": "Ⅱ", "pdf_page": 16, "children": [
+                {"level": 3, "label": "▼総論", "pdf_page": 17, "children": []},
+            ]},
+        ]},
+        {"level": 1, "label": "別紙2", "pdf_page": 60, "children": []},
+    ]
+    nodes = convert_legallib_nodes(raw, "9784000000010")
+    check(len(nodes) == 5, "children を再帰して全5ノード (top2のみにしない)")
+    by_t = {n["t"]: n for n in nodes}
+    check(by_t["Ⅰ"]["parent_toc_node_id"] == by_t["別紙1"]["toc_node_id"], "Ⅰの親=別紙1")
+    check(by_t["▼総論"]["depth"] == 3, "▼総論 depth=3")
+    check(by_t["▼総論"]["parent_toc_node_id"] == by_t["Ⅱ"]["toc_node_id"], "▼総論の親=Ⅱ")
+    check(by_t["Ⅰ"]["page_start"] == 2 and by_t["▼総論"]["page_start"] == 17, "pdf_page 転載")
+    check(by_t["別紙2"]["parent_toc_node_id"] == "", "別紙2 はトップ")
+
+
 def test_level_jump_clamp() -> None:
     # 1 -> 3 の飛び。depth は親+1 にクランプされる。
     warnings: list[str] = []
@@ -321,6 +343,7 @@ def test_empty_book_id_blocked_individually() -> None:
 def main() -> int:
     tests = [
         test_parent_reconstruction,
+        test_nested_children,
         test_level_jump_clamp,
         test_deterministic,
         test_empty_and_projection,

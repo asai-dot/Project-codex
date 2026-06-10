@@ -31,6 +31,7 @@ from legallib_to_canonical import (  # noqa: E402
     _coerce_level,
     _coerce_page,
     _coerce_title,
+    flatten_nodes,
 )
 
 _NODE_LIST_KEYS = ("toc", "nodes", "toc_nodes", "items")
@@ -61,6 +62,7 @@ def inspect_dir(path: Path, sample: int | None = None) -> dict:
     empty_titles = 0
     nodes_with_page = 0
     unreadable = 0
+    top_level_nodes = 0
 
     for f in files:
         try:
@@ -72,6 +74,9 @@ def inspect_dir(path: Path, sample: int | None = None) -> dict:
             content_types[str(data.get("content_type") or "<unset>")] += 1
         lk, nodes = _node_list(data)
         list_keys[lk] += 1
+        top_level_nodes += len(nodes)
+        # ネスト (children 木) を再帰して全ノードを数える (フラットならそのまま)。
+        nodes = flatten_nodes(nodes)
         for n in nodes:
             if not isinstance(n, dict):
                 continue
@@ -102,7 +107,9 @@ def inspect_dir(path: Path, sample: int | None = None) -> dict:
         "title_keys": dict(title_keys),
         "level_keys": dict(level_keys),
         "page_keys": dict(page_keys),
+        "top_level_nodes": top_level_nodes,
         "total_nodes": total_nodes,
+        "nested": total_nodes > top_level_nodes,
         "level_histogram": dict(sorted(levels.items())),
         "empty_title_rate": round(empty_titles / total_nodes, 4) if total_nodes else None,
         "page_coverage": round(nodes_with_page / total_nodes, 4) if total_nodes else None,
