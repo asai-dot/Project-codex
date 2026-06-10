@@ -84,9 +84,24 @@ def test_run_coverage() -> None:
         check(run(spine, rows)["matched"] == 1, "csv 入力 OK")
 
 
+def test_book_titles_and_broad_tier() -> None:
+    # ③文献の面: 同じ matcher を蔵書タイトルへ。実務書は手続名で leaf 一致、
+    # 根拠法令名(手続法)で書かれた広い本は broad 一致、実体法書は未一致。
+    spine = _spine()
+    h = match_title("民事保全の実務 第3版", spine)
+    check(h[0]["procedure_id"] == "civil_preservation" and h[0]["tier"] == "leaf",
+          "実務書(手続名)→leaf 一致")
+    hb = match_title("家事事件手続法の解説", spine)
+    check(hb and all(x["系統"].startswith("民事·家事") for x in hb)
+          and hb[0]["tier"] == "broad", "根拠法令(手続法)→broad で家事に一致")
+    check(match_title("民法総則 第9版", spine) == [], "実体法書(民法)→未一致")
+    check(match_title("注釈 会社法", spine) == [], "会社法(実体法)→broadでも拾わない")
+
+
 def main() -> int:
     for t in [test_spine_loads, test_match_procedural_titles,
-              test_transactional_titles_unmatched, test_run_coverage]:
+              test_transactional_titles_unmatched, test_run_coverage,
+              test_book_titles_and_broad_tier]:
         print(f"• {t.__name__}")
         t()
     print(f"\n{_PASS} passed, {_FAIL} failed")
