@@ -1,6 +1,6 @@
 ### DD-LAWSUBTRANS-001 v0.1.2: 法令改廃に伴う「実質的変更・解釈変遷」レイヤ（形式軸の上に乗る assertion overlay）
 
-> **id**: `DD-LAWSUBTRANS-001` / **version**: v0.1.2 / **status**: candidate
+> **id**: `DD-LAWSUBTRANS-001` / **version**: v0.1.2 / **status**: accepted (design; owner ratified 2026-06-10。production DDL/DB write/MCP claim_support は HOLD)
 > **supersedes_review**: v0.1.1（gate DDLAWSUBTRANS → `DDLAWSUBTRANS_PASS_WITH_NOTES` ×2,
 > 2026-06-10。GPT Pro お目付け役＋GPT-5.5 Pro 再レビュー。v0.1 指摘4点すべて CLOSED、
 > 即時 blocker なし。本 v0.1.2 は production 前 Note A–D を §10 に明文化したのみ＝設計不変）
