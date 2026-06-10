@@ -45,8 +45,22 @@
           {"id": "vocab_gakuyo", "label": "学陽", "stages": [], "note": "学陽 all_entries 2,684・554正規化#2"},
           {"id": "vocab_yuhikaku", "label": "有斐閣", "stages": [], "note": "三点測量の第3源 (core 922)"}
         ]},
-      {"id": "procedure", "label": "⑥ 手続", "stages": [], "note": "統合軸(横串): ①③⑦②を束ねる・未起票"},
-      {"id": "template", "label": "⑦ 書式", "stages": [], "note": "外部WS: 書式テンプレ構造化 tmplstruct (3,806件)"}
+      {"id": "procedure", "label": "⑥ 手続", "stages": [], "note": "統合軸(横串): 手続類型をキーに①法令③文献⑦書式②判例が収斂・未起票",
+        "subs": [
+          {"id": "proc_civil_litigation", "label": "民事·訴訟系", "stages": [], "note": "通常/少額/手形小切手。根拠: 民訴法"},
+          {"id": "proc_civil_nonlitigation", "label": "民事·非訟系", "stages": [], "note": "非訟・各種調停。根拠: 非訟法/民調法"},
+          {"id": "proc_civil_preserve_exec", "label": "民事·保全執行系", "stages": [], "note": "民事保全/民事執行。根拠: 民保法/民執法"},
+          {"id": "proc_civil_insolvency", "label": "民事·倒産系", "stages": [], "note": "破産/民事再生/会社更生/特別清算。根拠: 破産法/民再法/会更法"},
+          {"id": "proc_civil_family", "label": "民事·家事系", "stages": [], "note": "家事審判/家事調停/人事訴訟。根拠: 家事手続法/人訴法"},
+          {"id": "proc_civil_commercial", "label": "民事·商事系", "stages": [], "note": "会社非訟・商事関係。根拠: 会社法/商事非訟"},
+          {"id": "proc_criminal", "label": "刑事", "stages": [], "note": "捜査/公判/略式/上訴/再審。根拠: 刑訴法"}
+        ]},
+      {"id": "template", "label": "⑦ 書式", "stages": [], "note": "外部WS: 書式テンプレ構造化 tmplstruct (3,806件・sample30検証中)",
+        "subs": [
+          {"id": "tmpl_contract", "label": "契約書", "stages": [], "note": "839件。条項見出し span 構造"},
+          {"id": "tmpl_filing", "label": "申立・通知・登記系", "stages": [], "note": "裁判所提出・登記・通知。slot 抽出"},
+          {"id": "tmpl_other", "label": "その他/書状", "stages": [], "note": "上記以外。type別 structure_profile を sample30 で逆算中"}
+        ]}
     ],
     "dynamic_sources": [
       {"id": "google", "label": "Ⓐ Google系", "stages": [], "note": "Gmail案件ラベル (紐付け#3)"},
