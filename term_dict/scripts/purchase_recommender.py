@@ -7,30 +7,33 @@ purchase_recommender.py — 購入レコメンドエンジン（アイデアD / 
 関連度でランキングし、購入候補を提案する。さらに「すでに持っている本を
 2度買わない」ための重複アラートを出力する。
 
-接合不要・単体成立（gap_recommender.py と同様にローカル/Box同期のデータを直読み）。
+データソースは2系統（--source）:
+  - json     : ローカル/Box同期のJSONを直読み（既定。gap_recommender.py と同流儀）
+  - supabase : private `bookdx` schema を SQL で読む（大容量JSONを実行環境に
+               持ち込めない場合の実走経路。read-only role で接続）
 
 ------------------------------------------------------------------------
 設計（番頭目検で上位が現業テーマと合致することを検収基準とする）
 ------------------------------------------------------------------------
-① 所蔵の主題分布 × 未所蔵候補のTOC主題 で関連度（gap/fit）スコア
+① 所蔵の主題分布 × 未所蔵候補のTOC主題 で関連度（fit）スコア
    - 所蔵カタログ books.json の genre / ndc を domain_l1 へ写像して
-     「所蔵の主題分布（= 現業テーマの強さ）」demand_share[domain] を作る。
-   - 未所蔵候補は book_coverage_by_domain.json（TOCをterm_dictへ照合した
-     primary_domain）と tag→domain 写像から主題プロファイル profile[domain]
-     を作る。
+     「所蔵の主題分布（= 現業テーマの強さ）」を作る。母数は2系統:
+       demand_share_all      … 全 domain（参考）
+       demand_share_in_scope … 候補軸8 domain のみ（ランキング既定）       [監査F5]
+   - 未所蔵候補は book_coverage_by_domain.json（primary_domain / domain_hits）と
+     tag→domain 写像から主題プロファイル profile[domain] を作る。
+     併せて profile_source / profile_confidence を付与（tag fallback の過信回避）[監査F3]
    - score = Σ_domain ( demand_share[domain] ** weight_power ) * profile[domain]
      weight_power=1.0（既定）で「現業テーマ整合」、<1 で空白補完寄りに振れる。
 
 ② 旗艦級（高ノード数 = コンメンタール・大系・注釈・講座 等）に重み
-   - flagship_weight = 1 + alpha * log1p(toc_nodes)、加えてシリーズ/書名の
-     旗艦キーワードでブースト。詳細TOCほど（＝引きやすい基幹書ほど）優遇。
+   - flagship_weight = 1 + alpha * log1p(toc_nodes) ＋ 旗艦キーワードでブースト。
 
 ③ Top-N 提案表（txt / json / csv）。
 
-「2度買い防止」アラート:
-   - 候補（または任意の買い物リスト）を所蔵カタログに突き合わせ、ISBN /
-     bencomId / 正規化タイトルが一致するものを「購入不要（所蔵済み）」として
-     列挙。別版（near-duplicate）も注記する。
+「2度買い防止」アラート（強弱2レーン）:                                    [監査F2]
+   - 強一致（自動「所蔵済み＝買うな」）: 正規化ISBN / bencomId 一致
+   - ソフト一致（レビュー候補。自動除外しない）: 正規化タイトル（＋著者/出版社）一致
 
 ------------------------------------------------------------------------
 入力（既定パスは Box 同期を想定。BOOKDX_BASE 環境変数 / --base で上書き可）
@@ -44,16 +47,17 @@ purchase_recommender.py — 購入レコメンドエンジン（アイデアD / 
      明示の defer_new id リストがあれば優先採用。無ければ
      「未所蔵 × TOCノード数>=min_toc_nodes」で動的に算出する。
 
-Usage:
-    # 実データに対して全出力を生成
-    python purchase_recommender.py --base "C:/Users/Asai/Box/浅井/claude/事務所内本棚DX化計画"
+Supabase（--source supabase）:
+   接続は env BOOKDX_DB_URL（read-only role 推奨）。private `bookdx` schema を読む。
+   books.json は依然 SoT。bookdx.* はそこからの一方向リードレプリカで write-back しない。
 
-    # ライブラリとして
+Usage:
+    python purchase_recommender.py --base "C:/Users/Asai/Box/.../事務所内本棚DX化計画"
+    python purchase_recommender.py --source supabase --db-url "postgresql://...:5432/postgres"
+
     from purchase_recommender import PurchaseRecommender
-    pr = PurchaseRecommender(base=...)
-    pr.load()
-    recs = pr.recommend(top_n=50)
-    alerts = pr.dedup_alert()
+    pr = PurchaseRecommender(base=...); pr.load()
+    recs = pr.recommend(top_n=50); alerts = pr.dedup_alert()
 """
 
 from __future__ import annotations
@@ -65,10 +69,10 @@ import math
 import os
 import re
 import unicodedata
-from collections import Counter, defaultdict
+from collections import Counter
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Callable, Iterable, Optional
 
 
 # ---------------------------------------------------------------------------
@@ -104,9 +108,8 @@ REL = {
 # 語彙は2系統の和集合:
 #   (1) booklib.py の GENRE_RULES（キーワード分類。「〜実務」「〜法務」系）
 #   (2) app/data/ndc_genre_mapping.json（NDCバックフィル。「民法」「刑法」等）
-# 候補軸 = {commercial, civil, administrative, labor, procedure, criminal, ip, tax}
-# それ以外（other/information/international/medical）は所蔵分布には載るが候補とは
-# 整合しない（内積0）。これは仕様どおり（該当候補が無いだけ）。
+# 候補軸 = IN_SCOPE_DOMAINS。それ以外（other/information/international/medical）は
+# 所蔵分布(all)には載るが in_scope では除外（ランキングは in_scope を使う）。 [監査F5]
 GENRE_TO_DOMAIN: dict[str, str] = {
     # ── commercial（商事・企業法務系）──
     "M&A": "commercial",
@@ -156,7 +159,7 @@ GENRE_TO_DOMAIN: dict[str, str] = {
     # ── tax（税務）──
     "税務・会計": "tax",
     "税法": "tax",
-    # ── 軸外（所蔵分布の母数には入るが候補とは整合しにくい）──
+    # ── 軸外（所蔵分布(all)の母数には入るが候補とは整合しにくい）──
     "情報法": "information",
     "国際法務": "international",
     "国際法": "international",
@@ -169,7 +172,6 @@ GENRE_TO_DOMAIN: dict[str, str] = {
 }
 
 # NDC 分類（先頭一致・最長優先）→ domain_l1。books.json の `ndc` を補助シグナルに。
-# app/data/ndc_genre_mapping.json の ndc_prefix_fallback を domain へ写像したもの。
 NDC_PREFIX_TO_DOMAIN: list[tuple[str, str]] = [
     ("320", "other"),         # 法学一般
     ("321", "other"),
@@ -202,14 +204,30 @@ NDC_PREFIX_TO_DOMAIN: list[tuple[str, str]] = [
     ("673", "civil"),         # 不動産法
 ]
 
+# 候補側 domain_l1 軸（ランキングで使う in_scope 母数）。bookdx.candidates の
+# primary_domain CHECK 制約とも一致させる（unclassified/unknown は除外）。
+IN_SCOPE_DOMAINS = (
+    "commercial", "civil", "administrative", "labor",
+    "procedure", "criminal", "ip", "tax",
+)
+NON_DOMAIN = ("unclassified", "unknown")
+
 # 旗艦級（基幹書）を示す書名/シリーズのキーワード。
 FLAGSHIP_KEYWORDS = (
     "コンメンタール", "大系", "注釈", "注解", "講座", "体系",
     "全書", "実務大系", "争点", "判例体系", "総覧",
 )
 
-DEFAULT_MIN_TOC_NODES = 40   # 「詳細TOC有り」の閾値（office実データで defer_new≈616 になる目安）
+DEFAULT_MIN_TOC_NODES = 40   # 「詳細TOC有り」の閾値（office実データで defer_new≈616 の目安）
 DEFAULT_FLAGSHIP_ALPHA = 0.20
+
+# 候補プロファイルの confidence 固定閾値（監査F3: 実装者が後で恣意調整しないよう固定）。
+# term_dict 照合は疎（matched_toc は小さく、coverage 中央値 ~0.02-0.03）なので、
+# high は「明確に TOC が辞書と当たっている」少数に限定する保守的な値。
+CONF_HIGH_MATCHED_TOC = 5     # high: matched_toc >= 5 かつ
+CONF_HIGH_COVERAGE = 0.05     #       coverage >= 0.05
+PROFILE_SOURCES = ("toc_term_dict", "tag_domain_fallback", "mixed", "unclassified")
+PROFILE_CONFIDENCES = ("high", "medium", "low")
 
 
 # ---------------------------------------------------------------------------
@@ -227,7 +245,6 @@ def normalize_isbn(raw) -> str:
     if len(digits) == 13 and digits.isdigit():
         return digits
     if len(digits) == 10:
-        # ISBN-10 → 13 へ（978 プレフィックス + チェックディジット再計算）
         core = "978" + digits[:9]
         s = sum((1 if i % 2 == 0 else 3) * int(c) for i, c in enumerate(core))
         check = (10 - s % 10) % 10
@@ -236,7 +253,7 @@ def normalize_isbn(raw) -> str:
 
 
 def normalize_title(s: str) -> str:
-    """タイトル照合用の正規化キー（NFKC・小文字・空白/記号除去）。"""
+    """照合用の正規化キー（NFKC・小文字・空白/記号除去）。著者/出版社にも流用。"""
     s = _nfkc(s).lower()
     s = re.sub(r"[\s　・,.:;！!？?（）()\[\]【】「」『』~〜\-—_/\\]+", "", s)
     return s
@@ -255,13 +272,11 @@ def flatten_toc(toc) -> list[str]:
             continue
         if not isinstance(item, dict):
             continue
-        # 見出しテキストの候補キー
         for k in ("t", "title", "label", "text", "heading"):
             v = item.get(k)
             if v:
                 out.append(str(v).strip())
                 break
-        # 子ノードの候補キー
         for ck in ("children", "c", "sub", "items", "nodes"):
             if isinstance(item.get(ck), (list, tuple)):
                 out.extend(flatten_toc(item[ck]))
@@ -297,6 +312,59 @@ def ndc_to_domain(ndc_value) -> Optional[str]:
     return best
 
 
+def compute_candidate_profile(
+    primary_domain: Optional[str],
+    domain_hits: Optional[dict],
+    tags: Optional[list],
+    tag_domain: dict,
+    matched_toc: int = 0,
+    coverage: float = 0.0,
+) -> tuple[dict[str, float], str, str]:
+    """候補の (profile, profile_source, profile_confidence) を計算する純関数。 [監査F3]
+
+    engine（_candidate_signal）と loader（load_to_supabase）で共有し、写像/閾値の
+    ドリフトを防ぐ。confidence 閾値は CONF_HIGH_* に固定。
+    """
+    prof: Counter = Counter()
+    toc_signal = False
+    tag_signal = False
+
+    if primary_domain and primary_domain not in NON_DOMAIN:
+        prof[primary_domain] += 2.0
+        toc_signal = True
+    if isinstance(domain_hits, dict):
+        for d, c in domain_hits.items():
+            if d and d not in NON_DOMAIN:
+                prof[d] += float(c)
+                toc_signal = True
+    for tag in _as_list(tags):
+        d = tag_domain.get(tag)
+        if d and d not in NON_DOMAIN:
+            prof[d] += 1.0
+            tag_signal = True
+
+    total = sum(prof.values())
+    if total <= 0:
+        return {}, "unclassified", "low"
+    profile = {d: c / total for d, c in prof.items()}
+
+    if toc_signal and tag_signal:
+        source = "mixed"
+    elif toc_signal:
+        source = "toc_term_dict"
+    else:
+        source = "tag_domain_fallback"
+
+    if toc_signal and int(matched_toc or 0) >= CONF_HIGH_MATCHED_TOC \
+            and float(coverage or 0.0) >= CONF_HIGH_COVERAGE:
+        confidence = "high"
+    elif toc_signal:
+        confidence = "medium"
+    else:
+        confidence = "low"
+    return profile, source, confidence
+
+
 # ---------------------------------------------------------------------------
 # Data classes
 # ---------------------------------------------------------------------------
@@ -305,8 +373,8 @@ class Recommendation:
     """購入候補1件。"""
     rank: int
     score: float                 # 0-100 に正規化した最終スコア
-    raw_score: float             # 正規化前
-    relevance: float             # 所蔵分布との整合（旗艦重み前）
+    raw_score: float
+    relevance: float
     flagship_weight: float
     is_flagship: bool
     book_id: str
@@ -316,19 +384,23 @@ class Recommendation:
     publisher: str
     toc_nodes: int
     primary_domain: str
+    profile_source: str = "unclassified"      # [監査F3]
+    profile_confidence: str = "low"           # high/medium/low [監査F3]
+    demand_scope: str = "in_scope"            # スコアに使った母数 [監査F5]
     top_domains: list = field(default_factory=list)   # [(domain, weight), ...]
     sample_headings: list = field(default_factory=list)
     bencom_url: str = ""
-    dup_alert: str = ""          # 別版所蔵などの注記（空なら無し）
+    dup_alert: str = ""          # ソフト一致（別版所蔵の可能性）注記。空なら無し
 
 
 @dataclass
 class DedupHit:
-    """すでに所蔵している（=買うと2度買い）候補。"""
+    """所蔵済み候補（2度買い）。強一致＝買うな / ソフト一致＝要レビュー。 [監査F2]"""
     book_id: str
     isbn: str
     title: str
-    match_reason: str            # "isbn" / "bencom_id" / "title" / "near_title"
+    match_strength: str          # "strong" | "soft"
+    match_reason: str            # isbn / bencom_id / title / title_author / title_publisher
     held_title: str
     held_id: str
 
@@ -346,28 +418,41 @@ class PurchaseRecommender:
         weight_power: float = 1.0,
         flagship_alpha: float = DEFAULT_FLAGSHIP_ALPHA,
         present_only: bool = False,
+        demand_scope: str = "in_scope",   # "in_scope"（既定・ランキング用）| "all"
     ):
         self.base = Path(base) if base else DEFAULT_BASE
         self.min_toc_nodes = min_toc_nodes
         self.weight_power = weight_power
         self.flagship_alpha = flagship_alpha
         self.present_only = present_only
+        self.demand_scope = demand_scope
 
         # loaded data
         self.holdings: list[dict] = []
         self.bencom: list[dict] = []
-        self.coverage: dict[str, dict] = {}      # book_id -> {primary_domain,total_toc,...}
+        self.coverage: dict[str, dict] = {}
         self.tag_domain: dict[str, Optional[str]] = {}
         self.explicit_defer_ids: Optional[set] = None
 
-        # derived
-        self.demand: Counter = Counter()         # domain -> weight（所蔵主題分布）
-        self.demand_share: dict[str, float] = {}
-        self.unmapped_genres: Counter = Counter() # 写像漏れ genre の観測（実データ点検用）
-        self.held_isbn: set = set()
-        self.held_bencom_id: set = set()
-        self.held_title: set = set()
+        # derived demand（所蔵主題分布）
+        self.demand_all: Counter = Counter()
+        self.demand_in: Counter = Counter()
+        self.demand_share_all: dict[str, float] = {}
+        self.demand_share_in_scope: dict[str, float] = {}
+        self.unmapped_genres: Counter = Counter()
+
+        # dedup indices: strong（isbn/bencom_id） & soft（title / title|author / title|publisher）
+        self.held_isbn: dict[str, tuple] = {}        # isbn -> (held_id, held_title)
+        self.held_bencom_id: dict[str, tuple] = {}
+        self.held_title: dict[str, tuple] = {}
+        self.held_title_author: dict[str, tuple] = {}
+        self.held_title_pub: dict[str, tuple] = {}
         self._loaded = False
+
+    # active demand share（ランキングで使う母数）
+    @property
+    def demand_share(self) -> dict[str, float]:
+        return self.demand_share_all if self.demand_scope == "all" else self.demand_share_in_scope
 
     # -------------------------------------------------------------------
     # Loading
@@ -377,8 +462,7 @@ class PurchaseRecommender:
 
     @staticmethod
     def _normalize_tag_domain(raw: dict) -> dict:
-        """tag→domain 写像を {tag: domain_l1|None} へ正規化。
-        値は {"domain_l1": ...} 形式・文字列・None のいずれも許容。"""
+        """tag→domain 写像を {tag: domain_l1|None} へ正規化。"""
         out: dict[str, Optional[str]] = {}
         for tag, entry in (raw or {}).items():
             if isinstance(entry, dict):
@@ -421,7 +505,7 @@ class PurchaseRecommender:
         tag_domain: Optional[dict] = None,
         defer_ids: Optional[Iterable] = None,
     ):
-        """テスト用: ファイルを介さずに in-memory データを注入。"""
+        """テスト用 / SupabaseDataSource 用: in-memory データを注入。"""
         self.holdings = holdings
         self.bencom = bencom
         self.coverage = {}
@@ -434,39 +518,61 @@ class PurchaseRecommender:
         self.build_indices()
         self._loaded = True
 
+    def load_supabase(self, query_runner: Callable[[str], list], schema: str = "bookdx"):
+        """private `bookdx` schema から読み込む（read-only role 接続を想定）。
+        query_runner(sql)->list[dict] を注入（本番=psycopg / テスト=フェイク）。"""
+        ds = SupabaseDataSource(query_runner, schema=schema)
+        holdings, bencom, coverage, tag_domain = ds.fetch()
+        self.load_from_memory(holdings, bencom, coverage, tag_domain)
+
     # -------------------------------------------------------------------
     # Indices / demand distribution（所蔵の主題分布）
     # -------------------------------------------------------------------
     def build_indices(self):
-        self.demand = Counter()
-        self.held_isbn = set()
-        self.held_bencom_id = set()
-        self.held_title = set()
+        self.demand_all = Counter()
+        self.held_isbn = {}
+        self.held_bencom_id = {}
+        self.held_title = {}
+        self.held_title_author = {}
+        self.held_title_pub = {}
 
         for b in self.holdings:
             if self.present_only and not self._is_present(b):
                 continue
-            # 重複検出用インデックス
+            hid = str(b.get("id", ""))
+            title = b.get("title", "")
+            # dedup インデックス（強/ソフト）
             isbn = normalize_isbn(b.get("isbn") or (b.get("external_refs") or {}).get("isbn"))
             if isbn:
-                self.held_isbn.add(isbn)
+                self.held_isbn[isbn] = (hid, title)
             bcid = str(b.get("bencomId") or "").strip()
             if bcid:
-                self.held_bencom_id.add(bcid)
-            tkey = normalize_title(b.get("title", ""))
+                self.held_bencom_id[bcid] = (hid, title)
+            tkey = normalize_title(title)
             if tkey:
-                self.held_title.add(tkey)
+                self.held_title[tkey] = (hid, title)
+                akey = normalize_title(b.get("author", ""))
+                if akey:
+                    self.held_title_author[tkey + "|" + akey] = (hid, title)
+                pkey = normalize_title(b.get("publisher", ""))
+                if pkey:
+                    self.held_title_pub[tkey + "|" + pkey] = (hid, title)
 
-            # 主題分布: genre（複数可）→domain、無ければ ndc→domain
+            # 主題分布
             domains = self._holding_domains(b)
             if not domains:
                 continue
             w = 1.0 / len(domains)
             for d in domains:
-                self.demand[d] += w
+                self.demand_all[d] += w
 
-        total = sum(self.demand.values()) or 1.0
-        self.demand_share = {d: c / total for d, c in self.demand.items()}
+        total_all = sum(self.demand_all.values()) or 1.0
+        self.demand_share_all = {d: c / total_all for d, c in self.demand_all.items()}
+        self.demand_in = Counter(
+            {d: c for d, c in self.demand_all.items() if d in IN_SCOPE_DOMAINS}
+        )
+        total_in = sum(self.demand_in.values()) or 1.0
+        self.demand_share_in_scope = {d: c / total_in for d, c in self.demand_in.items()}
 
     @staticmethod
     def _is_present(b: dict) -> bool:
@@ -492,10 +598,8 @@ class PurchaseRecommender:
             if d:
                 domains.append(d)
             else:
-                # genre も ndc も写像できなかった → 観測（写像辞書の補正点になる）
                 for key in unmapped:
                     self.unmapped_genres[key] += 1
-        # 重複除去（順序保持）
         seen = set()
         uniq = []
         for d in domains:
@@ -505,47 +609,34 @@ class PurchaseRecommender:
         return uniq
 
     # -------------------------------------------------------------------
-    # Candidate profile（未所蔵候補のTOC主題）
+    # Candidate profile（未所蔵候補のTOC主題）+ source/confidence [監査F3]
     # -------------------------------------------------------------------
     def _candidate_profile(self, book: dict) -> dict[str, float]:
         """候補1冊の主題プロファイル profile[domain]（合計1へ正規化）。"""
-        prof: Counter = Counter()
-        bid = str(book.get("id", ""))
-        cov = self.coverage.get(bid, {})
+        return self._candidate_signal(book)[0]
 
-        # (a) book_coverage の primary_domain（TOCをterm_dictへ照合した主結果）
-        pdom = cov.get("primary_domain")
-        if pdom and pdom != "unclassified":
-            prof[pdom] += 2.0
-
-        # (b) domain_hits があれば加点（book_coverage_by_domain.json の実フィールド名は
-        #     domain_hits = {domain: ヒット数}。別名 domain_distribution/domains も許容）
+    def _candidate_signal(self, book: dict) -> tuple[dict[str, float], str, str]:
+        """(profile, profile_source, profile_confidence) を返す。共有純関数へ委譲。"""
+        cov = self.coverage.get(str(book.get("id", "")), {})
         dist = cov.get("domain_hits") or cov.get("domain_distribution") or cov.get("domains")
-        if isinstance(dist, dict):
-            for d, c in dist.items():
-                if d and d not in ("unclassified", "unknown"):
-                    prof[d] += float(c)
-
-        # (c) tags → domain（term_dict照合が疎なため重要なフォールバック）
-        for tag in _as_list(book.get("tags")):
-            d = self.tag_domain.get(tag)
-            if d and d not in ("unclassified", "unknown"):
-                prof[d] += 1.0
-
-        total = sum(prof.values())
-        if total <= 0:
-            return {}
-        return {d: c / total for d, c in prof.items()}
+        return compute_candidate_profile(
+            primary_domain=cov.get("primary_domain"),
+            domain_hits=dist if isinstance(dist, dict) else None,
+            tags=book.get("tags"),
+            tag_domain=self.tag_domain,
+            matched_toc=cov.get("matched_toc") or 0,
+            coverage=cov.get("coverage") or 0.0,
+        )
 
     # -------------------------------------------------------------------
     # Scoring
     # -------------------------------------------------------------------
     def _relevance(self, profile: dict[str, float]) -> float:
-        """所蔵分布との整合度。weight_power で現業整合↔空白補完を制御。"""
+        """所蔵分布(active母数)との整合度。weight_power で現業整合↔空白補完を制御。"""
         s = 0.0
+        share = self.demand_share
         for d, w in profile.items():
-            share = self.demand_share.get(d, 0.0)
-            s += (share ** self.weight_power) * w
+            s += (share.get(d, 0.0) ** self.weight_power) * w
         return s
 
     def _toc_nodes(self, book: dict) -> int:
@@ -564,27 +655,33 @@ class PurchaseRecommender:
         return weight, is_flag
 
     # -------------------------------------------------------------------
-    # Held / dedup
+    # Held / dedup（強=自動ブロック / ソフト=レビュー） [監査F2]
     # -------------------------------------------------------------------
-    def _held_match(self, book: dict) -> tuple[bool, str]:
-        """所蔵済みか。(held, reason)。reason: isbn/bencom_id/title/near_title/''"""
+    def _held_match(self, book: dict) -> tuple[str, str, tuple]:
+        """(strength, reason, (held_id, held_title))。未一致なら ("","",("",""))。
+        strength: "strong"（isbn/bencom_id）| "soft"（title系）| ""。"""
         isbn = normalize_isbn(book.get("isbn"))
         if isbn and isbn in self.held_isbn:
-            return True, "isbn"
+            return "strong", "isbn", self.held_isbn[isbn]
         bid = str(book.get("id") or book.get("bencomId") or "").strip()
         if bid and bid in self.held_bencom_id:
-            return True, "bencom_id"
+            return "strong", "bencom_id", self.held_bencom_id[bid]
         tkey = normalize_title(book.get("title", ""))
-        if tkey and tkey in self.held_title:
-            return True, "title"
-        return False, ""
+        if tkey:
+            akey = normalize_title(book.get("author", ""))
+            if akey and (tkey + "|" + akey) in self.held_title_author:
+                return "soft", "title_author", self.held_title_author[tkey + "|" + akey]
+            pkey = normalize_title(book.get("publisher", ""))
+            if pkey and (tkey + "|" + pkey) in self.held_title_pub:
+                return "soft", "title_publisher", self.held_title_pub[tkey + "|" + pkey]
+            if tkey in self.held_title:
+                return "soft", "title", self.held_title[tkey]
+        return "", "", ("", "")
 
     # -------------------------------------------------------------------
-    # defer_new selection
+    # defer_new selection（未所蔵＝強一致のみ除外。ソフトは候補に残し注記） [監査F2]
     # -------------------------------------------------------------------
     def select_defer_new(self) -> list[dict]:
-        """未所蔵 × 詳細TOC有り の候補（defer_new）。
-        明示idリストがあればそれを採用、無ければ動的算出。"""
         out = []
         for book in self.bencom:
             bid = str(book.get("id", ""))
@@ -592,8 +689,8 @@ class PurchaseRecommender:
                 if bid not in self.explicit_defer_ids:
                     continue
             else:
-                held, _ = self._held_match(book)
-                if held:
+                strength, _, _ = self._held_match(book)
+                if strength == "strong":
                     continue
                 if self._toc_nodes(book) < self.min_toc_nodes:
                     continue
@@ -607,7 +704,7 @@ class PurchaseRecommender:
         self.load()
         scored: list[Recommendation] = []
         for book in self.select_defer_new():
-            profile = self._candidate_profile(book)
+            profile, source, confidence = self._candidate_signal(book)
             if not profile:
                 continue  # 主題が取れない候補はスキップ（番頭目検の精度を守る）
             relevance = self._relevance(profile)
@@ -618,14 +715,10 @@ class PurchaseRecommender:
             raw = relevance * fw
             top_domains = sorted(profile.items(), key=lambda x: -x[1])[:3]
             headings = flatten_toc(book.get("toc"))[:6]
-            # near-duplicate（別版所蔵）注記
-            _, reason = self._held_match(book)
+            strength, reason, _ = self._held_match(book)
             dup = ""
-            tkey = normalize_title(book.get("title", ""))
-            if not reason and tkey and any(
-                tkey in h or h in tkey for h in self.held_title if len(h) > 6 and len(tkey) > 6
-            ):
-                dup = "別版/類似タイトルを所蔵の可能性"
+            if strength == "soft":
+                dup = f"別版/類似を所蔵の可能性（{reason}）"
             scored.append(Recommendation(
                 rank=0, score=0.0, raw_score=raw, relevance=relevance,
                 flagship_weight=fw, is_flagship=is_flag,
@@ -636,6 +729,9 @@ class PurchaseRecommender:
                 publisher=book.get("publisher", ""),
                 toc_nodes=toc_nodes,
                 primary_domain=self.coverage.get(str(book.get("id", "")), {}).get("primary_domain", ""),
+                profile_source=source,
+                profile_confidence=confidence,
+                demand_scope=self.demand_scope,
                 top_domains=top_domains,
                 sample_headings=headings,
                 bencom_url=book.get("bencomUrl") or book.get("url", ""),
@@ -654,58 +750,41 @@ class PurchaseRecommender:
         return top
 
     # -------------------------------------------------------------------
-    # Dedup alert（2度買い防止）
+    # Dedup alert（2度買い防止・強/ソフト2レーン） [監査F2]
     # -------------------------------------------------------------------
     def dedup_alert(self, candidates: Optional[list[dict]] = None) -> list[DedupHit]:
         """候補（既定: bencom 全体）のうち所蔵済みのものを列挙。
         買い物リスト(dict list)を渡せば、その2度買いチェックにも使える。"""
         self.load()
         pool = candidates if candidates is not None else self.bencom
-        # held_id -> title 逆引き
-        id_to_title = {}
-        isbn_to_title = {}
-        title_to_title = {}
-        for b in self.holdings:
-            t = b.get("title", "")
-            bcid = str(b.get("bencomId") or "").strip()
-            if bcid:
-                id_to_title[bcid] = (b.get("id", ""), t)
-            isbn = normalize_isbn(b.get("isbn") or (b.get("external_refs") or {}).get("isbn"))
-            if isbn:
-                isbn_to_title[isbn] = (b.get("id", ""), t)
-            tk = normalize_title(t)
-            if tk:
-                title_to_title[tk] = (b.get("id", ""), t)
-
         hits: list[DedupHit] = []
         for book in pool:
-            isbn = normalize_isbn(book.get("isbn"))
-            bid = str(book.get("id") or book.get("bencomId") or "").strip()
-            tkey = normalize_title(book.get("title", ""))
-            held_id, held_title, reason = "", "", ""
-            if isbn and isbn in isbn_to_title:
-                held_id, held_title = isbn_to_title[isbn]; reason = "isbn"
-            elif bid and bid in id_to_title:
-                held_id, held_title = id_to_title[bid]; reason = "bencom_id"
-            elif tkey and tkey in title_to_title:
-                held_id, held_title = title_to_title[tkey]; reason = "title"
-            if reason:
+            strength, reason, (held_id, held_title) = self._held_match(book)
+            if strength:
                 hits.append(DedupHit(
                     book_id=str(book.get("id", "")),
-                    isbn=isbn,
+                    isbn=normalize_isbn(book.get("isbn")),
                     title=book.get("title", ""),
+                    match_strength=strength,
                     match_reason=reason,
                     held_title=held_title,
                     held_id=str(held_id),
                 ))
+        # 強一致を先に
+        hits.sort(key=lambda h: 0 if h.match_strength == "strong" else 1)
         return hits
 
     # -------------------------------------------------------------------
     # Reporting
     # -------------------------------------------------------------------
-    def demand_summary(self) -> list[tuple[str, float, float]]:
+    def demand_summary(self, scope: Optional[str] = None) -> list[tuple[str, float, float]]:
         """所蔵の主題分布 [(domain, weight, share), ...]（share降順）。"""
-        rows = [(d, self.demand[d], self.demand_share[d]) for d in self.demand]
+        scope = scope or self.demand_scope
+        if scope == "all":
+            counter, share = self.demand_all, self.demand_share_all
+        else:
+            counter, share = self.demand_in, self.demand_share_in_scope
+        rows = [(d, counter[d], share[d]) for d in counter]
         rows.sort(key=lambda x: -x[2])
         return rows
 
@@ -714,6 +793,9 @@ class PurchaseRecommender:
         recs = self.recommend(top_n=top_n)
         alerts = self.dedup_alert()
         defer = self.select_defer_new()
+        strong = [h for h in alerts if h.match_strength == "strong"]
+        soft = [h for h in alerts if h.match_strength == "soft"]
+        oos = sum(s for d, s in self.demand_share_all.items() if d not in IN_SCOPE_DOMAINS)
 
         L = []
         L.append("=" * 76)
@@ -724,11 +806,13 @@ class PurchaseRecommender:
         L.append(f"  所蔵カタログ件数 : {len(self.holdings):,}")
         L.append(f"  候補プール(bencom): {len(self.bencom):,}")
         L.append(f"  defer_new（未所蔵×詳細TOC, min_toc_nodes={self.min_toc_nodes}）: {len(defer):,}")
-        L.append(f"  weight_power={self.weight_power}  flagship_alpha={self.flagship_alpha}")
+        L.append(f"  weight_power={self.weight_power}  flagship_alpha={self.flagship_alpha}"
+                 f"  demand_scope={self.demand_scope}")
         L.append("")
-        L.append("■ 所蔵の主題分布（= 現業テーマの強さ）")
+        L.append(f"■ 所蔵の主題分布（= 現業テーマの強さ・母数={self.demand_scope}）")
         for d, w, share in self.demand_summary():
             L.append(f"    {d:<14} {share*100:5.1f}%  ({w:.1f})")
+        L.append(f"  （参考）軸外ドメインの所蔵シェア(all母数): {oos*100:.1f}%")
         if self.unmapped_genres:
             L.append("")
             L.append("  ⚠ 未写像 genre（GENRE_TO_DOMAIN 補正候補・上位10）:")
@@ -740,20 +824,24 @@ class PurchaseRecommender:
         L.append("-" * 76)
         for r in recs:
             flag = " ★旗艦" if r.is_flagship else ""
+            conf = "" if r.profile_confidence == "high" else f" ⟨{r.profile_confidence}"
+            if r.profile_source == "tag_domain_fallback":
+                conf = " ⟨tag fallback"
+            conf = (conf + "⟩") if conf else ""
             doms = ", ".join(f"{d}:{w:.2f}" for d, w in r.top_domains)
-            L.append(f"  {r.rank:3d}. [{r.score:5.1f}] {r.title[:54]}{flag}")
+            L.append(f"  {r.rank:3d}. [{r.score:5.1f}] {r.title[:54]}{flag}{conf}")
             L.append(f"        著者={r.author[:30]}  出版={r.publisher[:24]}")
             L.append(f"        TOCノード={r.toc_nodes}  主題[{doms}]  ISBN={r.isbn}")
             if r.dup_alert:
                 L.append(f"        ⚠ {r.dup_alert}")
         L.append("")
         L.append("-" * 76)
-        L.append(f"■ 2度買い防止アラート（候補プール中の所蔵済み）: {len(alerts)} 件")
+        L.append(f"■ 2度買い防止アラート: 強一致(所蔵済み)={len(strong)} / ソフト(要レビュー)={len(soft)}")
         L.append("-" * 76)
-        for h in alerts[:50]:
-            L.append(f"    ✗ {h.title[:54]}  ←所蔵済み({h.match_reason}: {h.held_title[:30]})")
-        if len(alerts) > 50:
-            L.append(f"    … 他 {len(alerts)-50} 件")
+        for h in strong[:40]:
+            L.append(f"    ✗強 {h.title[:50]}  ←所蔵済み({h.match_reason}: {h.held_title[:28]})")
+        for h in soft[:20]:
+            L.append(f"    ?軟 {h.title[:50]}  ←別版の可能性({h.match_reason}: {h.held_title[:28]})")
         L.append("")
         L.append("=" * 76)
         L.append("End of report.")
@@ -777,12 +865,14 @@ class PurchaseRecommender:
         with open(self._path("out_csv"), "w", encoding="utf-8-sig", newline="") as f:
             w = csv.writer(f)
             w.writerow(["rank", "score", "title", "author", "publisher",
-                        "primary_domain", "toc_nodes", "is_flagship", "isbn",
+                        "primary_domain", "profile_source", "profile_confidence",
+                        "toc_nodes", "is_flagship", "isbn",
                         "top_domains", "dup_alert", "bencom_url"])
             for r in recs:
                 w.writerow([
                     r.rank, r.score, r.title, r.author, r.publisher,
-                    r.primary_domain, r.toc_nodes, int(r.is_flagship), r.isbn,
+                    r.primary_domain, r.profile_source, r.profile_confidence,
+                    r.toc_nodes, int(r.is_flagship), r.isbn,
                     ";".join(f"{d}:{wt:.2f}" for d, wt in r.top_domains),
                     r.dup_alert, r.bencom_url,
                 ])
@@ -792,15 +882,98 @@ class PurchaseRecommender:
             encoding="utf-8",
         )
 
+        n_strong = sum(1 for h in alerts if h.match_strength == "strong")
         print(f"Report  : {self._path('out_report')}")
         print(f"JSON    : {self._path('out_json')}")
         print(f"CSV     : {self._path('out_csv')}")
-        print(f"Alert   : {self._path('out_alert')}  ({len(alerts)} 件)")
+        print(f"Alert   : {self._path('out_alert')}  (強={n_strong} / ソフト={len(alerts)-n_strong})")
         print()
         print("Top 5 購入提案:")
         for r in recs[:5]:
             print(f"  {r.rank}. [{r.score}] {r.title[:50]} "
-                  f"(TOC={r.toc_nodes}, {'旗艦' if r.is_flagship else '通常'})")
+                  f"(TOC={r.toc_nodes}, {'旗艦' if r.is_flagship else '通常'}, conf={r.profile_confidence})")
+
+
+# ---------------------------------------------------------------------------
+# Supabase data source（private bookdx schema を read-only で読む） [監査F1]
+# ---------------------------------------------------------------------------
+class SupabaseDataSource:
+    """`bookdx` schema の行を JSON ソースと同形の in-memory 構造へ変換する。
+    query_runner(sql)->list[dict] を注入（本番=psycopg / テスト=フェイク）。
+    toc/raw は引かない（ペイロード最小・total_toc は coverage 列を使用）。"""
+
+    def __init__(self, query_runner: Callable[[str], list], schema: str = "bookdx"):
+        self.q = query_runner
+        self.schema = schema
+
+    def fetch(self) -> tuple[list[dict], list[dict], list[dict], dict]:
+        s = self.schema
+        h_rows = self.q(
+            f"SELECT internal_id, isbn, bencom_id, title, author, publisher, "
+            f"genre, ndc, physical, cut, scanned FROM {s}.holdings"
+        )
+        holdings = [{
+            "id": r.get("internal_id"),
+            "isbn": r.get("isbn"),
+            "bencomId": r.get("bencom_id"),
+            "title": r.get("title") or "",
+            "author": r.get("author") or "",
+            "publisher": r.get("publisher") or "",
+            "genre": r.get("genre"),
+            "ndc": r.get("ndc"),
+            "status": {"physical": r.get("physical"), "cut": r.get("cut"),
+                       "scanned": r.get("scanned")},
+        } for r in h_rows]
+
+        c_rows = self.q(
+            f"SELECT book_id, isbn, title, author, publisher, tags, bencom_url, "
+            f"primary_domain, domain_hits, total_toc, matched_toc, coverage "
+            f"FROM {s}.candidates"
+        )
+        bencom, coverage = [], []
+        for r in c_rows:
+            bencom.append({
+                "id": r.get("book_id"),
+                "isbn": r.get("isbn"),
+                "title": r.get("title") or "",
+                "author": r.get("author") or "",
+                "publisher": r.get("publisher") or "",
+                "tags": r.get("tags") or [],
+                "bencomUrl": r.get("bencom_url") or "",
+                "toc": [],   # 本文は引かない。total_toc を coverage で渡す
+            })
+            coverage.append({
+                "book_id": r.get("book_id"),
+                "primary_domain": r.get("primary_domain"),
+                "domain_hits": r.get("domain_hits") or {},
+                "total_toc": r.get("total_toc") or 0,
+                "matched_toc": r.get("matched_toc") or 0,
+                "coverage": float(r.get("coverage") or 0.0),
+            })
+
+        t_rows = self.q(f"SELECT tag, domain_l1 FROM {s}.tag_domain")
+        tag_domain = {r.get("tag"): r.get("domain_l1") for r in t_rows if r.get("tag")}
+        return holdings, bencom, coverage, tag_domain
+
+
+def make_psycopg_runner(db_url: str) -> Callable[[str], list]:
+    """psycopg(v3) を遅延importして read-only クエリランナを返す。
+    通常実行は read-only role の接続文字列を渡すこと（監査: service_role常用を避ける）。"""
+    try:
+        import psycopg                      # noqa: F401  (遅延import)
+        from psycopg.rows import dict_row
+    except ImportError as e:                # pragma: no cover - 環境依存
+        raise RuntimeError(
+            "Supabase ソースには psycopg(v3) が必要です: pip install 'psycopg[binary]'"
+        ) from e
+
+    def run(sql: str) -> list:
+        with psycopg.connect(db_url, row_factory=dict_row) as conn:
+            conn.read_only = True           # 防御的に read-only を宣言
+            with conn.cursor() as cur:
+                cur.execute(sql)
+                return list(cur.fetchall())
+    return run
 
 
 # ---------------------------------------------------------------------------
@@ -808,14 +981,19 @@ class PurchaseRecommender:
 # ---------------------------------------------------------------------------
 def main(argv=None):
     ap = argparse.ArgumentParser(description="購入レコメンド（アイデアD）")
+    ap.add_argument("--source", choices=["json", "supabase"], default="json",
+                    help="データソース（既定 json）")
     ap.add_argument("--base", default=str(DEFAULT_BASE),
-                    help="事務所内本棚DX化計画 のベースディレクトリ")
+                    help="json ソース時の 事務所内本棚DX化計画 ベースディレクトリ")
+    ap.add_argument("--db-url", default=os.environ.get("BOOKDX_DB_URL", ""),
+                    help="supabase ソース時の接続文字列（read-only role 推奨）")
     ap.add_argument("--top-n", type=int, default=100)
-    ap.add_argument("--min-toc-nodes", type=int, default=DEFAULT_MIN_TOC_NODES,
-                    help="defer_new 判定: 詳細TOCとみなすノード数の下限")
+    ap.add_argument("--min-toc-nodes", type=int, default=DEFAULT_MIN_TOC_NODES)
     ap.add_argument("--weight-power", type=float, default=1.0,
                     help="1.0=現業テーマ整合, <1.0=空白補完寄り")
     ap.add_argument("--flagship-alpha", type=float, default=DEFAULT_FLAGSHIP_ALPHA)
+    ap.add_argument("--demand-scope", choices=["in_scope", "all"], default="in_scope",
+                    help="所蔵分布の母数（既定 in_scope=候補軸8 domain）")
     ap.add_argument("--present-only", action="store_true",
                     help="所蔵分布を物理/スキャン所持本のみで集計")
     ap.add_argument("--print", dest="do_print", action="store_true",
@@ -828,7 +1006,13 @@ def main(argv=None):
         weight_power=args.weight_power,
         flagship_alpha=args.flagship_alpha,
         present_only=args.present_only,
+        demand_scope=args.demand_scope,
     )
+    if args.source == "supabase":
+        if not args.db_url:
+            ap.error("--source supabase には --db-url か env BOOKDX_DB_URL が必要です")
+        pr.load_supabase(make_psycopg_runner(args.db_url))
+
     if args.do_print:
         print(pr.full_report(top_n=args.top_n))
     else:

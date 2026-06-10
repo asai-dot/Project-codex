@@ -163,12 +163,54 @@ dist   = pr.demand_summary()           # 所蔵の主題分布
 Box/実データ無しで動く合成テストを同梱。
 
 ```bash
-python tests/test_purchase_recommender.py     # もしくは: pytest tests/
+python tests/test_purchase_recommender.py     # engine（12件）
+python tests/test_supabase_source.py          # Supabaseソース（7件・実DB不要）
+# もしくは: pytest tests/
 ```
 
 検証内容: 所蔵主題分布の生成（genre/ndc）、`defer_new` 選定、現業テーマ整合
 ランキング、旗艦重み、`weight_power` による gap-fill シフト、2度買いアラート
-（ISBN/bencomId/タイトル一致・任意の買い物リスト）。
+（強/ソフト）、profile confidence 固定閾値、demand 母数 all/in_scope、
+Supabaseソースの JSON 同等性・read-only（書込みSQLを出さない）。
+
+---
+
+## 6b. Supabase データソース（`--source supabase`）
+
+実データ（`books.json` 33.6MB / `bencom_clean.json` 67MB）を実行環境に持ち込めない
+場合に、private `bookdx` schema へ載せて SQL で読む経路。GPT監査
+（`20260607_purchaserec_v0.2_DESIGN` = PASS_WITH_NOTES）反映済み。
+
+- **DDL**: `term_dict/sql/supabase_bookdx_schema.sql`
+  - private `bookdx` schema（PostgREST非露出）、`REVOKE ALL ... FROM PUBLIC`、
+    `bookdx_loader`(RW) / `bookdx_readonly`(RO) ロール分離
+  - `profile_source` / `profile_confidence` / `primary_domain` / `isbn` に CHECK
+  - `bookdx.load_run`（source_hash / loaded_at / loader_version）＋各行 `load_run_id`
+  - **SoT は books.json**。`bookdx.*` は一方向リードレプリカで **write-back しない**
+- **投入**: `term_dict/scripts/load_to_supabase.py`（**お手元PCで実行**）
+  ```bash
+  export BOOKDX_DB_URL="postgresql://bookdx_loader:...@db.<ref>.supabase.co:5432/postgres"
+  python load_to_supabase.py --base "<Box path>"        # or --dry-run
+  ```
+- **実行（読取りは read-only role 推奨）**:
+  ```bash
+  python purchase_recommender.py --source supabase \
+      --db-url "postgresql://bookdx_readonly:...@db.<ref>.supabase.co:5432/postgres" --print
+  ```
+- 本番のみ `psycopg`(v3) を遅延import（テスト/CIは不要）。
+
+### 固定パラメータ（監査F3: 恣意調整防止のため固定）
+
+| 区分 | 値 |
+|---|---|
+| `profile_confidence=high` | `matched_toc ≥ 5` かつ `coverage ≥ 0.05` |
+| `profile_confidence=medium` | TOC照合あり（上記未満） |
+| `profile_confidence=low` | tags のみ（tag fallback と明示） |
+| `demand_scope`（既定） | `in_scope`（候補軸8 domain を母数。`--demand-scope all` で全軸） |
+
+確定値は `purchase_recommender.py` の `CONF_HIGH_MATCHED_TOC` / `CONF_HIGH_COVERAGE`
+／`IN_SCOPE_DOMAINS`。engine と loader は `compute_candidate_profile()` を共有し写像/閾値の
+ドリフトを防ぐ。
 
 ---
 
