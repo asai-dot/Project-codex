@@ -133,6 +133,11 @@ procedure_type(spine)
   その業務スケジュール（分岐・期限・必要書類・根拠条文）を抽出 → flow JSON 化（source にページ）。
   条文(①/e-Gov・会社法は保有)・実務書TOC(③)・裁判所HP と突合（三点測量）→ owner/GPT 監査。
   別ルート: 既に条見出しを持つ 民訴/刑訴 を条文構造から skeleton 抽出。いずれも**手作り不要**。
+- **STEP 1（実装済・橋渡し）**: `scripts/procedure_flow_from_toc.py` ＝ 本の**詳細TOC**を読み、章=業務・
+  節=順序付き局面 として **flow 雛形(`status: toc_stub`)を自動生成**（各 node に「書名 p頁」出典）。
+  TOC は順序を持つが分岐は持たないので生成物は線形 stub。分岐・根拠条文・期限・書類は本文＋条文から
+  後付け＋監査。ワーカー発注書: `pipeline/procedure_flow/WORKER_TASK_kaishaho_jitsumu_schedule.md`
+  （会社法実務スケジュールの ISBN 特定・PDF/詳細TOC 確認・TOC を jsonl 出力）。
 
 ---
 
