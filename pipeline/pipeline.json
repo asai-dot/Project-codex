@@ -22,10 +22,10 @@
           {"id": "law_article_link", "label": "条文リンク", "stages": ["law_headword_article_links"], "note": "見出し語→条文 e-Gov URI。学陽1,731リンク/326見出し#2"},
           {"id": "law_mention", "label": "引用mention", "stages": [], "note": "DB全体 条文参照 mention 10,211 (Supabase・ファイル無し)#8"}
         ]},
-      {"id": "case", "label": "② 判例", "stages": [], "note": "外部WS: KG#11 / 判例リンク#8 (引用グラフ)",
+      {"id": "case", "label": "② 判例", "stages": ["case_citations_count"], "note": "外部WS: KG#11 / 判例リンク#8 (引用グラフ)",
         "subs": [
           {"id": "case_spine", "label": "正本キー", "stages": [], "note": "和暦・事件番号・裁判所 (case_identity)#11"},
-          {"id": "case_citation", "label": "引用グラフ", "stages": [], "note": "case_citations 17,259件・被覆率40%→100%#11"},
+          {"id": "case_citation", "label": "引用グラフ", "stages": ["case_citations_count"], "note": "case_citations 17,259件・被覆率40%→100% (Supabase)#11"},
           {"id": "case_landing", "label": "着地/RAG", "stages": [], "note": "3層着地(内部PD→裁判所HTML→ベンコム)＋③RAG#11"}
         ]},
       {"id": "book", "label": "③ 文献", "stages": ["toc_baseline", "ndl_canonical", "legallib_fetch", "resolver", "legallib_join_dryrun", "legallib_review", "legallib_apply", "hastoc_reconcile", "toc_search_index", "defer_new"], "note": "書誌メタ・著者・詳細目次(TOC)・横断検索を内包",
@@ -220,6 +220,13 @@
       "track": "static", "owner": "mac", "depends_on": [],
       "probes": [{"type": "exists", "root": "gakuyo", "path": "data/citations/headword_to_article_links.jsonl", "label": "条文リンク(1,731)"}],
       "note": "gakuyo data/citations。単一 jsonl(1,731リンク)なので有無で判定。"
+    },
+    {
+      "id": "case_citations_count",
+      "title": "②判例: 引用グラフ件数 (Supabase)",
+      "track": "static", "owner": "mac", "depends_on": [],
+      "probes": [{"type": "supabase", "table": "case_citations", "expected": 17259, "label": "判例引用"}],
+      "note": "SUPABASE_URL/KEY 設定時のみ点灯 (未設定/オフラインは — skipped)。table/schema は実Supabaseに合わせて要確認 (schema 指定が要る場合は probe に \"schema\":\"<名>\" を追加)。"
     }
   ]
 }

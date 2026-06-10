@@ -41,7 +41,9 @@ _COLOR = {"done": "#2e7d32", "in_progress": "#1565c0", "waiting": "#ef6c00",
 
 def _rollup(rows_by_id: dict, stage_ids: list[str]) -> dict | None:
     """構造オブジェクトに紐づくステージ群の runtime 状態を 1 つに集約 (無ければ None)。"""
-    rs = [rows_by_id[s] for s in stage_ids if s in rows_by_id]
+    # skipped (例: SUPABASE 未接続) は「未測定」扱いで集計から除外 → 全部 skipped なら —。
+    rs = [rows_by_id[s] for s in stage_ids
+          if s in rows_by_id and not rows_by_id[s].get("skipped")]
     if not rs:
         return None
     total = len(rs)
@@ -130,8 +132,8 @@ def _probe_ratio(results: list[dict]) -> float:
         return 0.0
     total = 0.0
     for r in results:
-        if r.get("type") == "count":
-            total += r.get("ratio", 0.0)
+        if r.get("type") in ("count", "supabase"):
+            total += r.get("ratio", 0.0)  # skipped supabase は ratio 無し→0
         else:
             total += 1.0 if r.get("done") else 0.0
     return total / len(results)
@@ -159,9 +161,16 @@ def _has_count(results: list[dict]) -> bool:
 def _progress_cell(row: dict) -> str:
     """exists-only/roundtrip は誤誘導する % を出さず present/待ち表示 (GPT 指摘#5)。"""
     results = row["probes"]
+    kinds = {r.get("type") for r in results}
+    if "supabase" in kinds:
+        sp = [r for r in results if r.get("type") == "supabase"]
+        if all(not r.get("available") for r in sp):
+            return "DB未接続"
+        if any(r.get("expected") for r in sp):
+            return f"`{_bar(row['ratio'])}` {int(row['ratio']*100)}%"
+        return "DB有" if row["status"] == "done" else "DB部分"
     if _has_count(results):
         return f"`{_bar(row['ratio'])}` {int(row['ratio']*100)}%"
-    kinds = {r.get("type") for r in results}
     if kinds <= {"exists", "orphan"} and results:
         done = sum(1 for r in results if r.get("done"))
         return "有" if done == len(results) else ("一部" if done else "無")
@@ -183,6 +192,7 @@ def derive(manifest: dict, snapshot: dict, now: int | None = None) -> list[dict]
         ratio = _probe_ratio(results)
         all_done = bool(results) and all(r.get("done") for r in results)
         has_err = any("error" in r for r in results)
+        skipped = bool(results) and all(r.get("skipped") for r in results)
         waiting, stale = _has_waiting(results, now)
 
         deps = stage.get("depends_on", [])
@@ -207,7 +217,7 @@ def derive(manifest: dict, snapshot: dict, now: int | None = None) -> list[dict]
             "track": stage.get("track", "other"), "owner": stage.get("owner", ""),
             "status": status, "ratio": round(ratio, 3), "deps": deps,
             "unmet_deps": unmet, "stale": stale, "note": stage.get("note", ""),
-            "probes": results,
+            "skipped": skipped, "probes": results,
         })
     return rows
 
@@ -232,6 +242,12 @@ def _probe_summary(results: list[dict]) -> str:
                          f"(未{r['pending_count']}){orphan}{dup}")
         elif r["type"] == "orphan":
             parts.append(f"{r['label']} 未宣言{r['orphan_count']}/{r['scan_count']}")
+        elif r["type"] == "supabase":
+            if r.get("available"):
+                exp = r.get("expected")
+                parts.append(f"{r['label']} {r['count']}/{exp if exp else '?'}(DB)")
+            else:
+                parts.append(f"{r['label']} DB未接続")
         elif "error" in r:
             parts.append(f"{r.get('label', '?')} ❗{r['error']}")
     return ", ".join(parts)

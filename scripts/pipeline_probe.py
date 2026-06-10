@@ -32,16 +32,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 import time
+import urllib.request
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
 PROBE_VERSION = "0.2.1"
 _JST = timezone(timedelta(hours=9))
-VALID_PROBE_TYPES = frozenset({"count", "exists", "roundtrip", "orphan"})
+VALID_PROBE_TYPES = frozenset({"count", "exists", "roundtrip", "orphan", "supabase"})
 
 # roundtrip stem fallback: 末尾の役割サフィックスを落として送信/戻りを同一キーに。
 _RT_SUFFIX = re.compile(
@@ -212,7 +214,61 @@ def run_probe(root: Path, probe: dict) -> dict:
             "done": len(orphans) == 0,
         }
 
+    if ptype == "supabase":
+        return _supabase_probe(probe, label)
+
     return {"type": ptype, "label": label, "error": f"unknown probe type: {ptype}"}
+
+
+def _supabase_count(probe: dict) -> tuple[int | None, str | None]:
+    """Supabase(PostgREST) でテーブル行数を取得 (stdlib only)。
+
+    接続情報は env (``SUPABASE_URL`` / ``SUPABASE_KEY`` か ``SUPABASE_ANON_KEY``)。
+    manifest には資格情報を書かない。env 無し・ネット不通は **例外を投げず**
+    (None, 理由) を返し、呼び出し側で skipped 扱いにする (オフライン安全)。
+    """
+    url = os.environ.get("SUPABASE_URL")
+    key = os.environ.get("SUPABASE_KEY") or os.environ.get("SUPABASE_ANON_KEY")
+    if not url or not key:
+        return None, "SUPABASE_URL/KEY 未設定"
+    table = probe.get("table")
+    if not table:
+        return None, "table 未指定"
+    q = f"{url.rstrip('/')}/rest/v1/{table}?select=*"
+    if probe.get("filter"):  # PostgREST クエリ (例: claim_scope=eq.cites)
+        q += "&" + probe["filter"]
+    req = urllib.request.Request(q, method="GET")
+    req.add_header("apikey", key)
+    req.add_header("Authorization", f"Bearer {key}")
+    req.add_header("Prefer", "count=exact")
+    req.add_header("Range-Unit", "items")
+    req.add_header("Range", "0-0")  # 本体は取らず Content-Range の総数だけ見る
+    if probe.get("schema"):
+        req.add_header("Accept-Profile", probe["schema"])
+    try:
+        with urllib.request.urlopen(req, timeout=probe.get("timeout", 8)) as resp:
+            content_range = resp.headers.get("Content-Range", "")  # 例 "0-0/17259"
+    except Exception as e:  # 接続/HTTP/SSL いずれも skip 扱い (collect を壊さない)
+        return None, f"接続失敗: {type(e).__name__}"
+    total = content_range.split("/")[-1] if "/" in content_range else ""
+    if total.isdigit():
+        return int(total), None
+    return None, f"count 取得失敗: {content_range!r}"
+
+
+def _supabase_probe(probe: dict, label: str) -> dict:
+    count, err = _supabase_count(probe)
+    expected = probe.get("expected")
+    if count is None:
+        # 未接続/未設定: error ではなく skipped (オフライン環境では — 表示)。
+        return {"type": "supabase", "label": label, "table": probe.get("table"),
+                "available": False, "skipped": True, "note": err,
+                "expected": expected, "done": False}
+    ratio = (min(count / expected, 1.0) if expected else (1.0 if count else 0.0))
+    return {"type": "supabase", "label": label, "table": probe.get("table"),
+            "available": True, "count": count, "expected": expected,
+            "ratio": round(ratio, 4),
+            "done": (count >= expected) if expected else bool(count)}
 
 
 # --- manifest 検証 (GPT 指摘#4) -------------------------------------------
@@ -242,8 +298,13 @@ def validate_manifest(manifest: dict) -> list[str]:
             if d not in id_set:
                 errors.append(f"unknown dependency: {sid} -> {d}")
         for pr in s.get("probes", []):
-            if pr.get("type") not in VALID_PROBE_TYPES:
-                errors.append(f"invalid probe type in {sid}: {pr.get('type')}")
+            ptype = pr.get("type")
+            if ptype not in VALID_PROBE_TYPES:
+                errors.append(f"invalid probe type in {sid}: {ptype}")
+            if ptype == "supabase":
+                if not pr.get("table"):  # fs root は使わない。table 必須。
+                    errors.append(f"supabase probe に table が無い: {sid}")
+                continue
             rk = pr.get("root", "default")
             if rk not in valid_roots:
                 errors.append(f"unknown root in {sid}: {rk}")

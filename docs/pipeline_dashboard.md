@@ -26,6 +26,10 @@ scripts/pipeline_dashboard.py ← manifest+snapshot から status を導出し M
     **front-matter の `request_id` / `result_expected_filename` を優先**して突合（無ければ
     filename stem fallback）。`pending`(戻ってない) / `stale`(古いまま戻らない=詰まり) / `orphan`。
   - `orphan` — `scan` glob にあって `declared` globs に無い「未宣言成果物」を出す（manifest ドリフト検知）。
+  - `supabase` — Supabase(PostgREST) のテーブル行数を `count=exact` で取得（DB 由来の②判例 等）。
+    接続は **env `SUPABASE_URL` / `SUPABASE_KEY`**（manifest には資格情報を書かない）。stdlib(`urllib`)のみ。
+    未設定・オフライン・接続失敗は **error ではなく skipped**（描画は `—`／構造 roll-up から除外）。
+    probe は `{"type":"supabase","table":"...","expected":N,"schema":"...(任意)","filter":"...(任意)"}`。
 
 ## 使い方
 

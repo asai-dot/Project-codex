@@ -353,6 +353,41 @@ def test_structure_section(tmp: Path) -> None:
           "structure 無しならセクション無し")
 
 
+def test_supabase_probe() -> None:
+    # オフライン(env未設定)では skipped を返し、ネットを叩かない・collect を壊さない。
+    import os
+
+    from pipeline_dashboard import _rollup, derive
+
+    saved = {k: os.environ.pop(k, None)
+             for k in ("SUPABASE_URL", "SUPABASE_KEY", "SUPABASE_ANON_KEY")}
+    try:
+        r = run_probe(Path("."), {"type": "supabase", "table": "case_citations",
+                                  "expected": 17259, "label": "判例引用"})
+        check(r["type"] == "supabase" and r["skipped"] and not r["available"]
+              and not r["done"], "supabase offline = skipped (ネット不要)")
+
+        # validate: supabase は fs root 不要・table 必須。
+        ok = {"roots": {"a": "x"},
+              "stages": [{"id": "S", "probes": [{"type": "supabase", "table": "t"}]}]}
+        check(validate_manifest(ok) == [], "supabase probe は root 無しでも valid")
+        bad = {"stages": [{"id": "S", "probes": [{"type": "supabase"}]}]}
+        check(any("table が無い" in e for e in validate_manifest(bad)),
+              "table 無し supabase は error")
+
+        # 構造 roll-up: skipped のみのオブジェクトは集計から除外 → None(—)。
+        manifest = {"structure": {"static_objects": [{"id": "case", "label": "②", "stages": ["C"]}]},
+                    "stages": [{"id": "C", "probes": [{"type": "supabase", "table": "t", "expected": 9}]}]}
+        snap = collect({"a": Path(".")}, manifest)  # supabase は root 無視
+        rows = derive(manifest, snap)
+        check(rows[0]["skipped"], "skipped 行フラグ")
+        check(_rollup({x["id"]: x for x in rows}, ["C"]) is None, "skipped のみ→roll-up None(—)")
+    finally:
+        for k, v in saved.items():
+            if v is not None:
+                os.environ[k] = v
+
+
 def main() -> int:
     import tempfile
 
@@ -365,7 +400,7 @@ def main() -> int:
         print(f"• {t.__name__}")
         with tempfile.TemporaryDirectory() as td:
             t(Path(td))
-    for t in [test_manifest_validation, test_real_manifest_smoke]:
+    for t in [test_manifest_validation, test_real_manifest_smoke, test_supabase_probe]:
         print(f"• {t.__name__}")
         t()
     print(f"\n{_PASS} passed, {_FAIL} failed")

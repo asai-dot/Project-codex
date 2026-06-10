@@ -52,6 +52,9 @@ ENV_EXTRA=""
 [ -n "${ALO_BOOKDX_ROOT:-}" ] && ENV_EXTRA+=$'\n    <key>ALO_BOOKDX_ROOT</key><string>'"$ALO_BOOKDX_ROOT"'</string>'
 [ -n "${ALO_ALO_ROOT:-}" ]    && ENV_EXTRA+=$'\n    <key>ALO_ALO_ROOT</key><string>'"$ALO_ALO_ROOT"'</string>'
 [ -n "${ALO_GAKUYO_ROOT:-}" ] && ENV_EXTRA+=$'\n    <key>ALO_GAKUYO_ROOT</key><string>'"$ALO_GAKUYO_ROOT"'</string>'
+# ②判例の Supabase probe 用 (任意)。設定時のみ plist に焼く。
+[ -n "${SUPABASE_URL:-}" ] && ENV_EXTRA+=$'\n    <key>SUPABASE_URL</key><string>'"$SUPABASE_URL"'</string>'
+[ -n "${SUPABASE_KEY:-}" ] && ENV_EXTRA+=$'\n    <key>SUPABASE_KEY</key><string>'"$SUPABASE_KEY"'</string>'
 
 cat > "$PLIST" <<PLISTEOF
 <?xml version="1.0" encoding="UTF-8"?>
