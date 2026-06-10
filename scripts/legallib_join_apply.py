@@ -69,10 +69,30 @@ def apply_join(
     commit: bool,
     whitelist: set[str] | None,
     log_path: Path | None = None,
+    backup_dir: Path | None = None,
 ) -> dict[str, Any]:
     protected = frozenset(policy.get("protected_sources", PROTECTED_SOURCES))
     result = run_dryrun(resolver_rows, legallib_dir, toc_dir, known_isbns, policy)
     proposed = result["proposed_files"]
+
+    # DDJOINAUDIT P0-1: 破壊的 overwrite_simple は承認済み whitelist 必須。
+    # whitelist 無しで overwrite を含む commit は **拒否** (人手レビューを CLI で強制)。
+    overwrite_targets = {
+        e["isbn"] for e in result["actions"]
+        if e.get("action") == "overwrite_simple" and e.get("isbn") in proposed
+    }
+    if commit and overwrite_targets and whitelist is None:
+        return {
+            "commit": False,
+            "refused": "overwrite_requires_whitelist",
+            "overwrite_count": len(overwrite_targets),
+            "applied": [],
+            "status_counts": {"refused_overwrite_needs_whitelist": len(overwrite_targets)},
+            "hastoc_isbns": [],
+            "dryrun_counts": result["counts"],
+            "blocked": result["blocked"],
+            "invariant_violations": result["invariant_violations"],
+        }
 
     applied: list[dict] = []
     hastoc_isbns: list[str] = []
@@ -90,7 +110,7 @@ def apply_join(
                 continue
 
             # defense in depth: ライブの既存へゲートを再適用 (unreadable も保護)。
-            live_action, _, _ = decide_for_isbn(toc_dir, isbn, protected)
+            live_action, _, live_existing = decide_for_isbn(toc_dir, isbn, protected)
             if live_action not in WRITE_ACTIONS:
                 applied.append({"isbn": isbn, "status": "refused_protected",
                                 "live_action": live_action})
@@ -99,6 +119,9 @@ def apply_join(
             nodes = proposed[isbn]
             out_path = toc_dir / f"isbn_{isbn}.json"
             if commit:
+                # P1 rollback: overwrite 前に旧ファイルを backup (新規 create は対象外)。
+                if live_action == "overwrite_simple" and live_existing and backup_dir:
+                    _atomic_write_json(backup_dir / f"isbn_{isbn}.json", live_existing)
                 _atomic_write_json(out_path, nodes)
                 status = "written"
             else:
@@ -133,7 +156,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--toc-dir", required=True)
     ap.add_argument("--books", required=True)
     ap.add_argument("--policy")
-    ap.add_argument("--only-isbns", help="承認済み ISBN のホワイトリスト (1行1ISBN)")
+    ap.add_argument("--only-isbns",
+                    help="承認済み ISBN のホワイトリスト (1行1ISBN)。overwrite を含む --commit には必須")
+    ap.add_argument("--backup-dir", help="overwrite 前の旧ファイル退避先 (rollback 用)")
     ap.add_argument("--log", help="適用ログ jsonl の追記先 (--commit 時のみ)")
     ap.add_argument("--commit", action="store_true",
                     help="実書き込み。付けなければ would_write のみ")
@@ -149,10 +174,16 @@ def main(argv: list[str] | None = None) -> int:
         commit=args.commit,
         whitelist=_load_whitelist(args.only_isbns),
         log_path=Path(args.log) if args.log else None,
+        backup_dir=Path(args.backup_dir) if args.backup_dir else None,
     )
 
     print(json.dumps(result["status_counts"], ensure_ascii=False, sort_keys=True))
     print(f"commit={result['commit']} hastoc_to_set={len(result['hastoc_isbns'])}")
+    # P0-1: overwrite を whitelist 無しで commit しようとした → 拒否 (exit 1)。
+    if result.get("refused") == "overwrite_requires_whitelist":
+        print(f"REFUSED: overwrite_simple {result['overwrite_count']} 件は "
+              f"--only-isbns (承認済み ISBN) が必須。create のみ自動可。", file=sys.stderr)
+        return 1
     # 保護対象への書き込み拒否は正常系だが、invariant 違反があれば失敗扱い。
     if result["invariant_violations"]:
         print(f"INVARIANT VIOLATION: {result['invariant_violations']}", file=sys.stderr)

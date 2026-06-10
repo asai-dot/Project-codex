@@ -314,19 +314,27 @@ def test_apply_safety() -> None:
         check(all(a["isbn"] != "9784000000027" for a in res["applied"]),
               "人手TOC は適用候補に入らない")
 
-        # commit=True: simple/新規のみ書く。人手は触らない。
-        manual_before = (toc_dir / "isbn_9784000000027.json").read_text()
-        res2 = apply_join(resolver, legallib_dir, toc_dir, known, policy,
+        # P0-1: commit=True かつ whitelist=None で overwrite を含む → 拒否 (何も書かない)。
+        before2 = {p.name: p.read_text() for p in toc_dir.glob("*.json")}
+        resR = apply_join(resolver, legallib_dir, toc_dir, known, policy,
                           commit=True, whitelist=None)
-        check(res2["status_counts"].get("written") == 2, "written 2 件")
+        check(resR.get("refused") == "overwrite_requires_whitelist", "whitelist無commitは拒否")
+        check(not (toc_dir / "isbn_9784000000034.json").exists(), "拒否時は create も書かない")
+        check({p.name: p.read_text() for p in toc_dir.glob("*.json")} == before2,
+              "拒否時は既存ファイル不変")
+
+        # commit=True + 承認済み whitelist: overwrite と create を書く。人手は触らない。
+        manual_before = (toc_dir / "isbn_9784000000027.json").read_text()
+        res2 = apply_join(resolver, legallib_dir, toc_dir, known, policy, commit=True,
+                          whitelist={"9784000000010", "9784000000034"})
+        check(res2["status_counts"].get("written") == 2, "承認済みなら written 2 件")
         manual_after = (toc_dir / "isbn_9784000000027.json").read_text()
         check(manual_before == manual_after, "人手TOC は commit でも不変 (diff 0)")
-        # 上書きされた simple は legallib になっている。
         written = json.loads((toc_dir / "isbn_9784000000010.json").read_text())
         check(written[0]["toc_source"] == "legallib", "simple→legallib 昇格")
         # 再実行は冪等 (既 legallib → skip、書き込み 0)。
-        res3 = apply_join(resolver, legallib_dir, toc_dir, known, policy,
-                          commit=True, whitelist=None)
+        res3 = apply_join(resolver, legallib_dir, toc_dir, known, policy, commit=True,
+                          whitelist={"9784000000010", "9784000000034"})
         check(res3["status_counts"].get("written", 0) == 0, "再commit は書き込み0 (冪等)")
 
 
@@ -342,6 +350,22 @@ def test_apply_whitelist() -> None:
         check(res["status_counts"].get("written") == 1, "whitelist で1件のみ書込")
         check(res["status_counts"].get("needs_approval") == 1, "未承認は needs_approval")
         check((toc_dir / "isbn_9784000000034.json").exists(), "承認分は作成された")
+
+
+def test_overwrite_backup() -> None:
+    # P1 rollback: overwrite 前に旧ファイルを backup_dir に退避 (create は対象外)。
+    import tempfile
+
+    policy = load_policy(None)
+    with tempfile.TemporaryDirectory() as td:
+        resolver, legallib_dir, toc_dir, known = _demo_inputs(Path(td))
+        backup = Path(td) / "backup"
+        old = (toc_dir / "isbn_9784000000010.json").read_text()
+        apply_join(resolver, legallib_dir, toc_dir, known, policy, commit=True,
+                   whitelist={"9784000000010", "9784000000034"}, backup_dir=backup)
+        check((backup / "isbn_9784000000010.json").read_text() == old,
+              "overwrite 前の旧 simple を backup")
+        check(not (backup / "isbn_9784000000034.json").exists(), "create は backup しない")
 
 
 def test_unreadable_existing_protected() -> None:
@@ -412,6 +436,7 @@ def main() -> int:
         test_empty_book_id_blocked_individually,
         test_apply_safety,
         test_apply_whitelist,
+        test_overwrite_backup,
     ]
     for t in tests:
         print(f"• {t.__name__}")
