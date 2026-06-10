@@ -88,6 +88,12 @@ snapshot は純データなので、**日次でコミットして差分を見れ
 `—` ＋メモを表示。`structure` が無い manifest では本セクションを出さない（後方互換）。
 オブジェクト・系統を増やすときは `structure` に足し、live で測りたければ `stages` を張る。
 
+live で点灯させるには対象の実ファイルを走査できる root が要る。①法令・⑤語彙は gakuyo
+ワークストリーム（`gakuyo-headless-migrate`）の `data/`（`data/egov/*.jsonl`・`data/jlt/*`・
+`data/gakuyo/*`・`data/citations/*`）を `--root gakuyo=<path>`（または `ALO_GAKUYO_ROOT`）で
+渡すと点灯する（`dd_collect.command` は自動検出）。なお `count` probe は **glob にマッチする
+ファイル数**を数えるので、単一ファイルに多数レコードを持つ辞書/リンク集は `exists`（有無）で測る。
+
 オブジェクトは `subs` でサブオブジェクトに割れる（親 stages を MECE に分割）。例: ③文献 →
 **書誌メタ**（NDL正本照合・ISBN突合・未収録退避）/ **詳細目次(TOC)**（TOC基盤・詳細TOC接合・
 hasToc整合・横断検索索引）/ **著者**（外部WS #8）。dashboard は親 roll-up の下に各サブの

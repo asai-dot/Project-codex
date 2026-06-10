@@ -51,6 +51,7 @@ PUSH_ARG=""
 ENV_EXTRA=""
 [ -n "${ALO_BOOKDX_ROOT:-}" ] && ENV_EXTRA+=$'\n    <key>ALO_BOOKDX_ROOT</key><string>'"$ALO_BOOKDX_ROOT"'</string>'
 [ -n "${ALO_ALO_ROOT:-}" ]    && ENV_EXTRA+=$'\n    <key>ALO_ALO_ROOT</key><string>'"$ALO_ALO_ROOT"'</string>'
+[ -n "${ALO_GAKUYO_ROOT:-}" ] && ENV_EXTRA+=$'\n    <key>ALO_GAKUYO_ROOT</key><string>'"$ALO_GAKUYO_ROOT"'</string>'
 
 cat > "$PLIST" <<PLISTEOF
 <?xml version="1.0" encoding="UTF-8"?>

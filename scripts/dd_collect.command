@@ -65,6 +65,19 @@ else
   echo "⚠ bookdx root 無し (ALO_BOOKDX_ROOT で指定可)。静的DB系ステージは todo 表示。"
 fi
 
+# gakuyo (⑤語彙/①法令 の data/)。env 優先、無ければ repo 直下/alo 配下に data/egov があるか探索。
+GAKUYO_ROOT="${ALO_GAKUYO_ROOT:-}"
+if [ -z "$GAKUYO_ROOT" ]; then
+  for cand in "$REPO_ROOT" "$ALO_ROOT" "$HOME/gakuyo" "$HOME/alo-ai/gakuyo"; do
+    [ -d "$cand/data/egov" ] && { GAKUYO_ROOT="$cand"; break; }
+  done
+fi
+if [ -n "$GAKUYO_ROOT" ] && [ -d "$GAKUYO_ROOT/data/egov" ]; then
+  ROOT_ARGS+=(--root "gakuyo=$GAKUYO_ROOT")
+else
+  echo "⚠ gakuyo root 無し (ALO_GAKUYO_ROOT で指定可)。①法令・⑤語彙は todo 表示。"
+fi
+
 echo "▶ snapshot 収集 … roots: ${ROOT_ARGS[*]}"
 # collect() が manifest を検証→不正なら exit 1 で止まる (描画/コミットへ進ませない)。
 "$PY" scripts/pipeline_probe.py --manifest "$MANIFEST" "${ROOT_ARGS[@]}" --out "$SNAPSHOT"

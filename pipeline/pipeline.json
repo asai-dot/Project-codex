@@ -5,7 +5,8 @@
   "roots": {
     "bookdx": "Box 同期 .../claude/事務所内本棚DX化計画",
     "alo": "~/alo-ai",
-    "repo": "Project-codex の checkout"
+    "repo": "Project-codex の checkout",
+    "gakuyo": "語彙/法令ワークストリーム(gakuyo-headless-migrate)の data/ を置いた実パス。--root gakuyo=<path> で指定"
   },
   "tracks": {
     "static": "静的DB (蔵書 canonical / BookDX)",
@@ -15,11 +16,11 @@
   "structure": {
     "_comment": "DD 全体の正本構造 (docs/dd_index.md)。static_objects=7, dynamic_sources=6, crosscutting=4。各エントリの stages は runtime roll-up 用に既存ステージ id を参照 (空=外部WS/未起票で live 測定なし)。",
     "static_objects": [
-      {"id": "law", "label": "① 法令", "stages": [], "note": "外部WS: 法令リンク#8 / 学陽e-Gov#2 / KG#11",
+      {"id": "law", "label": "① 法令", "stages": ["law_egov_definitions", "law_headword_article_links"], "note": "外部WS: 法令リンク#8 / 学陽e-Gov#2 / KG#11",
         "subs": [
-          {"id": "law_egov_def", "label": "e-Gov定義", "stages": [], "note": "e-Gov法令の定義語 534定義/13法令 (high216/med318)#8"},
-          {"id": "law_article_link", "label": "条文リンク", "stages": [], "note": "条文→e-Gov URI。学陽1,731リンク/326見出し・e-Gov条見出し4,367条#2"},
-          {"id": "law_mention", "label": "引用mention", "stages": [], "note": "DB全体 条文参照 mention 10,211 (枝番・漢数字・全角)#8"}
+          {"id": "law_egov_def", "label": "e-Gov定義", "stages": ["law_egov_definitions"], "note": "e-Gov法令の定義語 (ALL 18,099 / high 5,874 / 13法令534)#2"},
+          {"id": "law_article_link", "label": "条文リンク", "stages": ["law_headword_article_links"], "note": "見出し語→条文 e-Gov URI。学陽1,731リンク/326見出し#2"},
+          {"id": "law_mention", "label": "引用mention", "stages": [], "note": "DB全体 条文参照 mention 10,211 (Supabase・ファイル無し)#8"}
         ]},
       {"id": "case", "label": "② 判例", "stages": [], "note": "外部WS: KG#11 / 判例リンク#8 (引用グラフ)",
         "subs": [
@@ -39,11 +40,11 @@
           {"id": "journal_article", "label": "論文entity", "stages": ["legallib_article_parser"], "note": "号→{title,authors,参照} 分解 (article_parser#8)"},
           {"id": "journal_author", "label": "著者", "stages": [], "note": "外部WS: 著者正規化#8 (③文献と共通)"}
         ]},
-      {"id": "vocab", "label": "⑤ 語彙", "stages": [], "note": "外部WS: 三点測量#2 / JLT着地#1",
+      {"id": "vocab", "label": "⑤ 語彙", "stages": ["vocab_jlt_authority", "vocab_gakuyo_entries", "vocab_yuhikaku_terms"], "note": "外部WS: 三点測量#2 / JLT着地#1",
         "subs": [
-          {"id": "vocab_jlt", "label": "JLT", "stages": [], "note": "JLT v19.0 権威見出し 3,869 / Box着地#1"},
-          {"id": "vocab_gakuyo", "label": "学陽", "stages": [], "note": "学陽 all_entries 2,684・554正規化#2"},
-          {"id": "vocab_yuhikaku", "label": "有斐閣", "stages": [], "note": "三点測量の第3源 (core 922)"}
+          {"id": "vocab_jlt", "label": "JLT", "stages": ["vocab_jlt_authority"], "note": "JLT v19.0 権威見出し 3,869#2"},
+          {"id": "vocab_gakuyo", "label": "学陽", "stages": ["vocab_gakuyo_entries"], "note": "学陽 all_entries 2,684#2"},
+          {"id": "vocab_yuhikaku", "label": "有斐閣", "stages": ["vocab_yuhikaku_terms"], "note": "三点測量の第3源 (yuhikaku_terms)#2"}
         ]},
       {"id": "procedure", "label": "⑥ 手続", "stages": [], "note": "統合軸(横串): 手続類型をキーに①法令③文献⑦書式②判例が収斂・未起票",
         "subs": [
@@ -184,6 +185,41 @@
         "declared": ["handoff/legallib_dryrun_*/report.md", "handoff/*/*RESULT*.md"],
         "label": "handoff"}],
       "note": "manifest が拾っていない handoff 成果物を炙り出す (v0.2 orphan probe)。declared は実体に合わせて更新。"
+    },
+    {
+      "id": "vocab_jlt_authority",
+      "title": "⑤語彙: JLT v19.0 権威見出し",
+      "track": "static", "owner": "mac", "depends_on": [],
+      "probes": [{"type": "exists", "root": "gakuyo", "path": "data/jlt/jlt_terms_authority_v19.0.txt", "label": "JLT見出し(3,869)"}],
+      "note": "gakuyo data/jlt。単一ファイル(3,869レコード)なので有無で判定。--root gakuyo=<path> で点灯。"
+    },
+    {
+      "id": "vocab_gakuyo_entries",
+      "title": "⑤語彙: 学陽 all_entries",
+      "track": "static", "owner": "mac", "depends_on": [],
+      "probes": [{"type": "exists", "root": "gakuyo", "path": "data/gakuyo/gakuyo_all_entries.jsonl", "label": "学陽entry(2,684)"}],
+      "note": "gakuyo data/gakuyo。単一 jsonl(2,684レコード)なので有無で判定。"
+    },
+    {
+      "id": "vocab_yuhikaku_terms",
+      "title": "⑤語彙: 有斐閣 三点測量源",
+      "track": "static", "owner": "mac", "depends_on": [],
+      "probes": [{"type": "exists", "root": "gakuyo", "path": "data/triangulation/yuhikaku_terms.txt", "label": "有斐閣terms"}],
+      "note": "gakuyo data/triangulation。件数確定前のため存在確認。"
+    },
+    {
+      "id": "law_egov_definitions",
+      "title": "①法令: e-Gov 定義語抽出",
+      "track": "static", "owner": "mac", "depends_on": [],
+      "probes": [{"type": "exists", "root": "gakuyo", "path": "data/egov/egov_statutory_definitions_ALL.jsonl", "label": "e-Gov定義"}],
+      "note": "gakuyo data/egov (ALL 18,099 / high 5,874)。全法令ターゲット未確定のため存在確認。"
+    },
+    {
+      "id": "law_headword_article_links",
+      "title": "①法令: 見出し語→条文リンク",
+      "track": "static", "owner": "mac", "depends_on": [],
+      "probes": [{"type": "exists", "root": "gakuyo", "path": "data/citations/headword_to_article_links.jsonl", "label": "条文リンク(1,731)"}],
+      "note": "gakuyo data/citations。単一 jsonl(1,731リンク)なので有無で判定。"
     }
   ]
 }
