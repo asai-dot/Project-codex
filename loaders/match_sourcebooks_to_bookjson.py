@@ -35,11 +35,31 @@ def norm_pub(s):
         s = s.replace(a,b)
     return s.lower()
 
-def load_books(path):
-    """books.json を読み、isbn索引 と (title,pub)索引 を作る。配列でも {id:rec} でも可。"""
+def _slim_rows(path):
+    """books_slim.csv（export_books_slim.py 出力）を canonical 風 dict に正規化して返す。"""
+    out = []
     with open(path, encoding='utf-8') as f:
-        data = json.load(f)
-    recs = data.values() if isinstance(data, dict) else data
+        for r in csv.DictReader(f):
+            out.append({
+                'identity': {'isbn': r.get('isbn','')},
+                'bib_core': {'title': r.get('title',''), 'publisher': r.get('publisher','')},
+                'physical': {'present': r.get('physical_present') in ('1','True','true'),
+                             'shelf_label': r.get('shelf') or None},
+                'digital':  {'pdf_present': r.get('pdf_present') in ('1','True','true'),
+                             'pdf_quality': r.get('pdf_quality') or None,
+                             'pdf_files': [None]*int(r.get('pdf_files') or 0),
+                             'ocr_status': r.get('ocr_status') or None},
+            })
+    return out
+
+def load_books(path):
+    """books.json か books_slim.csv を読み、isbn索引 と (title,pub)索引 を作る。"""
+    if path.lower().endswith('.csv'):
+        recs = _slim_rows(path)
+    else:
+        with open(path, encoding='utf-8') as f:
+            data = json.load(f)
+        recs = data.values() if isinstance(data, dict) else data
     by_isbn, by_tp = {}, collections.defaultdict(list)
     for rec in recs:
         ident = rec.get('identity', rec)

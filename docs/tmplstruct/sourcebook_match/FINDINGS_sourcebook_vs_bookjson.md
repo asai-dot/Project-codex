@@ -87,20 +87,40 @@ templates.csv は全書式に native 原本の直リンクを持つ。**A が枠
 
 ---
 
-## 4. 未実行＝ワーカーで1コマンド（books.json 所蔵突合）
+## 4. 所蔵突合 — 実環境で当たった結果と制約
 
-books.json は約33MB・**Mac ローカルが唯一の実体**（このリモート実行環境はセッション上限で33MB全量を引けない）。
-同梱の決定論マッチャを Mac で走らせれば、出典本ごとに 現物所蔵/自前PDF/OCR を判定し、CSV＋サマリが出る：
+番頭がリモート環境から **実際に Box を当たった**結果（2026-06-11）:
 
+| 当たった先 | 結果 | 所蔵判定に使えるか |
+|---|---|---|
+| `app/data/books.json`（33MB・**唯一の正本**） | **取得不可**：MCP転送上限（実測 ~8MB。CSV 7.7MBは可、16.9/33MBは session expired）。`.jsonl`/拡張子なしバックアップは text表現なしで不可 | ○だが**引けない** |
+| `opac_parsed_v04`（OPAC登録簿 .tsv） | 取得済。だが**雑誌・継続刊行物中心**（判例時報・金融法務事情…分類Z） | × 書式集（単行本）には不向き |
+| `app/data/toc/isbn_*.json`（本ごとTOC） | 取得済。例 `isbn_9784908621093.json`＝創耕舎『契約書式の実務 上』が**存在** | △ `toc_source:"bencom"`＝リーガルライブラリー由来メタ。**所蔵の証明ではない**（システム掲載=所蔵ではない） |
+| `additions-log.json`＋`scan_events.json`（バーコード登録/スキャン履歴） | 取得済（現物登録~60冊・PDFスキャン8冊）。だが**2026/03-04の追加分のみ**＝全所蔵の極一部 | △ 載れば確実所蔵だが、175書式集とは**重複0** |
+
+**結論**: 物理所蔵/自前PDF/OCR の真実を持つのは books.json だけだが、約33MBで本環境に取り込めない。
+OPAC・toc・履歴ログでは 175書式集の所蔵を確証できない。**= 突合の最終判定は books.json を開ける場所で行う必要がある。**
+
+### 完了させる2経路（どちらも books.json 非改変・read-only・クォータ0）
+
+**経路①（速い・番頭が完了）**: Mac で軽量エクスポータを1回流し、<2MB の `books_slim.csv` を Box material_queue へ。番頭が取り込んで突合を即完了。
+```
+python3 loaders/export_books_slim.py --books ~/alo-ai/.../app/data/books.json --out books_slim.csv
+# → Box material_queue/20260611_srcbook_match/books_slim.csv に置く
+# 番頭: match_sourcebooks_to_bookjson.py の --books を books_slim.csv に向けて実行
+```
+**経路②（Macで完結）**: Mac でマッチャを直接実行。
 ```
 python3 loaders/match_sourcebooks_to_bookjson.py \
   --source docs/tmplstruct/sourcebook_match/source_books_175.csv \
   --books  ~/alo-ai/.../app/data/books.json
 ```
 出力: `sourcebook_holdings_match.csv`＋`_HOLDINGS_MATCH_SUMMARY.md`
-（突合鍵: ① ISBN完全一致 ② 書名正規化＋出版社 で fuzzy。曖昧は human_review）。
+（突合鍵: ① ISBN完全一致 ② 書名正規化＋出版社 fuzzy。曖昧は human_review）。
+詳細は `WORKER_TASK_PACKET_tmplstruct_sourcebook_match.md`。
 
-詳細手順は `WORKER_TASK_PACKET_tmplstruct_sourcebook_match.md`。read-only・books.json非改変・クォータ0。
+> マッチャは isbn 完全一致＋書名/出版社 fuzzy。`match_sourcebooks_to_bookjson.py` は books.json でも books_slim.csv でも
+> 同じ列名で動くよう slim 経路を優先実装（slim CSV を直読みできる）。
 
 ---
 
