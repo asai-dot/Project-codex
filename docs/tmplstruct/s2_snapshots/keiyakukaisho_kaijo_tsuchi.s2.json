@@ -1,0 +1,147 @@
+{
+  "schema": "form_snapshot.v1",
+  "form_uid": null,
+  "provisional_key": "NOBN_20220726_契約解消の法律実務_01:toc_ord29",
+  "anchor": {
+    "canonical_book_id": null,
+    "book_ref": {
+      "bencom_bib_id": "NOBN_20220726_契約解消の法律実務_01",
+      "isbn": "9784502434013",
+      "title": "契約解消の法律実務"
+    },
+    "toc_node_id": null,
+    "toc_ref": {
+      "source": "bencom_bib_toc",
+      "ordinal": 29,
+      "level": 4,
+      "text": "⑴ はじめに―解除通知の例"
+    },
+    "page_span_print": [
+      49,
+      50
+    ],
+    "page_span_pdf": [
+      59,
+      60
+    ],
+    "page_offset_pdf_minus_print": 10,
+    "span_kind": "embedded"
+  },
+  "source": {
+    "source_system": "jisui_vision_ocr",
+    "provenance_group": "asai_jisui",
+    "scan": {
+      "box_file_id": "2150796103179",
+      "dpi": 600
+    },
+    "ocr": {
+      "engine": "claude_vision",
+      "captured_at": "2026-06-11"
+    }
+  },
+  "form_title": "解除通知書（英文・Termination Notice 文例）",
+  "form_kind": "notice",
+  "language": "en",
+  "content": {
+    "blocks": [
+      {
+        "type": "date",
+        "text": "October 1st, 202X",
+        "blanks": [
+          "発信日"
+        ]
+      },
+      {
+        "type": "party",
+        "no": "FROM",
+        "text": "Tokyo, Japan, 100-XXXX",
+        "blanks": [
+          "差出人所在地"
+        ]
+      },
+      {
+        "type": "party",
+        "no": "TO",
+        "text": "B Holdings, Inc. / X-X-X, YYY, / U.S.A., 55555 / Attention: XXX",
+        "blanks": [
+          "宛先名",
+          "宛先住所",
+          "Attention担当者"
+        ]
+      },
+      {
+        "type": "party",
+        "no": "CC",
+        "text": "B Europe GmbH / Z-Z, ZZZ, / Germany, 14000 / Attention: YYY",
+        "blanks": [
+          "CC先名",
+          "CC先住所",
+          "Attention担当者"
+        ]
+      },
+      {
+        "type": "heading",
+        "no": "RE",
+        "text": "Termination of the XXX Agreement dated XX XX, XXXX",
+        "blanks": [
+          "対象契約名",
+          "契約日付"
+        ]
+      },
+      {
+        "type": "recital",
+        "text": "Dear Sirs/Madams,"
+      },
+      {
+        "type": "recital",
+        "text": "We refer to XX Agreement dated XX XX, XXXX (the \"Original Agreement\") and amendment thereof dated YY YY, YYYY (the \"Amendment\") by and among B Holdings, Inc., B Europe GmbH and A Corporation.",
+        "blanks": [
+          "原契約名・日付",
+          "変更契約日付",
+          "当事者名"
+        ]
+      },
+      {
+        "type": "clause",
+        "text": "This notice is being sent to the record address and attention of B Holdings, Inc. and B Europe GmbH pursuant to Section XX of the Amendment.",
+        "blanks": [
+          "Section番号"
+        ]
+      },
+      {
+        "type": "clause",
+        "text": "Pursuant to Article XX of the Amendment, under which XXXXXX months prior written notice is required for termination, we hereby give notice to B Holdings, Inc. of our intention of termination, of the Original Agreement and Amendment thereof, with lapse of XX XX XXXX.",
+        "blanks": [
+          "Article番号",
+          "予告月数",
+          "失効日付"
+        ]
+      },
+      {
+        "type": "signature",
+        "text": "Sincerely yours, [Name] [Title] [Department] A Corporation",
+        "blanks": [
+          "署名者氏名",
+          "役職",
+          "部署",
+          "会社名"
+        ]
+      }
+    ],
+    "blanks_total": 21,
+    "clause_count": 2,
+    "item_count": 0,
+    "block_count": 10
+  },
+  "quality": {
+    "notes": "箱組みの文例。解説本文中に埋め込み表示(独立書式集ページではない)。プレースホルダはXX/XXXX/[ ]形式。",
+    "ocr_error_classes": []
+  },
+  "confidence": {
+    "source_authority": 0.95,
+    "merge": null,
+    "quality_adjustment": 1.0
+  },
+  "form_group_uid": null,
+  "resolution_log_ref": null
+}
