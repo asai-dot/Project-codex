@@ -6,7 +6,7 @@ version: v0.3.1
 supersedes: 20260611_legallibjoin_v03_concordance_AUDIT
 parallel_related: [20260610_legallibjoin_v0.1_DDJOIN, 20260610_legallibjoin_analysis_v0.1_DDJOINAUDIT, 20260611_legallibjoin_v0.2_AUDIT]
 withdrawal_effect: v0.2 production-apply lane は撤回維持。本v0.3.1がproduction apply判断のcurrent governing。
-current_governing_result: pending
+current_governing_result: true  # DDLEGALLIBCONCORD_PASS_WITH_NOTES (2026-06-11) phase0=GO production_apply=HOLD
 git_commit: 3021208
 git_branch: claude/legallib-integration-design-Jgrtf
 git_pr: https://github.com/asai-dot/Project-codex/pull/5
