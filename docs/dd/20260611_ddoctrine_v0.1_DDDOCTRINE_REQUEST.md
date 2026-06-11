@@ -7,10 +7,14 @@ source_hash: sha256:3d614e3ae3a3d1ac05ce05b31d0dbec31f83610d46a29da92d4611b39ab0
 git_branch: claude/pipeline-collect-validation-EnNJM
 git_pr: https://github.com/asai-dot/Project-codex/pull/15
 result_expected_filename: 20260611_ddoctrine_v0.1_DDDOCTRINE_RESULT.md
-status: queued
+status: processed
 dispatched_at: 2026-06-11T02:09-07:00   # Box gpt_ometsuke/to_gpt/ へ投函済 (owner 指示「とうかんして」)
 box_file_id: 2278542621212
 box_path: 浅井/claude/handoffs/gpt_ometsuke/to_gpt/20260611_ddoctrine_v0.1_DDDOCTRINE_REQUEST.md
+result_label: DDDOCTRINE_PASS_WITH_NOTES
+result_file: docs/dd/20260611_ddoctrine_v0.1_DDDOCTRINE_RESULT.md   # from_gpt file_id 2278615307537
+reflected: true   # F1-F4 を dd_doctrine v0.2 に反映、§12を別冊へ、summary 新設
+box_processed_pending: true   # to_gpt/processed/ への物理退避は owner/lane 運用 (未実施)
 ---
 
 # 20260611 ddoctrine v0.1 — GPT Pro レビュー REQUEST（法情報DB 設計思想ドクトリン）
