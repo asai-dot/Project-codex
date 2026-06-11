@@ -1,6 +1,6 @@
 ### DD-LAWSUBTRANS-001 v0.1.2: 法令改廃に伴う「実質的変更・解釈変遷」レイヤ（形式軸の上に乗る assertion overlay）
 
-> **id**: `DD-LAWSUBTRANS-001` / **version**: v0.1.2 / **status**: accepted (design; owner ratified 2026-06-10。production DDL/DB write/MCP claim_support は HOLD)
+> **id**: `DD-LAWSUBTRANS-001` / **version**: v0.1.3 / **status**: accepted (design; owner ratified 2026-06-10。production DDL/DB write/MCP claim_support は HOLD)
 > **supersedes_review**: v0.1.1（gate DDLAWSUBTRANS → `DDLAWSUBTRANS_PASS_WITH_NOTES` ×2,
 > 2026-06-10。GPT Pro お目付け役＋GPT-5.5 Pro 再レビュー。v0.1 指摘4点すべて CLOSED、
 > 即時 blocker なし。本 v0.1.2 は production 前 Note A–D を §10 に明文化したのみ＝設計不変）
@@ -363,6 +363,9 @@ LEFT JOIN LATERAL (
   ORDER BY e.decided_at DESC LIMIT 1
 ) r ON true;
 -- interpretation_transition / old_law_survival も同型 view を持つ。
+-- v0.1.3（監査note）: T3/T4 は物理 assertion_status 列も持つが、**current_status の正本は本 view
+-- （= 物理 status を起点に最新 review-event を畳んだ値）**とする。物理 status と review-event が
+-- 食い違う場合は review-event が優先。T2 は物理 status を持たず 'candidate' 起点で同一規則に従う。
 ```
 
 ---
@@ -375,7 +378,7 @@ LEFT JOIN LATERAL (
 | `substantive_requires_evidence` | current_status ∈ (reviewed,accepted) ⇒ evidence_pointer_id NOT NULL | 0件 |
 | `disputed_blocks_claim` | counter_*_id NOT NULL ⇒ claim_support_eligible=false かつ current_status='disputed' | 0件 |
 | `claim_support_requires_accepted` | claim_support_eligible=true ⇒ current_status='accepted' ∧ disputed=false ∧ **evidence_count>=1** ∧ **未解決 counter なし** ∧ **lawtime_resolved=true**（from/to/superseding revision が lawtime で解決）。**Note B**: 当面は単一 `evidence_pointer_id IS NOT NULL` を evidence_count=1 とみなす。multi-evidence を許す場合は join table（`alo_law_assertion_evidence`）を新設し本 gate を count 化する。 | 0件 |
-| `claim_support_consistent_with_view` | **Note C**: `claim_support_eligible` を物理列として保持する場合、その値は §3.7 view が §4 条件から導出する値と一致する（保持しない＝view 導出のみなら本 gate は不要） | 0件 |
+| `claim_support_consistent_with_view` | **Note C**: `claim_support_eligible` を物理列として保持する場合、その値は §3.7 view が §4 条件から導出する値と一致する（保持しない＝view 導出のみなら本 gate は不要）。**T2/T3/T4 全系統に適用**（v0.1.3 監査note 反映） | 0件 |
 | `accepted_requires_review_event` | current_status='accepted' ⇒ 当該 assertion に review_basis 非空の T6 review-event が存在（**tier の高さだけで accepted 化しない**） | 0件 |
 | `evidence_locator_complete` | **reviewed/accepted/claim_support 対象**の根拠 evidence は source_uri・source_type・source_tier・locator・source_span_hash・retrieved_at・parser_version を備える（**Note A**: DDL の一律 NOT NULL ではなく、本 gate SQL で対象を限定して検査。candidate evidence には適用しない） | 0件 |
 | `drafter_intent_not_sole_truth` | tier2(立案担当者) 単独の「no_substantive_change/continues」に tier3(court) の反対主張があれば accepted 不可（disputed 強制） | 0件 |
@@ -459,7 +462,19 @@ v0.1.1 は GPT Pro お目付け役＋GPT-5.5 Pro 再レビューで `DDLAWSUBTRA
 その他 production 前必須（§7 と重複）: §4 gates の実 SQL 化、lawtime resolved view の実体接続、
 DD-LAWTIME v0.2.x の production 確定（v0.2.2 は MODIFY_REQUIRED のため依存は v0.2.1 design に限定）。
 
+### §10.1 production フェーズ宿題（v0.1.2 監査 P0/P1。設計不変・実装で閉じる）
+1. §4 gates を実 SQL / 独立 validator として実行可能化。
+2. `claim_support_consistent_with_view` を **T2/T3/T4 全系統**に適用。
+3. T3/T4 の物理 `assertion_status` と T6 review-event の優先関係を **current view で正本固定**（§3.7 反映済）。
+4. `evidence_locator_complete` は reviewed/accepted/claim_support 対象限定で実行。
+5. MCP 出口の「`unknown` を根拠にしない」を snapshot test 化。
+6. producer が `accepted` / `claim_support_eligible=true` を出さないことを CI gate に残す。
+
 ## §9. changelog
+- v0.1.3 (2026-06-11): v0.1.2 確認監査 `DDLAWSUBTRANS_PASS_WITH_NOTES`（design 不変・producer 全段
+  整合・即時 blocker なし）の note 2点を明文化。①`claim_support_consistent_with_view` を T2/T3/T4
+  全系統適用と明記。②T3/T4 の物理 status と T6 review-event の優先関係を §3.7 view で正本固定。
+  §10.1 に production P0/P1 を追記。**設計不変**。
 - v0.1.2 (2026-06-10): v0.1.1 監査（PASS_WITH_NOTES ×2）の production 前 Note A–D を §10 に明文化
   し、T2 コメント・gate 表に反映（evidence_locator_complete を対象限定 SQL gate に、
   新 gate `claim_support_consistent_with_view`、evidence_count 算出注記、T2 status は view 解決の旨）。
