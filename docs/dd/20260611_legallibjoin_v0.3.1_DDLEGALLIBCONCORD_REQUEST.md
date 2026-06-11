@@ -11,7 +11,7 @@ git_commit: 3021208
 git_branch: claude/legallib-integration-design-Jgrtf
 git_pr: https://github.com/asai-dot/Project-codex/pull/5
 result_expected_filename: 20260611_legallibjoin_v0.3.1_DDLEGALLIBCONCORD_RESULT.md
-status: draft   # 投函前に Mac/web 内輪同期 (新規約#1)。owner OK で queued へ。
+status: queued   # owner OK (2026-06-11) → to_gpt 投函
 ---
 
 # GPT Pro 設計監査(再)依頼: legallibjoin v0.3.1 concordance (P0 7点反映)
