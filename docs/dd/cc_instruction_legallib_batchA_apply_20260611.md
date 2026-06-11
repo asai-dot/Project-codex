@@ -1,3 +1,5 @@
+> ⛔ **WITHDRAWN 2026-06-11**: GPT strategy `LEGALLIBJOIN_STRATEGY_V03_1_FIRST` により Batch A 本適用は実行しない（v0.3.1 一本化）。本書は evidence として保全。停止通知 = Box `cc_instruction_legallib_batchA_apply_20260611_WITHDRAWN.md`。
+
 # INSTRUCTION: legallib 接合 Batch A 本適用 + Hold B/C レビュー材料生成（Mac CC 宛）
 
 - 宛先: Mac Claude Code セッション / 発信: web CC（番頭）/ 2026-06-11
