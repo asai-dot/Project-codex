@@ -28,7 +28,8 @@
     ],
     "page_offset_pdf_minus_print": 24,
     "span_kind": "single_node",
-    "edition_mismatch": true
+    "edition_mismatch": true,
+    "anchor_status": "pending_edition_mismatch (scan=旧版9784502992605 / toc_nodes=第3版のみ)"
   },
   "source": {
     "source_system": "jisui_vision_ocr",

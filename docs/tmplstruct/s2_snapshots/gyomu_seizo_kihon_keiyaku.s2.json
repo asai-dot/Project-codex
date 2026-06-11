@@ -3,18 +3,19 @@
   "form_uid": null,
   "provisional_key": "NOBN_20220203_業務委託契約書作成のポイント〈第2版〉_01:toc_ord134",
   "anchor": {
-    "canonical_book_id": null,
+    "canonical_book_id": "NOBN_20220203_業務委託契約書作成のポイント〈第2版〉_01",
     "book_ref": {
       "bencom_bib_id": "NOBN_20220203_業務委託契約書作成のポイント〈第2版〉_01",
       "isbn": "9784502406010",
       "title": "業務委託契約書作成のポイント〔第2版〕"
     },
-    "toc_node_id": null,
+    "toc_node_id": "NOBN_20220203_業務委託契約書作成のポイント〈第2版〉_01:toc:134",
     "toc_ref": {
       "source": "bencom_bib_toc",
       "ordinal": 134,
       "level": 1,
-      "text": "巻末資料１〔製造委託型〕 製造委託基本契約書（サンプル）"
+      "text": "巻末資料１〔製造委託型〕 製造委託基本契約書（サンプル）",
+      "print_page_in_toc_nodes": 216
     },
     "page_span_print": [
       203,
@@ -26,7 +27,8 @@
     ],
     "page_offset_pdf_minus_print": 14,
     "span_kind": "subtree",
-    "scope_note": "頭(PDF217-218)を抽出。契約全体はPDF235付近まで継続。"
+    "scope_note": "頭(PDF217-218)を抽出。契約全体はPDF235付近まで継続。",
+    "anchor_status": "confirmed_on_toc_nodes_20260611"
   },
   "source": {
     "source_system": "jisui_vision_ocr",

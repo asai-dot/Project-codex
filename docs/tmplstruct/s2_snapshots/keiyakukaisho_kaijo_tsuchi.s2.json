@@ -3,18 +3,19 @@
   "form_uid": null,
   "provisional_key": "NOBN_20220726_契約解消の法律実務_01:toc_ord29",
   "anchor": {
-    "canonical_book_id": null,
+    "canonical_book_id": "NOBN_20220726_契約解消の法律実務_01",
     "book_ref": {
       "bencom_bib_id": "NOBN_20220726_契約解消の法律実務_01",
       "isbn": "9784502434013",
       "title": "契約解消の法律実務"
     },
-    "toc_node_id": null,
+    "toc_node_id": "NOBN_20220726_契約解消の法律実務_01:toc:029",
     "toc_ref": {
       "source": "bencom_bib_toc",
       "ordinal": 29,
       "level": 4,
-      "text": "⑴ はじめに―解除通知の例"
+      "text": "⑴ はじめに―解除通知の例",
+      "print_page_in_toc_nodes": 60
     },
     "page_span_print": [
       49,
@@ -25,7 +26,8 @@
       60
     ],
     "page_offset_pdf_minus_print": 10,
-    "span_kind": "embedded"
+    "span_kind": "embedded",
+    "anchor_status": "confirmed_on_toc_nodes_20260611"
   },
   "source": {
     "source_system": "jisui_vision_ocr",
