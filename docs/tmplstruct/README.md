@@ -25,7 +25,16 @@
 
 **batch2 前に閉じる P0×4（いずれもクォータ0）**: ①content-type/zip 検証フェッチャ ②classify v0.3.1 無料再分類 ③deduped docx_queue ④independent validator 実装＋全profile実行（F-1 空虚ゲート置換）。
 
+## 根拠本×蔵書 突合レーン（2026-06-11 追加）
+OCRだけに依存せず「より生に近いきれいな材料」を探すため、書式の**出典本(根拠本)**とうちの蔵書(BookJSON=`books.json`)を突き合わせる調査を開始。
+- 書式3,806件（弁コム全体で**175冊・6,976書式**）は全件「出典本＋ページ＋**native原本の直DL URL**」を持つ（Word 5,282/PDF 1,625/Excel 69）。
+- 出典本101/175冊で ISBN を解決 → `books.json` の `physical.present`/`digital.pdf_present`/`ocr_status` と突合可能。
+- 詳細: `docs/tmplstruct/sourcebook_match/FINDINGS_sourcebook_vs_bookjson.md`。突合本体は books.json がローカルにある Mac で `WORKER_TASK_PACKET_tmplstruct_sourcebook_match.md` を実行。
+
 ## 成果物
+- `loaders/build_source_book_inventory.py` — 出典本175冊の集計（templates.csv×catalog.csv・read-only）
+- `loaders/match_sourcebooks_to_bookjson.py` — 出典本×books.json 突合（worker実行・books.json非改変）
+- `docs/tmplstruct/sourcebook_match/source_books_175.csv` — 出典本索引（確定）
 - `loaders/select_template_sample.py` — 層化30件サンプラー（read-only・決定論・inspect→bind）
 - `structure_profile_v0.3.1.md` — rollout closeout 確定設計（監査反映・meta/anchor・Phase A/B/C）
 - `VALIDATOR_restorable_profile_spec.md` — F-1 独立ゲート仕様（G1〜G7）
