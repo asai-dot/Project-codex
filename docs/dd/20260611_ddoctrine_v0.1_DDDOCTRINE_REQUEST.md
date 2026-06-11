@@ -8,6 +8,9 @@ git_branch: claude/pipeline-collect-validation-EnNJM
 git_pr: https://github.com/asai-dot/Project-codex/pull/15
 result_expected_filename: 20260611_ddoctrine_v0.1_DDDOCTRINE_RESULT.md
 status: queued
+dispatched_at: 2026-06-11T02:09-07:00   # Box gpt_ometsuke/to_gpt/ へ投函済 (owner 指示「とうかんして」)
+box_file_id: 2278542621212
+box_path: 浅井/claude/handoffs/gpt_ometsuke/to_gpt/20260611_ddoctrine_v0.1_DDDOCTRINE_REQUEST.md
 ---
 
 # 20260611 ddoctrine v0.1 — GPT Pro レビュー REQUEST（法情報DB 設計思想ドクトリン）
