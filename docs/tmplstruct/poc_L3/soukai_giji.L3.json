@@ -1,0 +1,81 @@
+{
+  "form_uid": "alo:form:prov:soukai_giji",
+  "form_title": "定時株主総会議事録(記載例)",
+  "archetype": "E2_minutes_record",
+  "form_kind": "minutes",
+  "source": {
+    "book": "会社法務書式集(旧版・自炊)",
+    "pdf_page": 200,
+    "src": "jisui_vision_ocr"
+  },
+  "parties": [],
+  "clauses": [
+    {
+      "no": null,
+      "title": "定時株主総会議事録",
+      "function": "corporate_minutes",
+      "function_label": "株主総会議事録",
+      "obligations": [],
+      "slots": [
+        {
+          "id": "開催回次",
+          "type": "ordinal"
+        },
+        {
+          "id": "開催日",
+          "type": "date"
+        },
+        {
+          "id": "開催時刻",
+          "type": "time"
+        },
+        {
+          "id": "開催場所",
+          "type": "place"
+        },
+        {
+          "id": "発行済株式総数",
+          "type": "count_shares"
+        },
+        {
+          "id": "総株主数",
+          "type": "count"
+        },
+        {
+          "id": "議決権総数",
+          "type": "count_votes"
+        },
+        {
+          "id": "出席株主数",
+          "type": "count"
+        },
+        {
+          "id": "出席議決権個数",
+          "type": "count_votes"
+        },
+        {
+          "id": "議長",
+          "type": "person_role"
+        },
+        {
+          "id": "出席役員",
+          "type": "list_person_role"
+        },
+        {
+          "id": "リモート出席",
+          "type": "bool"
+        }
+      ],
+      "attributes": {
+        "定足数確認": "リモート出席の適時/的確性を確認後に開会宣言",
+        "成立判定": "定足数充足→適法成立"
+      },
+      "comparable_key": "corporate_minutes"
+    }
+  ],
+  "extraction": {
+    "by": "claude_vision_auto",
+    "confidence": 0.85,
+    "ambiguity": "記載例の【】を全slot化。出席役員=可変長。議事本文は(以下省略)"
+  }
+}

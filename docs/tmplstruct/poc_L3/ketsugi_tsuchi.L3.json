@@ -1,0 +1,57 @@
+{
+  "form_uid": "alo:form:prov:ketsugi_tsuchi",
+  "form_title": "定時株主総会の決議通知(書式3-16)",
+  "archetype": "D_prose_notice",
+  "form_kind": "notice",
+  "source": {
+    "book": "会社法務書式集(旧版・自炊)",
+    "pdf_page": 200,
+    "src": "jisui_vision_ocr"
+  },
+  "parties": [
+    {
+      "role": "発信者(会社)"
+    },
+    {
+      "role": "宛先(株主)"
+    }
+  ],
+  "clauses": [
+    {
+      "no": null,
+      "title": "決議通知",
+      "function": "resolution_notice",
+      "function_label": "株主総会決議の通知",
+      "obligations": [],
+      "slots": [
+        {
+          "id": "通知日",
+          "type": "date"
+        },
+        {
+          "id": "宛先",
+          "type": "addressee"
+        },
+        {
+          "id": "差出人住所",
+          "type": "address"
+        },
+        {
+          "id": "差出人会社名",
+          "type": "org_name"
+        },
+        {
+          "id": "代表者",
+          "type": "person_role"
+        }
+      ],
+      "attributes": {},
+      "comparable_key": "resolution_notice"
+    }
+  ],
+  "extraction": {
+    "by": "claude_vision_auto",
+    "confidence": 0.8,
+    "ambiguity": "ヘッダのみ出現。決議事項本文は次頁"
+  }
+}

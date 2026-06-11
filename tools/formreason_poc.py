@@ -56,13 +56,33 @@ def q_missing(forms, function):
         has=any(c["function"]==function for c in f["clauses"])
         if not has: print("  ⚠", f["form_title"])
 
+def q_archetypes(forms):
+    print("【Q0】コーパス概要 (archetype別)")
+    by=defaultdict(list)
+    for f in forms: by[f.get("archetype","?")].append(f)
+    for a in sorted(by):
+        print(f"  {a} ({len(by[a])})")
+        for f in by[a]:
+            ex=f.get("extraction",{})
+            print(f"     - {f['form_title'][:34]}  [{f.get('form_kind','?')}] "
+                  f"auto_conf={ex.get('confidence','-')}")
+
+def q_extraction_quality(forms):
+    print("\n【Q6】自動抽出(vision→L3)の自己申告 confidence と曖昧点")
+    for f in forms:
+        ex=f.get("extraction")
+        if ex:
+            print(f"  {f['form_title'][:30]}: conf={ex.get('confidence')} / {ex.get('ambiguity','')[:48]}")
+
 if __name__=="__main__":
     d=sys.argv[1] if len(sys.argv)>1 else os.path.join(os.path.dirname(__file__),"..","docs/tmplstruct/poc_L3")
     forms=load(d)
     print(f"=== L3 corpus: {len(forms)} forms / {sum(len(f['clauses']) for f in forms)} clauses ===\n")
+    q_archetypes(forms)
+    print()
     q_function_matrix(forms)
     q_compare(forms,"payment")
     q_obligations(forms)
     q_slot_types(forms)
+    q_extraction_quality(forms)
     q_missing(forms,"damages")
-    q_missing(forms,"ip_assignment")
