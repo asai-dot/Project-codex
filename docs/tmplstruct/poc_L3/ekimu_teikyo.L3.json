@@ -1,0 +1,176 @@
+{
+  "form_uid": "alo:form:prov:ekimu_yakumu_sample",
+  "form_title": "業務委託契約書（役務提供型・サンプル）",
+  "archetype": "A_clause_contract",
+  "source": {
+    "book": "業務委託契約書作成のポイント〔第2版〕",
+    "toc_node_id": "…業務委託…_01:toc:135",
+    "src": "jisui_vision_ocr"
+  },
+  "parties": [
+    {
+      "role": "委託者"
+    },
+    {
+      "role": "受託者"
+    }
+  ],
+  "clauses": [
+    {
+      "no": "第3条",
+      "title": "契約内容の変更",
+      "function": "amendment",
+      "function_label": "契約内容の変更",
+      "obligations": [],
+      "slots": [],
+      "attributes": {
+        "変更方法": "両者協議"
+      },
+      "comparable_key": "amendment"
+    },
+    {
+      "no": "第4条",
+      "title": "履行",
+      "function": "performance",
+      "function_label": "履行",
+      "obligations": [
+        {
+          "obligor": "受託者",
+          "act": "契約成立後直ちに着手・履行期日までに完了"
+        }
+      ],
+      "slots": [
+        {
+          "id": "履行期日",
+          "type": "date"
+        }
+      ],
+      "attributes": {
+        "期日変更": "正当事由あれば協議で変更可"
+      },
+      "comparable_key": "performance"
+    },
+    {
+      "no": "第5条",
+      "title": "完了の報告",
+      "function": "completion_report",
+      "function_label": "完了報告",
+      "obligations": [
+        {
+          "obligor": "受託者",
+          "act": "完了時に完了報告"
+        },
+        {
+          "obligor": "受託者",
+          "act": "遅延・不能のおそれ時の通知"
+        }
+      ],
+      "slots": [],
+      "attributes": {},
+      "comparable_key": "completion_report"
+    },
+    {
+      "no": "第6条",
+      "title": "支払方法",
+      "function": "payment",
+      "function_label": "対価・支払",
+      "obligations": [
+        {
+          "obligor": "委託者",
+          "act": "対価の支払"
+        }
+      ],
+      "slots": [
+        {
+          "id": "対価",
+          "type": "amount_jpy",
+          "source": "第2条"
+        },
+        {
+          "id": "銀行口座",
+          "type": "bank_account"
+        }
+      ],
+      "attributes": {
+        "支払時期": "履行期日月末締め→翌月末日払い",
+        "支払方法": "銀行振込・送金",
+        "遅延損害金率_pct_pa": null,
+        "消費税": "(第6条に規定なし)",
+        "振込手数料負担": "委託者"
+      },
+      "comparable_key": "payment_terms"
+    },
+    {
+      "no": "第7条",
+      "title": "報告内容",
+      "function": "report",
+      "function_label": "報告",
+      "obligations": [
+        {
+          "obligor": "受託者",
+          "act": "適正履行・報告内容の真正を保証"
+        }
+      ],
+      "slots": [],
+      "attributes": {},
+      "comparable_key": "report"
+    },
+    {
+      "no": "第8条",
+      "title": "知的財産権の帰属",
+      "function": "ip_assignment",
+      "function_label": "知財帰属",
+      "obligations": [
+        {
+          "obligor": "受託者",
+          "act": "権利帰属手続の履践"
+        },
+        {
+          "obligor": "受託者",
+          "act": "著作者人格権の不行使"
+        }
+      ],
+      "slots": [],
+      "attributes": {
+        "帰属先": "委託者",
+        "対象": "特許/意匠/著作権(27・28条含む)/ノウハウ",
+        "対価": "委託料に含む"
+      },
+      "comparable_key": "ip_assignment"
+    },
+    {
+      "no": "第9条",
+      "title": "第三者が保有する知的財産権の侵害",
+      "function": "ip_noninfringement",
+      "function_label": "第三者知財非侵害",
+      "obligations": [
+        {
+          "obligor": "受託者",
+          "act": "非侵害の表明保証・紛争協力・損害賠償"
+        }
+      ],
+      "slots": [],
+      "attributes": {},
+      "comparable_key": "ip_noninfringement"
+    },
+    {
+      "no": "第10条",
+      "title": "損害賠償",
+      "function": "damages",
+      "function_label": "損害賠償",
+      "obligations": [
+        {
+          "obligor": "受託者",
+          "act": "故意過失による損害の賠償"
+        }
+      ],
+      "slots": [],
+      "attributes": {
+        "賠償義務者": "受託者(一方向)",
+        "上限": "(規定なし)",
+        "帰責": "故意・過失"
+      },
+      "comparable_key": "damages"
+    }
+  ]
+}

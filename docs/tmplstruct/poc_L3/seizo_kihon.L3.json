@@ -1,0 +1,165 @@
+{
+  "form_uid": "alo:form:prov:189841f625c2c43d",
+  "form_title": "製造委託基本契約書（サンプル）",
+  "archetype": "A_clause_contract",
+  "source": {
+    "book": "業務委託契約書作成のポイント〔第2版〕",
+    "toc_node_id": "…業務委託…_01:toc:134",
+    "src": "jisui_vision_ocr"
+  },
+  "parties": [
+    {
+      "role": "委託者"
+    },
+    {
+      "role": "受託者"
+    }
+  ],
+  "clauses": [
+    {
+      "no": "第1条",
+      "title": "目的",
+      "function": "purpose",
+      "function_label": "目的・対象",
+      "obligations": [
+        {
+          "obligor": "受託者",
+          "act": "善管注意義務をもって本業務を遂行"
+        }
+      ],
+      "slots": [
+        {
+          "id": "本製品(別紙1)",
+          "type": "ref_attachment"
+        }
+      ],
+      "attributes": {},
+      "comparable_key": "purpose"
+    },
+    {
+      "no": "第2条",
+      "title": "個別契約",
+      "function": "framework_individual_contract",
+      "function_label": "個別契約の成立",
+      "obligations": [],
+      "slots": [
+        {
+          "id": "注文書",
+          "type": "doc"
+        },
+        {
+          "id": "注文請書",
+          "type": "doc"
+        }
+      ],
+      "attributes": {
+        "成立要件": "注文書＋注文請書の交付",
+        "本契約と個別契約の優先": "個別契約優先"
+      },
+      "comparable_key": "order_formation"
+    },
+    {
+      "no": "第3条",
+      "title": "製造代金",
+      "function": "payment",
+      "function_label": "対価・支払",
+      "obligations": [
+        {
+          "obligor": "委託者",
+          "act": "製造代金の支払"
+        }
+      ],
+      "slots": [
+        {
+          "id": "支払期日",
+          "type": "date",
+          "source": "個別契約"
+        },
+        {
+          "id": "支払方法",
+          "type": "enum",
+          "source": "個別契約"
+        },
+        {
+          "id": "製造代金額",
+          "type": "amount_jpy",
+          "source": "個別契約"
+        }
+      ],
+      "attributes": {
+        "支払時期": "個別契約に定める支払期日",
+        "支払方法": "個別契約(銀行振込時の手当あり)",
+        "遅延損害金率_pct_pa": 14.6,
+        "消費税": "別途付加",
+        "振込手数料負担": "委託者"
+      },
+      "comparable_key": "payment_terms"
+    },
+    {
+      "no": "第4条",
+      "title": "本貸与品の貸与及び返還",
+      "function": "bailment_return",
+      "function_label": "貸与品の管理・返還",
+      "obligations": [
+        {
+          "obligor": "受託者",
+          "act": "善管注意義務・区分管理"
+        },
+        {
+          "obligor": "受託者",
+          "act": "目的外使用・複製の禁止"
+        },
+        {
+          "obligor": "受託者",
+          "act": "終了時の原状回復・返還"
+        }
+      ],
+      "slots": [
+        {
+          "id": "本貸与品明細",
+          "type": "ref_individual_contract"
+        },
+        {
+          "id": "預かり証",
+          "type": "doc"
+        }
+      ],
+      "attributes": {
+        "管理基準": "善管注意義務",
+        "廃棄の代替": "書面合意で可"
+      },
+      "comparable_key": "bailment"
+    },
+    {
+      "no": "第5条",
+      "title": "本支給品の支給",
+      "function": "supplied_material",
+      "function_label": "支給品",
+      "obligations": [
+        {
+          "obligor": "受託者",
+          "act": "受領後速やかに検査"
+        },
+        {
+          "obligor": "受託者",
+          "act": "不適合の通知"
+        }
+      ],
+      "slots": [
+        {
+          "id": "本支給品明細",
+          "type": "ref_individual_contract"
+        },
+        {
+          "id": "受領証",
+          "type": "doc"
+        }
+      ],
+      "attributes": {
+        "不適合対応": "種類/品質/数量(不足・過剰)別に処理",
+        "所有権・危険負担": "無償=委託者帰属/有償=対価を受託者負担"
+      },
+      "comparable_key": "supplied_material"
+    }
+  ]
+}
