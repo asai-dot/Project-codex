@@ -9,9 +9,12 @@
 > （GPT IMPL監査 note 5）。後続の DESIGN_RESULT が出たら必ず更新する。
 
 - **current_design_gate_result**: `from_gpt/20260607_legaldb_v0.5.1_DESIGN_RESULT.md` = `DESIGN_MODIFY_REQUIRED`
-  → **v0.6 を投函（差分監査中）**: `to_gpt/20260607_legaldb_v0.6_DESIGN_REQUEST.md`。v0.6 は v0.5.1 §3 の
-  「DD-LAWTIME v0.2.1 accepted」という**証跡なき自己申告を撤回**し、F4 を**実在・監査済**の DD-LAWTIME
-  v0.2(PASS_WITH_NOTES)／v0.2.1(投函) に張り替え、treatment の claim_support 物理化・over-reach 抑制を追加。
+  → **v0.6 → `DESIGN_PASS_WITH_NOTES`（2026-06-08）**: phantom-accept 撤回を「監査レーンへの誠実な再接地」と
+  評価。残notes＝F4 文言を「dependency_rebased_pending_ratify」へ緩和／treatment gate を「単純resolved引用は可・
+  treatment付きは reviewed 必須」に分岐／collision gate を複合自然キー(natural_key_hash)対応／ratify＋branch
+  gate まで実装・backfill・canonical 反映は HOLD。
+  → **その後 legaldb は legallibjoin として継続**: v0.2→v0.3→**v0.3.1(DDLEGALLIBCONCORD)**＋IMPL status review
+  （2026-06-13）。**legaldb 系の現在頭は legallibjoin v0.3.1**（着手前に from_gpt の当該 RESULT を読むこと）。
 - **判定（v0.5.1）**: `DESIGN_MODIFY_REQUIRED`（唯一の核心ブロッカーは F4 = DD-LAWTIME 依存の未検証）。
 - **未PASSの核心**: F4 が前提とする **DD-LAWTIME v0.2.1 accepted の証跡が監査レーンで未確認**
   （既存 `DDLAWTIME_MODIFY_REQUIRED` と矛盾）。よってブロック継続。
@@ -74,10 +77,11 @@ GPT が挙げた v0.5.1 / v0.6 必須パッチを反映し、owner ratify を得
      GPT は「未監査の自称 v0.2.1 を追認せず実監査ラインへ統合した判断は正しい」と是認。
      production DDL 前 notes P1–P5（article_path 明記／edge_id FK・gate／relation_type 正規化表／
      claim_support 導出 gate／merge・split event 整合 gate）は**設計受理を止めない**。
-   - **P1–P5 を反映した DD-LAWTIME v0.2.2（production-DDL パッチ）を投函**
-     （`to_gpt/20260607_lawtime_v0.2.2_DDLAWTIME_REQUEST.md`, 監査中）。実行可能 DDL で、ローカル
-     Postgres16 にて適用・two-tier CHECK・append-only トリガ・全ゲート（claim_support/unknown_asof/
-     no_current_law/event_consistency=0 件違反）・resolver(歴史版解決) を**実機検証済み**。
+   - **P1–P5 を反映した DD-LAWTIME v0.2.2（production-DDL パッチ）→ `DDLAWTIME_MODIFY_REQUIRED`（P0-1〜P0-4）。**
+     → **後続セッションで v0.2.3 が起票され `DDLAWTIME_PASS_WITH_NOTES`（2026-06-11）**：P0-1〜P0-4 を全クローズ
+     （既存 edge の `NOT VALID→backfill→VALIDATE` 順序／`[valid_from,valid_to)` 両端検査／claim_support を
+     current・superseded に限定／succession overlap gate）＋ LAWSUBTRANS 用 resolved lawtime view(R-1) を追加。
+     **lawtime の現在頭 = v0.2.3。** 次段 P1（LAWSUBTRANS）＋ branch dry-run ＋ owner ratify 待ち。
    - **重要（phantom-accept の摘発）**: v0.5.1 §3 の「DD-LAWTIME v0.2.1 は 2026-06-05 accepted」は
      **監査レーンに証跡が無い自己申告**だった（実在は v0.1=MODIFY と v0.2=PASS のみ）。v0.6 で撤回し、
      依存先を実在・監査済ラインへ確定。
