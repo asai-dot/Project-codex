@@ -4,7 +4,10 @@ GPT 指定の追加7パターン + base を report-only で検出する。各 co
 unresolved が残る ISBN は apply_guard が apply を拒否する (P0-4)。本番書き込みなし。
 """
 
+
 from __future__ import annotations
+
+CONFLICT_DETECTOR_VERSION = "0.3.1"
 
 import re
 import sys

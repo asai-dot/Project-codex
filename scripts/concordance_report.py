@@ -18,7 +18,17 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from concordance import CONCORDANCE_VERSION  # noqa: E402
+from conflict_detector import CONFLICT_DETECTOR_VERSION  # noqa: E402
+from page_basis import PAGE_BASIS_VERSION  # noqa: E402
 from review_report import book_summary, render_book_summary_md  # noqa: E402
+
+# report 出力に刻む pipeline version (GPT note: version stamp)。
+PIPELINE_VERSIONS = {
+    "concordance": CONCORDANCE_VERSION,
+    "conflict_detector": CONFLICT_DETECTOR_VERSION,
+    "page_basis": PAGE_BASIS_VERSION,
+}
 
 
 def run_report(books: list[dict]) -> dict:
@@ -30,8 +40,11 @@ def run_report(books: list[dict]) -> dict:
         for c in s.pop("_conflicts_detail", []):
             conflicts_rows.append({"isbn": b["isbn"], **c})
     risk = Counter(s["risk"] for s in summaries)
+    consensus_excluded = sum(s.get("consensus_excluded_sources", 0) for s in summaries)
     return {"summaries": summaries, "conflicts": conflicts_rows,
             "risk_counts": dict(risk),
+            "versions": PIPELINE_VERSIONS,
+            "consensus_excluded_sources_total": consensus_excluded,
             "report_only": True, "final_toc_written": False}
 
 
@@ -41,13 +54,18 @@ def write_report(result: dict, out_dir: Path) -> None:
         "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in result["conflicts"]),
         encoding="utf-8")
     (out_dir / "summary.json").write_text(
-        json.dumps({"risk_counts": result["risk_counts"],
+        json.dumps({"versions": result["versions"], "risk_counts": result["risk_counts"],
+                    "consensus_excluded_sources_total": result["consensus_excluded_sources_total"],
                     "summaries": result["summaries"]}, ensure_ascii=False, indent=1),
         encoding="utf-8")
     lines = ["# legallibjoin concordance report (report-only / final_toc 未生成)", "",
+             f"- versions: {result['versions']}",
              f"- books: {len(result['summaries'])}",
-             f"- risk: {result['risk_counts']}", "",
+             f"- risk: {result['risk_counts']}",
+             f"- consensus 除外 source (provenance_origin 未宣言): "
+             f"{result['consensus_excluded_sources_total']}", "",
              "> これは concordance/conflict report であり final_toc apply ではない。",
+             "> `pdf_primary` は絶対真理ではなく qualified PDF observation を意味する。",
              "> production apply は apply_guard の7 gate (whitelist/conflict/edition/PDF/"
              "rollback/decision_log/accounting) 通過後のみ。", ""]
     for s in result["summaries"]:

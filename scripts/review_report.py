@@ -45,6 +45,8 @@ def book_summary(isbn: str, title: str,
     acc = conc["all_nodes_accounted_for"]
     unresolved = unresolved_count(conflicts)
     risk = _risk(edition["status"], conflicts, acc)
+    # consensus に数えられない (provenance_origin 未宣言) source 数 (GPT note)。
+    consensus_excluded = sum(1 for m in source_meta.values() if not m.get("provenance_origin"))
 
     if risk == "low":
         rec = "approve candidate (no unresolved conflict, identity resolved)"
@@ -66,6 +68,7 @@ def book_summary(isbn: str, title: str,
         },
         "risk": risk,
         "recommended_action": rec,
+        "consensus_excluded_sources": consensus_excluded,
         "_conflicts_detail": conflicts,
     }
 

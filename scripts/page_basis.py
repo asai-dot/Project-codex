@@ -5,7 +5,10 @@ PDF は ground truth ではなく「抽出された TOC observation」。authori
 PDF observation の品質ゲートと print/pdf ページ変換を担う。report-only・stdlib のみ。
 """
 
+
 from __future__ import annotations
+
+PAGE_BASIS_VERSION = "0.3.1"
 
 PAGE_BASIS = frozenset({"print_page", "pdf_page", "unknown"})
 EXTRACTION_METHODS = frozenset({"manual", "ocr", "llm", "publisher_pdf_toc"})

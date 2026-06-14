@@ -5,7 +5,10 @@ matched / orphan のいずれかに必ず分類する (all_nodes_accounted_for; 
 merge も final_toc 生成もしない。本番書き込みなし。stdlib のみ・決定的。
 """
 
+
 from __future__ import annotations
+
+CONCORDANCE_VERSION = "0.3.1"
 
 import re
 import sys
