@@ -55,6 +55,9 @@ source_url, source_hash, form_type
 ここから読み取れるギャップ:
 
 - **分類列はあるが空。** `ndc`(日本十進分類)・`ndlc`(NDL分類) という分類専用列がスキーマに*ある*のに、3ソースのマッピングはどれもこれを埋めていない（legallib マッピング表は title/publisher/pub_year/responsibility/isbn/raw のみ）。**分類は構造としては用意済みなのに、供給されていない。**
+  - **【訂正・2026-06-14】NDC/NDLCの供給元は3サイトではなく NDL（国立国会図書館書誌）。** NDL書誌は NDC・NDLC・件名(BSH/NDLSH)を持つ（NDCは openBD でも取得可、NDLCはNDL固有）。`bib_records.ndl_bib_id` 列と source priority の `ndl`(上位) が示すとおり、設計は最初からNDLを分類の権威として想定済み。
+  - **問題は“ソースに無い”ではなく“既存NDL照会で分類を拾っていない”こと。** 実データ `colophon_ndl_results.json` を確認すると、現行のNDL照会は title/author/pubdate/link しか抽出しておらず、**NDC/NDLC が取得対象に入っていない**。穴埋めは新規取得ではなく**既存NDL照会の取得フィールドを増やすだけ**の小拡張。
+  - 制約: NDLはISBN/書名で引くため、ISBNゼロの弁コム・legallibは ISBN復元（fingerprint突合・colophonの `recovered`）を経由する必要があるが、その経路も既存。
 - **各サイト固有のジャンルは射影されない。** LION BOLT `genre[]`・弁コム `tags/selection/bookshelf`・legallib の分野は `raw` の中。SQLで `where genre = ...` も `group by` もできない＝検索・重み付け・メタタグに使えない。
 - **OCR品質シグナルが死蔵。** `accuracy_rank`(A/B/C)・`source_type`(scan/digital) は、横断検索やRAGで「どのソースのTOC/本文を信頼するか」の重み付けに直結する一級メタだが未活用。
 - **弁コム `abstract`（出版社あらすじ・数百字）が meta 止まり。** 1冊1要約の自然文は埋め込み・要約検索の最良の素材だが、表示/出力制限の open question（OQ-2）で保留。
