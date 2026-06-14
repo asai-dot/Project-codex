@@ -129,6 +129,24 @@ source_url, source_hash, form_type
 
 ---
 
+## 5.5. 同定(identity resolution)が利活用の律速 ──「分厚い書誌」への積層【2026-06-14 追記】
+
+owner確認: 現状 `bib_records.ndc/ndlc` は3ソース分**未投入**（本の同定が未了のため）。NDC/NDLC自体は取得・生保全・parse済み（§2 再訂正）。**載せるべき**という点は合意。要点はこう:
+
+- **いまは各ソースが薄い別レコード。** bencom行・lionbolt行・legallib行・NDL行がバラバラに存在し、bib_records も `source` 別の重複行として持つ（統合は authority 層に委譲）。
+- **同定が「これらは同じ本(manifestation)」と確定すると、属性が1つの正準書誌に積層する:**
+  - 分類: NDC10＋NDLC(NDL)＋genre[](LION BOLT)＋category/series(弁コム)＋分野(legallib) → **複数ソースの合議ジャンル**
+  - 構造: TOC（保有ソースから merge policy 優先順で）／ 要約: abstract(弁コム)
+  - 品質・来歴: OCR accuracy_rank・source_hash（ソース別）
+  - 外部リンク: CiNii/calil/amazon(LION BOLT)・引用リンク(弁コム)
+  - 識別子: 解決済みISBN・ndl_bib_id・jpno・各ソース book_id
+- **「分厚さ」＝ 属性数 × 裏取りソース数。** クロスソース一致は信頼度シグナルになる（合議ジャンルの一般化）。AIレディー・リサーチ層が欲しい「well-identified／重み付き著作ノード」そのもので、評価設計 §1 の C1(網羅)・C3(反対線)・C7(重み付け) を直接押し上げる。
+- **律速の連鎖**: 同定(authority・**現状HOLD**) → 正準書誌への projection（ndc/ndlc・合議ジャンル等の結線）→ 分厚い書誌 → 検索/重み付け/メタタグ。
+- **リスクの集中点**: 誤マージ1件で誤った分類・TOC・リンクが全部その本に積層する。既存ゲート `no_auto_merge`/`human_review`/誤マージ0 は正しく、ここは **recall より precision**。「分厚いデータ」は同定層の正確さの分しか信用できない。
+- **第一コホート**: 3サイト共通501冊＋NDL（同定が比較的堅く、効果検証もしやすい）。
+
+---
+
 ## 付録: 参照した一次資料（Box file id）
 
 - DATA_INVENTORY v1.1 … `2276950720705`
