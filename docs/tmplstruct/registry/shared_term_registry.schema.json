@@ -1,96 +1,104 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "shared_term_registry.schema.json",
-  "title": "shared_term (registry shell record) v0.1",
-  "description": "条項機能の正準term台帳の1レコード。L2(MEANING)とL4(FORMOBJ)の接合キー。先験オントロジーでなく発散防止の仮置き台帳。DDL/DB書込みは別ゲート(HOLD)。",
+  "title": "shared_term (registry shell record) v0.2",
+  "description": "条項機能の正準term台帳の1レコード。L2(MEANING)とL4(FORMOBJ)の接合キー。PJ横断共有(d1lic/alo_kb/biblio/lawsubtrans)。先験オントロジーでなく発散防止の仮置き台帳。DDL/DB書込みは別ゲート(HOLD)。v0.2: 監査 DDREGSHELL_PASS_WITH_NOTES 反映(status改称/term_kind+source_lane+usage_scope/narrower構造化/anchor配列化/owner_override構造化/L4 accepted矛盾・scope)。",
   "type": "object",
   "additionalProperties": false,
-  "required": ["term_id", "pref_label", "status", "domain", "source_basis", "version", "linked_l2", "linked_l4"],
+  "required": ["term_id", "pref_label", "term_identity_status", "domain", "term_kind", "source_lane", "usage_scope", "source_basis", "source_basis_kind", "version", "linked_l2", "linked_l4"],
   "properties": {
-    "term_id": {
-      "type": "string",
-      "pattern": "^[a-z][a-z0-9_]*$",
-      "description": "正準ID(snake_case, 安定・不変)。L2 function_ref と L4 term_id が共にこれを参照する。"
-    },
-    "pref_label": { "type": "string", "minLength": 1, "description": "代表ラベル(日本語)。" },
-    "provisional_aliases": {
-      "type": "array",
-      "items": { "type": "string" },
-      "default": [],
-      "description": "暫定別名。synonym のみ(related/example/party/event は入れない=SEED監査FF-2)。"
-    },
-    "status": {
-      "type": "string",
-      "enum": ["seed", "candidate", "accepted", "deprecated"],
-      "description": "term識別性(registry admission)の status。L2/L4 とは別。"
-    },
-    "domain": {
-      "type": "string",
-      "enum": ["civil_obligation", "civil_contract", "corporate", "labor", "procedural", "cross_practice", "general", "boilerplate"]
-    },
-    "source_basis": { "type": "string", "minLength": 1, "description": "なぜこの term を起こしたか。" },
+    "term_id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+    "pref_label": { "type": "string", "minLength": 1 },
+    "provisional_aliases": { "type": "array", "items": { "type": "string" }, "default": [], "description": "synonym のみ(related/example/party/event は別フィールド)。" },
+
+    "term_identity_status": { "type": "string", "enum": ["seed", "candidate", "accepted", "deprecated"], "description": "term identity/registry entry の識別性・運用採否(旧 status)。" },
+
+    "domain": { "type": "string", "enum": ["civil_obligation", "civil_contract", "corporate", "labor", "procedural", "cross_practice", "general", "boilerplate"], "description": "法分野。" },
+    "term_kind": { "type": "string", "enum": ["legal_concept", "clause_type", "remedy_type", "procedure_type", "document_type", "actor_role", "issue_label", "bibliographic_label"], "description": "用途種別(Q5)。同じ『解除』でも条項類型/法効果/訴訟争点/文献見出しを区別。" },
+    "source_lane": { "type": "array", "minItems": 1, "items": { "type": "string", "enum": ["tmplstruct", "d1lic", "alo_kb", "biblio", "lawsubtrans", "egov", "office_dynamic"] }, "description": "由来レーン(Q5)。PJ横断共有での混在防止。" },
+    "usage_scope": { "type": "array", "minItems": 1, "items": { "type": "string", "enum": ["template_l2", "template_l4", "case_issue", "statute_definition", "literature_toc", "sf_binding"] }, "description": "利用範囲(Q5)。" },
+
+    "source_basis": { "type": "string", "minLength": 1 },
+    "source_basis_kind": { "type": "string", "enum": ["observed_in_office_templates", "commentary", "a_frame_stabilizer", "mixed"], "description": "source_basis の型(validator G_SOURCE_BASIS_TYPED)。" },
     "version": { "type": "string" },
     "owner_ratified": { "type": "boolean", "default": false },
     "owner_override": {
-      "type": ["string", "null"],
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reason", "decided_by", "decided_at", "scope"],
+          "properties": {
+            "reason": { "type": "string", "minLength": 1 },
+            "decided_by": { "type": "string", "minLength": 1 },
+            "decided_at": { "type": "string" },
+            "scope": { "type": "string", "minLength": 1 },
+            "expiry_or_review_date": { "type": ["string", "null"], "default": null }
+          }
+        }
+      ],
       "default": null,
-      "description": "accepted条件を満たさないが owner が明示許可した場合の理由。null=override無し。"
+      "description": "accepted系ゲートのバイパス。理由文字列でなく構造化(監査Q3)。"
     },
+
     "linked_l2": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["clause_type", "l2_status", "anchor"],
+      "required": ["clause_type", "l2_anchor_status", "label_cohesion_reviewed", "anchors"],
       "properties": {
         "clause_type": { "type": "string", "minLength": 1 },
         "semantic_type": { "type": ["string", "null"], "default": null },
-        "l2_status": { "type": "string", "enum": ["seed", "candidate", "accepted", "deprecated"] },
-        "anchor": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["anchored", "authority_class", "label_cohesion_reviewed"],
-          "properties": {
-            "anchored": { "type": "boolean" },
-            "anchor_source": { "type": ["string", "null"], "enum": ["alo-kg", "egov", "jlt", "abbreviation_dict", null] },
-            "anchor_ref": { "type": ["string", "null"], "default": null },
-            "anchor_match_kind": {
-              "type": ["string", "null"],
-              "enum": ["exact", "exact_term", "exact_article_title", "exact_heading", "exact_structure", "substring_partial", "inline_iu", null]
-            },
-            "authority_class": {
-              "type": "string",
-              "enum": ["authoritative_anchor", "weak_observation_anchor", "non_anchor"],
-              "description": "SEED監査FF-1: surface一致だけで authoritative にしない。inline_iu/substring は weak。"
-            },
-            "label_cohesion_reviewed": { "type": "boolean" }
+        "l2_anchor_status": { "type": "string", "enum": ["seed", "candidate", "accepted", "deprecated"], "description": "L2 型語彙としての採否(旧 l2_status)。" },
+        "label_cohesion_reviewed": { "type": "boolean", "description": "ja_labels 凝集性レビュー済(SEED監査FF-2)。" },
+        "anchors": {
+          "type": "array",
+          "default": [],
+          "description": "term には複数 anchor がありうる(監査Q4 で配列化)。",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["authority_class", "evidence_purpose"],
+            "properties": {
+              "anchor_source": { "type": ["string", "null"], "enum": ["alo-kg", "egov", "jlt", "abbreviation_dict", null] },
+              "anchor_ref": { "type": ["string", "null"], "default": null },
+              "anchor_match_kind": { "type": ["string", "null"], "enum": ["exact", "exact_term", "exact_article_title", "exact_heading", "exact_structure", "substring_partial", "inline_iu", null] },
+              "authority_class": { "type": "string", "enum": ["authoritative_anchor", "weak_observation_anchor", "non_anchor"] },
+              "evidence_purpose": { "type": "string", "enum": ["identity_anchor", "design_rationale", "drafting_guidance", "observed_variation"] },
+              "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "default": null }
+            }
           }
         }
       }
     },
+
     "linked_l4": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["l4_status", "design_knowledge_count", "n_independent", "source_independence_checked"],
+      "required": ["l4_design_status", "design_knowledge_count", "n_independent", "source_independence_checked", "no_unresolved_contradiction", "applicable_scope", "narrower_relations"],
       "properties": {
-        "design_knowledge_ref": {
-          "type": "array",
-          "items": { "type": "string" },
-          "default": [],
-          "description": "clause_design_knowledge へのパス/ID(複数可)。"
-        },
+        "design_knowledge_ref": { "type": "array", "items": { "type": "string" }, "default": [] },
         "design_knowledge_count": { "type": "integer", "minimum": 0 },
-        "n_independent": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "独立した接地源の数(同一出版社/著者系列/テンプレ再利用は1票に数えない=R3/N3)。"
-        },
+        "n_independent": { "type": "integer", "minimum": 0 },
         "source_independence_checked": { "type": "boolean" },
-        "narrower_terms": {
+        "no_unresolved_contradiction": { "type": "boolean", "description": "accepted の前提(監査Q3)。" },
+        "applicable_scope": { "type": ["string", "null"], "default": null, "description": "適用範囲の明示(accepted の前提)。" },
+        "narrower_relations": {
           "type": "array",
-          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
           "default": [],
-          "description": "registry内の下位term_id(別語彙でなく)。存在する term_id のみ(gate_no_vocab_fork)。"
+          "description": "粒度差を別語彙でなく registry 内下位 term で(監査Q2)。",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["child_term_id", "narrower_kind"],
+            "properties": {
+              "child_term_id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+              "narrower_kind": { "type": "string", "enum": ["subfunction", "option_axis", "remedy", "party_role_variant", "procedural_variant"] },
+              "basis": { "type": ["string", "null"], "default": null }
+            }
+          }
         },
-        "l4_status": { "type": "string", "enum": ["seed", "candidate", "accepted", "deprecated"] }
+        "l4_design_status": { "type": "string", "enum": ["seed", "candidate", "accepted", "deprecated"], "description": "L4 設計知識としての採否(旧 l4_status)。" }
       }
     },
     "notes": { "type": ["string", "null"], "default": null }
