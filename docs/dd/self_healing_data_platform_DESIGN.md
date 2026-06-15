@@ -3,11 +3,13 @@ request_id: DDSELFHEAL
 topic: 自己浄化型 文献データ基盤 (3層チェーン + self-healing loop)
 gate: design_direction
 supersedes: なし (legallibjoin v0.3.1 を恒常ループへ一般化する上位設計)
-parallel_related: [DDLEGALLIBCONCORD, LEGALLIBJOIN_STRATEGY_V03_1]
+parallel_related: [DDLEGALLIBCONCORD, LEGALLIBJOIN_STRATEGY_V03_1, DD-TOCADOPT-001, DD-EDIDENT-001]
 withdrawal_effect: 本設計が却下されても legallibjoin v0.3.1 (report-only 接合) は単独で成立する
 current_governing_result: DDLEGALLIBCONCORD_PASS_WITH_NOTES (phase0=GO / production_apply=HOLD)
 result_expected_filename: DDSELFHEAL_result.md
-status: draft
+status: queued
+queued_date: 2026-06-15
+守秘: 設計・状態語彙・件数レベルのみ。実依頼者データ本文は含めない。
 ---
 
 # 自己浄化型 文献データ基盤 — 設計方針 (DDSELFHEAL)
@@ -128,9 +130,13 @@ chain 破綻時は係数 0.85 で満点を抑止)。
 
 ## 4. フェーズ計画
 
-- **Phase 0 (Mac, 実行中)**: 実データ inventory / profiling → 閾値の実分布把握
-- **Phase A (web)**: `thresholds.json` を実分布で調整 → evidence 5点実データ版 → owner whitelist
-  → gate 通過 ISBN のみ apply (HOLD 解除は owner ratify 後)
+- **Phase 0 (完了 2026-06-15)**: 実データ inventory / profiling 返送済 (legallib 4,052 TOC /
+  edition 2,082 対)。所見: v1 edition は過検知 (344中226偽陽性) → `edition_identity_v2` で 344→72。
+  page tolerance は本単位 offset 補正後に評価すべき。
+- **Phase A (web, 一部完了)**: `thresholds.json` 集約済 / edition v2 を既定off で全パイプライン配線済
+  (config 1フリップで切替) / 実10冊 golden の安全不変条件 (apply 可へ昇格させない) 固定済。
+  **残: 第2 node 源 (DD-TOCADOPT-001 統合 corpus, owner 裁定=待つ) → authoritative evidence ④⑤ →
+  owner whitelist → gate 通過 ISBN のみ apply (HOLD 解除は ratify 後)。**
 - **Phase B**: 接合を「恒常 SCAN」に格上げ (`data_health.corpus_health` を corpus 全体へ)
 - **Phase C**: repair 層 (決定的 repairer から順に / 全て gated / ratchet 可視化)  ← **本 DD の対象**
 - **Phase D (v0.4)**: semantic matching / NDC 補完 / L3 PDF 深い連結 (非決定は隔離)
