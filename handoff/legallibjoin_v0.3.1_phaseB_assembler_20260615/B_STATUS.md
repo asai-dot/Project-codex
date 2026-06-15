@@ -36,12 +36,14 @@ concordance は title が **2 源以上**で一致したとき matched になる
 multi-source corpus（lionbolt / ndl_partinfo / bencom / bib_toc）であり、
 **DD-TOCADOPT-001 が統合中**の対象そのもの（同DD §8.1 の projection dryrun=631クラスタ/116,727ノードが実在の多源 corpus）。
 
-## 4. authoritative evidence ④⑤ までの依存（2 つ）
+## 4. authoritative evidence ④⑤ までの依存（更新: 2026-06-15 夕）
 
-1. **A = DD-EDIDENT-001 の ratify + 実装**（強化版 classify_edition_identity）。
-   現状 evidence は旧 classify。golden の版衝突は旧版でも high に落ちているが、
-   過検知 226 の回収は強化版でしか効かない。
-2. **第2 node 源の供給**（mainline bib_toc / lionbolt / bencom corpus）。
+> 並行レーンの進行で依存(1)は解消。実質残るのは(2)＋配線。
+
+1. ~~強化版 classify~~ → **MET**: `edition_identity_v2.py` (commit b4423f2, DD-TOCADOPT-001 §6②)
+   が並行実装済み・regression gate 達成（別版疑い 344→72・確実な別版26/26保持）。
+   **残: パイプライン配線**（`concordance_pipeline`/`review_report` は依然 v1 を import → v2 へ差替が必要）。
+2. **第2 node 源の供給**（mainline bib_toc / lionbolt / bencom corpus）= **真の残ブロッカー**。
    `assemble_books.py --extra-sources <corpus>` で合流 → 1 コマンドで authoritative 化。
 
 ## 5. 次アクション（依存解消後）

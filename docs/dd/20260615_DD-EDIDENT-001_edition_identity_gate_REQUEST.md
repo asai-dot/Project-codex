@@ -2,7 +2,28 @@
 
 - 日付: 2026-06-15
 - domain: SDB (書籍 identity 層 / DD-BOOK 家系の同定ゲート)
-- status: **REQUEST** (design-only / 本番・共有モジュール未反映。GPT 再監査 → owner ratify 待ち)
+- status: **SUBSUMED** (2026-06-15) — 本DDの中核仕様(§3.2-3.5)は `scripts/edition_identity_v2.py`
+  (commit b4423f2, DD-TOCADOPT-001 §6② 配下) として**並行実装され、Required note 2 で本DDを上回った**。
+  本DDは「実装の design-of-record」として残置。**未消化の残務**は下記 ADDENDUM 参照。
+  GPT review lane は本DDを *open competing request として扱わないこと*。
+
+---
+
+## ADDENDUM (2026-06-15) — edition_identity_v2 による subsume と残務
+
+`edition_identity_v2.py` (b4423f2) が本DD §3.2(版番号抽出)/§3.3(核包含)/§3.4(判定順序)/§3.5(年±1)を
+phase0_inventory の実証ロジック (`edition_signature`/`_core_title`/`title_diff_kind`) の昇格として実装。
+さらに **Required note 2**（ISBN 一致だけで確定せず、page_count/publisher 大差は INSUFFICIENT）を追加し、
+regression gate 達成（別版疑い v1 344 → v2 72・確実な別版 26/26 を SUSPECTED 保持・装飾副題は同一通過）。
+
+**v2 が消化していない残務（本DDから繰り越し）:**
+1. **§3.1 共有 `_toc_text.normalize_title` の `_STRIP_RE` 穴**（`〔〕〈〉、`）は**未修正**（origin tip 実測）。
+   v2 は自前 `_CORE_STRIP` を使うため *identity 判定では non-load-bearing* になったが、
+   **concordance の title クラスタリング（matched 判定）は依然 `normalize_title` 依存**で、
+   装飾差がクラスタを割りうる。→ concordance 側の課題として残す（edition gate からは外す）。
+2. **§4 resolver 差し戻し**（defer_new 58 / auto_accept 偽陽性 12 → human_review）は v2 対象外。未着手。
+3. **配線**: `concordance_pipeline` / `review_report` は依然 **v1 `classify_edition_identity` を import**。
+   v2 をパイプラインへ繋ぐ統合は未了（DD-TOCADOPT-001 Step1 で全源共通化する際に実施）。
 - 起票理由: legallibjoin v0.3.1 Phase 0 実測で、現行 `classify_edition_identity` の
   「title 文字列が1つでも違えば別版 / 年が1つでも違えば別版」判定が **過検知**することが
   数値で確定した（生の別版疑い 344件=16.5% のうち **偽陽性 226 / 実質 118 / 確実な別版 26**）。
