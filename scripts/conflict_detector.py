@@ -41,11 +41,11 @@ def _page_basis_mismatch(source_meta: dict) -> list[dict]:
     return []
 
 
-def _edition_mismatch(source_meta: dict) -> list[dict]:
+def _edition_mismatch(source_meta: dict, *, page_tolerance: float = 0.1) -> list[dict]:
     bib = [{"source": s, **{k: m.get(k) for k in
             ("isbn", "title", "publisher", "year", "edition", "volume", "page_count")}}
            for s, m in source_meta.items()]
-    res = classify_edition_identity(bib)
+    res = classify_edition_identity(bib, page_tolerance=page_tolerance)
     if res["status"] not in (RESOLVED_SAME, MANUAL_RESOLVED):
         sev = "structural" if res["status"] == "suspected_different_manifestation" else "moderate"
         return [{"pattern": "edition_mismatch_suspected", "severity": sev, "resolved": False,
@@ -65,13 +65,13 @@ def _partial_toc(normalized: dict) -> list[dict]:
     return out
 
 
-def _appendix_misclassified(normalized: dict) -> list[dict]:
+def _appendix_misclassified(normalized: dict, *, min_count: int = 2) -> list[dict]:
     out = []
     for s, ns in normalized.items():
         bad = [n["title"] for n in ns if n["depth"] == 1 and _APPENDIX_RX.search(n["title"])]
         # depth1 に索引/別表等が「混在」かつ本体章もある場合に疑い。
         has_body = any(n["depth"] >= 2 for n in ns)
-        if bad and has_body and len(bad) >= 2:
+        if bad and has_body and len(bad) >= min_count:
             out.append({"pattern": "appendix_or_table_misclassified", "severity": "minor",
                         "resolved": False, "detail": {"source": s, "examples": bad[:5]}})
     return out
@@ -100,15 +100,24 @@ def _numbering_scheme_changed(normalized: dict) -> list[dict]:
     return []
 
 
-def detect_conflicts(concordance: dict, source_meta: dict) -> list[dict]:
-    """concordance + ソース別メタから conflict/quarantine を列挙。"""
+def detect_conflicts(concordance: dict, source_meta: dict,
+                     thresholds: dict | None = None) -> list[dict]:
+    """concordance + ソース別メタから conflict/quarantine を列挙。
+
+    thresholds=None なら現行の既定値で動く (挙動不変)。実データ調整時は
+    `thresholds.load_thresholds()` の dict を渡して数値だけ差し替える。
+    """
+    t = thresholds or {}
+    ratio = t.get("coverage_mismatch_ratio", 3.0)
+    page_tol = t.get("edition_page_tolerance", 0.1)
+    appendix_min = t.get("appendix_misclassified_min", 2)
     normalized = concordance["normalized"]
     conflicts: list[dict] = []
-    conflicts += _coverage_mismatch(normalized)
+    conflicts += _coverage_mismatch(normalized, ratio=ratio)
     conflicts += _page_basis_mismatch(source_meta)
-    conflicts += _edition_mismatch(source_meta)
+    conflicts += _edition_mismatch(source_meta, page_tolerance=page_tol)
     conflicts += _partial_toc(normalized)
-    conflicts += _appendix_misclassified(normalized)
+    conflicts += _appendix_misclassified(normalized, min_count=appendix_min)
     conflicts += _repeated_heading(concordance.get("repeated_headings", {}))
     conflicts += _numbering_scheme_changed(normalized)
     # orphan は削除せず quarantine (P0-6)。

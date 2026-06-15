@@ -34,14 +34,21 @@ def _risk(edition_status: str, conflicts: list[dict], accounted: bool) -> str:
 
 def book_summary(isbn: str, title: str,
                  sources_nodes: dict[str, list[dict]],
-                 source_meta: dict) -> dict:
-    """1冊の concordance + conflict から owner 向け summary を作る。"""
+                 source_meta: dict,
+                 thresholds: dict | None = None) -> dict:
+    """1冊の concordance + conflict から owner 向け summary を作る。
+
+    thresholds=None なら現行既定で動く (挙動不変)。実データ調整時のみ
+    `thresholds.load_thresholds()` の dict を渡す。
+    """
+    t = thresholds or {}
+    page_tol = t.get("edition_page_tolerance", 0.1)
     conc = build_concordance(sources_nodes)
-    conflicts = detect_conflicts(conc, source_meta)
+    conflicts = detect_conflicts(conc, source_meta, thresholds)
     bib = [{"source": s, **{k: m.get(k) for k in
             ("isbn", "title", "publisher", "year", "edition", "volume", "page_count")}}
            for s, m in source_meta.items()]
-    edition = classify_edition_identity(bib)
+    edition = classify_edition_identity(bib, page_tolerance=page_tol)
     acc = conc["all_nodes_accounted_for"]
     unresolved = unresolved_count(conflicts)
     risk = _risk(edition["status"], conflicts, acc)
