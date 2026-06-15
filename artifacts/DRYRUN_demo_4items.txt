@@ -1,0 +1,47 @@
+$ alo-gpt-audit status BEFORE
+============================================================
+# audit lane status — /tmp/tmp8u7gibk8/gpt_ometsuke
+to_gpt 直下 active REQUEST 総数 : 6
+  answered_not_processed (要 close): 4
+  missing_result (未回答 / GPT待ち) : 2
+  bad_label (移動しない)            : 0
+  skipped (superseded/cancelled)    : 0
+旧式 *_REQUEST.processed.md (要 relocate): 0
+
+  [answered_not_processed] 20260605_claudehead_v1.1_DDCLAUDEHEAD  <- 20260605_claudehead_v1.1_DDCLAUDEHEAD_RESULT.md [DDCLAUDEHEAD_PASS_WITH_NOTES]
+  [answered_not_processed] 20260605_quasijudicial_v0.4_DDCASESOURCE  <- 20260605_quasijudicial_v0.4_DDCASESOURCE_RESULT.md [DDCASESOURCE_NEED_MORE]
+  [answered_not_processed] 20260605_statusregistry_v0.1_DDSTATUS  <- 20260605_statusregistry_v0.1_DDSTATUS_RESULT.md [DDSTATUS_MODIFY_REQUIRED]
+  [answered_not_processed] 20260606_legaldb_v0.5_DESIGN  <- 20260606_legaldb_v0.5_DESIGN_RESULT.md [DESIGN_MODIFY_REQUIRED]
+  [missing_result] 20260607_lawtime_v0.2_DDLAWTIME
+  [missing_result] 20260607_toclegalref_v0.2_DDTOCLEGALREF
+
+
+$ alo-gpt-audit close-all DRY-RUN
+============================================================
+# close-all (dry-run, 既定) — /tmp/tmp8u7gibk8/gpt_ometsuke
+  WOULD CLOSE 20260605_claudehead_v1.1_DDCLAUDEHEAD_REQUEST.md
+    result : 20260605_claudehead_v1.1_DDCLAUDEHEAD_RESULT.md  [DDCLAUDEHEAD_PASS_WITH_NOTES] -> patch
+    move   : to_gpt/20260605_claudehead_v1.1_DDCLAUDEHEAD_REQUEST.md -> to_gpt/processed/20260605_claudehead_v1.1_DDCLAUDEHEAD_REQUEST.md
+    ledger : append close (returned)
+    would create card: patch_queue/20260605_claudehead_v1.1_DDCLAUDEHEAD_CARD.md
+  WOULD CLOSE 20260605_quasijudicial_v0.4_DDCASESOURCE_REQUEST.md
+    result : 20260605_quasijudicial_v0.4_DDCASESOURCE_RESULT.md  [DDCASESOURCE_NEED_MORE] -> required_materials
+    move   : to_gpt/20260605_quasijudicial_v0.4_DDCASESOURCE_REQUEST.md -> to_gpt/processed/20260605_quasijudicial_v0.4_DDCASESOURCE_REQUEST.md
+    ledger : append close (returned)
+    would create card: material_queue/20260605_quasijudicial_v0.4_DDCASESOURCE_CARD.md
+  WOULD CLOSE 20260605_statusregistry_v0.1_DDSTATUS_REQUEST.md
+    result : 20260605_statusregistry_v0.1_DDSTATUS_RESULT.md  [DDSTATUS_MODIFY_REQUIRED] -> patch
+    move   : to_gpt/20260605_statusregistry_v0.1_DDSTATUS_REQUEST.md -> to_gpt/processed/20260605_statusregistry_v0.1_DDSTATUS_REQUEST.md
+    ledger : append close (returned)
+    would create card: patch_queue/20260605_statusregistry_v0.1_DDSTATUS_CARD.md
+  WOULD CLOSE 20260606_legaldb_v0.5_DESIGN_REQUEST.md
+    result : 20260606_legaldb_v0.5_DESIGN_RESULT.md  [DESIGN_MODIFY_REQUIRED] -> patch
+    move   : to_gpt/20260606_legaldb_v0.5_DESIGN_REQUEST.md -> to_gpt/processed/20260606_legaldb_v0.5_DESIGN_REQUEST.md
+    ledger : append close (returned)
+    would create card: patch_queue/20260606_legaldb_v0.5_DESIGN_CARD.md
+
+移動しない (理由付き):
+  [missing_result] 20260607_lawtime_v0.2_DDLAWTIME: no RESULT found
+  [missing_result] 20260607_toclegalref_v0.2_DDTOCLEGALREF: no RESULT found
+
+(dry-run。承認不要処理だが既定は安全側。実行は --apply)
