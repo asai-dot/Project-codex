@@ -10,7 +10,9 @@ source_commit: d01da92 (branch claude/library-data-reanalysis-7fg7ib)
 親設計: DD-LITID-001 v0.2-draft（DESIGN_PASS_WITH_NOTES / Box 2275006797196）
 supersedes: null
 result_expected_filename: 20260615_DD-LITID-001-ATTR_attr_observation_layer_RESULT.md
-status: draft（owner GO で Box `to_gpt/` へ投函）
+status: queued（Box `to_gpt/` 投函済 2026-06-15）
+box_review_request_file_id: 2286086385325
+box_現物ファイルID: 2286087523073（追補doc現物・同 to_gpt/）
 gate: DESIGN。**DDL適用・既存移行・backfill・データ更新・本番書込は対象外。**
 ---
 
