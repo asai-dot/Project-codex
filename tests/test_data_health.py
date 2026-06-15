@@ -101,6 +101,13 @@ def test_book_health() -> None:
     check("repair_hints" in dirty and dirty["repair_hints"], "修復ヒントあり")
     # 単一ソースは edition insufficient → edition_unresolved defect
     check("L3:edition_unresolved" in dirty["defects"], "単一ソースは版未解決")
+    # DDSELFHEAL must_fix #4: health と apply_eligibility は別軸。
+    check(clean["apply_eligible"] is True and clean["apply_blockers"] == [],
+          "綺麗な本は apply 適格・P0 ブロッカー無し")
+    check(dirty["apply_eligible"] is False and "edition_unresolved" in dirty["apply_blockers"],
+          "汚い本は P0 で apply 不適格 (版未解決)")
+    check(clean["clean"] is True and dirty["clean"] is False, "clean フラグ")
+    check("clean_reason" in clean and "clean_reason" in dirty, "clean 理由を提示")
 
 
 def test_corpus_health() -> None:
@@ -110,6 +117,11 @@ def test_corpus_health() -> None:
     check(res["clean_count"] == 1, "clean は1冊")
     check(res["min_health"] <= res["mean_health"], "min <= mean")
     check(sum(res["buckets"].values()) == 2, "bucket 合計=2")
+    # DDSELFHEAL must_fix #4/#5: apply 適格と quarantine KPI を別軸で出す。
+    check(res["apply_eligible_count"] == 1, "apply 適格は1冊 (汚い本は P0 で除外)")
+    check("quarantine" in res and "rate" in res["quarantine"], "quarantine KPI あり")
+    check(res["quarantine"]["needs_ledger"], "履歴 ledger 要の KPI を明示")
+    check(isinstance(res["defect_counts"], dict) and res["defect_counts"], "defect 分布あり")
 
 
 def _year_gap1_book() -> dict:

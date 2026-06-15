@@ -156,3 +156,51 @@ chain 破綻時は係数 0.85 で満点を抑止)。
 
 > production apply / RDB write は引き続き **HOLD**。本設計は report-only の SCAN/分類/可視化までを
 > 実装済みとし、repair の書き込みは本 DD 承認 + owner ratify 後に限る。
+
+---
+
+## 6. GPT 監査反映 (DDSELFHEAL_PASS_WITH_NOTES, 2026-06-15)
+
+GPT Pro は方針を承認 (report-only の SCAN/分類/dashboard は続行可)。ただし **repair の書込は
+owner ratify + 下記 must_fix + gate 強制まで HOLD**。以下を設計契約として確定する。
+
+### 6.1 repair class 分類 (must_fix #1) — 書込権限の階層
+
+| class | 内容 | 許可フェーズ |
+|-------|------|-------------|
+| `report_only` | 検知・可視化のみ (現状) | 即時 (実装済) |
+| `quarantine_only` | reason_code 付きで隔離。clean を汚さない。silent drop 禁止 | C0 (gated) |
+| `deterministic_no_canonical_write` | body_sha 再計算 / page_basis 再profiling / 確定 offset 変換 / 決定的正規化。canonical 不変 | C1 (pre-approved class のみ) |
+| `deterministic_projection_write` | projection への決定的反映 | C2 (owner approve) |
+| `semantic_or_identity_review_required` | orphan 再parent(複数候補)/版同定/意味マージ/NDC補完 | v0.4 + 別承認 |
+
+auto に**入れてよい**初期候補: body_sha 再計算 / page_basis 再profiling / 信頼度1.0+複数アンカー検証済の本単位 offset / 決定的 fingerprint 再生成 / unaccounted→quarantine(reason_code付)。
+auto に**入れない**: orphan 再parent(曖昧時) / edition 同定 / 意味マージ / NDC/概念補完 / canonical・accepted TOC・source snapshot を変えるもの。
+
+### 6.2 hard rules (must_fix #2/#3)
+1. **raw source snapshot は repair で一切 mutate しない**。
+2. **edition identity / work identity / canonical projection は owner 承認 apply packet 無しに変更しない**。
+
+### 6.3 health と apply_eligibility の分離 (must_fix #4) — 実装済 (report-only)
+- `data_health.book_health` は `health_score` と独立に `apply_eligible` / `apply_blockers` を返す。
+- **P0 cap**: edition 未解決 / nodes_unaccounted / unresolved_conflict が1つでもあれば、health が
+  高くても `apply_eligible=False`。**高 health は apply 許可を意味しない**。本番ゲートは apply_guard。
+
+### 6.4 quarantine KPI (must_fix #5) — 一部実装済
+- `corpus_health.quarantine` = {count, rate}。**quarantine は成功でなく管理対象の負債**として扱う。
+- age / escape_rate / recurrence_rate は履歴 ledger が要る (`needs_ledger` に明示, Phase C で永続化)。
+
+### 6.5 regression taxonomy (must_fix #6)
+score 下降の理由を必ず分類: `new_evidence_found_defect` / `repair_failed` / `source_changed` /
+`policy_changed` / `bug`。証拠なき悪化は不可 (§2.3 ratchet)。
+
+### 6.6 repair manifest schema (must_fix #7) — Phase C で実装
+`{input_hashes, repairer_version, before, after, rollback_bundle, decision_log_hash,
+gate_result, owner_or_whitelist_ref, repair_class}`。これ無しに repair 書込はしない。
+
+### 6.7 semantic/LLM は決定的ループ外 (must_fix #8)
+非決定 (LLM/embedding) は v0.4 semantic 層へ隔離。決定的 repair ループには入れない。
+
+> should_fix も反映: 層別重みは `thresholds.json` で可変 (実装済) / apply_eligibility を health と
+> 別 dashboard track に / golden を10冊から拡張してから repair 書込 / `repair_noop_idempotent` gate /
+> `clean_set_membership_reason` (実装済: book_health.clean_reason)。

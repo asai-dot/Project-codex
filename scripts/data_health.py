@@ -116,6 +116,22 @@ def book_health(book: dict, thresholds: dict | None = None) -> dict:
 
     defects = ([f"L1:{d}" for d in m1] + [f"L2:{d}" for d in m2]
                + [f"L3:{d}" for d in m3] + [f"chain:{d}" for d in chain_defects])
+
+    # DDSELFHEAL must_fix #4: health_score と apply_eligibility を分離する。
+    # health が高くても、以下の P0 ブロッカーが1つでもあれば apply 適格は 0。
+    # (これは可視化であり、本番書込の物理ゲートは apply_guard が別途強制する。)
+    apply_blockers: list[str] = []
+    if summary["edition_identity_status"] not in APPLY_OK_STATUS:
+        apply_blockers.append("edition_unresolved")
+    if not chain_ok:
+        apply_blockers.append("nodes_unaccounted")
+    if unresolved:
+        apply_blockers.append("unresolved_conflicts")
+    apply_eligible = not apply_blockers
+
+    clean = not defects
+    clean_reason = ("no defects across L1/L2/L3/chain" if clean
+                    else f"{len(defects)} defect(s): " + ",".join(defects[:4]))
     return {
         "isbn": isbn, "title": title,
         "health_score": score,
@@ -127,6 +143,12 @@ def book_health(book: dict, thresholds: dict | None = None) -> dict:
         "chain_ok": chain_ok,
         "unresolved_conflicts": unresolved,
         "risk": summary["risk"],
+        # health とは独立した apply 適格 (P0 cap)。本番ゲートは apply_guard。
+        "apply_eligible": apply_eligible,
+        "apply_blockers": apply_blockers,
+        "clean": clean,
+        "clean_reason": clean_reason,
+        "quarantined": not chain_ok,  # nodes_unaccounted は quarantine 対象
         "defects": defects,
         "repair_hints": _repair_hints(defects),
     }
@@ -154,7 +176,12 @@ def _repair_hints(defects: list[str]) -> dict:
 
 
 def corpus_health(books: list[dict], thresholds: dict | None = None) -> dict:
-    """corpus 全体の health 分布 (ratchet を測る土台)。report-only。"""
+    """corpus 全体の health 分布 + apply 適格 + quarantine KPI。report-only。
+
+    DDSELFHEAL must_fix #4/#5: health と apply_eligibility を分離し、quarantine を
+    「成功」でなく管理対象の負債として KPI 化する。age/escape_rate/recurrence は
+    スナップショット単体では算出不可 → 永続 ledger 必須 (needs_ledger に明示)。
+    """
     t = thresholds or load_thresholds()
     rows = [book_health(b, t) for b in books]
     scores = [r["health_score"] for r in rows]
@@ -169,12 +196,30 @@ def corpus_health(books: list[dict], thresholds: dict | None = None) -> dict:
             buckets["50-79"] += 1
         else:
             buckets["0-49"] += 1
+
+    # defect reason_code 分布 (should_fix: regression taxonomy の土台)。
+    defect_counts: dict[str, int] = {}
+    for r in rows:
+        for d in r["defects"]:
+            defect_counts[d] = defect_counts.get(d, 0) + 1
+
+    quarantine_count = sum(1 for r in rows if r["quarantined"])
+    apply_eligible_count = sum(1 for r in rows if r["apply_eligible"])
     return {
         "books": len(rows),
         "mean_health": round(sum(scores) / n, 1),
         "min_health": min(scores, default=0.0),
         "buckets": buckets,
-        "clean_count": sum(1 for r in rows if not r["defects"]),
+        "clean_count": sum(1 for r in rows if r["clean"]),
+        # health とは別軸: apply 適格 (P0 cap 通過) と quarantine 負債。
+        "apply_eligible_count": apply_eligible_count,
+        "quarantine": {
+            "count": quarantine_count,
+            "rate": round(quarantine_count / n, 3),
+            # 以下はスナップショット単体では出せない (履歴 ledger が要る)。
+            "needs_ledger": ["age", "escape_rate", "recurrence_rate"],
+        },
+        "defect_counts": dict(sorted(defect_counts.items())),
         "rows": rows,
         "report_only": True,
     }
