@@ -64,7 +64,7 @@
     {"term": "bylaw_share_sellback", "label_ja": "相続人等への売渡請求", "requisite_class": "optional_design", "grounded_in_source": {"source_type": "statute_option", "law": "会社法174-177条"}, "favors_role": "会社側"}
   ],
   "witnessed_in": [
-    {"source_type": "statute", "source_identifier": "会社法27条", "note": "法定記載事項そのものの出所。書式の有無に関わらず法令から要件が出る(=書式は文献に従属しない例)"},
+    {"source_type": "statute", "source_identifier": "会社法27条", "verified_status": "statute_citation", "note": "法定記載事項そのものの出所。書式の有無に関わらず法令から要件が出る(=書式は文献に従属しない例)。法令引用は版検証の対象外"},
     {"source_type": "registry", "source_identifier": "法務局 商業登記の定款例(参考)", "edition_or_version": "未取得", "verified_status": "pending"}
   ]
 }

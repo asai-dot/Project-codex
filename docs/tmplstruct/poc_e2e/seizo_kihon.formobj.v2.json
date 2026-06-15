@@ -13,15 +13,16 @@
     "temporal_applicability": "民法(令和現行・債権法改正後)"
   },
   "form_variants": [
-    {"variant": "製造委託型(標準)", "note": "巻末資料1型。近藤本の母体"},
-    {"variant": "PB商品製造委託型", "note": "滝川本 第4節。下請法・返品・PL保険に力点"},
-    {"variant": "OEM取引型", "note": "近藤本COLUMN・滝川本第3節"}
+    {"variant": "製造委託型(標準)", "variant_split_reason": "risk_allocation_shift", "note": "巻末資料1型。近藤本の母体。基準形"},
+    {"variant": "PB商品製造委託型", "variant_split_reason": "regulatory_context_shift", "note": "滝川本 第4節。下請法・返品・PL保険・表示責任が変わる"},
+    {"variant": "OEM取引型", "variant_split_reason": "party_posture_shift", "note": "近藤本COLUMN・滝川本第3節。商標・製造主体・知財帰属が変わる"}
   ],
   "requisites": [
     {
       "term": "purpose", "label_ja": "目的・委託対象(本製品の特定)",
       "requisite_class": "validity_required",
       "grounded_in": {"law": "民法632/656(給付・事務の特定が契約成立の前提)", "forum_rule": null},
+      "source_basis": "契約類型論(請負/準委任の本質的要素)", "confidence": 0.9,
       "defect_kind_if_missing": "invalidity",
       "defect_note": "委託対象(本製品)が特定されないと給付内容が確定せず契約不成立。私契約の essentialia。",
       "slots": [{"id": "本製品", "type": "ref_attachment", "required": true}]
@@ -30,6 +31,7 @@
       "term": "payment", "label_ja": "対価(製造代金)",
       "requisite_class": "validity_required",
       "grounded_in": {"law": "民法632(請負報酬)/648(委任報酬)"},
+      "source_basis": "契約類型論(有償契約の本質的要素)", "confidence": 0.9,
       "defect_kind_if_missing": "invalidity",
       "defect_note": "対価は有償契約の essentialia。基本契約では『個別契約に定める』方式でも可だが、対価の決定方法は必須。",
       "slots": [{"id": "製造代金", "type": "amount_jpy", "source": "個別契約", "required": true}]
@@ -38,6 +40,7 @@
       "term": "inspection_acceptance", "label_ja": "検収",
       "requisite_class": "enforceability_required",
       "grounded_in": {"law": "民法562-564(契約不適合責任)の起点・期間の明確化"},
+      "source_basis": "契約不適合責任の主張立証構造", "confidence": 0.75,
       "defect_kind_if_missing": "evidentiary_weakness",
       "defect_note": "検収条項が無いと契約不適合の通知期間・合格の効果が曖昧になり、品質クレームの主張立証が弱くなる。",
       "slots": [{"id": "検収期間", "type": "period", "source": "個別契約"}]
