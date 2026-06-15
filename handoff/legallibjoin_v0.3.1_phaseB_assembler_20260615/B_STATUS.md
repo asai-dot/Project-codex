@@ -70,3 +70,14 @@ python3 scripts/concordance_pipeline.py --books books_all.json --only-isbns <own
 
 たたき台 = **(b)**（DD-TOCADOPT-001 が同じ多源統合をやっており、別経路を作ると二重管理）。
 ただし (a) なら今すぐ意味のある ④⑤ baseline が出せる。
+
+### owner 決定 = **(b)**（2026-06-15）
+B の authoritative evidence ④⑤ run は **DD-TOCADOPT-001 の統合 corpus 完成まで HOLD**。
+別経路の多源 join は作らない（二重構築回避）。
+**再開トリガ（イベント駆動・時刻ではない）**: DD-TOCADOPT-001 の統合 corpus（再現 gate 通過済の
+multi-source node corpus）が利用可能になった時点で:
+```
+assemble_books.py --extra-sources <unified_corpus> ... | concordance_pipeline.py --only-isbns <whitelist>
+```
+＋ v2 をパイプラインへ配線（DD-TOCADOPT Step1 全源共通化と同時）。
+それまで legallibjoin レーンの apply は HOLD 継続。アセンブラ(`assemble_books.py`)は配線待ちで ready。
