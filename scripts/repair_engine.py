@@ -18,7 +18,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import repair_offset  # noqa: E402,F401  (register 副作用で repairer を登録)
+# register 副作用で repairer を登録 (import 順 = registry 順)。
+import repair_offset  # noqa: E402,F401
+import repair_sha  # noqa: E402,F401
+import repair_normalize  # noqa: E402,F401
+import repair_quarantine  # noqa: E402,F401
 from apply_guard import evaluate_apply_gate  # noqa: E402
 from decision_log import DecisionLog, verify_chain  # noqa: E402
 from repair_base import build_manifest, is_write_allowed_in_phase, registry  # noqa: E402
@@ -106,28 +110,38 @@ def run_repairs(books: list[dict], *, whitelist: set[str] | None = None,
 
 
 def _demo_books() -> list[dict]:
+    # 各 book が概ね1 repairer を示す showcase (title_norm 等を入れて他を抑制)。
     return [
-        {  # 検証済 offset あり・print_page 未派生 → repairer が plan を出す
+        {  # offset_page_convert: 検証済 offset・print_page 未派生
             "isbn": "9784000000010", "title": "国際取引法",
             "page_offset": {"offset": 8, "confidence": 1.0, "validated": True, "anchors": 3},
             "source_meta": {
                 "legallib": {"isbn": "9784000000010", "title": "国際取引法", "publisher": "有斐閣",
-                             "year": "2018", "page_basis": "pdf_page"}},
+                             "year": "2018", "page_basis": "pdf_page", "source_sha256": "sha256:x"}},
             "sources": {"legallib": [
-                {"title": "第1章 序論", "depth": 1, "pdf_page": 9},
-                {"title": "第2章 当事者", "depth": 1, "pdf_page": 58}]},
+                {"title": "第1章 序論", "title_norm": "第1章序論", "depth": 1, "pdf_page": 9},
+                {"title": "第2章 当事者", "title_norm": "第2章当事者", "depth": 1, "pdf_page": 58}]},
         },
-        {  # 既に print_page 派生済 → detect False (冪等 no-op)
+        {  # body_sha_recompute: source_content あり・sha 欠落
             "isbn": "9784000000020", "title": "民法",
-            "page_offset": {"offset": 8, "confidence": 1.0, "validated": True, "anchors": 3},
-            "source_meta": {"legallib": {"isbn": "9784000000020", "title": "民法", "page_basis": "pdf_page"}},
-            "sources": {"legallib": [{"title": "第1章", "depth": 1, "pdf_page": 9, "print_page": 1}]},
+            "source_meta": {"legallib": {"isbn": "9784000000020", "title": "民法",
+                                          "page_basis": "print_page", "source_content": "目次本文..."}},
+            "sources": {"legallib": [{"title": "第1章 総則", "title_norm": "第1章総則", "depth": 1, "print_page": 1}]},
         },
-        {  # offset 未検証 → 適用外 (decision 的信号が無い)
+        {  # normalize_title_regen: title_norm 欠落
             "isbn": "9784000000030", "title": "会社法",
-            "page_offset": {"offset": 5, "confidence": 0.6, "validated": False, "anchors": 1},
-            "source_meta": {"legallib": {"isbn": "9784000000030", "title": "会社法", "page_basis": "pdf_page"}},
-            "sources": {"legallib": [{"title": "第1章", "depth": 1, "pdf_page": 6}]},
+            "source_meta": {"legallib": {"isbn": "9784000000030", "title": "会社法",
+                                          "page_basis": "print_page", "source_sha256": "sha256:y"}},
+            "sources": {"legallib": [{"title": "第1編 設立", "depth": 1, "print_page": 1}]},
+        },
+        {  # quarantine_orphan: cross-source 一致なし → orphan
+            "isbn": "9784000000040", "title": "刑法",
+            "source_meta": {
+                "legallib": {"isbn": "9784000000040", "title": "刑法", "page_basis": "print_page", "source_sha256": "sha256:a"},
+                "bencom": {"isbn": "9784000000040", "title": "刑法", "page_basis": "print_page", "source_sha256": "sha256:b"}},
+            "sources": {
+                "legallib": [{"title": "第1章 構成要件", "title_norm": "第1章構成要件", "depth": 1, "print_page": 1}],
+                "bencom": [{"title": "第A部 違法性", "title_norm": "第a部違法性", "depth": 1, "print_page": 1}]},
         },
     ]
 
