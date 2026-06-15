@@ -1,3 +1,5 @@
+> ⚠ **SUPERSEDED by `DD-FORMOBJ-001_v1.1-draft.md`**（2026-06-15、監査 `DDFORMOBJ_PASS_WITH_NOTES` 反映）。本v1.0は**監査提出版＝参照点として凍結**。現行はv1.1を見ること。
+
 # DD-FORMOBJ-001 v1.0: 書式オブジェクト — 設計文書（2026-06-11 議論の集約）
 
 > **id**: DD-FORMOBJ-001 / **version**: v1.0-draft / **supersedes**: v0.1-draft（S0-S3骨格は §6 に吸収）

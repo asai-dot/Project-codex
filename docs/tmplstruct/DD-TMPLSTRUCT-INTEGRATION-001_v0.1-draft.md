@@ -1,3 +1,5 @@
+> ⚠ **SUPERSEDED by `DD-TMPLSTRUCT-INTEGRATION-001_v0.2-draft.md`**（2026-06-15、監査 `DDTMPLINTEG_PASS_WITH_NOTES` 反映）。本v0.1は**監査提出版＝参照点として凍結**。現行はv0.2を見ること。
+
 # DD-TMPLSTRUCT-INTEGRATION-001 v0.1: 書式構造2系統の統合（FORMOBJ-001 × MEANING-001）
 
 > **id**: DD-TMPLSTRUCT-INTEGRATION-001 / **version**: v0.1-draft
