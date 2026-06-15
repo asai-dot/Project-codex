@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "shared_term_registry.schema.json",
+  "title": "shared_term (registry shell record) v0.1",
+  "description": "条項機能の正準term台帳の1レコード。L2(MEANING)とL4(FORMOBJ)の接合キー。先験オントロジーでなく発散防止の仮置き台帳。DDL/DB書込みは別ゲート(HOLD)。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["term_id", "pref_label", "status", "domain", "source_basis", "version", "linked_l2", "linked_l4"],
+  "properties": {
+    "term_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "正準ID(snake_case, 安定・不変)。L2 function_ref と L4 term_id が共にこれを参照する。"
+    },
+    "pref_label": { "type": "string", "minLength": 1, "description": "代表ラベル(日本語)。" },
+    "provisional_aliases": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "暫定別名。synonym のみ(related/example/party/event は入れない=SEED監査FF-2)。"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["seed", "candidate", "accepted", "deprecated"],
+      "description": "term識別性(registry admission)の status。L2/L4 とは別。"
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["civil_obligation", "civil_contract", "corporate", "labor", "procedural", "cross_practice", "general", "boilerplate"]
+    },
+    "source_basis": { "type": "string", "minLength": 1, "description": "なぜこの term を起こしたか。" },
+    "version": { "type": "string" },
+    "owner_ratified": { "type": "boolean", "default": false },
+    "owner_override": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "accepted条件を満たさないが owner が明示許可した場合の理由。null=override無し。"
+    },
+    "linked_l2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clause_type", "l2_status", "anchor"],
+      "properties": {
+        "clause_type": { "type": "string", "minLength": 1 },
+        "semantic_type": { "type": ["string", "null"], "default": null },
+        "l2_status": { "type": "string", "enum": ["seed", "candidate", "accepted", "deprecated"] },
+        "anchor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["anchored", "authority_class", "label_cohesion_reviewed"],
+          "properties": {
+            "anchored": { "type": "boolean" },
+            "anchor_source": { "type": ["string", "null"], "enum": ["alo-kg", "egov", "jlt", "abbreviation_dict", null] },
+            "anchor_ref": { "type": ["string", "null"], "default": null },
+            "anchor_match_kind": {
+              "type": ["string", "null"],
+              "enum": ["exact", "exact_term", "exact_article_title", "exact_heading", "exact_structure", "substring_partial", "inline_iu", null]
+            },
+            "authority_class": {
+              "type": "string",
+              "enum": ["authoritative_anchor", "weak_observation_anchor", "non_anchor"],
+              "description": "SEED監査FF-1: surface一致だけで authoritative にしない。inline_iu/substring は weak。"
+            },
+            "label_cohesion_reviewed": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "linked_l4": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["l4_status", "design_knowledge_count", "n_independent", "source_independence_checked"],
+      "properties": {
+        "design_knowledge_ref": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "clause_design_knowledge へのパス/ID(複数可)。"
+        },
+        "design_knowledge_count": { "type": "integer", "minimum": 0 },
+        "n_independent": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "独立した接地源の数(同一出版社/著者系列/テンプレ再利用は1票に数えない=R3/N3)。"
+        },
+        "source_independence_checked": { "type": "boolean" },
+        "narrower_terms": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+          "default": [],
+          "description": "registry内の下位term_id(別語彙でなく)。存在する term_id のみ(gate_no_vocab_fork)。"
+        },
+        "l4_status": { "type": "string", "enum": ["seed", "candidate", "accepted", "deprecated"] }
+      }
+    },
+    "notes": { "type": ["string", "null"], "default": null }
+  }
+}
