@@ -1,3 +1,5 @@
+> ⚠ **SUPERSEDED by `DD-FORMOBJ-002_form_as_independent_object_v0.2-draft.md`**（2026-06-15、監査 `DDFORMOBJ2_PASS_WITH_NOTES` 反映）。本v0.1は監査提出版＝凍結。現行はv0.2。
+
 # DD-FORMOBJ-002 v0.1: 書式オブジェクト ── 独立 first-class オブジェクトとしての再定義
 
 > **id**: DD-FORMOBJ-002 / **version**: v0.1-draft / date: 2026-06-15

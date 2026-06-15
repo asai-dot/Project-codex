@@ -1,0 +1,70 @@
+{
+  "schema": "form_object.v0.2-poc",
+  "note": "DD-FORMOBJ-002 v0.2 の最小実証(監査が許可した非機微な公的書式)。株式会社定款の『絶対的記載事項』を会社法27条に接地し、mandatory記載事項と欠落時のdefect_kindを機械可読に持つ。設計のみ・実案件データなし。",
+  "form_object": {
+    "form_uid": "alo:form:PROVISIONAL:teikan_kk",
+    "identity_status": "provisional",
+    "recorded_act": "株式会社の設立に際する根本規則の作成",
+    "legal_function": "会社の組織・運営の根本規則を定め、設立登記の添付書面となる",
+    "document_role": "定款(根本規則)",
+    "practice_domain": "会社",
+    "party_posture": "中立(発起人/会社側)",
+    "forum": "公証役場(認証)→法務局(設立登記)",
+    "temporal_applicability": "会社法(令和現行)"
+  },
+  "requisites": [
+    {
+      "term": "purpose", "label_ja": "目的",
+      "requisite_class": "statute_required",
+      "grounded_in": {"law": "会社法27条1号", "effective_check": "現行", "forum_rule": null},
+      "defect_kind_if_missing": "invalidity",
+      "defect_note": "絶対的記載事項。欠けると定款全体が無効(会社法27条柱書)。",
+      "slots": [{"id": "事業目的", "type": "enum_list", "required": true}]
+    },
+    {
+      "term": "trade_name", "label_ja": "商号",
+      "requisite_class": "statute_required",
+      "grounded_in": {"law": "会社法27条2号", "forum_rule": "商号に『株式会社』を含む(会社法6条2項)"},
+      "defect_kind_if_missing": "invalidity",
+      "slots": [{"id": "商号", "type": "string", "required": true}]
+    },
+    {
+      "term": "head_office_location", "label_ja": "本店の所在地",
+      "requisite_class": "statute_required",
+      "grounded_in": {"law": "会社法27条3号", "forum_rule": "最小行政区画まで(独立最小行政区画)。具体的所在場所は任意"},
+      "defect_kind_if_missing": "invalidity",
+      "slots": [{"id": "本店所在地", "type": "address_admin_unit", "required": true}]
+    },
+    {
+      "term": "capital_contribution_value", "label_ja": "設立に際して出資される財産の価額又はその最低額",
+      "requisite_class": "statute_required",
+      "grounded_in": {"law": "会社法27条4号"},
+      "defect_kind_if_missing": "invalidity",
+      "slots": [{"id": "出資価額_又は最低額", "type": "amount_jpy", "required": true}]
+    },
+    {
+      "term": "incorporator_identity", "label_ja": "発起人の氏名又は名称及び住所",
+      "requisite_class": "statute_required",
+      "grounded_in": {"law": "会社法27条5号"},
+      "defect_kind_if_missing": "invalidity",
+      "slots": [{"id": "発起人", "type": "list_person_name_address", "required": true}]
+    },
+    {
+      "term": "issuable_shares_total", "label_ja": "発行可能株式総数",
+      "requisite_class": "validity_required",
+      "grounded_in": {"law": "会社法37条1項(成立までに定款で定める)", "note": "27条の絶対的記載事項ではないが、会社成立時までに定款で必ず定める必要"},
+      "defect_kind_if_missing": "registration_defect",
+      "defect_note": "設立登記までに定款で定めることが必須。原始定款に無くても成立前に発起人全員の同意で定款変更して定める(会社法37/98)。",
+      "slots": [{"id": "発行可能株式総数", "type": "count_shares", "required": true}]
+    }
+  ],
+  "advisable_examples": [
+    {"term": "fiscal_year", "label_ja": "事業年度", "requisite_class": "advisable", "grounded_in_source": {"source_type": "practice", "authority_weight": "customary"}, "defect_kind_if_missing": "risk_warning"},
+    {"term": "share_transfer_restriction", "label_ja": "株式譲渡制限", "requisite_class": "optional_design", "grounded_in_source": {"source_type": "statute_option", "law": "会社法107/108条", "authority_weight": "design"}, "favors_role": "会社側(非公開会社化)"},
+    {"term": "bylaw_share_sellback", "label_ja": "相続人等への売渡請求", "requisite_class": "optional_design", "grounded_in_source": {"source_type": "statute_option", "law": "会社法174-177条"}, "favors_role": "会社側"}
+  ],
+  "witnessed_in": [
+    {"source_type": "statute", "source_identifier": "会社法27条", "note": "法定記載事項そのものの出所。書式の有無に関わらず法令から要件が出る(=書式は文献に従属しない例)"},
+    {"source_type": "registry", "source_identifier": "法務局 商業登記の定款例(参考)", "edition_or_version": "未取得", "verified_status": "pending"}
+  ]
+}
