@@ -14,10 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from concordance import build_concordance  # noqa: E402
 from conflict_detector import detect_conflicts, unresolved_count  # noqa: E402
-from edition_identity import (  # noqa: E402
-    APPLY_OK_STATUS,
-    classify_edition_identity,
-)
+from edition_identity import APPLY_OK_STATUS  # noqa: E402
+from edition_select import classify_edition_with_thresholds  # noqa: E402
 
 
 def _risk(edition_status: str, conflicts: list[dict], accounted: bool) -> str:
@@ -42,13 +40,12 @@ def book_summary(isbn: str, title: str,
     `thresholds.load_thresholds()` の dict を渡す。
     """
     t = thresholds or {}
-    page_tol = t.get("edition_page_tolerance", 0.1)
     conc = build_concordance(sources_nodes)
     conflicts = detect_conflicts(conc, source_meta, thresholds)
     bib = [{"source": s, **{k: m.get(k) for k in
             ("isbn", "title", "publisher", "year", "edition", "volume", "page_count")}}
            for s, m in source_meta.items()]
-    edition = classify_edition_identity(bib, page_tolerance=page_tol)
+    edition = classify_edition_with_thresholds(bib, t)
     acc = conc["all_nodes_accounted_for"]
     unresolved = unresolved_count(conflicts)
     risk = _risk(edition["status"], conflicts, acc)

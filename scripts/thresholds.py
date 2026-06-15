@@ -22,6 +22,8 @@ THRESHOLDS_VERSION = "0.3.1"
 DEFAULTS: dict = {
     "coverage_mismatch_ratio": 3.0,      # conflict_detector._coverage_mismatch
     "edition_page_tolerance": 0.1,       # edition_identity.classify_edition_identity
+    "edition_year_tolerance": 1,         # edition_identity_v2 (年差±1 許容)
+    "edition_classifier_version": "v1",  # "v2" 切替は DD-EDIDENT-001 ratify 後 (既定は安全側 v1)
     "pdf_required_confidence": "high",   # page_basis.qualify_pdf_observation
     "pdf_required_coverage": "full_toc",
     "appendix_misclassified_min": 2,     # conflict_detector._appendix_misclassified

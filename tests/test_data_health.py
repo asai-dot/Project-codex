@@ -15,6 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from data_health import book_health, corpus_health  # noqa: E402
+from review_report import book_summary  # noqa: E402
 from thresholds import DEFAULTS, load_thresholds  # noqa: E402
 
 _PASS = 0
@@ -111,8 +112,38 @@ def test_corpus_health() -> None:
     check(sum(res["buckets"].values()) == 2, "bucket 合計=2")
 
 
+def _year_gap1_book() -> dict:
+    # 核タイトル一致・版表記なし・年差1。v1=別版疑い / v2=同一 (年差±1許容) に割れる本。
+    return {
+        "isbn": "9784000000200", "title": "民法総則",
+        "source_meta": {
+            "legallib": {"isbn": "9784000000200", "title": "民法総則", "publisher": "Z",
+                         "year": "2020", "page_count": 300, "page_basis": "print_page"},
+            "bencom": {"isbn": "9784000000200", "title": "民法総則", "publisher": "Z",
+                       "year": "2021", "page_count": 300, "page_basis": "print_page"}},
+        "sources": {
+            "legallib": [{"title": "第1章 通則", "depth": 1}, {"title": "第2章 人", "depth": 1}],
+            "bencom": [{"title": "第1章 通則", "depth": 1}, {"title": "第2章 人", "depth": 1}]},
+    }
+
+
+def test_v2_flip_end_to_end() -> None:
+    # 既定 (v1) は別版疑い、thresholds で v2 に切替えると同一解決 → flip が配線されている。
+    book = _year_gap1_book()
+    v1 = book_summary(book["isbn"], book["title"], book["sources"], book["source_meta"],
+                      load_thresholds())  # 既定 v1
+    v2 = book_summary(book["isbn"], book["title"], book["sources"], book["source_meta"],
+                      load_thresholds(override={"edition_classifier_version": "v2"}))
+    check(v1["edition_identity_status"] == "suspected_different_manifestation",
+          f"v1 は年差1で別版疑い (got {v1['edition_identity_status']})")
+    check(v2["edition_identity_status"] == "resolved_same_manifestation",
+          f"v2 は年差±1許容で同一解決 (got {v2['edition_identity_status']})")
+    # flip により risk も改善 (high -> low)。
+    check(v1["risk"] == "high" and v2["risk"] == "low", "v2 切替で risk 改善")
+
+
 def main() -> int:
-    for t in [test_thresholds, test_book_health, test_corpus_health]:
+    for t in [test_thresholds, test_book_health, test_corpus_health, test_v2_flip_end_to_end]:
         print(f"• {t.__name__}")
         t()
     print(f"\n{_PASS} passed, {_FAIL} failed")

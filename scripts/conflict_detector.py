@@ -15,7 +15,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from edition_identity import RESOLVED_SAME, MANUAL_RESOLVED, classify_edition_identity  # noqa: E402
+from edition_identity import RESOLVED_SAME, MANUAL_RESOLVED  # noqa: E402
+from edition_select import classify_edition  # noqa: E402
 
 # 別表/索引/凡例/書式 等 (appendix_or_table_misclassified 用)。
 _APPENDIX_RX = re.compile(r"(索引|別表|凡例|書式|資料編?|付録|附録|参考文献|奥付)")
@@ -41,11 +42,13 @@ def _page_basis_mismatch(source_meta: dict) -> list[dict]:
     return []
 
 
-def _edition_mismatch(source_meta: dict, *, page_tolerance: float = 0.1) -> list[dict]:
+def _edition_mismatch(source_meta: dict, *, page_tolerance: float = 0.1,
+                      version: str = "v1", year_tolerance: int = 1) -> list[dict]:
     bib = [{"source": s, **{k: m.get(k) for k in
             ("isbn", "title", "publisher", "year", "edition", "volume", "page_count")}}
            for s, m in source_meta.items()]
-    res = classify_edition_identity(bib, page_tolerance=page_tolerance)
+    res = classify_edition(bib, version=version, page_tolerance=page_tolerance,
+                           year_tolerance=year_tolerance)
     if res["status"] not in (RESOLVED_SAME, MANUAL_RESOLVED):
         sev = "structural" if res["status"] == "suspected_different_manifestation" else "moderate"
         return [{"pattern": "edition_mismatch_suspected", "severity": sev, "resolved": False,
@@ -111,11 +114,14 @@ def detect_conflicts(concordance: dict, source_meta: dict,
     ratio = t.get("coverage_mismatch_ratio", 3.0)
     page_tol = t.get("edition_page_tolerance", 0.1)
     appendix_min = t.get("appendix_misclassified_min", 2)
+    ed_version = t.get("edition_classifier_version", "v1")
+    year_tol = t.get("edition_year_tolerance", 1)
     normalized = concordance["normalized"]
     conflicts: list[dict] = []
     conflicts += _coverage_mismatch(normalized, ratio=ratio)
     conflicts += _page_basis_mismatch(source_meta)
-    conflicts += _edition_mismatch(source_meta, page_tolerance=page_tol)
+    conflicts += _edition_mismatch(source_meta, page_tolerance=page_tol,
+                                   version=ed_version, year_tolerance=year_tol)
     conflicts += _partial_toc(normalized)
     conflicts += _appendix_misclassified(normalized, min_count=appendix_min)
     conflicts += _repeated_heading(concordance.get("repeated_headings", {}))
