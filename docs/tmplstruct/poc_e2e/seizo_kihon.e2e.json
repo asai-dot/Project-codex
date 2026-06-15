@@ -1,0 +1,106 @@
+{
+  "schema": "template_e2e.v0",
+  "note": "縦串PoC: 1書式(製造委託基本契約書)をL1地図→L2読取→L3構造→L4意味(法的裏付け)まで一体化。各clauseに read(原文)/structure(機械構造)/meaning(記載事項区分・有利不利・法的根拠・接地状態)を持つ。意味付けは『書式観測』でなく法令・契約類型・解説に接地し、接地状態を grounding で明示(no_blind_tagging)。",
+  "template_label_ja": "製造委託基本契約書",
+  "archetype": "A_clause_contract",
+  "contract_type_legal": "継続的製造委託(基本契約+個別契約)。法的性質=請負/製作物供給(請負類似)＋準委任の混合。",
+  "map_ref": "MAP_seizo_kihon.json",
+  "primary_source": {
+    "book": "業務委託契約書作成のポイント〔第2版〕(近藤/中央経済社)",
+    "toc_node_id": "…業務委託…_01:toc:134",
+    "read_ref": "s2_snapshots/gyomu_seizo_kihon_keiyaku.s2.json",
+    "structure_ref": "poc_L3/seizo_kihon.L3.json"
+  },
+  "parties": [{"role": "委託者", "role_en": "consignor"}, {"role": "受託者", "role_en": "contractor"}],
+
+  "clauses": [
+    {
+      "no": "第1条", "title": "目的",
+      "read_excerpt": "本契約は，委託者が受託者に委託する別紙1記載の製品(本製品)の製造業務(本業務)の基本的条件を定める…受託者は法令・本契約・個別契約を遵守し善管注意をもって本業務を遂行する。",
+      "structure": {"function_term": "purpose", "obligations": [{"obligor": "受託者", "act": "善管注意義務をもって本業務を遂行"}], "slots": [{"id": "本製品", "type": "ref_attachment", "ref": "別紙1"}]},
+      "meaning": {
+        "requisite_class": "essentialia",
+        "requisite_label": "本質的要素(契約の対象=製造する物・業務の特定)",
+        "advisability": "must_have",
+        "favors": "中立",
+        "legal_backing": ["民法632(請負)/656(準委任): 仕事/事務の特定が契約成立の前提", "別紙で本製品を特定=給付内容の確定"],
+        "grounding": "grounded(契約類型・民法)",
+        "drafting_note": "本製品(別紙1)が空だと給付内容不確定→契約の特定性を欠く。最優先で埋める。"
+      }
+    },
+    {
+      "no": "第2条", "title": "個別契約",
+      "read_excerpt": "個別契約に(1)業務内容(2)遂行期間(3)製造代金額・支払期日・支払方法(4)本製品の仕様・納期・検品(5)貸与品(6)支給品(7)その他を規定。注文書＋注文請書の交付で成立。本契約と異なる定めは個別契約優先。",
+      "structure": {"function_term": "individual_contract_framework", "obligations": [], "slots": [{"id": "注文書", "type": "doc"}, {"id": "注文請書", "type": "doc"}], "attributes": {"成立要件": "注文書＋注文請書", "優先": "個別契約優先"}},
+      "meaning": {
+        "requisite_class": "essentialia",
+        "requisite_label": "本質的要素(基本/個別の二層構造・給付と対価の確定手段)",
+        "advisability": "must_have",
+        "favors": "中立",
+        "legal_backing": ["基本契約は枠、個別契約で具体的給付・対価を確定", "申込(注文書)＋承諾(注文請書)=民法522の合意成立を書面で明確化"],
+        "grounding": "grounded(契約類型・民法522)",
+        "drafting_note": "個別契約優先の規定は、現場の注文で基本契約を上書きできる柔軟性。委託者の発注実務に沿う。"
+      }
+    },
+    {
+      "no": "第3条", "title": "製造代金",
+      "read_excerpt": "委託者は個別契約に定める支払期日・方法で製造代金を支払う。消費税別途付加。口座振込時は休業日は前営業日…(遅延損害金 年14.6%)",
+      "structure": {"function_term": "payment", "narrower": "late_payment_interest", "obligations": [{"obligor": "委託者", "act": "製造代金の支払"}], "slots": [{"id": "支払期日", "type": "date", "source": "個別契約"}, {"id": "製造代金額", "type": "amount_jpy", "source": "個別契約"}], "attributes": {"遅延損害金率_pct_pa": 14.6, "振込手数料負担": "委託者"}},
+      "meaning": {
+        "requisite_class": "essentialia",
+        "requisite_label": "本質的要素(対価=報酬)",
+        "advisability": "must_have",
+        "favors": "中立(代金額自体)／遅延損害金14.6%は委託者(受領遅延時)・受託者(支払遅延時)双方を規律",
+        "legal_backing": ["民法632(請負報酬)/648(準委任報酬): 対価は本質的要素", "遅延損害金は民法419(法定利率404)を契約で加重=14.6%(下請法・商慣行の上限的水準)"],
+        "grounding": "grounded(民法・商慣行)",
+        "push_pull": {"axis_type": "monetary_risk", "choice": "遅延損害金率を14.6%/年に設定", "effect": "法定利率(変動・現3%)より高率=支払遅延の抑止。設定なしだと法定利率のみ", "favors_role": "未払を受ける側(通常は受託者の代金回収を強化)", "favors_basis": "statute_structure"}
+      }
+    },
+    {
+      "no": "第4条", "title": "本貸与品の貸与及び返還",
+      "read_excerpt": "委託者は個別契約に従い本貸与品を貸与、受託者は預かり証を交付。受託者は善管注意・区分管理・目的外使用/複製/第三者利用の禁止、終了時の原状回復・返還(書面合意で廃棄可)。",
+      "structure": {"function_term": "bailment_return", "obligations": [{"obligor": "受託者", "act": "善管注意・区分管理"}, {"obligor": "受託者", "act": "目的外使用・複製の禁止"}, {"obligor": "受託者", "act": "終了時の原状回復・返還"}], "slots": [{"id": "預かり証", "type": "doc"}]},
+      "meaning": {
+        "requisite_class": "risk_allocation",
+        "requisite_label": "任意的記載事項(貸与品の管理責任の配分)",
+        "advisability": "should_have",
+        "favors": "委託者",
+        "legal_backing": ["使用貸借/寄託(民法593-/657-)の特約化。善管注意・区分管理・目的外使用禁止は委託者の物的資産を保護"],
+        "grounding": "provisional(要解説接地)",
+        "push_pull": {"axis_type": "liability_scope", "choice": "受託者に善管注意＋区分管理＋目的外使用禁止＋原状回復を課す", "effect": "貸与品の毀損・流用リスクを受託者に寄せる", "favors_role": "consignor", "favors_basis": "observed_hypothesis_only"}
+      }
+    },
+    {
+      "no": "第5条", "title": "本支給品の支給",
+      "read_excerpt": "委託者は個別契約に従い本支給品を支給、受託者は受領証交付・速やかに検査・不適合は通知。所有権/危険負担=無償は委託者帰属/有償は対価を受託者負担…(次頁へ続く)",
+      "structure": {"function_term": "supplied_material", "obligations": [{"obligor": "受託者", "act": "受領後速やかに検査"}, {"obligor": "受託者", "act": "不適合の通知"}], "slots": [{"id": "受領証", "type": "doc"}], "attributes": {"所有権_危険負担": "無償=委託者/有償=受託者"}},
+      "meaning": {
+        "requisite_class": "risk_allocation",
+        "requisite_label": "任意的記載事項(支給品の所有権・危険負担の配分)",
+        "advisability": "should_have",
+        "favors": "中立(無償/有償で帰属を切替)",
+        "legal_backing": ["支給品の所有権・危険負担は当事者の特約事項。下請法の有償支給材の規律にも留意"],
+        "grounding": "provisional(要解説接地)"
+      }
+    }
+  ],
+
+  "expected_clauses_beyond_capture": [
+    {
+      "term": "subcontracting", "label_ja": "再委託",
+      "meaning": {
+        "requisite_class": "default_modifying", "requisite_label": "任意的記載事項(推奨)",
+        "advisability": "should_have", "favors": "原則禁止＋事前承諾は委託者有利",
+        "grounding": "grounded(解説接地: poc_grounded/saiitaku.knowledge.json pp.75-78)",
+        "baseline": "原則禁止＋事前承諾で限定許容",
+        "push_pull": {"axis_type": "liability_scope", "choice": "再委託先の行為への受託者責任を『選定・監督のみ』に限定", "effect": "受託者の責任を限定", "favors_role": "contractor", "favors_basis": "statute_structure", "legal_caveat": "旧民法105条1項削除で限定説の根拠弱化"}
+      }
+    },
+    {"term": "damages", "label_ja": "損害賠償", "meaning": {"requisite_class": "risk_allocation", "advisability": "should_have", "favors": "上限設定は受託者有利／無制限は委託者有利", "grounding": "provisional", "legal_backing": ["民法415/416。賠償範囲・上限・免責は特約事項"], "gap_flag": "捕捉範囲(第1-5条)に無し=標準条項の欠落候補"}},
+    {"term": "ip_assignment", "label_ja": "知的財産権の帰属", "meaning": {"requisite_class": "default_modifying", "advisability": "should_have", "favors": "委託者帰属は委託者有利", "grounding": "provisional", "legal_backing": ["著作権法27/28・特許法。成果物の権利帰属の特約"], "gap_flag": "捕捉範囲に無し"}},
+    {"term": "confidentiality", "label_ja": "秘密保持", "meaning": {"requisite_class": "risk_allocation", "advisability": "should_have", "favors": "中立", "grounding": "provisional", "gap_flag": "捕捉範囲に無し"}},
+    {"term": "termination", "label_ja": "解除", "meaning": {"requisite_class": "default_modifying", "advisability": "should_have", "favors": "中立", "grounding": "provisional", "legal_backing": ["民法540-548。無催告解除事由の追加は当事者の特約"], "gap_flag": "捕捉範囲に無し"}},
+    {"term": "antisocial_forces", "label_ja": "反社会的勢力の排除", "meaning": {"requisite_class": "risk_allocation", "advisability": "should_have", "favors": "中立", "grounding": "provisional", "gap_flag": "捕捉範囲に無し"}},
+    {"term": "jurisdiction", "label_ja": "合意管轄", "meaning": {"requisite_class": "default_modifying", "advisability": "should_have", "favors": "自陣の裁判所指定が各当事者有利", "grounding": "grounded(民訴法11)", "gap_flag": "捕捉範囲に無し"}}
+  ]
+}
