@@ -100,3 +100,27 @@ GPT が挙げた v0.5.1 / v0.6 必須パッチを反映し、owner ratify を得
 差し替え、staging→prod の昇格マイグレーションを PR レビューに乗せる。
 **昇格時には staging 側で FK / NOT NULL / unique / resolved-only を必ず閉じる**（landing の緩さを
 clean target に持ち込まない。GPT IMPL監査 note 3）。
+
+---
+
+## lawtime v0.2.3 — apply 前の未吸収 open items（2026-06-15, v0.2.3 ピアレビュー由来）
+
+> 現在頭確認（2026-06-15）: lawtime 頭 = **v0.2.3**（より新しい版なし）／LAWSUBTRANS = **v0.1.3 PASS_WITH_NOTES**／
+> to_gpt active キュー = 空。下記は v0.2.3 を**バージョンを増やさず**「apply 前チェックリスト追補」として消化する想定。
+> lawtime v0.2.3 の git 正本は `asai-dot/Project-codex PR #19, docs/dd/DD-LAWTIME-001_v0.2.3_production_patch.md`。
+
+**C1（掃除・lawtime branch dry-run 前）**: `gate_no_current_law_for_historical_citation` を **alias で残さず削除**し、
+`gate_resolved_revision_covers_asof`（両端検査の上位互換）に一本化する。同義 view を漂わせない（v0.2.3 が
+「名称は残す場合 alias」と曖昧にした点を決め切る）。
+
+**C2（掃除・テスト）**: `gate_succession_no_ambiguous_overlap` の **NULL 端点 fixture を固定**する。
+(a) `valid_from/valid_to` と `lineage_event_id` がともに NULL の重なり2行 → 違反検出されること、
+(b) 同一 `lineage_event_id` で束ねた merge/split の正当な重なり → 違反として拾わないこと。
+
+**C3（as_of ガード・lawtime でなく LAWSUBTRANS P0/P1 で確認）**: `v_lawtime_formal_status` は**現在スナップショット**で
+as_of 真実ではない。LAWSUBTRANS production P0/P1 で「as_of の法的根拠 = `resolved_law_revision_id`／現在形式状態 =
+`v_lawtime_formal_status`」の軸分離を**消費側 gate/注記で確認**する（新規 design mandate ではなく coverage 確認。
+v0.1.3 が current view を正本にしているため、as_of 軸との混同が起きないことを明示で担保する）。
+
+> 方針: C1/C2 は lawtime apply チェックリスト追補（新バージョン不要）。C3 は LAWSUBTRANS 側の確認項目。
+> いずれも production apply / owner ratify の前段で消化。新規 to_gpt 投函は不要（設計変更でないため）。
