@@ -31,6 +31,7 @@ from concordance import CONCORDANCE_VERSION, build_concordance  # noqa: E402
 from decision_log import DecisionLog, verify_chain  # noqa: E402
 from page_basis import qualify_pdf_observation  # noqa: E402
 from review_report import book_summary  # noqa: E402
+from thresholds import load_thresholds  # noqa: E402
 
 PIPELINE_VERSION = "0.3.1"
 
@@ -46,8 +47,14 @@ def _bucket(n: int) -> str:
 
 
 def run_pipeline(books: list[dict], *, whitelist: set[str] | None,
-                 rollback_present: bool = False) -> dict:
-    """全 book を評価し evidence 行を組み立てる (書き込みはしない)。"""
+                 rollback_present: bool = False,
+                 thresholds: dict | None = None) -> dict:
+    """全 book を評価し evidence 行を組み立てる (書き込みはしない)。
+
+    thresholds=None なら config/thresholds.json (既定 edition v1) をロード。
+    edition_classifier_version="v2" にすれば edition 判定が強化版へ切替わる。
+    """
+    t = thresholds if thresholds is not None else load_thresholds()
     inventory_rows: list[dict] = []
     histogram = Counter()
     accounting_rows: list[dict] = []
@@ -61,7 +68,7 @@ def run_pipeline(books: list[dict], *, whitelist: set[str] | None,
         source_meta = b.get("source_meta", {})
         sources = b["sources"]
 
-        s = book_summary(isbn, title, sources, source_meta)
+        s = book_summary(isbn, title, sources, source_meta, t)
         summaries.append({k: v for k, v in s.items() if k != "_conflicts_detail"})
         for c in s.get("_conflicts_detail", []):
             conflicts_rows.append({"isbn": isbn, **c})
@@ -183,6 +190,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--only-isbns", help="承認 whitelist (1行1ISBN)")
     ap.add_argument("--rollback-present", action="store_true")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--edition-version", choices=["v1", "v2"], default=None,
+                    help="edition classifier 上書き (既定は config の v1)")
     ap.add_argument("--demo", action="store_true")
     args = ap.parse_args(argv)
 
@@ -192,7 +201,11 @@ def main(argv: list[str] | None = None) -> int:
         wl = {ln.strip() for ln in Path(args.only_isbns).read_text(encoding="utf-8").splitlines() if ln.strip()}
     elif args.demo:
         wl = {"9784000000010"}  # demo: 低リスク本だけ承認
-    result = run_pipeline(books, whitelist=wl, rollback_present=args.demo or args.rollback_present)
+    override = {"edition_classifier_version": args.edition_version} if args.edition_version else None
+    thresholds = load_thresholds(override=override)
+    result = run_pipeline(books, whitelist=wl,
+                          rollback_present=args.demo or args.rollback_present,
+                          thresholds=thresholds)
     write_evidence(result, Path(args.out))
     print(json.dumps({"risk": result["risk_counts"],
                       "apply_allowed": len(result["apply_allowed_isbns"])},
