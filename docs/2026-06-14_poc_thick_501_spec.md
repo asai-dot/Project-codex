@@ -11,8 +11,11 @@
 
 **目的**: 「薄い別レコードを本の同定で束ね、各ソースの属性を積層して分厚い書誌を作る」を、3サイト共通の高重なりコホート（501冊）で**本番に触れず**検証し、全冊展開の Go/No-Go を出す。
 
-**成功条件（このPoCが“通った”と言える基準）**:
-1. **同定 precision** ― 監査サンプルで誤マージ ≈ 0、auto_accept クラスタの正解率 ≥ 98%（数値は P2 で確定・要 owner 合意）。
+**成功条件（このPoCが“通った”と言える基準）** ― **owner合意済み 2026-06-15**:
+1. **同定（非対称基準）** ― precision と recall を非対称に扱う:
+   - **誤マージ（別の本を同一視）= 絶対0**。監査で1件でも出たら **No-Go＋同定ロジック改修**（毒が積層で増幅するため）。
+   - **auto_accept precision ≥ 99%**。
+   - **recall ≥ 90% で可**（取りこぼし＝同一本を別扱いは毒でない。human_review で回収）。
 2. **積層効果** ― thick 化後の1冊あたり属性数が、単一ソース最良値より有意に増える（定量、§4）。
 3. **整合の可視化** ― クロスソースの一致率と**不一致カタログ**が出る（厚さの裏でどこが食い違うか）。
 4. **Go/No-Go** ― 全冊（次は pairwise の B4+LLB 1,551 等）へ広げる判断と、widening の precision 閾値案が出る。
@@ -82,7 +85,7 @@
 |---|---|---|---|
 | **P0** | コホート凍結（501のkey固定）＋3ソース＋NDL を read-only 取得 | **不要**（読取のみ） | cohort_manifest.jsonl(+sha256) |
 | **P1** | 同定クラスタリング（既存ゲート適用）→ バケット＋根拠 | 不要（dry-run） | identity_clusters.jsonl |
-| **P2** | 人手監査（全 human_review ＋ auto_accept から無作為50）→ precision推定 | owner時間 | identity_audit.csv |
+| **P2** | 人手監査 **層化~150**（human_review 全件 ＋ auto_accept から無作為~100）→ precision推定。**誤マージが1件でも出たら 501 全件 census へ自動拡大**（owner合意 2026-06-15）。rule of three: 誤り0なら誤マージ率上限 ~2% | owner時間 | identity_audit.csv |
 | **P3** | 積層 dry-run projection ＋ 指標算出 | 不要（書込なし） | thick_records_dryrun.jsonl / metrics_report.md |
 | **P4** | 報告＋Go/No-Go＋widening閾値案 | owner＋お目付け役 | poc_report.md |
 
@@ -92,8 +95,8 @@
 
 ## 6. 受け入れ・撤退条件
 
-- **Go（全冊展開へ）**: precision≥閾値 ＆ mis-merge≈0 ＆ 厚み増が定量確認 ＆ 不一致が管理可能。
-- **No-Go/要改修**: mis-merge が出る／fingerprint が版・分冊を誤束ね／厚み増が乏しい → 同定ロジック改修へ差し戻し。
+- **Go（全冊展開へ）**: 誤マージ=0（絶対）＆ auto_accept precision≥99% ＆ recall≥90% ＆ 厚み増が定量確認 ＆ 不一致が管理可能。
+- **No-Go/要改修**: 誤マージが1件でも出る（→census拡大の上、同定ロジック改修へ差し戻し）／fingerprint が版・分冊を誤束ね／厚み増が乏しい。
 - 次コホート候補（Go後）: pairwise B4+LLB 1,551 / B4+LB 174 / LB+LLB 128、さらに LB+所蔵 ISBN一致 1,932。
 
 ---
