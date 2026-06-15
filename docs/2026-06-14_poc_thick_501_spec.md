@@ -22,6 +22,27 @@
 
 ---
 
+## 0.5. 既存設計との整合【重要・2026-06-15 追記】
+
+本PoCは**新規の同定設計ではない**。プロジェクトには既に owner作の正本がある:
+- **正本設計**: `DD-LITID-001 v0.2`（biblio_item 3層・fingerprint・resolution_log。GPT監査 PASS_WITH_NOTES）。
+- **実行計画**: `20260611_book_identity_lane_plan_v0.1.md`（B0〜B6）。
+- **501の所在**: 既に生成済みの `identity_candidates.jsonl`（4,296組）の **weak候補2,354組のうち「B4+LB+LLB 501」**＝**lane plan の B2（TOC fingerprint）対象**そのもの。
+
+→ **本PoC = lane plan B2 を「3源501サブセット」に限定して回す instantiation ＋ 既存計画が明示していない「積層(thin→thick)の効果測定」レイヤの追加**。同定の規律は下記の正本に従う（本書独自のゲート定義は破棄し、正本を引く）:
+
+- **証拠階層 E1–E5 と独立証拠2つ要件**（自動confirmは独立証拠2つ）:
+  E1 isbn13(0.95) / E2 NDL識別子(0.9) / E3 fingerprint(title+pub+year+**pages**)(0.85) / E4 **toc_fingerprint**(高一致+0.2・独立証拠) / E5 title+pub+year(pages欠損,0.6・単独はreview止まり)。
+- **501はE5(0.6)単独＝review止まり**。confirmには **E4(TOC fingerprint)を独立証拠として加算**して2証拠にするのが本筋（弁コム・legallibはTOC100%保有で判別力が高い）。
+- **ゲート（lane plan §3 を継承）**: gate_no_auto_merge_without_dual_evidence / gate_edition_family_not_merged（版違いマージ0）/ gate_serial_not_book_merge / gate_resolution_log_append_only / gate_isbn13_checkdigit / **gate_provenance_group_no_double_count**。
+
+### 落とし穴: provenance group（同一供給元TOCの二重計上）
+弁コムとlegal-libraryは**同じ出版社供給のTOCを再配信している可能性**があり（B4↔LLB重複は約46%＝2,052組）、両者のTOC一致は**独立観測ではない**ことがある。
+- 同定では「TOC全文ほぼ同一」を `provenance_group` 同一とみなし、E4を**多数決に二重計上しない**。
+- **本PoCの「積層」にも同じ警告が効く**: §3 の `genre_consensus`・クロスソース一致信頼度は、弁コム×legallib を**別ソースとして二重に数えてはいけない**。一致を信頼度に使う前に provenance_group を判定し、同一群は1票に畳む。
+
+---
+
 ## 1. コホート定義（凍結）
 
 - **母体**: `newsources_books_identity_dryrun` の overlap `B4+LB+LLB | title_publisher_year_exact = 501`（弁コム×LION BOLT×legal-library の3社共通）。
@@ -84,6 +105,12 @@
 | Phase | 内容 | ゲート | 産物 |
 |---|---|---|---|
 | **P0** | コホート凍結（501のkey固定）＋3ソース＋NDL を read-only 取得 | **不要**（読取のみ） | cohort_manifest.jsonl(+sha256) |
+
+> **P0 アクセス現実（2026-06-15 実査）**: 501の個別キーは **Mac ローカル `build/newsources_books_identity/20260611/identity_candidates.jsonl`**（basis=`title_publisher_year`、members が B4&LB&LLB を跨ぐ行＝501）にあり、**Box/Supabase からは読めない**（biblio には bencom 3,802＋蔵書のみ、LION BOLT/legallib 未投入）。
+> → **凍結の実行は Mac ワーカー側**。リモート(本セッション)からの P0 成果物は「**選択述語＋manifest スキーマの runbook**」に限定する:
+> - 選択述語: `identity_candidates.jsonl` で `basis ∈ {title+publisher+year}` かつ cluster members の source 集合 ⊇ {bengo4, lionbolt, legallib} の 501 行。
+> - manifest 列: `cluster_tmp_id, bengo4_content_id, lionbolt_isbn|book_id, legallib_book_id, ndl_oai_id(解決後), title_norm, publisher_norm, pub_year` ＋ 生成 sha256。
+> - 産物の置き場は §7 に従い `build/`/Box（GitHub には置かない）。
 | **P1** | 同定クラスタリング（既存ゲート適用）→ バケット＋根拠 | 不要（dry-run） | identity_clusters.jsonl |
 | **P2** | 人手監査 **層化~150**（human_review 全件 ＋ auto_accept から無作為~100）→ precision推定。**誤マージが1件でも出たら 501 全件 census へ自動拡大**（owner合意 2026-06-15）。rule of three: 誤り0なら誤マージ率上限 ~2% | owner時間 | identity_audit.csv |
 | **P3** | 積層 dry-run projection ＋ 指標算出 | 不要（書込なし） | thick_records_dryrun.jsonl / metrics_report.md |
@@ -105,7 +132,7 @@
 - 正準ジャンル軸（`genre_l2`）の確定（別タスク。本PoCは暫定対応表で可）。
 - 版・分冊の「同一Work／別manifestation」境界の運用（authority設計と接続）。
 - 監査サンプル数と precision 閾値の owner 合意値。
-- 産物の置き場（`eval/poc_thick_501/` を Box正本にするか repo に置くか）。
+- 産物の置き場【確定・2026-06-15】: プロジェクト規約「コード=GitHub / ドキュメント=Box / 構造化データ=Supabase」に従い、**構造化産物（manifest/clusters/thick jsonl）は GitHub に置かない**。`build/book_identity/`（Mac→Box）配下に蓄積し、本リポジトリには**本仕様(doc)のみ**を置く。lane plan の `build/book_identity/IDENTITY_PROGRESS.md` 台帳に進捗追記。
 
 ---
 
