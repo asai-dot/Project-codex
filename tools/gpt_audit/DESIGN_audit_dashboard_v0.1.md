@@ -227,3 +227,49 @@ CLI/AI の物理操作だけ。Supabase は「指示・可視化」、Box は「
 > 移行期の可読控えにして、P0 ミラー（Box 不変）から安全に始める。
 
 本メモは設計のみ。実装・Supabase 適用は次の Owner ゴーで着手する。
+
+---
+
+## 11. GPT Pro 監査反映（v0.1 → v0.2）
+
+- 監査結果: `DDAUDITDASH_PASS_WITH_NOTES`（from_gpt/20260615_auditdash_v0.1_DDAUDITDASH_RESULT.md, file 2285798929999, 2026-06-15 JST, GPT-5.5 Pro）
+- 判定: candidate として進めてよい。**ただし ratify 候補は「P0 read-only ミラーのみ」**。P1 以降は RLS テスト＋write-back dry-run evidence を付けて別監査に戻す。
+
+### blocking_before_ratify（P0 を進める前に仕様へ固定する。反映済み）
+
+| # | GPT 指摘 | v0.2 での固定 |
+|---|---|---|
+| B1 | Box が物理 SoT、Supabase は派生ミラーのみ、と明文化 | §1/§3 の鉄則を**規範**に格上げ。Supabase の SoT 化・「Supabase 編集だけで Box を動かす」ことを**禁止条項**として §11.1 に固定 |
+| B2 | generated fields は UI 編集不可 | §2 に `generated_fields`（request_status / lane_status / box_location / result_label / missing_result / bad_label / processed_state）を新設し、**ingest ジョブのみ更新可・owner/agent UI は read-only**（§11.2） |
+| B3 | P0 保存項目を最小化（本文・案件名・機微パスを保存しない） | §7 を P0 ホワイトリスト化（§11.3）。Box path はクライアント名を含みうるため P0 は `folder_class` ＋ `file_id` 優先、生 path は保存しない |
+| B4 | RLS role matrix を SQL testable に | §5 に role matrix を定義し、P1 前に RLS テスト SQL を必須成果物化（§11.4） |
+| B5 | owner_decision は AI が insert/update/delete できない | §5 の agent ロールを **owner_decision read-only** に明記。owner ロールは agent の audit_event を偽装できない（§11.5） |
+| B6 | P2 write-back は今回の candidate 範囲外として別 gate 化 | §6 の P2 を**本メモの ratify 範囲から除外**。entry 条件（mirror 安定・dual-state 不整合ゼロ・RLS テスト pass・dry-run pass・Box rollback path・owner_decision immutable log）を満たした上で**別監査**（§11.6） |
+
+### reconcile レコード必須項目（B2 付随・§3 強化）
+
+`box_scan_id / box_scan_started_at / box_scan_completed_at / box_cursor_or_snapshot_hash / source_file_id / source_file_version_or_sha1 / reconcile_policy_version` を毎回保持し、再現可能にする。
+
+### non_blocking（ratify 後でよい・採用方針）
+
+- N1: `_GPT_AUDIT_BOARD.md` は P0/P1 中 人間向け控えとして残す（採用）
+- N2: `_AUDIT_LEDGER.jsonl` は Supabase `audit_event` の export 控えに降格（採用）
+- N3: Supabase は監査メタ**専用プロジェクト分離**（推奨どおり採用方針、§9-1）
+- N4: `owner_digest_5line` は `sanitized_digest` ＋ `raw_digest_ref` に分割（採用）
+- N5: Realtime は P3 まで入れない（採用）
+
+### 11.x 確定した境界（規範）
+
+```text
+- Box の物理配置・ファイル実体・from_gpt RESULT が正本(SoT)。Supabase は再生成可能な
+  derived live mirror に限定する。Supabase を正本化しない。
+- Supabase の行編集だけで Box 状態を動かさない。Box を動かすのは CLI/AI の物理操作のみ。
+- generated_fields は ingest ジョブのみ更新。owner/agent の UI からは編集不可。
+- owner_decision は人間のみ insert。AI/agent は read-only。lifecycle 昇格はトリガで
+  owner_decision 必須。
+- P0 は read-only ミラー＋最小メタのみ。RESULT 本文・案件名・依頼者情報・機微パスは保存しない。
+- P2 write-back 自動化は本メモの ratify 範囲外。別 gate・別監査。
+```
+
+→ 本 v0.2 で blocking 6 点を反映済み。**Owner ratify 候補は「P0 read-only ミラーのみ」**。
+P1 以降は RLS テスト SQL ＋ write-back dry-run evidence を持って GPT Pro 再監査に戻す。
