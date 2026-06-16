@@ -34,7 +34,7 @@ from edition_identity import APPLY_OK_STATUS  # noqa: E402
 from edition_identity_v2 import classify_edition_identity_v2  # noqa: E402
 from page_basis import normalize_page_basis, to_print_page  # noqa: E402
 
-TOC_ADOPT_VERSION = "0.2.0"
+TOC_ADOPT_VERSION = "0.3.0"
 
 _DEFAULT_POLICY = Path(__file__).resolve().parents[1] / "data" / "toc_merge_policy_unified_DRAFT.json"
 
