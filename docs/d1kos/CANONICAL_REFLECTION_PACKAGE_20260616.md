@@ -35,8 +35,16 @@ independent_verification_ref:
   github: { repo: asai-dot/Project-codex, pr: 22, commit: df4d88c092796cb0980ff9ff2ed7f0a762735a43 }
   layers:
     A_internal_integrity: all_green (55,074件, key重複0/orphan0/level0/cycle0/NFC0, 変換件数再計算一致)
-    B_visual: spot_check_no_obvious_anomaly (105 + 補強47)  # 全件精度保証ではない
-    removed_929: closed (916=box_prior点描ノイズ, 781=経済法スコープ仕様 P-8 RESOLVED)
+    B_visual: spot_check_no_obvious_anomaly (105件 + 補強47件)  # sanity であり全件精度保証ではない
+    removed_929:
+      status: closed
+      # 内訳は2軸（クラス×法編）。単純加算ではない:
+      by_class: { absent_from_live: 916, present_in_live(改名移動候補): 13 }   # 合計929
+      by_root_top: { 経済法: 781, 商法: 69, 債権法Ⅱ: 36, 他: 43 }              # 合計929(別軸)
+      closure_logic: >
+        929 = absent916 + present13。経済法781は法編軸の内数で、その776がabsent916に含まれる(5はpresent13側)。
+        recall残差の説明 = absent群=box_prior(判例trunk)点描ノイズ ＋ 経済法はD1民事法セレクションの掲載スコープ仕様(P-8 RESOLVED)。
+        民事コア法編のremovedはほぼ0。よってlive取りこぼしではない。
   pending:
     - C_jsonl_byte_integrity: WO-D1TAXO-002(+addendum) ワーカー返り待ち
   apply_gate: HOLD  # apply/canonical化は別ゲート・owner ratify後
@@ -48,6 +56,8 @@ independent_verification_ref:
 {
   "request_id": "20260615_d1taxo_accuracy_thread_DDTAXOAUDIT",
   "result_filename": "20260615_d1taxo_accuracy_thread_DDTAXOAUDIT_RESULT.md",
+  "result_file_id": "2287180763230",
+  "result_canonical_note": "参照先は file_id 2287180763230 を正本に一本化（補正版があれば file_id で差し替え）",
   "result_label": "DDTAXOAUDIT_PASS_WITH_NOTES",
   "next_action_type": "strengthen_sampling_and_reflection_flow",
   "loop_state": "returned_reflected",
