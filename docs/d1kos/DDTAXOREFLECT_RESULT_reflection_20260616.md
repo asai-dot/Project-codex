@@ -9,7 +9,7 @@
 |---|---|---|
 | ① acceptance package `independent_verification_ref` | GO_WITH_NOTES（即マージ可） | **修正適用済**：B範囲「105+補強47」明記・removed_929 を2軸(クラス×法編)で内訳化し「単純加算でない」閉鎖ロジックを明示 |
 | ② _AUDIT_LEDGER entry | GO_WITH_NOTES（即マージ可） | **修正適用済**：`result_file_id=2287180763230` で参照先を一本化・owner_digest に B弱め記録維持・blocking 2件維持 |
-| ③ 90_design_decisions append | HOLD_UNTIL_OWNER_RATIFY | 保留継続（設計判断本文のため owner ratify 後のみ） |
+| ③ 90_design_decisions append | HOLD_UNTIL_OWNER_RATIFY → **owner RATIFIED 2026-06-16** | **解放**。DD-20260616-DDT-A1/A2 を正本へ append 可。正本書込みは single-writer（established writer）が実行 |
 
 ## 必須修正（監査指摘）への対応内容
 
@@ -21,5 +21,7 @@
 ## 残
 
 - ①② は established writer が SoT へマージ（修正反映済みブロックを使用）。
-- ③ は owner ratify 後。
+- ③ は **owner RATIFIED（2026-06-16）** により解放。①②③をまとめて established writer が正本へ反映。
+  （※90_design_decisions への物理 append は single-writer 規律により owner手動 / GPTお目付け経由。番頭は解放のみ。）
+  ※apply/canonical化・DB write は依然 HOLD（③の ratify は「設計判断の受入」であって apply 解除ではない）。
 - C(byte) は worker fp 照合返り待ち（apply 解除条件ではない）。
