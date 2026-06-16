@@ -22,14 +22,21 @@ from edition_identity_v2 import classify_edition_identity_v2  # noqa: E402
 _PROVENANCE_FIELDS = ("source_system", "provenance_origin", "locator", "page_basis", "source_hash")
 
 
-def gate1_reproduces_projection(baseline: dict, candidate: dict) -> dict:
-    """gate_policy_unification_reproduces_existing_projection の比較器。
+def _node_set(rec: dict) -> set:
+    """baseline export の1冊から (toc_node_id, parent_id, title_norm, page_start, origin) 集合。"""
+    return {(n.get("toc_node_id"), n.get("parent_id"), n.get("title_norm"),
+             n.get("page_start"), n.get("provenance_origin")) for n in rec.get("nodes", [])}
 
-    baseline/candidate = {isbn: {"projection_sha":..., "base_source":..., "node_count":...}}。
-    投影 sha が入力順非依存で一致し、基底源分布が不変なら pass。
+
+def gate1_reproduces_projection(baseline: dict, candidate: dict) -> dict:
+    """gate_policy_unification_reproduces_existing_projection の比較器 (F2 強化版)。
+
+    baseline/candidate = export_baseline() 形式 (nodes 付き)。sha 一致だけでなく
+    **ノード集合・親子・ページ・base 分布**の同値を検査する (sha 衝突や粒度の取りこぼしを防ぐ)。
     """
     isbns = sorted(set(baseline) | set(candidate))
     sha_mismatch, base_mismatch, missing = [], [], []
+    nodeset_mismatch, dist_mismatch = [], []
     for isbn in isbns:
         b, c = baseline.get(isbn), candidate.get(isbn)
         if b is None or c is None:
@@ -39,12 +46,18 @@ def gate1_reproduces_projection(baseline: dict, candidate: dict) -> dict:
             sha_mismatch.append(isbn)
         if b.get("base_source") != c.get("base_source"):
             base_mismatch.append(isbn)
-    ok = not (sha_mismatch or base_mismatch or missing)
+        if _node_set(b) != _node_set(c):
+            nodeset_mismatch.append(isbn)
+        if b.get("base_source_distribution") != c.get("base_source_distribution"):
+            dist_mismatch.append(isbn)
+    ok = not (sha_mismatch or base_mismatch or missing or nodeset_mismatch or dist_mismatch)
     return {"gate": "gate_policy_unification_reproduces_existing_projection", "pass": ok,
             "sha_mismatch": sha_mismatch, "base_source_mismatch": base_mismatch,
+            "node_set_mismatch": nodeset_mismatch, "base_distribution_mismatch": dist_mismatch,
             "missing": missing,
-            "note": ("ALOBookDX baseline export 未供給時は比較器のみ green。"
-                     "実 baseline 631クラスタ到着で本実行に切替。")}
+            "note": ("baseline export は export_baseline() 形式 (toc_node_id/parent_id/title_norm/"
+                     "page_start/page_end/provenance_origin/source_snapshot_hash/projection_sha)。"
+                     "ALOBookDX 実 631クラスタ baseline 到着でそのまま本実行。")}
 
 
 def gate2_edition_regression(known_conflict_rows: list[dict]) -> dict:
@@ -64,21 +77,32 @@ def gate2_edition_regression(known_conflict_rows: list[dict]) -> dict:
             "checked": len(known_conflict_rows)}
 
 
-def gate3_no_rich_to_shallow(adoptions: list[dict]) -> dict:
-    """gate_no_rich_to_shallow_degradation: guard 未満の源が base になっていない。"""
+def gate3_no_rich_to_shallow(adoptions: list[dict], policy: dict | None = None) -> dict:
+    """gate_no_rich_to_shallow_degradation: guard 未満の源が base になっていない。
+
+    F1: engine と同じ per-source override / default を policy から読む (閾値の二重定義を排除)。
+    """
+    guard = (policy or {}).get("step2_base_selection", {}).get("granularity_guard", {})
+    default_ratio = guard.get("min_node_ratio_vs_richest_default", 0.2)
+    per_source = guard.get("min_node_ratio_vs_richest_per_source", {})
     violations = []
     for a in adoptions:
         s2 = a.get("step2", {})
         base = s2.get("base")
         blocked = {b["source"] for b in s2.get("guard_blocked", [])}
         if base in blocked:
-            violations.append({"isbn": a.get("isbn"), "base": base})
-        # 採用 projection の base 由来ノード数が最富源比 guard を満たすか。
-        if base and s2.get("richest_count"):
+            violations.append({"isbn": a.get("isbn"), "base": base, "reason": "base is guard_blocked"})
+        rc, rd = s2.get("richest_count"), s2.get("richest_depth")
+        if base and rc:
+            ratio = per_source.get(base, default_ratio)
             base_nodes = s2.get("candidates", {}).get(base, 0)
-            if base_nodes < 0.2 * s2["richest_count"]:
+            base_depth = (s2.get("granularity", {}).get(base) or [0])[0]
+            if base_nodes < ratio * rc:
                 violations.append({"isbn": a.get("isbn"), "base": base,
-                                   "ratio": round(base_nodes / s2["richest_count"], 3)})
+                                   "node_ratio": round(base_nodes / rc, 3), "min_ratio": ratio})
+            if rd and base_depth < rd:
+                violations.append({"isbn": a.get("isbn"), "base": base,
+                                   "base_depth": base_depth, "richest_depth": rd})
     return {"gate": "gate_no_rich_to_shallow_degradation",
             "pass": not violations, "violations": violations}
 
@@ -145,6 +169,7 @@ def gate7_report_only(adoptions: list[dict], corpus_result: dict | None = None) 
 
 
 def run_gates(books: list[dict], adoptions: list[dict], *,
+              policy: dict | None = None,
               corpus_result: dict | None = None,
               baseline_projection: dict | None = None,
               candidate_projection: dict | None = None,
@@ -162,7 +187,7 @@ def run_gates(books: list[dict], adoptions: list[dict], *,
     else:
         results.append({"gate": "gate_edition_identity_phase0_regression",
                         "pass": None, "skipped": "known_conflict fixture 未供給"})
-    results.append(gate3_no_rich_to_shallow(adoptions))
+    results.append(gate3_no_rich_to_shallow(adoptions, policy))
     results.append(gate4_node_provenance_complete(adoptions))
     results.append(gate5_no_node_invention(adoptions, by_isbn))
     results.append(gate6_votes_by_provenance_origin(adoptions, by_isbn))

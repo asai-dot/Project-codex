@@ -105,6 +105,28 @@ def _scenarios() -> list[tuple[str, dict]]:
         "source_meta": {"legallib": _meta("知的財産法", "legallib_extraction", sha="sha256:ll")},
         "sources": {"legallib": [_n("第1章 特許", 1, print_page=1)]}}))
 
+    # 8) C4: ndl_partinfo の volume_structure ノードは reject、contents は採用候補。
+    s.append(("partinfo_volume_structure", {
+        "isbn": "9784100000088", "title": "倒産法",
+        "source_meta": {
+            "ndl_partinfo": _meta("倒産法", "ndl", sha="sha256:nd"),
+            "legallib": _meta("倒産法", "legallib_extraction", sha="sha256:ll")},
+        "sources": {
+            "ndl_partinfo": [_n("上巻", 1, print_page=1, kind="volume_structure"),
+                             _n("第1章 破産手続", 1, print_page=3, kind="contents")],
+            "legallib": [_n("第1章 破産手続", 1, print_page=3)]}}))
+
+    # 9) C1: source_sha256 欠落源のノードは snapshot_missing → pending (捏造 hash で採用しない)。
+    s.append(("missing_source_hash", {
+        "isbn": "9784100000099", "title": "租税法",
+        "source_meta": {
+            "legallib": {"title": "租税法", "publisher": "有斐閣", "year": "2020",
+                         "page_basis": "print_page", "provenance_origin": "legallib_extraction"},
+            "bencom": _meta("租税法", "bengo4_redist", sha="sha256:bc")},
+        "sources": {
+            "legallib": [_n("第1章 総則", 1, print_page=1)],
+            "bencom": [_n("第1章 総則", 1, print_page=1)]}}))
+
     return s
 
 
@@ -115,17 +137,18 @@ def build() -> list[dict]:
         a = adopt_book(book, p)
         expected = {
             "status": a["step1"]["status"],
+            "anchor": a["step1"]["anchor"],
             "clustered_with_nodes": a["step1"]["clustered_with_nodes"],
             "human_review_sources": [h["source"] for h in a["step1"]["human_review"]],
             "base_source": a["base_source"],
             "guard_blocked": [b["source"] for b in a["step2"].get("guard_blocked", [])],
-            "base_count": a["step3"].get("base_count", 0),
-            "appended_count": a["step3"].get("appended_count", 0),
             "projection_node_count": a["projection_node_count"],
+            "pending_node_count": a["pending_node_count"],
+            "rejected_count": len(a["rejected"]),
             "base_source_distribution": a["base_source_distribution"],
-            "consensus_nodes": a["step4"].get("consensus_nodes", 0),
             "authority": a["step4"].get("authority"),
             "adoptable": a["adoptable"],
+            "adoptable_blockers": a["adoptable_blockers"],
             "projection_sha": a["projection_sha"],
         }
         rows.append({"scenario": scenario, "expected": expected, "book": book})

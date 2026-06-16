@@ -35,7 +35,30 @@
 - **HOLD**: production apply / canonical projection / RDB write / policy 本番切替 /
   **accepted projection への非合議ノード混入** / **fake provenance hash での gate 通過**。
 
-## 反映方針
+## 反映状況 (2026-06-16・同日是正済 / report-only)
 
-GPT 指定順 (1→7) で is正。E1 のみ「policy 廃止 or 実装」の二択が残るため owner 裁定を仰ぐ
-(他は方向確定済で即着手可)。全て report-only・HOLD 厳守で修正する。
+owner 裁定: **E1 = 廃止明記** (legacy rules を採用しない)。全 must_fix を反映:
+
+| 項目 | 是正内容 | 状態 |
+|---|---|---|
+| **C1** | source_hash 欠落は捏造せず `snapshot_missing=True` で **pending**。accepted は実 sha のみ | ✅ |
+| **C4** | `partinfo_kind_filter` 実装。volume_structure を **rejected**、mixed_small を pending | ✅ |
+| **D1** | `accepted`(consensus∧provenance健全) と `pending`(理由付き lane) を分離。projection=accepted のみ | ✅ |
+| **D2** | `adoptable` = identity ∧ consensus ∧ authority≠HR ∧ provenance。blocker を列挙 | ✅ |
+| **E1** | policy `rules._deprecated` 明記・`replace_if_higher_source=false`。append_missing_only に一本化 | ✅ |
+| **B1** | 粒度を **(最大深さ, ノード数, ページ被覆) 複合**に。guard は最富源比 **かつ** 深さ非劣化 | ✅ |
+| **B2** | simple_only 張替え意味論を実装 (protected 保護 / simple incumbent のみ詳細で張替え / rich は skip) | ✅ |
+| **F2** | `export_baseline()` (toc_node_id/parent_id/title_norm/page/origin/snapshot_hash) + gate1 を **ノード集合・親子・ページ・base分布**同値検査へ強化 | ✅ |
+| **A1** | 全ペア edge → anchor の **connected component** で合議集合。anchor は node 持ち源優先 (A2) | ✅ |
+| **C2** | toc_node_id に lineage (isbn/origin/locator/title) で衝突回避 | ✅ |
+| **C3** | offset は検証済本に限定・`page_converted_from_pdf`/`needs_offset` を付与 | ✅ |
+| **F1** | gate3 が policy の per-source override / default を読む (engine と一致) | ✅ |
+| E2 | confidence 未使用を policy `confidence_usage` に明記 | ✅ |
+| F3/G1 | fixture を identity 入力列に補強 / 敵対カテゴリ (volume_structure・missing_hash) を golden に追加 | ✅ 一部 (G1 は更に拡張余地) |
+
+実装版 = `TOC_ADOPT_VERSION 0.2.0`。golden 9 シナリオ (7→9)・`test_tocadopt.py` 161 checks。
+stdlib 全体 **796 checks green**。挙動は大幅に保守化: 合成 9 冊で adoptable は **consensus3 の1冊のみ**
+(3 独立 origin 一致)、他は pending/identity blocker で正しく非採用。
+
+> production apply / canonical / RDB / policy 本番切替 = HOLD 継続。投影のみ・書込ゼロ。
+> 再監査が要れば本 IMPL を v0.2.0 として再投函可。

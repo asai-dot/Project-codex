@@ -104,10 +104,14 @@
     "note": "volume_structure型はDD-LITID親子レーンへ(v2踏襲)"
   },
   "rules": {
-    "replace_if_higher_source": true,
+    "_deprecated": "DD-TOCADOPT-001-IMPL E1 (owner 裁定 2026-06-16): 本 legacy ブロックは v2 からの残骸。新原則『源の優劣でなく本/ノード単位で最良を合成』に一本化し、merge は append_missing_only のみ。`replace_if_higher_source` は採用しない (高位源での既存ノード置換はしない)。本ブロックは参照されず、reproduction gate 通過後に物理削除する。",
+    "replace_if_higher_source": false,
     "keep_manual_overrides": true,
     "merge_same_source": "append_missing_only",
     "page_numbers_prefer": "with_pages"
+  },
+  "confidence_usage": {
+    "_note": "DD-TOCADOPT-001-IMPL E2: confidence map は現採用関数では未使用。base 選択/合議の重みには使わず、priority(tie-break) と粒度複合指標(depth/node_count/page_coverage)のみで決める。将来 confidence を重みに入れる場合は本キーを usage 仕様に書き換える。"
   },
   "release_boundary": {
     "report_only": true,
