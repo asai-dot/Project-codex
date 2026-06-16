@@ -26,6 +26,7 @@ import repair_quarantine  # noqa: E402,F401
 from apply_guard import evaluate_apply_gate  # noqa: E402
 from data_health import book_health  # noqa: E402
 from decision_log import DecisionLog, verify_chain  # noqa: E402
+from regression_taxonomy import regression_diff  # noqa: E402
 from repair_base import (  # noqa: E402
     apply_plan, build_manifest, is_write_allowed_in_phase, plan_field, registry, sha256_of,
 )
@@ -49,8 +50,11 @@ def _repair_metrics(book: dict, repairer, plan: dict, rollback: dict | None,
     applied = apply_plan(book, plan)
     # no-op 二度がけ証明: 適用後は同じ repairer がもう発火しない。
     no_op = repairer.detect(applied) is False
-    # health delta: 適用で health が下がらない (派生補完は悪化させない)。
-    post_health = book_health(applied, thresholds)["health_score"]
+    # health delta + regression: 適用で health が下がらず、新規 P0 defect も作らない。
+    pre_defects = book_health(book, thresholds)["defects"]
+    post_eval = book_health(applied, thresholds)
+    post_health = post_eval["health_score"]
+    regression = regression_diff(pre_defects, post_eval["defects"])
     # rollback 検証: plan→rollback で対象 field が原状復帰する。
     rollback_verified = None
     if rollback is not None:
@@ -66,6 +70,7 @@ def _repair_metrics(book: dict, repairer, plan: dict, rollback: dict | None,
         "idempotency_proof": sha256_of(plan),
         "no_op_second_run": no_op,
         "rollback_verified": rollback_verified,
+        "regression": regression,
         "owner_signoff": None,  # C0 は未署名 (C1 で owner が入れる)
     }
 
@@ -144,6 +149,11 @@ def run_repairs(books: list[dict], *, whitelist: set[str] | None = None,
         "all_rollback_verified": all(
             m["rollback_verified"] for m in manifests if m["rollback_verified"] is not None),
         "all_health_non_decreasing": all(m["health_delta"] >= 0 for m in manifests),
+        # C1 不変条件: 決定的 repair は新規 P0 defect を一切作らない。
+        "no_repair_introduces_p0": all(
+            not (m.get("regression") or {}).get("introduces_p0") for m in manifests),
+        "regression_free": all(
+            not (m.get("regression") or {}).get("has_regression") for m in manifests),
     }
 
 

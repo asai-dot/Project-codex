@@ -175,12 +175,15 @@ def _repair_hints(defects: list[str]) -> dict:
     return routes
 
 
-def corpus_health(books: list[dict], thresholds: dict | None = None) -> dict:
+def corpus_health(books: list[dict], thresholds: dict | None = None,
+                  *, ledger_path: str | Path | None = None,
+                  ledger_now: float | None = None) -> dict:
     """corpus 全体の health 分布 + apply 適格 + quarantine KPI。report-only。
 
     DDSELFHEAL must_fix #4/#5: health と apply_eligibility を分離し、quarantine を
     「成功」でなく管理対象の負債として KPI 化する。age/escape_rate/recurrence は
     スナップショット単体では算出不可 → 永続 ledger 必須 (needs_ledger に明示)。
+    ledger_path を渡すと quarantine_ledger からその3 KPI を実値で埋める。
     """
     t = thresholds or load_thresholds()
     rows = [book_health(b, t) for b in books]
@@ -205,6 +208,27 @@ def corpus_health(books: list[dict], thresholds: dict | None = None) -> dict:
 
     quarantine_count = sum(1 for r in rows if r["quarantined"])
     apply_eligible_count = sum(1 for r in rows if r["apply_eligible"])
+    # ledger があれば age/escape_rate/recurrence を履歴から実値で供給 (なければ needs_ledger)。
+    if ledger_path is not None:
+        from quarantine_ledger import kpi as _ledger_kpi
+        lk = _ledger_kpi(ledger_path, now=ledger_now)
+        quarantine_block = {
+            "count": quarantine_count,
+            "rate": round(quarantine_count / n, 3),
+            "ledger_open_count": lk["open_count"],
+            "mean_age_days": lk["mean_age_days"],
+            "max_age_days": lk["max_age_days"],
+            "escape_rate": lk["escape_rate"],
+            "recurrence_rate": lk["recurrence_rate"],
+            "ledger_chain_ok": lk["chain"]["ok"],
+        }
+    else:
+        quarantine_block = {
+            "count": quarantine_count,
+            "rate": round(quarantine_count / n, 3),
+            # 以下はスナップショット単体では出せない (履歴 ledger が要る)。
+            "needs_ledger": ["age", "escape_rate", "recurrence_rate"],
+        }
     return {
         "books": len(rows),
         "mean_health": round(sum(scores) / n, 1),
@@ -213,12 +237,7 @@ def corpus_health(books: list[dict], thresholds: dict | None = None) -> dict:
         "clean_count": sum(1 for r in rows if r["clean"]),
         # health とは別軸: apply 適格 (P0 cap 通過) と quarantine 負債。
         "apply_eligible_count": apply_eligible_count,
-        "quarantine": {
-            "count": quarantine_count,
-            "rate": round(quarantine_count / n, 3),
-            # 以下はスナップショット単体では出せない (履歴 ledger が要る)。
-            "needs_ledger": ["age", "escape_rate", "recurrence_rate"],
-        },
+        "quarantine": quarantine_block,
         "defect_counts": dict(sorted(defect_counts.items())),
         "rows": rows,
         "report_only": True,

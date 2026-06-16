@@ -154,8 +154,41 @@ def test_v2_flip_end_to_end() -> None:
     check(v1["risk"] == "high" and v2["risk"] == "low", "v2 切替で risk 改善")
 
 
+def test_corpus_health_ledger_wired() -> None:
+    """ledger_path を渡すと quarantine KPI が needs_ledger から実値に置き換わる。"""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+    from quarantine_ledger import ENTER, QuarantineLedger
+    books = [{"isbn": "9784000000020", "title": "民法",
+              "source_meta": {"legallib": {"isbn": "9784000000020", "title": "民法",
+                                           "page_basis": "print_page", "source_sha256": "sha256:x"}},
+              "sources": {"legallib": [{"title": "第1章", "title_norm": "第1章",
+                                        "depth": 1, "print_page": 1}]}}]
+    # ledger 無し: 従来どおり needs_ledger。
+    ch0 = corpus_health(books)
+    check("needs_ledger" in ch0["quarantine"], "ledger 無しは needs_ledger を立てる")
+    with tempfile.TemporaryDirectory() as td:
+        p = Path(td) / "q.jsonl"
+        n = [0.0]
+
+        def clk():
+            v = n[0]
+            n[0] += 86400.0
+            return v
+        lg = QuarantineLedger(p, clock=clk)
+        lg.record(isbn="A", locator="x#0", transition=ENTER, reason_code="orphan", decided_by="e")
+        lg.record(isbn="A", locator="x#1", transition=ENTER, reason_code="orphan", decided_by="e")
+        ch = corpus_health(books, ledger_path=p, ledger_now=5 * 86400.0)
+        q = ch["quarantine"]
+        check("needs_ledger" not in q, "ledger 有りは needs_ledger を消す")
+        check(q["ledger_open_count"] == 2, f"open=2 (実 {q.get('ledger_open_count')})")
+        check(q["max_age_days"] == 5.0, f"max_age=5 (実 {q.get('max_age_days')})")
+        check(q["escape_rate"] == 0.0 and q["recurrence_rate"] == 0.0, "escape/recur=0")
+        check(q["ledger_chain_ok"], "ledger chain OK")
+
+
 def main() -> int:
-    for t in [test_thresholds, test_book_health, test_corpus_health, test_v2_flip_end_to_end]:
+    for t in [test_thresholds, test_book_health, test_corpus_health,
+              test_corpus_health_ledger_wired, test_v2_flip_end_to_end]:
         print(f"• {t.__name__}")
         t()
     print(f"\n{_PASS} passed, {_FAIL} failed")

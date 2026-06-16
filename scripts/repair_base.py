@@ -124,6 +124,8 @@ def build_manifest(book: dict, repairer: Repairer, plan: dict, *,
         "idempotency_proof": m.get("idempotency_proof"),   # plan の決定的ハッシュ
         "no_op_second_run": m.get("no_op_second_run"),     # 適用後 re-detect False か
         "rollback_verified": m.get("rollback_verified"),   # plan→rollback で原状復帰か
+        "regression": m.get("regression"),                 # 修復前後の defect 回帰判定
+        "quarantine_ledger_pointer": m.get("quarantine_ledger_pointer"),  # 隔離台帳への参照
         "owner_signoff": m.get("owner_signoff"),           # C1 で owner が入れる (C0 は None)
         "write_executed": False,           # C0: 常に False (dry-run)
     }
