@@ -24,8 +24,11 @@ import repair_sha  # noqa: E402,F401
 import repair_normalize  # noqa: E402,F401
 import repair_quarantine  # noqa: E402,F401
 from apply_guard import evaluate_apply_gate  # noqa: E402
+from data_health import book_health  # noqa: E402
 from decision_log import DecisionLog, verify_chain  # noqa: E402
-from repair_base import build_manifest, is_write_allowed_in_phase, registry  # noqa: E402
+from repair_base import (  # noqa: E402
+    apply_plan, build_manifest, is_write_allowed_in_phase, plan_field, registry, sha256_of,
+)
 from review_report import book_summary  # noqa: E402
 from thresholds import load_thresholds  # noqa: E402
 
@@ -38,6 +41,33 @@ def _inverse_rollback(plan: dict) -> dict:
             "changes": [{"locator": c["locator"], "field": c["field"],
                          "before": c["after"], "after": c["before"]}
                         for c in plan.get("changes", [])]}
+
+
+def _repair_metrics(book: dict, repairer, plan: dict, rollback: dict | None,
+                    pre_health: float, thresholds: dict) -> dict:
+    """C1 前に必須の証明系メトリクスを dry-run で算出 (本は変更しない)。"""
+    applied = apply_plan(book, plan)
+    # no-op 二度がけ証明: 適用後は同じ repairer がもう発火しない。
+    no_op = repairer.detect(applied) is False
+    # health delta: 適用で health が下がらない (派生補完は悪化させない)。
+    post_health = book_health(applied, thresholds)["health_score"]
+    # rollback 検証: plan→rollback で対象 field が原状復帰する。
+    rollback_verified = None
+    if rollback is not None:
+        restored = apply_plan(applied, rollback)
+        rollback_verified = all(
+            plan_field(book, c["locator"], c["field"]) == plan_field(restored, c["locator"], c["field"])
+            for c in plan.get("changes", []))
+    return {
+        "affected_count": len(plan.get("changes", [])),
+        "pre_health": pre_health,
+        "post_health": post_health,
+        "health_delta": round(post_health - pre_health, 1),
+        "idempotency_proof": sha256_of(plan),
+        "no_op_second_run": no_op,
+        "rollback_verified": rollback_verified,
+        "owner_signoff": None,  # C0 は未署名 (C1 で owner が入れる)
+    }
 
 
 def _gate_req(isbn: str, summary: dict, *, rollback_present: bool) -> dict:
@@ -65,6 +95,7 @@ def run_repairs(books: list[dict], *, whitelist: set[str] | None = None,
         isbn = b["isbn"]
         summary = book_summary(isbn, b.get("title", ""), b.get("sources", {}),
                                b.get("source_meta", {}), t)
+        pre_health = book_health(b, t)["health_score"]
         gate = evaluate_apply_gate(_gate_req(isbn, summary, rollback_present=rollback_present),
                                    whitelist=whitelist)
         for r in registry():
@@ -76,6 +107,7 @@ def run_repairs(books: list[dict], *, whitelist: set[str] | None = None,
             # 冪等の素: plan は決定的 (副作用なしに二度同じ)。
             plan_deterministic = (r.plan(b) == plan)
             rollback = _inverse_rollback(plan) if rollback_present else None
+            metrics = _repair_metrics(b, r, plan, rollback, pre_health, t)
             dl_hash = None
             if dlog is not None:
                 rec = dlog.append(isbn=isbn, conflict_id=f"repair:{r.name}",
@@ -84,7 +116,8 @@ def run_repairs(books: list[dict], *, whitelist: set[str] | None = None,
                 dl_hash = rec["hash"]
             wl_ref = "owner_whitelist" if (whitelist and isbn in whitelist) else None
             m = build_manifest(b, r, plan, gate_result=gate, rollback_bundle=rollback,
-                               decision_log_hash=dl_hash, owner_or_whitelist_ref=wl_ref)
+                               decision_log_hash=dl_hash, owner_or_whitelist_ref=wl_ref,
+                               metrics=metrics)
             # 実書込許可 = phase が許す AND apply_guard 通過 (C0 は phase が常に不許可)。
             m["phase"] = phase
             m["write_allowed"] = bool(
@@ -106,6 +139,11 @@ def run_repairs(books: list[dict], *, whitelist: set[str] | None = None,
         "by_class": dict(Counter(m["repair_class"] for m in manifests)),
         "decision_log_chain": chain,
         "all_plans_deterministic": all(m["plan_deterministic"] for m in manifests),
+        # DDSELFHEAL-C0 review: C1 前に全 plan が満たすべき証明系。
+        "all_no_op_second_run": all(m["no_op_second_run"] for m in manifests),
+        "all_rollback_verified": all(
+            m["rollback_verified"] for m in manifests if m["rollback_verified"] is not None),
+        "all_health_non_decreasing": all(m["health_delta"] >= 0 for m in manifests),
     }
 
 

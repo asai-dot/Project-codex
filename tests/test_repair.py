@@ -165,9 +165,52 @@ def test_decision_log_chain() -> None:
         check(all(m["decision_log_hash"] for m in res["manifests"]), "全 manifest に log hash")
 
 
+def test_quarantine_exceptions() -> None:
+    r = QuarantineOrphan()
+    # 索引/付録は orphan でも隔離しない (review #2)。
+    b = {"isbn": "1", "source_meta": {},
+         "sources": {"a": [{"title": "索引", "title_norm": "索引"}],
+                     "b": [{"title": "事項索引", "title_norm": "事項索引"}]}}
+    check(r.detect(b) is False, "quarantine: 索引/付録は隔離対象外")
+    # sparse 宣言された source の node は隔離対象外 (per-source)。a=sparse, b=通常。
+    b2 = {"isbn": "1",
+          "source_meta": {"a": {"sparse": True}, "b": {}},
+          "sources": {"a": [{"title": "甲", "title_norm": "甲"}],
+                      "b": [{"title": "乙", "title_norm": "乙"}]}}
+    plan2 = r.plan(b2)
+    locs = [c["locator"] for c in plan2["changes"]]
+    check(all(not loc.startswith("a#") for loc in locs), "quarantine: sparse源 a の node は除外")
+    check(any(loc.startswith("b#") for loc in locs), "quarantine: 通常源 b の orphan は隔離")
+    # 通常の本体章 orphan は依然隔離。
+    b3 = {"isbn": "1", "source_meta": {},
+          "sources": {"a": [{"title": "第1章 甲", "title_norm": "第1章甲"}],
+                      "b": [{"title": "第2章 乙", "title_norm": "第2章乙"}]}}
+    check(r.detect(b3) is True, "quarantine: 本体章 orphan は隔離")
+
+
+def test_c1_prep_metrics() -> None:
+    # DDSELFHEAL-C0 review §4: C1 前必須の証明系メトリクスを全 manifest が持つ。
+    res = run_repairs(_demo_books(), whitelist={"9784000000020"}, rollback_present=True)
+    check(res["all_no_op_second_run"] is True, "全 plan: 適用後 re-detect False (no-op 二度がけ)")
+    check(res["all_rollback_verified"] is True, "全 plan: rollback で原状復帰")
+    check(res["all_health_non_decreasing"] is True, "全 plan: health 非悪化")
+    for m in res["manifests"]:
+        check(m["idempotency_proof"] and m["idempotency_proof"].startswith("sha256:"),
+              f"{m['repairer']}: idempotency_proof")
+        check(m["no_op_second_run"] is True, f"{m['repairer']}: no_op_second_run")
+        check(m["rollback_verified"] is True, f"{m['repairer']}: rollback_verified")
+        check(m["affected_count"] >= 1, f"{m['repairer']}: affected_count")
+        check(m["owner_signoff"] is None, f"{m['repairer']}: C0 は owner_signoff None")
+        check(isinstance(m["health_delta"], (int, float)), f"{m['repairer']}: health_delta 数値")
+    # sha 修復は欠落 body_sha を補完するので health が改善する (綺麗になる実証)。
+    sha = [m for m in res["manifests"] if m["repairer"] == "body_sha_recompute"][0]
+    check(sha["health_delta"] > 0, f"sha 修復は health 改善 (got {sha['health_delta']})")
+
+
 def main() -> int:
     for t in [test_offset_repairer, test_sha_repairer, test_normalize_repairer,
-              test_quarantine_repairer, test_engine_dryrun_no_write,
+              test_quarantine_repairer, test_quarantine_exceptions, test_c1_prep_metrics,
+              test_engine_dryrun_no_write,
               test_whitelist_physical_refusal, test_phase_gate_semantics,
               test_decision_log_chain]:
         print(f"• {t.__name__}")

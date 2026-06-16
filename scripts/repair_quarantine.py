@@ -12,8 +12,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import re  # noqa: E402
+
 from concordance import build_concordance  # noqa: E402
 from repair_base import QUARANTINE_ONLY, Repairer, register  # noqa: E402
+
+# DDSELFHEAL-C0 review #2: 索引/別表/付録/前付後付は orphan でも隔離対象から除外。
+_APPENDIX_RX = re.compile(r"(索引|別表|凡例|書式|資料編?|付録|附録|参考文献|奥付|目次|はしがき|序文|あとがき)")
 
 
 def _orphan_keys(book: dict) -> set[str]:
@@ -34,15 +39,24 @@ def _orphan_nodes(book: dict) -> list[tuple[str, int, str]]:
     keys = _orphan_keys(book)
     if not keys:
         return []
+    source_meta = book.get("source_meta", {})
     norm = build_concordance(book.get("sources", {}))["normalized"]
     out = []
     for src, nodes in norm.items():
+        # 既知 sparse / 多巻物 source は隔離対象外 (corpus メタで明示された場合)。
+        sm = source_meta.get(src, {})
+        if sm.get("sparse") or sm.get("multi_volume"):
+            continue
         for n in nodes:
-            if n["title_norm"] in keys:
-                raw = book["sources"][src][n["idx"]]
-                if isinstance(raw, dict) and raw.get("quarantine_reason"):
-                    continue  # 既に隔離印あり → 冪等
-                out.append((src, n["idx"], n["title_norm"]))
+            if n["title_norm"] not in keys:
+                continue
+            raw = book["sources"][src][n["idx"]]
+            if isinstance(raw, dict) and raw.get("quarantine_reason"):
+                continue  # 既に隔離印あり → 冪等
+            # 索引/別表/付録/前付後付は orphan でも隔離しない (構造上 cross-source 不一致が正常)。
+            if _APPENDIX_RX.search(raw.get("title") or raw.get("t") or ""):
+                continue
+            out.append((src, n["idx"], n["title_norm"]))
     return out
 
 

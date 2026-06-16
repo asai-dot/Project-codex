@@ -86,14 +86,21 @@ def registry() -> list[Repairer]:
 def build_manifest(book: dict, repairer: Repairer, plan: dict, *,
                    gate_result: dict, rollback_bundle: dict | None,
                    decision_log_hash: str | None,
-                   owner_or_whitelist_ref: str | None) -> dict:
-    """must_fix #7 の repair manifest を組み立てる (純データ・書込なし)。"""
+                   owner_or_whitelist_ref: str | None,
+                   metrics: dict | None = None) -> dict:
+    """must_fix #7 の repair manifest を組み立てる (純データ・書込なし)。
+
+    metrics (DDSELFHEAL-C0 review §4 で C1 前に必須とされた追加項目):
+      pre_health / post_health / health_delta / idempotency_proof /
+      no_op_second_run / rollback_verified / affected_count / owner_signoff。
+    """
     isbn = book.get("isbn", "")
     input_hashes = {
         "source_meta": sha256_of(book.get("source_meta", {})),
         "sources": sha256_of(book.get("sources", {})),
     }
     repair_id = sha256_of([isbn, repairer.name, repairer.version, plan])[:23]
+    m = metrics or {}
     return {
         "repair_id": repair_id,
         "isbn": isbn,
@@ -108,13 +115,58 @@ def build_manifest(book: dict, repairer: Repairer, plan: dict, *,
         "decision_log_hash": decision_log_hash,
         "gate_result": gate_result,        # apply_guard の allowed/refusals
         "owner_or_whitelist_ref": owner_or_whitelist_ref,
+        # --- DDSELFHEAL-C0 review §4: C1 前に必須の追加項目 ---
+        "affected_count": m.get("affected_count", len(plan.get("changes", []))),
+        "pre_health": m.get("pre_health"),
+        "post_health": m.get("post_health"),
+        "health_delta": m.get("health_delta"),
+        "apply_eligible_before": m.get("apply_eligible_before"),
+        "idempotency_proof": m.get("idempotency_proof"),   # plan の決定的ハッシュ
+        "no_op_second_run": m.get("no_op_second_run"),     # 適用後 re-detect False か
+        "rollback_verified": m.get("rollback_verified"),   # plan→rollback で原状復帰か
+        "owner_signoff": m.get("owner_signoff"),           # C1 で owner が入れる (C0 は None)
         "write_executed": False,           # C0: 常に False (dry-run)
     }
+
+
+def apply_plan(book: dict, plan: dict | None) -> dict:
+    """plan の changes を **deepcopy に**当てた本を返す (証明・シミュレーション専用)。
+
+    no-op 二度がけ証明 / rollback 検証 / pre-post health 算出に使う。
+    **元の book は一切変更しない** (engine は依然何も永続書込しない)。
+    """
+    import copy
+    b = copy.deepcopy(book)
+    for c in (plan or {}).get("changes", []):
+        loc, field, after = c["locator"], c["field"], c["after"]
+        if loc.startswith("source_meta."):
+            src = loc.split(".", 1)[1]
+            b.setdefault("source_meta", {}).setdefault(src, {})[field] = after
+        elif "#" in loc:
+            src, idx = loc.split("#", 1)
+            try:
+                b["sources"][src][int(idx)][field] = after
+            except (KeyError, IndexError, ValueError):
+                pass
+    return b
+
+
+def plan_field(book: dict, locator: str, field: str):
+    """locator(src#idx | source_meta.src) の field 値を取り出す (検証用)。"""
+    if locator.startswith("source_meta."):
+        return book.get("source_meta", {}).get(locator.split(".", 1)[1], {}).get(field)
+    if "#" in locator:
+        src, idx = locator.split("#", 1)
+        try:
+            return book["sources"][src][int(idx)].get(field)
+        except (KeyError, IndexError, ValueError):
+            return None
+    return None
 
 
 __all__ = [
     "REPAIR_BASE_VERSION", "REPORT_ONLY", "QUARANTINE_ONLY", "DET_NO_CANONICAL",
     "DET_PROJECTION", "SEMANTIC_IDENTITY", "REPAIR_CLASSES",
     "is_write_allowed_in_phase", "sha256_of", "Repairer",
-    "register", "registry", "build_manifest",
+    "register", "registry", "build_manifest", "apply_plan", "plan_field",
 ]
