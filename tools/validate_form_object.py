@@ -135,6 +135,37 @@ def validate(fo):
         if fv.get("variant_split_reason") not in SPLIT_REASONS:
             v.append(("G_VARIANT_SPLIT_REASON_PRESENT", f"variant '{fv.get('variant')}' missing valid variant_split_reason"))
 
+    # ---- additional property gates (required before DDL apply) ----
+    wits = fo.get("witnessed_in", [])
+    adopted = [w for w in wits if w.get("adopted") is True]
+    # G_MULTI_WITNESS_NO_AUTO_CANONICAL: 複数 adopted witness から勝手に canonical を作らない
+    if foo.get("canonical_text_synthesized") is True and len(adopted) > 1 and not fo.get("witness_conflict_resolution"):
+        v.append(("G_MULTI_WITNESS_NO_AUTO_CANONICAL",
+                  "synthesized canonical from >1 adopted witness without witness_conflict_resolution"))
+    # G_PROVENANCE_FAMILY_NOT_INDEPENDENT: 同一 provenance_family を独立票に数えない
+    fam_indep = {}
+    for w in wits:
+        if w.get("counts_as_independent") is True:
+            fam_indep[w.get("provenance_family")] = fam_indep.get(w.get("provenance_family"), 0) + 1
+    for fam, n in fam_indep.items():
+        if n > 1:
+            v.append(("G_PROVENANCE_FAMILY_NOT_INDEPENDENT",
+                      f"{n} witnesses in same provenance_family '{fam}' marked independent"))
+    # G_TEMPORAL_CONSISTENCY: adopted witness の版年が form の有効下限年を下回るなら警告
+    floor = foo.get("temporal_floor_year")
+    if isinstance(floor, int):
+        for w in adopted:
+            ey = w.get("edition_year")
+            if isinstance(ey, int) and ey < floor:
+                v.append(("G_TEMPORAL_CONSISTENCY",
+                          f"adopted witness edition_year {ey} < temporal_floor_year {floor}: {w.get('source_identifier')}"))
+    # G_DEFECT_SEVERITY_MONOTONIC: 非mandatory(advisable/optional)に高重大度を付けない
+    HIGH = {"invalidity", "rejection_by_forum", "registration_defect"}
+    for r in _all_requisites(fo):
+        if r.get("requisite_class") in ("advisable", "optional_design") and r.get("defect_kind_if_missing") in HIGH:
+            v.append(("G_DEFECT_SEVERITY_MONOTONIC",
+                      f"{r.get('term')}: non-mandatory class with high-severity defect {r.get('defect_kind_if_missing')}"))
+
     return v
 
 
@@ -194,12 +225,57 @@ def _negative_tests():
     r["form_object"]["form_uid"] = "alo:form:9784502406010"
     cases.append(("form_uid_isbn", r, "G_FORM_ID_OPAQUE"))
 
+    # 7. 複数 adopted witness から無断 canonical 合成
+    r = copy.deepcopy(base)
+    r["form_object"]["canonical_text_synthesized"] = True
+    n = 0
+    for w in r["witnessed_in"]:
+        if n < 2:
+            w["adopted"] = True
+            n += 1
+    cases.append(("multi_witness_auto_canonical", r, "G_MULTI_WITNESS_NO_AUTO_CANONICAL"))
+
+    # 8. 同一 provenance_family を独立票扱い
+    r = copy.deepcopy(base)
+    n = 0
+    for w in r["witnessed_in"]:
+        if n < 2:
+            w["provenance_family"] = "同一供給元X"
+            w["counts_as_independent"] = True
+            n += 1
+    cases.append(("same_family_independent", r, "G_PROVENANCE_FAMILY_NOT_INDEPENDENT"))
+
+    # 9. temporal 矛盾(版年が有効下限年を下回る)
+    r = copy.deepcopy(base)
+    r["form_object"]["temporal_floor_year"] = 2020
+    r["witnessed_in"][0]["adopted"] = True
+    r["witnessed_in"][0]["edition_year"] = 2018
+    cases.append(("temporal_conflict", r, "G_TEMPORAL_CONSISTENCY"))
+
+    # 10. advisable に高重大度(registration_defect)
+    r = copy.deepcopy(base)
+    r["advisable_examples"][0]["defect_kind_if_missing"] = "registration_defect"
+    cases.append(("advisable_high_severity", r, "G_DEFECT_SEVERITY_MONOTONIC"))
+
     ok = True
     for name, rec, expect in cases:
         gates = {g for g, _ in validate(rec)}
         passed = expect in gates
         ok = ok and passed
         print(f"  [{'PASS' if passed else 'FAIL'}] neg:{name}: expect {expect} -> {'fired' if passed else 'MISSED'}")
+    return ok
+
+
+def _positive_tests():
+    """正常系: 私契約(forum=私人間/null)は正常に通ること等。"""
+    ok = True
+    seizo = json.load(open(POC[1], encoding="utf-8"))
+    # forum-null private contract positive
+    seizo["form_object"]["forum"] = None
+    gates = {g for g, _ in validate(seizo)}
+    p = "G_FORUM_REQUIRED_ONLY_WHEN_FORUM_EXISTS" not in gates and len(gates) == 0
+    ok = ok and p
+    print(f"  [{'PASS' if p else 'FAIL'}] pos:private_forum_null_is_clean -> {sorted(gates) or 'clean'}")
     return ok
 
 
@@ -211,9 +287,11 @@ if __name__ == "__main__":
             print(f"  {g} :: {m}")
         print("OK" if not viol else f"{len(viol)} violations")
         sys.exit(0 if not viol else 1)
-    print("=== PoC dry-run (12 gates) ===")
+    print("=== PoC dry-run (16 gates) ===")
     a = _run_poc()
     print("\n=== negative tests (違反を弾けるか) ===")
     b = _negative_tests()
-    print(f"\nresult: poc={'PASS' if a else 'FAIL'} / negative={'PASS' if b else 'FAIL'}")
-    sys.exit(0 if (a and b) else 1)
+    print("\n=== positive tests (正常系を通すか) ===")
+    c = _positive_tests()
+    print(f"\nresult: poc={'PASS' if a else 'FAIL'} / negative={'PASS' if b else 'FAIL'} / positive={'PASS' if c else 'FAIL'}")
+    sys.exit(0 if (a and b and c) else 1)
