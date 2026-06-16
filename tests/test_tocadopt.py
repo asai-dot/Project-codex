@@ -51,13 +51,14 @@ def _load(path) -> list[dict]:
 
 def test_shape() -> None:
     rows = _load(_FIXTURE)
-    check(len(rows) >= 9, f"golden は 9 シナリオ以上 (実 {len(rows)})")
+    check(len(rows) >= 12, f"golden は 12 シナリオ以上 (実 {len(rows)})")
     isbns = [r["book"]["isbn"] for r in rows]
     check(len(set(isbns)) == len(isbns), "ISBN は一意")
     scns = {r["scenario"] for r in rows}
     for need in ("merge_richest_base", "guard_block", "edition_exclude", "consensus3",
                  "pdf_offset", "protected_base", "single_source_insufficient",
-                 "partinfo_volume_structure", "missing_source_hash"):
+                 "partinfo_volume_structure", "missing_source_hash", "title_collision",
+                 "duplicate_provenance_origin", "partinfo_mixed_small"):
         check(need in scns, f"シナリオ {need} を含む")
 
 
@@ -71,7 +72,8 @@ def test_regression_lock() -> None:
         check(a["step1"]["clustered_with_nodes"] == e["clustered_with_nodes"], f"{sc}: clustered")
         check(a["projection_node_count"] == e["projection_node_count"], f"{sc}: accepted 数")
         check(a["pending_node_count"] == e["pending_node_count"], f"{sc}: pending 数")
-        check(len(a["rejected"]) == e["rejected_count"], f"{sc}: rejected 数")
+        check(a["rejected_node_count"] == e["rejected_count"], f"{sc}: rejected 数")
+        check(a["non_adoptable_node_count"] == e["non_adoptable_node_count"], f"{sc}: non_adoptable 数")
         check(a["projection_sha"] == e["projection_sha"], f"{sc}: projection_sha")
         check(a["adoptable"] == e["adoptable"], f"{sc}: adoptable")
         check(sorted(a["adoptable_blockers"]) == sorted(e["adoptable_blockers"]), f"{sc}: blockers")
@@ -82,13 +84,12 @@ def test_must_fix_invariants() -> None:
     p = load_policy()
     rows = {r["scenario"]: r["book"] for r in _load(_FIXTURE)}
 
-    # C1: missing_source_hash → 該当ノードは accepted に入らず、accepted は実 source_hash のみ。
+    # C1: missing_source_hash → 該当ノードは non_adoptable レーン (捏造せず)。accepted は実 sha のみ。
     a = adopt_book(rows["missing_source_hash"], p)
     check(all(n.get("source_hash") for n in a["accepted"]), "C1: accepted は実 source_hash のみ")
-    check(any("source_snapshot_missing" in n.get("pending_reasons", []) for n in a["pending"]),
-          "C1: 欠落ノードは snapshot_missing で pending")
-    check(all("sha256:" + "" not in str(n.get("source_hash") or "x")  # 捏造 sha が無い
-              or n.get("source_hash") for n in a["accepted"]), "C1: 捏造 hash なし")
+    check(a["non_adoptable_node_count"] == 1, "C1: 欠落ノードは non_adoptable レーン")
+    check(all(n.get("snapshot_missing") for n in a["non_adoptable"]), "C1: non_adoptable=snapshot_missing")
+    check("non_adoptable_nodes_present" in a["adoptable_blockers"], "C1: hard blocker 立つ")
 
     # C4: partinfo volume_structure は rejected (採用も pending もしない)。
     a = adopt_book(rows["partinfo_volume_structure"], p)
@@ -97,17 +98,41 @@ def test_must_fix_invariants() -> None:
     allnodes = a["accepted"] + a["pending"]
     check(all(n["title_norm"] != "上巻" for n in allnodes), "C4: 上巻 は採用/pending に出ない")
 
-    # D1: accepted は全て consensus True。pending は理由付き。
+    # N1/D1: 4 レーンが構造分離。各 node はちょうど1レーン。projection==accepted。
     for sc, book in rows.items():
         a = adopt_book(book, p)
-        check(all(n.get("consensus") for n in a["accepted"]), f"D1/{sc}: accepted は全 consensus")
-        check(all(n.get("pending_reasons") for n in a["pending"]), f"D1/{sc}: pending は理由付き")
+        lanes = a["lanes"]
+        check(a["projection"] is lanes["accepted"], f"N1/{sc}: projection==accepted lane")
+        all_ln = lanes["accepted"] + lanes["pending_human_review"] + lanes["non_adoptable"]
+        ids = [n["toc_node_id"] for n in all_ln]
+        check(len(ids) == len(set(ids)), f"N1/{sc}: node は1レーンのみ")
+        check(all(n.get("consensus") and n.get("source_hash") for n in lanes["accepted"]),
+              f"D1/{sc}: accepted は consensus∧provenance")
+        check(all(n.get("lane_reason") for n in lanes["pending_human_review"]),
+              f"D1/{sc}: pending は理由付き")
+        env = a["envelope"]
+        check(env["apply_unit"] == "book_envelope" and env["apply_target"] == "accepted_node_set",
+              f"N1/{sc}: envelope は book単位・accepted対象")
+        check(env["apply_eligibility"]["adoptable"] == a["adoptable"], f"N1/{sc}: envelope 整合")
 
-    # D2: adoptable は 4 条件 AND。consensus3 のみ True、他は blocker 付き。
+    # D2: adoptable = 5 名前付き条件 AND。consensus3 のみ True、他は blocker 付き。
     a = adopt_book(rows["consensus3"], p)
     check(a["adoptable"] and not a["adoptable_blockers"], "D2: consensus3 は adoptable")
+    check(all(a["envelope"]["apply_eligibility"]["conditions"].values()), "D2: consensus3 は全条件 True")
     a = adopt_book(rows["edition_exclude"], p)
     check("identity_unresolved" in a["adoptable_blockers"], "D2: 別版は identity blocker")
+
+    # G1 敵対: 同名節は locator 違いで別 toc_node_id (base 内重複を残す)。
+    a = adopt_book(rows["title_collision"], p)
+    coll = a["accepted"] + a["pending"]
+    check(len(coll) == 2 and len({n["toc_node_id"] for n in coll}) == 2,
+          "G1: 同名2節が別 toc_node_id で保持")
+
+    # G1 敵対: 同一 provenance_origin の二重申告は votes を二重計上しない。
+    a = adopt_book(rows["duplicate_provenance_origin"], p)
+    alln = a["accepted"] + a["pending"] + a["non_adoptable"]
+    check(all(n["votes_by_provenance_origin"] <= 1 for n in alln),
+          "G1: 同一 origin は votes 二重計上しない")
 
     # A1: edition_exclude で別版源は human_review・clustered から外れる。
     a = adopt_book(rows["edition_exclude"], p)
@@ -152,8 +177,8 @@ def test_projection_sha_order_independent() -> None:
               f"{r['scenario']}: projection_sha が source 順依存")
 
 
-def test_all_seven_gates() -> None:
-    """§4 の 7 gate を実走 (gate1=export_baseline 同値 / gate2=known_conflict)。"""
+def test_all_gates() -> None:
+    """§4 の 7 gate + N1 lane 分離 gate8 を実走 (gate1=export_baseline / gate2=known_conflict)。"""
     p = load_policy()
     rows = _load(_FIXTURE)
     books = [r["book"] for r in rows]
@@ -173,7 +198,7 @@ def test_all_seven_gates() -> None:
     g = run_gates(books, adoptions, policy=p, corpus_result=corpus,
                   baseline_projection=baseline, candidate_projection=candidate,
                   known_conflict_rows=known_conflict)
-    check(g["checked"] == 7, f"7 gate 全て実走 (skipped: {g['skipped']})")
+    check(g["checked"] == 8, f"8 gate 全て実走 (skipped: {g['skipped']})")
     check(g["all_checked_pass"], "全 gate pass")
     for gate in g["gates"]:
         check(gate["pass"] is True, f"{gate['gate']} = {gate['pass']}")
@@ -185,7 +210,7 @@ def main() -> int:
                      ("test_must_fix_invariants", test_must_fix_invariants),
                      ("test_safety_invariants", test_safety_invariants),
                      ("test_projection_sha_order_independent", test_projection_sha_order_independent),
-                     ("test_all_seven_gates", test_all_seven_gates)):
+                     ("test_all_gates", test_all_gates)):
         print(f"• {name}")
         fn()
     print(f"\n{_PASS} passed, {_FAIL} failed")

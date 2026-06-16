@@ -1,0 +1,14 @@
+{
+  "books_compared": 12,
+  "gate1": {
+    "base_distribution_mismatch": [],
+    "base_source_mismatch": [],
+    "gate": "gate_policy_unification_reproduces_existing_projection",
+    "missing": [],
+    "node_set_mismatch": [],
+    "note": "baseline export は export_baseline() 形式 (toc_node_id/parent_id/title_norm/page_start/page_end/provenance_origin/source_snapshot_hash/projection_sha)。ALOBookDX 実 631クラスタ baseline 到着でそのまま本実行。",
+    "pass": true,
+    "sha_mismatch": []
+  },
+  "method": "source 入力順を反転した candidate を export_baseline 同値比較 (node集合・親子・ページ・base分布・projection_sha)"
+}

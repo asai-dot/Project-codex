@@ -116,7 +116,7 @@ def _scenarios() -> list[tuple[str, dict]]:
                              _n("第1章 破産手続", 1, print_page=3, kind="contents")],
             "legallib": [_n("第1章 破産手続", 1, print_page=3)]}}))
 
-    # 9) C1: source_sha256 欠落源のノードは snapshot_missing → pending (捏造 hash で採用しない)。
+    # 9) C1: source_sha256 欠落源のノードは snapshot_missing → non_adoptable (捏造 hash で採用しない)。
     s.append(("missing_source_hash", {
         "isbn": "9784100000099", "title": "租税法",
         "source_meta": {
@@ -126,6 +126,33 @@ def _scenarios() -> list[tuple[str, dict]]:
         "sources": {
             "legallib": [_n("第1章 総則", 1, print_page=1)],
             "bencom": [_n("第1章 総則", 1, print_page=1)]}}))
+
+    # 10) G1 敵対: 同一 title_norm が base 内に2回 (locator 違いで toc_node_id は別)。
+    s.append(("title_collision", {
+        "isbn": "9784100000110", "title": "民事訴訟法",
+        "source_meta": {"legallib": _meta("民事訴訟法", "legallib_extraction", sha="sha256:ll")},
+        "sources": {"legallib": [_n("第1章 総論", 1, print_page=1),
+                                 _n("第1章 総論", 1, print_page=200)]}}))
+
+    # 11) G1 敵対: 別 source が同一 provenance_origin を申告 → votes 二重計上しない。
+    s.append(("duplicate_provenance_origin", {
+        "isbn": "9784100000121", "title": "行政法",
+        "source_meta": {
+            "legallib": _meta("行政法", "shared_origin", sha="sha256:ll"),
+            "bencom": _meta("行政法", "shared_origin", year="2021", sha="sha256:bc")},
+        "sources": {
+            "legallib": [_n("第1章 行政行為", 1, print_page=1)],
+            "bencom": [_n("第1章 行政行為", 1, print_page=1)]}}))
+
+    # 12) C4 敵対: partinfo mixed_small は review レーン (pending_human_review)。
+    s.append(("partinfo_mixed_small", {
+        "isbn": "9784100000132", "title": "労働法",
+        "source_meta": {
+            "ndl_partinfo": _meta("労働法", "ndl", sha="sha256:nd"),
+            "legallib": _meta("労働法", "legallib_extraction", sha="sha256:ll")},
+        "sources": {
+            "ndl_partinfo": [_n("第1章 労働契約", 1, print_page=1, kind="mixed_small")],
+            "legallib": [_n("第1章 労働契約", 1, print_page=1)]}}))
 
     return s
 
@@ -144,7 +171,8 @@ def build() -> list[dict]:
             "guard_blocked": [b["source"] for b in a["step2"].get("guard_blocked", [])],
             "projection_node_count": a["projection_node_count"],
             "pending_node_count": a["pending_node_count"],
-            "rejected_count": len(a["rejected"]),
+            "rejected_count": a["rejected_node_count"],
+            "non_adoptable_node_count": a["non_adoptable_node_count"],
             "base_source_distribution": a["base_source_distribution"],
             "authority": a["step4"].get("authority"),
             "adoptable": a["adoptable"],

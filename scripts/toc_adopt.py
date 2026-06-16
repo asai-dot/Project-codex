@@ -295,9 +295,11 @@ def step3_node_completion(book: dict, policy: dict, clustered: list[str], base: 
     rejected: list[dict] = []
     seen: set[str] = set()
 
-    def add_from(src: str, appended_from: str | None):
+    def add_from(src: str, appended_from: str | None, *, dedup: bool):
+        # dedup=True (append 元) は既出 title_norm を足さない (append_missing_only)。
+        # dedup=False (base) は base 内の同名節 (巻違い等) を locator で別ノードとして残す。
         for n in norm[src]:
-            if n["title_norm"] in seen:
+            if dedup and n["title_norm"] in seen:
                 continue
             mk = make_node(n, appended_from)
             if mk is None:
@@ -308,11 +310,11 @@ def step3_node_completion(book: dict, policy: dict, clustered: list[str], base: 
             nodes.append(mk)
             seen.add(n["title_norm"])
 
-    add_from(base, None)
+    add_from(base, None, dedup=False)
     base_count = len(nodes)
     for s in sorted(norm, key=lambda x: _priority_index(policy, x)):
         if s != base:
-            add_from(s, s)
+            add_from(s, s, dedup=True)
 
     # 章執筆者: ndl_partinfo contents から付与。
     for a in policy.get("step3_node_completion", {}).get("chapter_author_from", []):
@@ -329,7 +331,14 @@ def step3_node_completion(book: dict, policy: dict, clustered: list[str], base: 
             "base_count": base_count, "appended_count": len(nodes) - base_count}
 
 
-# ---- Step 4: 保護と合議 (D1 lane 分離 / votes=provenance_origin) -----------
+# ---- Step 4: 保護と合議 (N1: 4-lane node 分離 / votes=provenance_origin) -----
+
+# node-level lane (DD-TOCADOPT-001-IMPL-REAUDIT N1)。優先度の高い順に1つだけ割当てる。
+LANE_REJECTED = "rejected"               # 構造上 TOC 本文でない (partinfo volume_structure)
+LANE_NON_ADOPTABLE = "non_adoptable"     # provenance 完全性が無く採用不能 (snapshot hash 欠落)
+LANE_PENDING = "pending_human_review"    # 採用余地はあるが人手判断が要る (非合議/mixed_small/offset)
+LANE_ACCEPTED = "accepted"               # consensus かつ provenance 健全かつ contents
+
 
 def step4_protect_and_consensus(book: dict, policy: dict, clustered: list[str],
                                 nodes: list[dict], edition_status: str) -> dict:
@@ -343,32 +352,37 @@ def step4_protect_and_consensus(book: dict, policy: dict, clustered: list[str],
         for n in ns:
             origins_by_title.setdefault(n["title_norm"], set()).add(origin)
 
-    accepted, pending = [], []
+    accepted, pending, non_adoptable = [], [], []
     for node in nodes:
         votes = len(origins_by_title.get(node["title_norm"], set()))
         node["votes_by_provenance_origin"] = votes
         node["consensus"] = votes >= min_origins
-        # D1: accepted = consensus かつ provenance 健全かつ kind が review でない。
+        # N1: 1 node = 1 lane。優先度 non_adoptable > pending > accepted で振る。
+        if node.get("snapshot_missing"):
+            node["lane"], node["lane_reason"] = LANE_NON_ADOPTABLE, ["source_snapshot_missing"]
+            non_adoptable.append(node)
+            continue
         reasons = []
         if not node["consensus"]:
             reasons.append("non_consensus")
-        if node.get("snapshot_missing"):
-            reasons.append("source_snapshot_missing")
         if node.get("kind_status") == "review":
             reasons.append("partinfo_mixed_small_review")
         if node.get("needs_offset"):
             reasons.append("needs_offset")
         if reasons:
-            node["pending_reasons"] = reasons
+            node["lane"], node["lane_reason"] = LANE_PENDING, reasons
+            node["pending_reasons"] = reasons        # 後方互換
             pending.append(node)
         else:
+            node["lane"], node["lane_reason"] = LANE_ACCEPTED, []
             accepted.append(node)
 
     authority = resolve_authority(meta, edition_status=edition_status)
     return {"authority": authority["authority"], "authority_reason": authority["reason"],
-            "accepted": accepted, "pending": pending,
+            "accepted": accepted, "pending": pending, "non_adoptable": non_adoptable,
             "consensus_nodes": len(accepted), "pending_nodes": len(pending),
-            "min_origins": min_origins}
+            "non_adoptable_nodes": len(non_adoptable), "min_origins": min_origins,
+            "non_consensus_nodes": sum(1 for n in pending if "non_consensus" in n["lane_reason"])}
 
 
 # ---- 親子リンク (F2 baseline 用) + 統合 ------------------------------------
@@ -383,8 +397,33 @@ def _link_parents(ordered: list[dict]) -> None:
         stack.append(n)
 
 
+def _empty_envelope(book: dict, s1: dict, s2: dict, blocker: str) -> dict:
+    return {
+        "isbn": book.get("isbn", ""), "title": book.get("title", ""),
+        "step1": s1, "step2": s2, "step3": {"nodes": [], "rejected": []}, "step4": {},
+        "base_source": None,
+        "lanes": {"accepted": [], "pending_human_review": [], "rejected": [], "non_adoptable": []},
+        "accepted": [], "pending": [], "rejected": [], "non_adoptable": [],
+        "projection": [], "projection_node_count": 0, "pending_node_count": 0,
+        "rejected_node_count": 0, "non_adoptable_node_count": 0,
+        "projection_sha": _sha([]), "base_source_distribution": {},
+        "envelope": {"edition_identity": s1["status"], "base_source": None,
+                     "projection_sha": _sha([]), "policy_version": None,
+                     "apply_unit": "book_envelope", "apply_target": "accepted_node_set",
+                     "apply_eligibility": {"adoptable": False, "conditions": {}, "blockers": [blocker]}},
+        "adoptable": False, "adoptable_blockers": [blocker], "report_only": True,
+    }
+
+
 def adopt_book(book: dict, policy: dict | None = None) -> dict:
-    """1 冊に 5 ステップを適用し、採用 projection を返す (report-only)。"""
+    """1 冊に 5 ステップを適用し、book-envelope + node-lane を返す (report-only)。
+
+    N1 (REAUDIT): 二層構造。
+      - book-level envelope = apply 単位 (edition identity / base / projection_sha /
+        policy version / baseline 互換 / apply 可否)。apply 対象は **accepted node set のみ**。
+      - node-level lane ∈ {accepted, pending_human_review, rejected, non_adoptable}。
+        各 node はちょうど1レーン。accepted 以外を projection に混ぜない。
+    """
     p = policy or load_policy()
     s1 = step1_identity_gate(book, p)
     clustered = s1["clustered_with_nodes"]
@@ -392,46 +431,66 @@ def adopt_book(book: dict, policy: dict | None = None) -> dict:
     base = s2["base"]
     identity_ok = s1["status"] in APPLY_OK_STATUS
     if base is None:
-        return {"isbn": book.get("isbn", ""), "title": book.get("title", ""),
-                "step1": s1, "step2": s2, "step3": {"nodes": [], "rejected": []},
-                "step4": {}, "base_source": None, "accepted": [], "pending": [], "rejected": [],
-                "projection": [], "projection_node_count": 0, "projection_sha": _sha([]),
-                "base_source_distribution": {}, "adoptable": False, "adoptable_blockers": ["no_base"],
-                "report_only": True}
+        return _empty_envelope(book, s1, s2, "no_base")
+
     s3 = step3_node_completion(book, p, clustered, base)
     s4 = step4_protect_and_consensus(book, p, clustered, s3["nodes"], s1["status"])
 
     accepted = s4["accepted"]
     _link_parents(accepted)
-    pending = s4["pending"]
+    pending, non_adoptable = s4["pending"], s4["non_adoptable"]
+    rejected = s3["rejected"]
+    for r in rejected:                      # rejected レーンにも lane を明示。
+        r.setdefault("lane", LANE_REJECTED)
 
-    # D2: adoptable = identity ∧ consensus ∧ authority≠HR ∧ provenance(欠落なし)。
-    authority_ok = s4["authority"] != AUTH_HUMAN_REVIEW
-    consensus_ok = bool(accepted) and not pending
-    provenance_ok = all(n.get("source_hash") for n in accepted)
-    blockers = []
-    if not identity_ok:
-        blockers.append("identity_unresolved")
-    if not consensus_ok:
-        blockers.append("non_consensus_or_pending")
-    if not authority_ok:
-        blockers.append("authority_human_review")
-    if not provenance_ok:
-        blockers.append("provenance_incomplete")
+    # D2/N1: 名前付き AND 条件で apply 可否を決める (= GPT 指定の adoptable 定義)。
+    cond = {
+        "identity_ok": identity_ok,
+        "provenance_ok": all(n.get("source_hash") for n in accepted),
+        "consensus_ok": bool(accepted) and s4["non_consensus_nodes"] == 0,
+        "authority_resolved": s4["authority"] != AUTH_HUMAN_REVIEW,
+        "no_hard_blocker": not non_adoptable,
+    }
+    _blocker_of = {
+        "identity_ok": "identity_unresolved", "provenance_ok": "provenance_incomplete",
+        "consensus_ok": "non_consensus_or_empty", "authority_resolved": "authority_human_review",
+        "no_hard_blocker": "non_adoptable_nodes_present",
+    }
+    blockers = [_blocker_of[k] for k, v in cond.items() if not v]
     adoptable = not blockers
+
+    projection_sha = _sha(sorted(
+        (n["toc_node_id"], n["title_norm"], n.get("page"), n.get("parent_id"),
+         n["provenance_origin"]) for n in accepted))   # 入力順非依存
+    base_dist = _base_dist(accepted, base)
 
     return {
         "isbn": book.get("isbn", ""), "title": book.get("title", ""),
         "step1": s1, "step2": s2, "step3": s3, "step4": s4,
         "base_source": base,
-        "accepted": accepted, "pending": pending, "rejected": s3["rejected"],
-        "projection": accepted,                 # accepted のみが採用 projection (D1)
+        # node-level lane (N1) — 各 node はちょうど1レーン。
+        "lanes": {"accepted": accepted, "pending_human_review": pending,
+                  "rejected": rejected, "non_adoptable": non_adoptable},
+        "accepted": accepted, "pending": pending,            # 後方互換のエイリアス
+        "rejected": rejected, "non_adoptable": non_adoptable,
+        "projection": accepted,                              # accepted のみが採用 projection
         "projection_node_count": len(accepted),
         "pending_node_count": len(pending),
-        "projection_sha": _sha(sorted(
-            (n["toc_node_id"], n["title_norm"], n.get("page"), n.get("parent_id"),
-             n["provenance_origin"]) for n in accepted)),  # 入力順非依存
-        "base_source_distribution": _base_dist(accepted, base),
+        "rejected_node_count": len(rejected),
+        "non_adoptable_node_count": len(non_adoptable),
+        "projection_sha": projection_sha,
+        "base_source_distribution": base_dist,
+        # book-level envelope (N1) — apply 単位。
+        "envelope": {
+            "edition_identity": s1["status"],
+            "base_source": base,
+            "projection_sha": projection_sha,
+            "policy_version": p.get("policy_version"),
+            "base_source_distribution": base_dist,
+            "apply_unit": "book_envelope",
+            "apply_target": "accepted_node_set",
+            "apply_eligibility": {"adoptable": adoptable, "conditions": cond, "blockers": blockers},
+        },
         "adoptable": adoptable, "adoptable_blockers": blockers,
         "report_only": True,
     }

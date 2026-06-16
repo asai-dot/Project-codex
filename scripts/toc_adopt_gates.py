@@ -168,6 +168,60 @@ def gate7_report_only(adoptions: list[dict], corpus_result: dict | None = None) 
             "pass": not bad and corpus_ok, "non_report_only": bad}
 
 
+def gate8_lane_separation(adoptions: list[dict]) -> dict:
+    """gate_node_lane_structural_separation (REAUDIT N1)。
+
+    accepted / pending_human_review / rejected / non_adoptable が **構造上分離**され、
+    projection==accepted で、accepted には保留・拒否・非採用要因が混ざらないことを保証する。
+    """
+    v = []
+    for a in adoptions:
+        isbn = a.get("isbn")
+        lanes = a.get("lanes", {})
+        acc = lanes.get("accepted", [])
+        pend = lanes.get("pending_human_review", [])
+        rej = lanes.get("rejected", [])
+        nad = lanes.get("non_adoptable", [])
+
+        # (1) projection は accepted と同一実体。
+        if a.get("projection") is not acc:
+            v.append({"isbn": isbn, "why": "projection is not accepted lane"})
+
+        # (2) 各 node はちょうど1レーン (toc_node_id が複数レーンに跨らない)。
+        ids = [n.get("toc_node_id") for n in acc + pend + nad]
+        if len(ids) != len(set(ids)):
+            v.append({"isbn": isbn, "why": "node appears in multiple lanes"})
+
+        # (3) accepted は consensus かつ provenance 健全かつ lane タグが accepted。
+        for n in acc:
+            if not n.get("consensus"):
+                v.append({"isbn": isbn, "node": n.get("title_norm"), "why": "accepted but non_consensus"})
+            if not n.get("source_hash"):
+                v.append({"isbn": isbn, "node": n.get("title_norm"), "why": "accepted but no source_hash"})
+            if n.get("snapshot_missing"):
+                v.append({"isbn": isbn, "node": n.get("title_norm"), "why": "accepted but snapshot_missing"})
+            if n.get("needs_offset"):
+                v.append({"isbn": isbn, "node": n.get("title_norm"), "why": "accepted but needs_offset"})
+            if n.get("lane") != "accepted":
+                v.append({"isbn": isbn, "node": n.get("title_norm"), "why": f"lane tag={n.get('lane')}"})
+
+        # (4) non_adoptable は全て provenance 欠落要因。
+        for n in nad:
+            if not n.get("snapshot_missing"):
+                v.append({"isbn": isbn, "node": n.get("title_norm"), "why": "non_adoptable without snapshot_missing"})
+
+        # (5) rejected は採用/保留に出てこない (構造拒否)。
+        rej_ids = {n.get("title_norm") for n in rej}
+        if rej_ids & {n.get("title_norm") for n in acc + pend}:
+            v.append({"isbn": isbn, "why": "rejected node leaks into accepted/pending"})
+
+        # (6) envelope の apply_target は accepted_node_set。
+        env = a.get("envelope", {})
+        if env.get("apply_target") != "accepted_node_set":
+            v.append({"isbn": isbn, "why": f"apply_target={env.get('apply_target')}"})
+    return {"gate": "gate_node_lane_structural_separation", "pass": not v, "violations": v}
+
+
 def run_gates(books: list[dict], adoptions: list[dict], *,
               policy: dict | None = None,
               corpus_result: dict | None = None,
@@ -192,6 +246,7 @@ def run_gates(books: list[dict], adoptions: list[dict], *,
     results.append(gate5_no_node_invention(adoptions, by_isbn))
     results.append(gate6_votes_by_provenance_origin(adoptions, by_isbn))
     results.append(gate7_report_only(adoptions, corpus_result))
+    results.append(gate8_lane_separation(adoptions))
 
     checked = [g for g in results if g["pass"] is not None]
     return {
