@@ -1,0 +1,17 @@
+{
+  "generated_from": "d1law_live_taxonomy_20260612_nodes.csv (55,074)",
+  "scheme": "d1law-taikei",
+  "counts": {
+    "terms": 49733,
+    "statutes": 5341,
+    "skos_broader": 38910,
+    "parentless_L3": 10823,
+    "labels": 49733
+  },
+  "invariants_all_pass": true,
+  "fingerprints_sha256_sorted_nfc": {
+    "term_uris": "23bade6c355b04390eaaf7553dfac3ec5df3eb25fde7e89667f162512404f4cc",
+    "skos_broader_edges": "d3e22bc6c28e783d678b6ec801dbc0a539c2f03cd27746e30348ebfdcabbe1ab",
+    "statute_uris": "eb389a4935916b5961447924fcaa0b608d7ba7297ff8f9ccdd687392aa31b73e"
+  }
+}
