@@ -37,13 +37,17 @@ WHERE edge_type IN ('cites_statute','statute_ref','applies_statute')
 ALTER TABLE alo_edges VALIDATE CONSTRAINT ck_law_ref_two_tier;
 ```
 
-検収 gate（migration 専用・一時）:
+検収 gate（migration 専用・一時。v0.2.3 監査 note 反映: unknown branch の**全条件**を検査）:
 ```sql
 CREATE VIEW gate_backfill_unknown_unchecked AS
   SELECT edge_id FROM alo_edges
   WHERE edge_type IN ('cites_statute','statute_ref','applies_statute')
-    AND as_of_basis='unknown' AND (temporal_status IS DISTINCT FROM 'unchecked');
--- 合格: 0件（VALIDATE 前に空であること）
+    AND as_of_basis = 'unknown'
+    AND ( as_of_date IS NOT NULL
+       OR resolved_law_revision_id IS NOT NULL
+       OR temporal_status IS DISTINCT FROM 'unchecked'
+       OR claim_support_eligible IS DISTINCT FROM false );
+-- 合格: 0件（VALIDATE 前に空であること）。CHECK の unknown branch と完全一致を保証する。
 ```
 
 ## P0-2. resolved 版の as_of カバレッジ両端検査（valid_to 側の追加）
@@ -159,8 +163,27 @@ CREATE VIEW v_lawtime_resolved_ref AS
 - 値域・テーブル定義・二段 resolver の関数シグネチャ・append-only トリガは v0.2.2 のまま。
 - resolver の `LIMIT 1` 自体は維持（挙動変更はせず、曖昧ケースを P0-4 gate で**事前に空にする**運用）。
 
+## 監査・ratify 状況（2026-06-11）
+
+- GPT お目付け役 `DDLAWTIME_PASS_WITH_NOTES`（P0-1〜P0-4 CLOSED〔うち P0-1/P0-4 は CLOSED_WITH_NOTE〕、
+  R-1 採用可）。即時 blocker なし。P1 へ進行可。
+- production apply 条件: branch dry-run → 全 lawtime gate 0件 → R-1 接続 dry-run → owner ratify。
+- **重要 note（R-1）**: `lawtime_resolved=true` は「lawtime 上で版解決済み」を意味するだけで、
+  **claim_support の充分条件ではない**。LAWSUBTRANS 側で accepted ∧ disputed=false ∧ evidence ∧
+  counter 無し を併せて満たして初めて出口利用可能。本注記を LAWSUBTRANS の P1 gate に明示する
+  （`lawtime_resolved_not_sufficient_for_claim_support`）。
+
+owner ratify メモ案:
+```text
+DD-LAWTIME-001 v0.2.3 accepted as production-DDL candidate with notes.
+Closes v0.2.2 MODIFY_REQUIRED P0-1〜P0-4 and adds resolved lawtime views for DD-LAWSUBTRANS.
+Production apply remains conditional on branch dry-run, all lawtime gates empty,
+LAWSUBTRANS connection dry-run, and owner ratify.
+Note: lawtime_resolved=true is NOT by itself claim_support eligibility.
+```
+
 ## changelog
 - v0.2.3 (2026-06-11): v0.2.2 `DDLAWTIME_MODIFY_REQUIRED` の P0-1〜P0-4 を閉鎖。
-  ①NOT VALID→backfill→VALIDATE の migration 順序＋検収 gate。②resolved 版カバレッジの両端検査。
-  ③claim_support を current/superseded に限定（状態主張フラグは将来切り出し）。
+  ①NOT VALID→backfill→VALIDATE の migration 順序＋検収 gate（unknown branch 全条件を検査・監査note反映）。
+  ②resolved 版カバレッジの両端検査。③claim_support を current/superseded に限定（状態主張フラグは将来切り出し）。
   ④succession 期間重なりの曖昧検出 gate。＋ LAWSUBTRANS 接続用 resolved lawtime view（R-1）新設。

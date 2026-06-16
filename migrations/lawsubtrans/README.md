@@ -11,6 +11,8 @@ PLAN v0.1 の **P1** に相当。**まだ本番 apply していない。**
 | 002 | `002_append_only_triggers.sql` | T1–T4,T6 の content 不変トリガ（T5 は除外） |
 | 003 | `003_current_views.sql` | §3.7 current view（review-event 優先・T2 は candidate 起点） |
 | 004 | `004_gates.sql` | §4 品質 gate 13本（違反行を返す view。CI で空を assert） |
+| 005 | `005_lawtime_connection_gates.sql` | lawtime 接続 gate 3本（DD-LAWTIME v0.2.3 RESULT §6 由来。R-1 view 依存・lawtime apply まで HOLD） |
+| ── | `verify_dry_run.sql` | branch dry-run 検証器（004+005 の全 gate を 0件 assert。違反で EXCEPTION 停止） |
 
 ## 依存
 
@@ -18,6 +20,13 @@ PLAN v0.1 の **P1** に相当。**まだ本番 apply していない。**
 - **DD-LAWTIME v0.2.3 R-1 view**: `v_lawtime_formal_status` / `v_lawtime_resolved_ref`
   （gate 4・9・13 が参照）。**lawtime v0.2.3 が ratify・apply される前は当該 gate のみ HOLD**、
   他テーブル・トリガ・view・gate（lawtime 非依存）は先行 apply 可能。
+
+## 実行の前提（正直な現状）
+
+本番 branch dry-run には **法令レイヤ（alo_law_work / alo_statutes / alo_edges）が実体化済みの DB** が要る。
+現在の Supabase `alo-connect` の public は空で、土台テーブルも既存行もこの環境の DB に無い。したがって
+**実 dry-run は「法令レイヤ＋lawtime v0.2.2/v0.2.3 を materialize した環境」が前提**であり、本スレッドでは
+「dry-run が即走れる SQL 一式（001–005 ＋ verify_dry_run.sql）」を完成させるところまでが上限。
 
 ## 検証方針（重要）
 
