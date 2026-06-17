@@ -45,6 +45,7 @@ def main() -> int:
         json.dumps(sample, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
 
     # 2) baseline equivalence report: source 入力順を反転した candidate と gate1 同値検査。
+    #    must_fix: node set / parent relation / page locator / base distribution / projection hash の5次元を明示。
     baseline = export_baseline(adoptions)
     cand_rows = []
     for b in books:
@@ -54,10 +55,22 @@ def main() -> int:
         cand_rows.append(adopt_book(rev, p))
     candidate = export_baseline(cand_rows)
     g1 = gate1_reproduces_projection(baseline, candidate)
+
+    def _dim(getter):
+        return all(getter(baseline[i]) == getter(candidate[i]) for i in baseline)
+    dimensions = {
+        "node_set": _dim(lambda r: {(n["toc_node_id"], n["title_norm"], n["page_start"],
+                                     n["provenance_origin"]) for n in r["nodes"]}),
+        "parent_relation": _dim(lambda r: {(n["toc_node_id"], n["parent_id"]) for n in r["nodes"]}),
+        "page_locator": _dim(lambda r: {(n["toc_node_id"], n["page_start"], n["page_end"]) for n in r["nodes"]}),
+        "base_source_distribution": _dim(lambda r: r["base_source_distribution"]),
+        "projection_hash": _dim(lambda r: r["projection_sha"]),
+    }
     (OUTDIR / "baseline_equivalence_report.json").write_text(
         json.dumps({"gate1": g1, "books_compared": len(baseline),
-                    "method": "source 入力順を反転した candidate を export_baseline 同値比較 "
-                              "(node集合・親子・ページ・base分布・projection_sha)"},
+                    "dimensions": dimensions, "all_dimensions_equivalent": all(dimensions.values()),
+                    "method": "source 入力順を反転した candidate を export_baseline で同値比較 "
+                              "(node集合・親子関係・ページlocator・base分布・projection_sha の5次元)"},
                    ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
 
     # 3) lane + envelope summary (全冊)。

@@ -12,7 +12,10 @@
       "OQ-2": "granularity_guard 既定 0.2、ただし source 別に再較正可能な parameter",
       "OQ-3": "弁コム↔legallib 同一本は粒度優先で可、ただし provenance_origin 同一の票水増し禁止",
       "OQ-4": "Fork1 policy は本 DRAFT が既存 dry-run を完全再現した後に廃止 (即廃止不可)"
-    }
+    },
+    "production_use_allowed": false,
+    "parallel_run_period": "本 DRAFT と既存 app/data/toc_merge_policy.json (v2) + data/toc_merge_policy_legallib.json (Fork1) は、reproduction gate green + owner ratify までは並走。Fork1 即廃止は HOLD。",
+    "ci_release_guard": "tests/test_tocadopt.py::test_release_guard が (a) production_use_allowed=false (b) release_boundary.report_only=true (c) policy_version に DRAFT を含む (d) 本流 production policy パスと別物 であることを CI で固定する。"
   },
   "policy_version": "unified_v0.1_DRAFT",
   "principle": "源の優劣でなく本/ノード単位で最良の中身を合成採用。priority は tie-break 専用。",

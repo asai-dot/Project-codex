@@ -1,5 +1,13 @@
 {
+  "all_dimensions_equivalent": true,
   "books_compared": 12,
+  "dimensions": {
+    "base_source_distribution": true,
+    "node_set": true,
+    "page_locator": true,
+    "parent_relation": true,
+    "projection_hash": true
+  },
   "gate1": {
     "base_distribution_mismatch": [],
     "base_source_mismatch": [],
@@ -10,5 +18,5 @@
     "pass": true,
     "sha_mismatch": []
   },
-  "method": "source 入力順を反転した candidate を export_baseline 同値比較 (node集合・親子・ページ・base分布・projection_sha)"
+  "method": "source 入力順を反転した candidate を export_baseline で同値比較 (node集合・親子関係・ページlocator・base分布・projection_sha の5次元)"
 }

@@ -177,6 +177,54 @@ def test_projection_sha_order_independent() -> None:
               f"{r['scenario']}: projection_sha が source 順依存")
 
 
+def test_release_guard() -> None:
+    """REAUDIT2 must_fix#3: unified DRAFT policy が本番 policy として参照されないことを固定。
+
+    confidence map 未使用 (REAUDIT2 should_fix#1) も policy `confidence_usage` で明示。
+    """
+    p = load_policy()
+    check(p.get("_draft", {}).get("production_use_allowed") is False, "DRAFT: production 不許可")
+    check("DRAFT" in (p.get("policy_version") or ""), "DRAFT: policy_version に DRAFT")
+    check(p.get("release_boundary", {}).get("report_only") is True, "DRAFT: report_only")
+    for must in ("production apply", "canonical projection apply", "policy本番切替"):
+        check(must in p["release_boundary"]["hold"], f"DRAFT: HOLD に {must}")
+    # 本流 production policy パスと別物 (このファイルは *_DRAFT.json)。
+    from toc_adopt import _DEFAULT_POLICY  # noqa
+    check("DRAFT" in _DEFAULT_POLICY.name and _DEFAULT_POLICY.name != "toc_merge_policy.json",
+          "DRAFT: 本流 production policy ファイルと別物")
+    # confidence map は未使用であることを policy に明記 (should_fix#1)。
+    check("confidence_usage" in p, "should_fix: confidence 未使用を明記")
+
+
+def test_unresolved_manifestation_excluded() -> None:
+    """REAUDIT2 must_fix#4: 同定未解決 manifestation は合議・projection に参加しない。"""
+    p = load_policy()
+    # 別版疑い (suspected_different) の源は connected component 外 → human_review。
+    book = {
+        "isbn": "9784100009001", "title": "未解決版テスト",
+        "source_meta": {
+            "legallib": {"title": "民法", "publisher": "有斐閣", "year": "2018",
+                         "page_basis": "print_page", "provenance_origin": "legallib_extraction",
+                         "source_sha256": "sha256:ll", "edition": "第4版"},
+            "bencom": {"title": "民法", "publisher": "有斐閣", "year": "2023",
+                       "page_basis": "print_page", "provenance_origin": "bengo4_redist",
+                       "source_sha256": "sha256:bc", "edition": "第7版"}},
+        "sources": {
+            "legallib": [{"title": "第1章 総則", "depth": 1, "print_page": 1}],
+            "bencom": [{"title": "別版限定章", "depth": 1, "print_page": 1}]}}
+    a = adopt_book(book, p)
+    check(a["step1"]["status"] not in APPLY_OK_STATUS, "未解決: identity 未解決")
+    check("bencom" not in a["step1"]["clustered_with_nodes"], "未解決: 別版源は合議外")
+    # 別版源 (bencom) の固有 node は accepted/pending/projection のどこにも出ない。
+    titles = {n["title_norm"] for n in a["accepted"] + a["pending"] + a["non_adoptable"]}
+    check("別版限定章" not in titles, "未解決: 別版源の node は採用候補に出ない")
+    check(a["projection_node_count"] == 0 or all(
+        n["provenance_origin"] != "bengo4_redist" for n in a["accepted"]),
+        "未解決: 別版源は projection に参加しない")
+    check(a["adoptable"] is False and "identity_unresolved" in a["adoptable_blockers"],
+          "未解決: adoptable False (identity blocker)")
+
+
 def test_all_gates() -> None:
     """§4 の 7 gate + N1 lane 分離 gate8 を実走 (gate1=export_baseline / gate2=known_conflict)。"""
     p = load_policy()
@@ -210,6 +258,8 @@ def main() -> int:
                      ("test_must_fix_invariants", test_must_fix_invariants),
                      ("test_safety_invariants", test_safety_invariants),
                      ("test_projection_sha_order_independent", test_projection_sha_order_independent),
+                     ("test_release_guard", test_release_guard),
+                     ("test_unresolved_manifestation_excluded", test_unresolved_manifestation_excluded),
                      ("test_all_gates", test_all_gates)):
         print(f"• {name}")
         fn()
