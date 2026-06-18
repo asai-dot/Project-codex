@@ -3,8 +3,8 @@
   "title": "募集株式の発行（会社法）",
   "spine_ref": "commercial_nonlitigation",
   "status": "scaffold_pre_audit",
-  "_comment": "★これは構造の雛形(scaffold)であり権威ある出力ではない。局面・分岐・根拠条文・期限・必要書類は『会社法実務スケジュール』等の段取り本＋条文(e-Gov)から抽出し、owner/GPT が監査して確定する。各 node の source は要差し替え(ページ番号)。分岐(公開会社/非公開会社)が構造として保持できることの実証用。",
-  "source_books": ["会社法実務スケジュール (ISBN 要記入)"],
+  "_comment": "★これは構造の雛形(scaffold)であり権威ある出力ではない。局面・分岐・根拠条文・期限・必要書類は『会社法実務スケジュール』等の段取り本＋条文(e-Gov)から抽出し、owner/GPT が監査して確定する。各 node の source は要差し替え(ページ番号)。分岐(公開会社/非公開会社)が構造として保持できることの実証用。実データ由来の本物の例は commercial_share_delivery.json(株式交付・bencom綺麗TOC由来) を参照。",
+  "source_books": ["会社法実務スケジュール (ISBN 9784788291249, 新日本法規)"],
   "entry": "decide_issue",
   "terminal": ["registration"],
   "nodes": [

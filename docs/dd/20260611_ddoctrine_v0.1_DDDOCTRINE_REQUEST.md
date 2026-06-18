@@ -14,7 +14,7 @@ box_path: 浅井/claude/handoffs/gpt_ometsuke/to_gpt/20260611_ddoctrine_v0.1_DDD
 result_label: DDDOCTRINE_PASS_WITH_NOTES
 result_file: docs/dd/20260611_ddoctrine_v0.1_DDDOCTRINE_RESULT.md   # from_gpt file_id 2278615307537
 reflected: true   # F1-F4 を dd_doctrine v0.2 に反映、§12を別冊へ、summary 新設
-box_processed_pending: true   # to_gpt/processed/ への物理退避は owner/lane 運用 (未実施)
+box_processed: true   # to_gpt/processed/ へ物理退避済 (2026-06-11, file_id 2278542621212)
 ---
 
 # 20260611 ddoctrine v0.1 — GPT Pro レビュー REQUEST（法情報DB 設計思想ドクトリン）
