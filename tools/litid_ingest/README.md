@@ -41,8 +41,22 @@ python3 field_profile.py CATALOG.jsonl --source lionbolt \
 Mac→`raw_intake/legallib/` ドロップ後、突合より先にこれをかけて
 ISBN形式・TOC構造・キー充足率を確認 → 問題なければ `isbn_ndl_lane` に合流。
 
+## manifest_gate.py — §7-A 契約ゲート (enforcement)
+
+`field_profile.py --manifest-stub` が出すのは下書き。取得時メタ（TODO 印）が埋まらないまま
+投入されると append-only でも永久に取り戻せない（監査 must_fix #1）。本ゲートは manifest.json を
+検証し、**必須欠落／TODO 残り／値域違反／sha256 不正があれば exit 1 で投入をブロック**する。
+
+```bash
+python3 manifest_gate.py raw_intake/legallib/20260618/manifest.json
+# PASS -> exit 0,  FAIL -> 違反列挙 + exit 1
+```
+
+ワークフロー: `field_profile --manifest-stub` で stub 生成 → 人が TODO を埋める →
+`manifest_gate` 通過（exit 0）して初めて ingest 可。stub のまま投げると必ず止まる。
+
 ## テスト
 
 ```bash
-python3 -m pytest tools/litid_ingest/tests/ -q
+python3 -m pytest tools/litid_ingest/tests/ -q   # 15 passed
 ```
