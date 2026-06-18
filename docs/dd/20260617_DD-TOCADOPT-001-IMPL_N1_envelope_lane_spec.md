@@ -60,6 +60,13 @@ envelope = {
 
 `adoptable = identity_ok ∧ provenance_ok ∧ consensus_ok ∧ authority_resolved ∧ no_hard_blocker`。
 
+### apply 粒度 (owner ratify 2026-06-17, OQ-5)
+
+apply は **book 単位 all-or-nothing** を当面維持する。`adoptable=True` の book のみ apply 対象とし、
+1 node でも non_adoptable / non_consensus が残れば book 全体を保留する (安全側)。
+node 単位 partial-apply (accepted node set だけ apply し book を partial-adoptable とする) は
+**実 apply 設計時に再検討**する未決事項であり、report-only の現段階では採用しない。
+
 ## 3. なぜ二層か (設計根拠)
 
 - **apply の原子性は book 単位**: projection_sha・base 源・policy version は book で1つ。

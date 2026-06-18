@@ -11,7 +11,9 @@
       "OQ-1": "legallib > toc_pdf を維持 (2026-06-15。v2 D-5 ratify を踏襲。toc_pdf は抽出レイヤ・legallib はPhase0でクリーンと実証)",
       "OQ-2": "granularity_guard 既定 0.2、ただし source 別に再較正可能な parameter",
       "OQ-3": "弁コム↔legallib 同一本は粒度優先で可、ただし provenance_origin 同一の票水増し禁止",
-      "OQ-4": "Fork1 policy は本 DRAFT が既存 dry-run を完全再現した後に廃止 (即廃止不可)"
+      "OQ-4": "Fork1 policy は本 DRAFT が既存 dry-run を完全再現した後に廃止 (即廃止不可)",
+      "OQ-5": "apply 粒度は当面 book 単位 all-or-nothing を維持 (2026-06-17 owner ratify, REAUDIT2 N1-a)。node 単位 partial-apply は実 apply 設計時に再検討。report-only の現段階では影響なし。",
+      "OQ-6": "v0.3.0 report-only 実装を closed packet として受理し次ゲート(実baseline reproduction)へ進める (2026-06-17 owner ratify)。production apply は HOLD 継続。"
     },
     "production_use_allowed": false,
     "parallel_run_period": "本 DRAFT と既存 app/data/toc_merge_policy.json (v2) + data/toc_merge_policy_legallib.json (Fork1) は、reproduction gate green + owner ratify までは並走。Fork1 即廃止は HOLD。",
