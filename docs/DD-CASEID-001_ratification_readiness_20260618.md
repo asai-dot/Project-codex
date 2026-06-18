@@ -60,19 +60,21 @@ ratify を「条件付き」にできるよう、未決を分類した：
 浅井さんが以下を確認できれば accept 可能：
 
 ```
-[ ] A. 前提同意: 「特定(自然キー)」と「ID確定(名寄せ・採番)」を別レイヤにする思想で良い
-        （= 2026-06-04 に確定済みの再確認）
-[ ] B. case_key(ULID不変)を事務所IDのanchorにすることに同意
-[ ] C. court_code → forum_code 一般化（準司法・ADR・行政庁を収容）に同意
-[ ] D. DD-CASE-001(cases母型)との重複排除メモ(S2)を accept条件に含めることに同意
-[ ] E. independent_meaning_audit(GPT Pro)を accept前 or accept直後どちらで通すか指定
-        ( ) accept前に監査  ( ) 条件付きacceptし監査はNOTESで並走
+[x] A. 前提同意: 「特定(自然キー)」と「ID確定(名寄せ・採番)」を別レイヤにする思想で良い  ← 2026-06-18 OK
+[x] B. case_key(ULID不変)を事務所IDのanchorにすることに同意                          ← 2026-06-18 OK
+[x] C. court_code → forum_code 一般化（準司法・ADR・行政庁を収容）に同意              ← 2026-06-18 OK
+[x] D. DD-CASE-001(cases母型)との重複排除メモ(S2)を accept条件に含めることに同意       ← 2026-06-18 OK
+[x] E. independent_meaning_audit(GPT Pro) → **accept前に監査を回す**を指定           ← 2026-06-18 決定
 [ ] F. 昇格の意味の確認:
         accept = 「設計確定(_accepted_v1.0)」であって、
         DDL/backfill/canonical mint の実装GOではない（実装は別gate G2）
 ```
 
-→ A–D に同意・E を指定できれば、`candidate v0.1` → `_accepted_v1.0`(または `_accepted_v1.0_with_notes`) へ昇格可能。
+### オーナー決定記録（2026-06-18）
+- **A–D: 同意済み。**
+- **E: accept前に GPT Pro 独立意味監査を回す**（条件付きacceptではなく、監査通過を accept の前提にする）。
+- → よって昇格シーケンスは: **GPT Pro意味監査(S1.5) → 通過 → DD-CASE-001 reconcile(S2) → `_accepted_v1.0` 昇格**。
+- 監査依頼: `docs/audit/20260618_DD-CASEID-001_meaning_audit_REQUEST.md`（Box `to_gpt` へ投函済／投函予定）。
 
 ---
 
