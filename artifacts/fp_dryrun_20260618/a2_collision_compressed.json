@@ -1,0 +1,35 @@
+{
+  "task": "A2_collision_compressed",
+  "wo_id": "WO-BIBREC-FPDRYRUN-RECFIX-20260618",
+  "supabase_project": "nixfjmwxmgugiiuqfuym",
+  "executed_at_utc": "2026-06-18T01:01Z",
+  "gate": "READ_ONLY_STRICT",
+  "txn_read_only": "on",
+  "method": "Phase0 で holdings 側に残った 365 衝突グループ (bookdx.holdings を title_norm+publisher_norm で count>1) を、full fingerprint_v1 = title+publisher+page_count+pub_year+edition で再突合。",
+  "enrichment_note": "WO は raw jsonb から pub_year/page_count を補う想定だったが、実測では bookdx.holdings.raw / biblio.bib_records.raw / bookdx.candidates.raw は全行 NULL。代替として bib_records 列で補完: pub_year=bib_records.pub_year列, page_count=bib_records.physical(数値文字列)パース, edition=bib_records.edition列。holdings.internal_id = bib_records.bib_id で結合(両者キー一致)。",
+  "base_collision_groups": 365,
+  "base_rows": 1015,
+  "enrichment_coverage": {
+    "rows_matched_to_bibrec": 1015,
+    "rows_with_pub_year": 995,
+    "rows_with_page_count": 875,
+    "rows_with_edition": 166
+  },
+  "after_full_fingerprint": {
+    "distinct_full_fingerprints": 956,
+    "residual_collision_buckets": 35,
+    "rows_still_colliding": 94,
+    "base_groups_fully_resolved": 338,
+    "base_groups_still_colliding": 27
+  },
+  "compression_summary": {
+    "before_collision_groups": 365,
+    "after_residual_groups": 27,
+    "resolved_groups": 338,
+    "resolution_rate": "92.6%",
+    "residual_rows": 94
+  },
+  "verdict": "365 衝突グループ中 338 (92.6%) が full fingerprint(page_count/pub_year/edition補完)で解消。残 27 グループ(94行)は page_count/pub_year/edition いずれも同一 or 欠落で機械的に分離不能=真の要手当て(split_required寄り)。",
+  "mutations": 0,
+  "minted_biblio_items": 0
+}
