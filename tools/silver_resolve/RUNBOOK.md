@@ -55,7 +55,13 @@ python3 tools/silver_resolve/silver_cite_id.py \
 - strong 件数 = issue_page_exact 単一 = **P1 で staging write 候補**になる集合。
 - 未解決理由内訳 (`locator_unresolvable` / `db_unbuilt`) → 正規化辞書 or 号fallback の改善対象。
 
-**反復改善ループ**: report の未解決・多候補を見て `--norm-dict` に表記ゆれを追記 → 再実行 → 歩留まり比較。
+**反復改善ループ**: report の未解決・多候補を見て表記ゆれを拾い、`--norm-dict` を更新 → 再実行 → 歩留まり比較。
+
+> **★誌名正規化は再発明しない**: `--norm-dict` は雑誌レーン (DD-PERIODICAL-001) の既存正本
+> （`periodical_edges_normalize.py` の `ALIAS` ＋ `build/periodical_lane_20260611/journal_issn_map.jsonl`）
+> から生成する。silver-1 の照合は雑誌レーンと同じ正規化に揃え、可能なら `hanrei_published_in` の
+> `issue_id`（`issn:…#…` / `jp:…#…`）名前空間で突合する。別系統の号キーを新設しないこと。
+> 詳細は design/vocab_bottleneck/WORKER_TASK_PACKET_P0_SILVER_DRYRUN_20260619.md §1.5。
 
 ## 3. silver-2: TOC → 論点section
 
