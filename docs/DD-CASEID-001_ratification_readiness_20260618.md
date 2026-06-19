@@ -33,10 +33,10 @@ DD-CASEID-001 §4 は self-accept を禁じ、昇格に3条件を課している
 | 条件 | 状態 | 根拠 |
 |---|---|---|
 | deterministic_self_verification | ✅ **done** | case_number_norm解析率 NII 100.00%(65,853/65,855) / D1 99.94%(68,099/68,141)、**NII∩D1 norm一致 12,661**(dedup収束を実証)、forum未マップ0で123コード、fixture pass |
-| independent_meaning_audit (GPT Pro) | ⏳ **pending** | 目付け役監査が未実施（D1-LIC等 他DDは監査通過実績あり） |
-| owner_approval (浅井 ratify) | ⏳ **pending** | ← **本パッケージが解こうとしている地点** |
+| independent_meaning_audit (GPT Pro) | ✅ **PASS_WITH_NOTES**（2026-06-19） | gate=DDCASEID。blocking must_fix無し→design accept可。accept-notes 5点付き。詳細: `audit/DDCASEID_audit_result_reflect_20260618.md` / `audit/...DDCASEID_RESULT.md`(Box 2294753110991) |
+| owner_approval (浅井 ratify) | ⏳ **ratify待ち** | ← 監査通過。残るはオーナーの ratify のみ |
 
-→ 機械的検証は**通っている**。残るは「意味監査」と「オーナー承認」の2つの人手gate。
+→ 机上検証＋意味監査は**通った**。残るは**オーナーの ratify 1点**（accept-notes 5点 ＋ reconcile枠組み込み）。
 
 ---
 
