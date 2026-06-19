@@ -1,0 +1,23 @@
+{
+  "version": 0.1,
+  "_comment": "bencom 手続本の章構造(Supabase biblio.bib_toc)から bottom-up 抽出した経験的手続インベントリ。a-priori な procedure_spine.json(24類型)の裏付け/反証に使う。重要: 章の意味は本依存——『手続群』のことも『局面(steps)』のこともある(kind で明示)。経験的な手続単位は TOC の level に固定できない。",
+  "source": "Supabase biblio.bib_toc (bencom-library, 実データ)",
+  "procedures": [
+    {"name": "合併", "系統": "民事·商事", "spine_ref": "commercial_nonlitigation", "kind": "procedure", "source_book": "商業登記全書/7 組織再編の手続〈第3版〉", "source_bib_id": "NOBN_20220928_商業登記全書7_組織再編の手続〈第3版〉_01", "source_chapter": "第2編 合併"},
+    {"name": "会社分割", "系統": "民事·商事", "spine_ref": "commercial_nonlitigation", "kind": "procedure", "source_book": "商業登記全書/7 組織再編の手続〈第3版〉", "source_chapter": "第3編 会社分割"},
+    {"name": "株式交換", "系統": "民事·商事", "spine_ref": "commercial_nonlitigation", "kind": "procedure", "source_book": "商業登記全書/7 組織再編の手続〈第3版〉", "source_chapter": "第4編 株式交換と株式移転"},
+    {"name": "株式移転", "系統": "民事·商事", "spine_ref": "commercial_nonlitigation", "kind": "procedure", "source_book": "商業登記全書/7 組織再編の手続〈第3版〉", "source_chapter": "第4編 株式交換と株式移転"},
+    {"name": "組織変更", "系統": "民事·商事", "spine_ref": "commercial_nonlitigation", "kind": "procedure", "source_book": "商業登記全書/7 組織再編の手続〈第3版〉", "source_chapter": "第5編 組織変更"},
+    {"name": "株式交付", "系統": "民事·商事", "spine_ref": "commercial_nonlitigation", "kind": "procedure", "source_book": "商業登記全書/7 組織再編の手続〈第3版〉", "source_chapter": "第6編 株式交付", "flow": "pipeline/procedure_flow/commercial_share_delivery.json"},
+    {"name": "通常清算", "系統": "民事·商事", "spine_ref": null, "kind": "procedure", "source_book": "株式会社・各種法人別 清算手続と書式", "source_bib_id": "NOBN_20220101_株式会社・各種法人別_清算手続と書式_01", "source_chapter": "第2章 株式会社の清算（通常清算）", "note": "spine に無い(特別清算のみ)"},
+    {"name": "特別清算", "系統": "民事·倒産", "spine_ref": "insolvency_special_liquidation", "kind": "procedure", "source_book": "株式会社・各種法人別 清算手続と書式", "source_chapter": "第3章 株式会社の清算（特別清算）"},
+    {"name": "清算(法人類型別: 医療/社福/NPO/宗教/学校/持分会社/士業法人)", "系統": "民事·商事", "spine_ref": null, "kind": "dimension", "source_book": "株式会社・各種法人別 清算手続と書式", "source_chapter": "第4〜11章", "note": "spine に無い『法人類型』軸。手続は entity type で枝分かれする"},
+    {"name": "略式手続", "系統": "刑事", "spine_ref": "criminal_summary", "kind": "flow_steps", "source_book": "略式手続の理論と実務【第二版】", "source_bib_id": "NOBN_20171201_略式手続の理論と実務【第二版】_01", "source_chapter": "第1〜8章(意義/請求/審査/発付/告知/効力/正式裁判)", "note": "本の章=局面(steps)。spine の1類型で粒度は正しい"}
+  ],
+  "reconciliation": {
+    "spine_underresolved": ["commercial_nonlitigation → 合併/会社分割/株式交換/株式移転/組織変更/株式交付 に分割すべき(実データで6手続)"],
+    "spine_gap": ["通常清算 が spine に無い(特別清算のみ)"],
+    "spine_missing_dimension": ["清算は法人類型(株式会社/医療/社福/NPO/宗教/学校/持分会社/士業)で枝分かれ。spine に entity-type 軸が無い"],
+    "granularity_caveat": ["level-1 章 = 手続 とは限らない。組織再編=章は手続群、略式手続=章は局面。経験的手続単位は TOC level に固定できない→ kind で明示し owner 監査"]
+  }
+}

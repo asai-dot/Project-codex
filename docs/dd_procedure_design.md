@@ -152,6 +152,26 @@ procedure_type(spine)
 
 ---
 
+## 9. spine の bottom-up 裏付け（実データ照合・止揚の実証）
+
+「spine は上から作るな、本の業務一覧から立ち上げろ」を**実データで検算**した。bencom 手続本の章構造
+（Supabase `biblio.bib_toc`）から経験的インベントリ `pipeline/procedure_inventory.json` を作り、
+`scripts/spine_reconcile.py` で a-priori spine(24類型) と照合：
+
+- **過少解像（最大の発見）**：spine「商事・会社非訟」**1類型に、実データでは6手続**
+  （合併／会社分割／株式交換／株式移転／組織変更／株式交付）がぶら下がる ＝ **要分割**。
+- **欠落**：spine は特別清算のみ。**通常清算**が無い。
+- **欠けた軸**：清算は**法人類型別**（株式会社/医療/社福/NPO/宗教/学校/持分会社/士業）で枝分かれ。
+  spine に entity-type 軸が無い。
+- **粒度の caveat**：level-1 章 ＝ 手続 とは限らない。組織再編＝章は手続群、略式手続＝章は局面(steps)。
+  **経験的手続単位は TOC level に固定できない**（`kind` で明示し owner 監査）。
+
+→ **結論**: 24類型は a-priori の骨にすぎず、**実手続インベントリで分割・補完すべき**（特に商事系）。
+spine の改訂は owner 監査の領分。本ツールは本が増えるほど裏付けが増え、過少解像/欠落を機械的に出す。
+
+---
+
 _v0.3（巨人の肩に乗る）。手続フローは**手作りしない**。出所＝手続法の条文構造(①/e-Gov・民訴刑訴は保有)
 ＋実務書/コンメンタールのTOC(③・保有)＋裁判所HP。突合して生成し、owner/GPT は監査(三点測量流)。
-layer0=分類(procedure_match)は入口、本丸=node 単位フロー(§8)。spine=`pipeline/procedure_spine.json`。_
+layer0=分類(procedure_match)は入口、本丸=node 単位フロー(§8)。spine=`pipeline/procedure_spine.json`、
+bottom-up 裏付け=`procedure_inventory.json`＋`spine_reconcile.py`(§9)。_
