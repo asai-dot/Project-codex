@@ -60,6 +60,20 @@ python3 tools/gpt_audit/alo_gpt_audit.py --root /path/to/gpt_ometsuke status
 | `health [--json]` | 監査レーン health report | 不要 |
 | `gate-check <op>` | 操作の承認要否を判定 | — |
 
+## ワーカー差配 (設計中 v0.1・未実装)
+
+司令塔 (claudehead) が自分で実行まで抱えて枠が枯れる問題への対処として、
+`action-queue` に「**担当 (assignee)**」を1段足し、実行を3ワーカー
+(`local` / `codex` / `worker_cc`) の別枠へ分散する設計を検討中。
+
+- 司令塔は分解・差配だけ。手は動かさない (枠を温存)。
+- 各ワーカーは `worklist <assignee>` で自分の担当ぶんを**自分で拾う** (読み取りのみ)。
+- 単一書き手 (ファイル移動) は `local` 1台に固定。GPT/claudehead は担当に含めない
+  (自己監査の禁止)。
+
+詳細・差配表・実装ポイント・テスト計画は
+**`WORKER_DELEGATION_DESIGN_v0.1_20260619.md`** を参照 (ratify 後に実装)。
+
 ## 監査ループ (理想形)
 
 ```
