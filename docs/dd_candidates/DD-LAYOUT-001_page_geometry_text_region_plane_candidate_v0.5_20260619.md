@@ -1,6 +1,7 @@
 # DD-LAYOUT-001 v0.5 — page 幾何・text-region 面（自己完結 ratify 版）candidate
 
 > **id**: DD-LAYOUT-001 / **version**: candidate v0.5 / **supersedes**: v0.4（および v0.3 を内包・自己完結化）
+> **lifecycle**: **accepted**（owner 浅井 ratify 2026-06-19、設計のみ）。実装/DDL/DB/mint/Box mutation/OCR/embedding は**別ゲートで HOLD**（accepted≠deployed）。
 > **owner**: 浅井 / **author**: 番頭(リモートClaude) / **date**: 2026-06-19 JST
 > **gate**: 設計のみ candidate。DDL/DB/Box mutation/mint/OCR/embedding/canonical 発番は HOLD。
 > **改訂理由（v0.4→v0.5）**: GPT Pro 再監査 `DDLAYOUT_PASS_WITH_NOTES`（RESULT Box 2295584135873）反映。**v0.4 追加（block_ref/projection）は PASS**。形式note＝「v0.4 REQUEST が v0.3 閉鎖本文を inline しきっていない」を解消するため、本 v0.5 は **v0.3 確定スキーマ＋blocking閉鎖チェックリストを内包した自己完結 ratify 文書**。＋notes gate 4本を追加。

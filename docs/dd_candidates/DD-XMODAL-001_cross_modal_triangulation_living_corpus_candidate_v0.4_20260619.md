@@ -1,6 +1,7 @@
 # DD-XMODAL-001 v0.4 — cross-modal triangulation & 生きたコーパス（PASS_WITH_NOTES 反映・ratify候補）candidate
 
 > **id**: DD-XMODAL-001 / **version**: candidate v0.4 / **supersedes**: v0.3
+> **lifecycle**: **accepted**（owner 浅井 ratify 2026-06-19、設計のみ）。実装/DDL/DB/mint/Box mutation/学習/embedding/OCR は**別ゲートで HOLD**（accepted≠deployed）。
 > **owner**: 浅井 / **author**: 番頭(リモートClaude) / **date**: 2026-06-19 JST
 > **gate**: 設計のみ candidate。DDL/DB/Box mutation/mint/学習/embedding/OCR は HOLD。
 > **改訂理由（v0.3→v0.4）**: GPT Pro 再監査 `DDXMODAL_PASS_WITH_NOTES`（RESULT Box 2295556105320）の非blocking notes 2点を反映。**致命傷（D軸一枚岩）は v0.3 で解消・是認済**。本 v0.4 は notes 反映＝**owner ratify 候補**。
