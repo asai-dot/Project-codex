@@ -81,10 +81,14 @@ Box 全体を6クエリで横断検索したが、**DD-CASE-001 と4つの sibli
 - 準司法 REQUEST(2266376727636)は 2026-06-19 に `to_gpt/processed/` へ `archived_processed` 退避済。targets 未アップロードのまま archive された。
 - **判定: DD-CASE-001 は Box に存在しない＝ローカル限定の下書き**（2026-06-06 と 2026-06-19 で二重確認）。前セッション(2026-06-04〜05)のローカル作業のまま未アップロード。
 
-### 回収オプション
-1. **Mac CC ローカル作業ディレクトリを探す**（DD-CASE-001 を起草した端末。`docs/alo` 同期元のローカル実体）→ あれば Box `docs/alo`(372503394965) へ上げる。
-2. 失われている場合は**再構成**：準司法REQUEST（RP-01〜06要旨・§D5' 3軸分離）＋ `31_case_layer.md`(base)＋ `build_forum_registry_seed.py` ＋ 本reconcile不変則 から DD-CASE-001 v0.1 を再起草。
-3. 回収後、field-level reconcile（case_type 正準enum / node schema）と 準司法監査(DDCASESOURCE)の blocked 解除を同時進行。
+### 回収（2026-06-19 実行＝オプション2を採用）
+- **再構成を実施**。原本はローカル散逸で回収不能のため、Box 残存材料（準司法REQUEST の RP-01〜06・§D5' 要旨、`31_case_layer.md`、`DD-CASE reality_check`、DD-CASEID-001 accepted正本／本不変則）から意味を復元した **`DD-CASE-001_individual_judgment_canonical_node_v0.1-recon_20260619.md`** を起草し Box `docs/alo`(372503394965) へ昇格（file **2295258030670**）。
+  - §1 §D5' = **3軸分離（A1同一性 / A2解釈 / A3出口）**を母型の核として確定。
+  - §2 **case_type 正準enum**（judicial/adjudication/administrative_review/advisory/adr/conciliation）を本DDが唯一定義（N-2 双方向一致）。
+  - §3 node schema は CASEID-001 §3 と同一フィールド集合を共有（重複定義なし）。
+  - §4 RP-01〜06 を A3 制約として明記。§5 で N-1〜N-4 / AN-1〜AN-5 整合。
+- これにより **field-level reconcile（case_type enum / node schema）は recon 版で接地**。残作業＝(a)本 recon 版を DDCASESOURCE ゲートへ投函し独立監査、(b)`build_forum_registry_seed.py` 実行で `alo_source_registry_seed` 再生成、(c)`registry_negative_test` をテスト仕様から再構成。
+- 原本がローカルから発見されれば本 recon 版を `superseded_by` で更新し逐語差分照合。
 
 ### 含意
 - 本メモは責務分担の**枠組み（不変則 N-1〜N-3 と §2 の所有表）を確定**する。これは DD-CASE-001 の本文が無くても、DD-CASEID-001・DD-DYNDB-CASES-001・DDCASESOURCE v0.4・監査findingから導ける。
