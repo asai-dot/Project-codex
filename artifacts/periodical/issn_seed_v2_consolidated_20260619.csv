@@ -1,0 +1,27 @@
+journal_norm,issn,issn_l,evidence_source,source_ref,status,note
+税経通信,0387-2866,,internal_bibrecords,"biblio.bib_records(147行)",confirmed,web検索では取れず内部DBで解決
+ビジネス法務,1347-4146,,internal_bibrecords,"biblio.bib_records(56行)",confirmed,BUSINESS LAW JOURNAL(1882-6377)とは別誌
+交通事故民事裁判例集,0389-6544,,internal_bibrecords,"biblio.bib_records(19行)",confirmed,web検索では取れず内部DBで解決
+法学教室,0389-2220,,internal_bibrecords+ndl_tsv,"bib_records; 法学教室_NDL_raw.tsv",confirmed,
+ビジネスガイド,0387-7035,,internal_bibrecords,"biblio.bib_records(10行)",confirmed,
+jcaジャーナル,0386-3042,0386-3042,internal_bibrecords,"biblio.bib_records(134行)",confirmed,ただしstaging216中214は通巻欠=Track B
+法律時報,0387-3420,0387-3420,ndl_box_tsv,"NDL_magazine/法律時報_書誌情報DL.tsv(file 2163759657037)",confirmed,日本評論社。staging「法律時報e-book」はこのISSNか電子版別ISSNか要判断
+ジュリスト,0448-0791,,existing_seed+ndl_tsv,"staging canonical; ジュリスト_NDL_raw.tsv",confirmed,
+判例タイムズ,0438-5896,,existing_seed+ndl_tsv,"staging; 判例タイムズ_NDL_raw.tsv",confirmed,
+旬刊商事法務,0289-1107,,existing_seed+ndl_tsv,"staging; 旬刊商事法務_raw.tsv",confirmed,
+金融・商事判例,0287-9956,,existing_seed+ndl_tsv,"staging; 金融商事判例_raw.tsv",confirmed,
+NBL,0287-9670,,existing_seed+ndl_tsv,"staging; NBL_raw.tsv",confirmed,
+民商法雑誌,1342-5056,,existing_seed+ndl_tsv,"staging; 民商法雑誌_raw.tsv",confirmed,
+法律のひろば,0916-9806,,internal_bibrecords+ndl_tsv,"bib_records(28行); 法律のひろば_NDL_raw.tsv",confirmed,
+警察学論集,0287-6345,,internal_bibrecords+ndl_tsv,"bib_records(11行); 警察学論集_NDL_raw.tsv",confirmed,旧字「警察學論集」をtitle_variantsで吸収(staging2号が別扱い)
+家庭の法と裁判,2189-1702,,existing_seed,"staging canonical",confirmed,
+金融法務事情,,,ndl_box_tsv_candidate,"NDL_magazine/金融法務事情_raw.tsv(2.26MB,file 2049050034811)",candidate_tsv,TSV実在・ISSN要抽出(大容量のため未読)。旧旬刊0451-9787/現2185-3223の別も整理要
+労働経済判例速報,,,ndl_box_tsv_candidate,"NDL_magazine/労働経済判例速報_NDL_raw.tsv(file 2049062759276)",candidate_tsv,TSV実在・ISSN要抽出
+戸籍,,,needs_pull,"NDL_magazineに『戸籍時報』はあるが『戸籍』本体は別誌",judgment_needed,別誌(戸籍時報)と取り違え注意。NDL再取得 or 突合判断要
+労働判例,,,needs_pull,"NDL_magazineに『労働判例ジャーナル』はあるが『労働判例』(産労)は別",judgment_needed,staging33号がどちらか要判断
+登記研究,,,needs_pull,"NDL_magazineに『登記インターネット』はあるが『登記研究』は別",judgment_needed,
+季刊刑事弁護,,,needs_pull,"NDL_magazineコーパスに無し",needs_pull,現代人文社1994-。NDL再取得要
+人事の地図,,,needs_pull,"コーパスに無し",needs_pull,
+法と哲学,,,needs_pull,"コーパスに無し",needs_pull,
+jcaaビジネスジャーナル,,,needs_pull,"コーパスに無し",needs_pull,jcaジャーナルと別か要確認
+law&technology,,,needs_pull,"コーパスに無し",needs_pull,
