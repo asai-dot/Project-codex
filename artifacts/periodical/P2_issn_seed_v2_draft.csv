@@ -1,0 +1,29 @@
+issn,issn_l,journal_norm,title_variants,status,evidence_source,ndl_bib_id,valid_from,valid_to,renamed_from,renamed_to,seed_version,note
+0438-5888,,判例時報,,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,既存canonical 952号で実在確認
+0289-1107,,旬刊商事法務,商事法務,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,既存canonical 437号
+0448-0791,,ジュリスト,,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,既存canonical 203号
+0287-9670,,nbl,NBL,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,既存canonical 114号
+1882-7640,,businesslawjournal,ビジネスロー・ジャーナル,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,既存canonical 61号
+0438-5896,,判例タイムズ,,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,既存canonical 41号
+0287-6345,,警察学論集,警察學論集,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,旧字「學」異表記が別号2件で漏れ→title_variantsで吸収必要
+0287-9956,,金融・商事判例,金商,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,既存canonical 38号
+0916-9806,,法律のひろば,,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,既存canonical 33号
+1342-5056,,民商法雑誌,,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,既存canonical 2号
+2189-1702,,家庭の法と裁判,,confirmed,existing_seed,,,,,,issn_seed_v2_20260618,既存canonical 1号
+,,jcaジャーナル,JCAジャーナル,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=216（最優先）
+,,税経通信,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=208（最優先）
+,,ビジネス法務,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=66
+,,戸籍,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=58
+,,交通事故民事裁判例集,交民,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=50（判例集・通巻同定要注意）
+,,季刊刑事弁護,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=40
+,,法律時報e-book,法律時報,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=36（印刷版法律時報とISSN共有/別ISSN要確認）
+,,労働判例,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=33
+,,人事の地図,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=24
+,,金融法務事情,金法,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=15
+,,ビジネスガイド,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=10
+,,労働経済判例速報,労経速,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=10
+,,法学教室,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=6
+,,jcaaビジネスジャーナル,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=4（jcaジャーナルと別か要確認）
+,,法と哲学,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=4
+,,登記研究,,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=2
+,,law&technology,L&T,review,pending_ndl,,,,,,issn_seed_v2_20260618,need_seed=2
