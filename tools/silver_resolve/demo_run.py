@@ -11,6 +11,7 @@ import tempfile
 from pathlib import Path
 
 import silver_cite_id as s1
+import silver_stage_write as sw
 import silver_toc_section as s2
 
 REPO = Path(__file__).resolve().parents[2]
@@ -98,7 +99,26 @@ def main() -> int:
             (d / "out2" / "silver_toc_section_report.md").read_text(encoding="utf-8"),
             encoding="utf-8")
 
-    print(f"[demo] reports -> {ARTIFACTS}/DEMO_silver_*.md")
+        # --- P0→P1 end-to-end via orchestrator (stage-write は dry-run) ---
+        import run_p0
+        run_p0.main([
+            "--lic-edges", str(d / "lic.jsonl"), "--pub-index", str(d / "pub.jsonl"),
+            "--canon-index", str(d / "canon.jsonl"), "--norm-dict", str(d / "norm.json"),
+            "--authority-snapshot", str(d / "authority.json"),
+            "--toc-nodes", str(d / "nodes.jsonl"), "--toc-edges", str(d / "edges.jsonl"),
+            "--hyoshaku", str(d / "hyo.jsonl"), "--out", str(d / "p0"),
+        ])
+        # P1 stage-write を --apply して staging が候補/曖昧に振り分くか確認 (一時dir内のみ)
+        sw.main([
+            "--cite-candidates", str(d / "p0/silver1/silver_cite_resolution_candidates.jsonl"),
+            "--section-candidates", str(d / "p0/silver2/silver_toc_section_candidates.jsonl"),
+            "--cooc-candidates", str(d / "p0/silver2/silver_issue_cooccurrence_candidates.jsonl"),
+            "--staging-dir", str(d / "p0/silver_staging"), "--apply",
+        ])
+        ledger = d / "p0/silver_staging/_SILVER_WRITE_LEDGER.jsonl"
+        assert ledger.exists(), "stage-write --apply should produce a ledger"
+
+    print(f"[demo] reports -> {ARTIFACTS}/DEMO_silver_*.md ; P0→P1 chain OK")
     return 0
 
 
