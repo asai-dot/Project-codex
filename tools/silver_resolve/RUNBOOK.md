@@ -22,9 +22,19 @@
 | toc_row_reports_hanrei | periodical edges (`edge_type=toc_row_reports_hanrei`, 7,039 strong) |
 | TOC 階層 | 文献TOC nodes (新3源TOC 1.64M の node 化分) |
 
-> 実フィールド名が本ツールの期待スキーマと違う場合は、**事前に小さな変換スクリプトで期待スキーマへ写像**する
-> (期待スキーマは各 .py の docstring 冒頭、および demo_run.py の fixture を参照)。スキーマ確認のため
-> まず `head -n 3` で各 JSONL のフィールドを目視すること。
+> 実フィールド名が本ツールの期待スキーマと違っても、**変換スクリプトは不要**。
+> まず `schema_probe.py` で点検 → 出力された field-map 雛形を埋めて `--field-map` に渡すだけ。
+>
+> ```bash
+> # 各入力のフィールドと期待スキーマの充足/欠落を点検し, field-map 雛形を得る
+> python3 tools/silver_resolve/schema_probe.py --jsonl <lic_edges.jsonl>  --expect lic
+> python3 tools/silver_resolve/schema_probe.py --jsonl <pub_index.jsonl>  --expect pub
+> python3 tools/silver_resolve/schema_probe.py --jsonl <toc_nodes.jsonl>  --expect toc_nodes
+> ```
+>
+> 欠落キーがあれば `field_map.json`（例: `{"source_locator":"cite_str","hanrei_id":"case_id"}`）を作り、
+> 下記コマンドに `--field-map field_map.json` を足す。`toc_nodes` に `kind` が無ければ silver-2 に `--infer-kind`
+> を付ける（判例を report する node=row, 他=heading と推定）。
 
 ## 2. silver-1: 掲載位置 → 判例ID
 
@@ -34,6 +44,7 @@ python3 tools/silver_resolve/silver_cite_id.py \
   --pub-index   <hanrei_published_in.jsonl> \
   --canon-index <hanrei_canonical.jsonl> \   # by_date 経路用 (任意)
   --norm-dict   <journal_norm.json> \         # 誌名正規化辞書 (任意・反復改善)
+  --field-map   field_map.json \              # フィールド名が違う場合 (任意)
   --out         out/silver1_$(date +%Y%m%d)
 ```
 
@@ -53,6 +64,8 @@ python3 tools/silver_resolve/silver_toc_section.py \
   --toc-nodes <toc_nodes.jsonl> \
   --toc-edges <toc_row_reports_hanrei.jsonl> \
   --hyoshaku  <hyoshaku.jsonl> \   # 重要度 (任意)
+  --field-map field_map.json \     # フィールド名が違う場合 (任意)
+  --infer-kind \                   # toc_nodes に kind が無い場合 (任意)
   --out       out/silver2_$(date +%Y%m%d)
 ```
 
@@ -64,8 +77,8 @@ python3 tools/silver_resolve/silver_toc_section.py \
 - 論点section サイズ分布 / 共起 weight 分布。
 - trace_absent (評釈密度ゼロ section) の割合。
 
-> 注意: TOC nodes に `kind` (heading/row) が無いデータの場合、heading 判定規則を事前変換で付与する
-> (例: 判例を report しない node = heading、report する leaf = row)。
+> 注意: TOC nodes に `kind` (heading/row) が無い場合は `--infer-kind` を付ける
+> (判例を report する node = row、他 = heading と自動推定)。事前変換は不要。
 
 ## 4. canary (D1 採用: 賃料不払解除)
 

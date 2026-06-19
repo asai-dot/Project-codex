@@ -39,6 +39,26 @@ def read_jsonl(path: Path) -> Iterable[dict]:
                 yield json.loads(line)
 
 
+def remap_records(records: Iterable[dict], field_map: Optional[Dict[str, str]]) -> List[dict]:
+    """実データのフィールド名を期待スキーマへ写像. field_map = {expected_key: actual_key}."""
+    out = []
+    for r in records:
+        if field_map:
+            for expected, actual in field_map.items():
+                if expected not in r and actual in r:
+                    r[expected] = r[actual]
+        out.append(r)
+    return out
+
+
+def infer_kind(nodes: List[dict], edges: List[dict]) -> None:
+    """kind 欠落データ向け: toc-edges で判例を report する node = row, それ以外 = heading."""
+    row_ids = {str(e.get("toc_node_id", "")) for e in edges}
+    for n in nodes:
+        if not n.get("kind"):
+            n["kind"] = "row" if str(n.get("toc_node_id", "")) in row_ids else "heading"
+
+
 def nearest_heading(node_id: str, nodes: Dict[str, dict]) -> Optional[str]:
     """node から親方向に辿り, 最近接の kind=='heading' ノード id を返す (論点section)."""
     seen = set()
@@ -169,16 +189,25 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--toc-nodes", required=True, type=Path)
     ap.add_argument("--toc-edges", required=True, type=Path)
     ap.add_argument("--hyoshaku", type=Path, default=None)
+    ap.add_argument("--field-map", type=Path, default=None,
+                    help="実データのフィールド名写像 JSON {expected_key: actual_key}")
+    ap.add_argument("--infer-kind", action="store_true",
+                    help="kind 欠落時, toc-edges で判例を report する node を row, 他を heading と推定")
     ap.add_argument("--out", required=True, type=Path)
     args = ap.parse_args(argv)
 
+    fmap = json.loads(args.field_map.read_text(encoding="utf-8")) if args.field_map else None
+    nodes = remap_records(read_jsonl(args.toc_nodes), fmap)
+    edges = remap_records(read_jsonl(args.toc_edges), fmap)
+    if args.infer_kind:
+        infer_kind(nodes, edges)
+
     hyoshaku: Dict[str, int] = {}
     if args.hyoshaku:
-        for r in read_jsonl(args.hyoshaku):
+        for r in remap_records(read_jsonl(args.hyoshaku), fmap):
             hyoshaku[str(r.get("hanrei_id", ""))] = int(r.get("hyoshaku_count", 0))
 
-    sec_cands, co_cands, stats = resolve_sections(
-        read_jsonl(args.toc_nodes), read_jsonl(args.toc_edges), hyoshaku)
+    sec_cands, co_cands, stats = resolve_sections(nodes, edges, hyoshaku)
 
     args.out.mkdir(parents=True, exist_ok=True)
     sp = args.out / "silver_toc_section_candidates.jsonl"

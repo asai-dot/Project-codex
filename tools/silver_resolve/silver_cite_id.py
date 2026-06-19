@@ -41,6 +41,22 @@ def read_jsonl(path: Path) -> Iterable[dict]:
                 yield json.loads(line)
 
 
+def remap_records(records: Iterable[dict], field_map: Optional[Dict[str, str]]) -> Iterable[dict]:
+    """実データのフィールド名を期待スキーマへ写像. field_map = {expected_key: actual_key}.
+
+    actual_key が record に在れば expected_key へコピー (既存 expected_key は上書きしない).
+    これにより手書き変換スクリプト無しで実データを投入できる.
+    """
+    if not field_map:
+        yield from records
+        return
+    for r in records:
+        for expected, actual in field_map.items():
+            if expected not in r and actual in r:
+                r[expected] = r[actual]
+        yield r
+
+
 def normalize_journal(raw: str, norm_dict: Optional[Dict[str, str]] = None) -> str:
     """誌名正規化: 全半角・空白を吸収し, 辞書で canonical へ寄せる."""
     if raw is None:
@@ -206,13 +222,16 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--pub-index", required=True, type=Path)
     ap.add_argument("--canon-index", type=Path, default=None)
     ap.add_argument("--norm-dict", type=Path, default=None)
+    ap.add_argument("--field-map", type=Path, default=None,
+                    help="実データのフィールド名写像 JSON {expected_key: actual_key}")
     ap.add_argument("--out", required=True, type=Path)
     args = ap.parse_args(argv)
 
     norm_dict = json.loads(args.norm_dict.read_text(encoding="utf-8")) if args.norm_dict else None
-    by_jip, by_ji = build_pub_indexes(read_jsonl(args.pub_index), norm_dict)
-    by_cd = build_canon_index(read_jsonl(args.canon_index)) if args.canon_index else {}
-    cands = resolve_all(read_jsonl(args.lic_edges), by_jip, by_ji, by_cd, norm_dict)
+    fmap = json.loads(args.field_map.read_text(encoding="utf-8")) if args.field_map else None
+    by_jip, by_ji = build_pub_indexes(remap_records(read_jsonl(args.pub_index), fmap), norm_dict)
+    by_cd = build_canon_index(remap_records(read_jsonl(args.canon_index), fmap)) if args.canon_index else {}
+    cands = resolve_all(remap_records(read_jsonl(args.lic_edges), fmap), by_jip, by_ji, by_cd, norm_dict)
 
     args.out.mkdir(parents=True, exist_ok=True)
     cpath = args.out / "silver_cite_resolution_candidates.jsonl"

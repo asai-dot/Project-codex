@@ -131,5 +131,36 @@ class TestSilver2(unittest.TestCase):
             self.assertEqual(s["decision_status"], "review")  # 評釈密度ゼロ = trace_absent 相当
 
 
+class TestAdapters(unittest.TestCase):
+    def test_s1_remap_records(self):
+        # 実データ風: hanrei_id が case_id, source_locator が cite_str
+        recs = [{"edge_id": "1", "edge_type": "cites_judgment_via_journal", "cite_str": "journal_article:労判:1060:5"}]
+        out = list(s1.remap_records(recs, {"source_locator": "cite_str"}))
+        self.assertEqual(out[0]["source_locator"], "journal_article:労判:1060:5")
+
+    def test_s1_remap_no_overwrite(self):
+        recs = [{"hanrei_id": "A", "case_id": "B"}]
+        out = list(s1.remap_records(recs, {"hanrei_id": "case_id"}))
+        self.assertEqual(out[0]["hanrei_id"], "A")  # 既存 expected は上書きしない
+
+    def test_s2_remap_records(self):
+        recs = [{"node": "t1", "parent": None, "title": "賃貸借"}]
+        out = s2.remap_records(recs, {"toc_node_id": "node", "parent_id": "parent", "heading": "title"})
+        self.assertEqual(out[0]["toc_node_id"], "t1")
+        self.assertEqual(out[0]["heading"], "賃貸借")
+
+    def test_s2_infer_kind(self):
+        nodes = [{"toc_node_id": "t1"}, {"toc_node_id": "r1"}]
+        edges = [{"toc_node_id": "r1", "hanrei_id": "A"}]
+        s2.infer_kind(nodes, edges)
+        kinds = {n["toc_node_id"]: n["kind"] for n in nodes}
+        self.assertEqual(kinds, {"t1": "heading", "r1": "row"})
+
+    def test_s2_infer_kind_respects_existing(self):
+        nodes = [{"toc_node_id": "t1", "kind": "row"}]
+        s2.infer_kind(nodes, [])
+        self.assertEqual(nodes[0]["kind"], "row")  # 既存 kind は尊重
+
+
 if __name__ == "__main__":
     unittest.main()
