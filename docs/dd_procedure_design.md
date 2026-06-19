@@ -166,8 +166,26 @@ procedure_type(spine)
 - **粒度の caveat**：level-1 章 ＝ 手続 とは限らない。組織再編＝章は手続群、略式手続＝章は局面(steps)。
   **経験的手続単位は TOC level に固定できない**（`kind` で明示し owner 監査）。
 
-→ **結論**: 24類型は a-priori の骨にすぎず、**実手続インベントリで分割・補完すべき**（特に商事系）。
-spine の改訂は owner 監査の領分。本ツールは本が増えるほど裏付けが増え、過少解像/欠落を機械的に出す。
+→ **結論（GPT お目付け 20260619 DDPROGRESS `PASS_WITH_NOTES` で校正済）**: 初回サンプル（数冊）で
+**商事系の過少解像と欠落・法人類型 facet の必要性が確認**された（※「24類型全体が粗すぎる」とまでは未実証）。
+向きは **bottom-up GO**。ただし二者択一にせず**三層**で持つ：
+
+| 層 | 中身 | 正本性 |
+|---|---|---|
+| **L0 observation** | TOC/法令/公式案内由来の生観測（`procedure_inventory.json`, kind付） | 観測のみ・正本でない |
+| **L1 registry** | 操作的定義を満たし **owner ratify** された procedure / family / variant（安定ID） | 正準レジストリ |
+| **L2 roll-up / facet** | 旧24類型(navigation)・系統・法人類型・forum 等のビュー | 唯一の真理にしない |
+
+- **商事6手続**は `commercial_nonlitigation`（裁判所の会社非訟）の下で「分割」ではなく、会社法手続の
+  **`corporate_reorganization` family を新設して再分類**（category error 回避）。会社非訟＝検査役選任等は別維持。
+- **法人類型**は直積表にせず**疎な applicability crosswalk / `procedure_variant`** で持つ。
+- `kind` の操作的定義: `procedure`(目的･契機･根拠･局面列･終局を持つ過程) / `procedure_family`(束ね) /
+  `procedure_variant`(主体･法人類型差で局面分岐) / `flow_step`(局面・単独でID鋳造しない) / `dimension`(facet)。
+- **HOLD**: spine 正本置換・DDL・DB write・`requirement_floor` accepted化・MCP publication。e-Gov 各号の
+  **read-only 取得は並行 GO**。商事再分類・三層化・entity facet は **owner ratify packet** に出す（自動正本化しない）。
+- 監査記録: `docs/dd/20260619_spinebottomup_v0.1_DDPROGRESS_{REQUEST,RESULT}.md`。
+- 本ツール `spine_reconcile.py` は観測を **kind 別に集計**し、過少解像/未マップ手続/未観測類型(`not_observed_in_current_sample`)/
+  source coverage(冊数・系統) を機械出力する（サンプル依存を可視化）。
 
 ---
 

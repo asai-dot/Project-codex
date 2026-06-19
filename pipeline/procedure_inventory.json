@@ -1,6 +1,9 @@
 {
   "version": 0.1,
-  "_comment": "bencom 手続本の章構造(Supabase biblio.bib_toc)から bottom-up 抽出した経験的手続インベントリ。a-priori な procedure_spine.json(24類型)の裏付け/反証に使う。重要: 章の意味は本依存——『手続群』のことも『局面(steps)』のこともある(kind で明示)。経験的な手続単位は TOC の level に固定できない。",
+  "layer": "L0_observation",
+  "_comment": "【観測層(L0)・正本ではない】bencom 手続本の章構造(Supabase biblio.bib_toc)から bottom-up 抽出した経験的手続観測。これは観測であって procedure 確定ではない(owner ratify で L1 registry へ昇格)。a-priori な procedure_spine.json(24類型=L2 roll-up)の裏付け/反証に使う。重要: 章の意味は本依存——procedure / dimension(facet) / flow_step(局面) が混在し kind で明示。1冊1章からの auto-accept はしない。GPT お目付け 20260619 DDPROGRESS PASS_WITH_NOTES 反映。",
+  "audit": "docs/dd/20260619_spinebottomup_v0.1_DDPROGRESS_RESULT.md (DDPROGRESS_PASS_WITH_NOTES)",
+  "sample_caveat": "現サンプル=数冊。未観測の spine 類型は『裏付け無し(粗さの実証)』ではなく not_observed_in_current_sample。",
   "source": "Supabase biblio.bib_toc (bencom-library, 実データ)",
   "procedures": [
     {"name": "合併", "系統": "民事·商事", "spine_ref": "commercial_nonlitigation", "kind": "procedure", "source_book": "商業登記全書/7 組織再編の手続〈第3版〉", "source_bib_id": "NOBN_20220928_商業登記全書7_組織再編の手続〈第3版〉_01", "source_chapter": "第2編 合併"},
