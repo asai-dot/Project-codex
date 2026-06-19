@@ -53,13 +53,17 @@ def main() -> int:
         ]
         canon = [{"hanrei_id": "27824765", "court": "最高裁", "date": "1994-07-18"}]
         norm = {"労判": "労働判例"}
+        authority = {"authority_dataset_version": "periodical_20260611_demo",
+                     "authority_hash": "demohash", "rule_version": "v0.1"}
         _w(d / "lic.jsonl", lic)
         _w(d / "pub.jsonl", pub)
         _w(d / "canon.jsonl", canon)
         (d / "norm.json").write_text(json.dumps(norm, ensure_ascii=False), encoding="utf-8")
+        (d / "authority.json").write_text(json.dumps(authority, ensure_ascii=False), encoding="utf-8")
 
         s1.main(["--lic-edges", str(d / "lic.jsonl"), "--pub-index", str(d / "pub.jsonl"),
                  "--canon-index", str(d / "canon.jsonl"), "--norm-dict", str(d / "norm.json"),
+                 "--authority-snapshot", str(d / "authority.json"),
                  "--out", str(d / "out1")])
         (ARTIFACTS / "DEMO_silver_cite_resolution_report.md").write_text(
             (d / "out1" / "silver_cite_resolution_report.md").read_text(encoding="utf-8"),

@@ -38,22 +38,31 @@
 
 ## 2. silver-1: 掲載位置 → 判例ID
 
+> **整合(v0.1.1)**: 出力は未レビュー候補（source-record URI）。実データは既存 crosswalk v0
+> （`build/d1_lic_reference_staging_20260611.../`・5,475 links）を**起点**に、未解決 B-tier の追加解決のみ（v0 上書き禁止）。
+
 ```bash
 python3 tools/silver_resolve/silver_cite_id.py \
-  --lic-edges   <lic_edges.jsonl> \
-  --pub-index   <hanrei_published_in.jsonl> \
-  --canon-index <hanrei_canonical.jsonl> \   # by_date 経路用 (任意)
-  --norm-dict   <journal_norm.json> \         # 誌名正規化辞書 (任意・反復改善)
-  --field-map   field_map.json \              # フィールド名が違う場合 (任意)
-  --out         out/silver1_$(date +%Y%m%d)
+  --lic-edges          <lic_edges.jsonl> \
+  --pub-index          <hanrei_published_in.jsonl> \
+  --canon-index        <hanrei_canonical.jsonl> \   # by_date 経路用 (任意)
+  --norm-dict          <journal_norm.json> \         # 雑誌レーン正本から生成 (§下記・再発明禁止)
+  --authority-snapshot <authority_snapshot.json> \   # 必須(gate8): 無いと全行 blocked
+  --field-map          field_map.json \              # フィールド名が違う場合 (任意)
+  --out                out/silver1_$(date +%Y%m%d)
+```
+
+`authority_snapshot.json` 最小例:
+```json
+{"authority_dataset_version":"periodical_20260611","authority_hash":"<sha>","rule_version":"silver1_v0.1","source_registry_status":"unratified"}
 ```
 
 出力: `silver_cite_resolution_candidates.jsonl` / `silver_cite_resolution_report.md`。
 
 **見るべき数字** (report):
-- 解決済 % (基準値 概算 24%)。誌名正規化辞書を足して **向上幅**を測る (これが silver-1 の主眼)。
-- strong 件数 = issue_page_exact 単一 = **P1 で staging write 候補**になる集合。
-- 未解決理由内訳 (`locator_unresolvable` / `db_unbuilt`) → 正規化辞書 or 号fallback の改善対象。
+- machine_suggested (tier A+B) % (基準値 概算 24%)。誌名正規化を足して **向上幅**を測る (silver-1 の主眼)。
+- tier A 単一exact = P1 candidate lane に上がる集合。tier B(alias) は高密度QA対象。
+- blocker_code 内訳 (`insufficient_signal` / `index_absent` / `authority_snapshot_missing`) → 正規化辞書 or 号fallback or authority の改善対象。
 
 **反復改善ループ**: report の未解決・多候補を見て表記ゆれを拾い、`--norm-dict` を更新 → 再実行 → 歩留まり比較。
 

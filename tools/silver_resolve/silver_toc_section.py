@@ -30,6 +30,10 @@ from itertools import combinations
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
 
+# status 語彙 (SILVER-RESOLUTION-KICKOFF v0.1.1 整合: 未レビュー候補. reviewed/canonical 化なし)
+ST_SUGGESTED = "machine_suggested_issue_section_unreviewed"
+ST_REVIEW = "needs_human_review"
+
 
 def read_jsonl(path: Path) -> Iterable[dict]:
     with path.open(encoding="utf-8") as fh:
@@ -108,7 +112,8 @@ def resolve_sections(node_records: Iterable[dict], edge_records: Iterable[dict],
             "book_id": section_book.get(sec, ""),
             "member_hanrei_ids": sorted(members),
             "member_count": len(members),
-            "decision_status": "strong" if any(hyoshaku.get(h, 0) > 0 for h in members) else "review",
+            "identity_scope": "issue_section_grouping_noncanonical",
+            "decision_status": ST_SUGGESTED if any(hyoshaku.get(h, 0) > 0 for h in members) else ST_REVIEW,
             "evidence": f"section heading harvest; {len(members)} members",
             "honest_empty": None,
         })
@@ -126,7 +131,7 @@ def resolve_sections(node_records: Iterable[dict], edge_records: Iterable[dict],
             "shared_section_ids": sorted(secs),
             "pair_weight": len(secs),          # 共有論点section 数
             "importance": imp,                 # 評釈密度合計 (harvest. 人手重み付けなし)
-            "decision_status": "strong" if imp > 0 else "review",
+            "decision_status": ST_SUGGESTED if imp > 0 else ST_REVIEW,
         })
 
     # naive 同一書籍全結合ペア数 (置換前の無意味共起の規模)
@@ -149,7 +154,7 @@ def build_report(sec_cands, co_cands, stats) -> str:
         bucket = "1" if b == 1 else "2-5" if b <= 5 else "6-20" if b <= 20 else "21+"
         sizes[bucket] += 1
     wdist = Counter(c["pair_weight"] for c in co_cands)
-    trace_absent = sum(1 for s in sec_cands if s["decision_status"] == "review")
+    trace_absent = sum(1 for s in sec_cands if s["decision_status"] == ST_REVIEW)
     lines = [
         "# silver-2 TOC→論点section 構造化レポート (dry-run / read-only)",
         "",

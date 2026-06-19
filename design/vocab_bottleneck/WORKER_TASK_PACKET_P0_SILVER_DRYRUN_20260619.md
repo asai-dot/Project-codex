@@ -53,6 +53,15 @@ python3 tools/silver_resolve/schema_probe.py --jsonl <toc_edges>  --expect toc_e
 - 欠落キーが出たら、雛形を埋めて `field_map.json`（例 `{"source_locator":"cite_str","hanrei_id":"case_id"}`）を作る。
 - `toc_nodes` に `kind` が無ければ STEP C で `--infer-kind` を付ける（手書き変換は不要）。
 
+### STEP A2. authority snapshot ＋ crosswalk v0 起点（監査 v0.1.1 必須）
+- **起点は既存 crosswalk v0**（`build/d1_lic_reference_staging_20260611.../`・5,475 links）。これを上書きせず、
+  未解決 B-tier（lic via_journal 23,914 / by_date 5,571）の**追加解決のみ**を silver-1 で行う。
+- candidate 生成前に `authority_snapshot.json` を作って凍結（再現性）。`--authority-snapshot` に渡す。
+  ```json
+  {"authority_dataset_version":"periodical_20260611","authority_hash":"<sha>","rule_version":"silver1_v0.1","source_registry_status":"unratified"}
+  ```
+  これが無いと silver-1 は全行 `blocked_by_policy_or_provenance`（gate8）。
+
 ### STEP B. canary（小さく検証してから全量）
 1. lic を先頭 2,000 行に絞って silver-1 を回し、strong の中身が妥当か目視（誌名・号・頁が正しく判例に対応するか）。
 2. silver-2 は **賃貸借/解除** 周辺の book に絞って回し、論点section 見出しが「論点タイトル」になっているか、
@@ -61,11 +70,12 @@ python3 tools/silver_resolve/schema_probe.py --jsonl <toc_edges>  --expect toc_e
 
 ### STEP C. 全量 dry-run
 ```bash
-# silver-1: 掲載位置→判例ID
+# silver-1: 掲載位置→source-record 候補
 python3 tools/silver_resolve/silver_cite_id.py \
   --lic-edges <lic_edges> --pub-index <pub_index> \
   --canon-index <hanrei_canonical> \
   --norm-dict journal_norm.json \   # §1.5 で既存 ALIAS＋journal_issn_map から生成（手書きしない）
+  --authority-snapshot authority_snapshot.json \   # STEP A2（必須）
   [--field-map field_map.json] \
   --out out/silver1_20260619
 
@@ -76,8 +86,18 @@ python3 tools/silver_resolve/silver_toc_section.py \
   --out out/silver2_20260619
 ```
 
+### STEP C2. QA frame を凍結（rule tuning の前に・監査 v0.1.1 §7 必須）
+STEP D で正規化ルールを直す**前に**、QA sample frame を凍結（同じ frame で前後比較）。最低限の strata:
+```text
+tier A 単一exact / tier B alias要QA / C 号レベル一意 / D 衝突 /
+高衝突誌号 / 旧元号・日付正規化 / 非選択sibling / index_absent(真の不在と区別) /
+negative control（誤マッチ罠） / source-registry-unratified
+```
+B-tier(alias/高密度)は初回 100% QA（多すぎる場合は上限を置き、未抽出 tail サイズを記録）。
+negative control を必ず入れる。frame には `sample_seed` と `rule_version_at_freeze` を記録。
+
 ### STEP D. 歩留まり改善ループ（silver-1）
-- report の `未解決理由`（locator_unresolvable / db_unbuilt）と多候補を見て、誌名表記ゆれを拾う。
+- report の `blocker_code`（insufficient_signal / index_absent）と多候補（D）を見て、誌名表記ゆれを拾う。
 - 新しい別称は **`periodical_edges_normalize.py` の `ALIAS`（雑誌レーン正本）へ還元する形で追記**し、そこから
   `journal_norm.json` を再生成する（silver-1 ローカルに別辞書を増殖させない＝雑誌レーンと単一の正規化を保つ）。
 - 再実行し、**解決% の向上幅**（基準 概算24%）を記録。2〜3反復で頭打ちまで。
@@ -87,7 +107,7 @@ python3 tools/silver_resolve/silver_toc_section.py \
 1. `out/silver1_20260619/silver_cite_resolution_report.md` の中身。
 2. `out/silver2_20260619/silver_toc_section_report.md` の中身。
 3. 主要数字を3行で:
-   - silver-1: 解決%（正規化前→後）/ **strong 件数** / 主な未解決理由。
+   - silver-1: machine_suggested%（正規化前→後）/ **tier A 件数**（candidate候補）/ 主な blocker_code。
    - silver-2: `naive_book_pairs`（≒89,358想定）→ `section_pairs`（意味あり）の置換規模 / 論点section 数。
    - 異常・スキーマ不一致・想定外があればその旨。
 4. candidate JSONL は **out/ に置いたまま**（DB へ入れない）。パスだけ報告。
