@@ -93,6 +93,31 @@ for each of 501 clusters:
 | ungrounded_value_count | contributor_obs が空の採用値数（**0であるべき**＝anti-hallucination） |
 | provenance_collapse_count | provenance_family 畳みで独立計上から外した観測数（二重計上回避の効き） |
 
+## 5.5 必須出力【お目付け役 2026-06-19 指定・12項目】＋ regression guard
+
+interim evidence RESULT（Box 2295018289446 / DESIGN_EVIDENCE_PASS_WITH_NOTES）が 501本番 dry-run に要求する出力。`summary.md`/`metrics.json` で全て満たすこと:
+
+1. source pair / `provenance_family` 別の **独立証拠数**。
+2. **item / edition / work 各レベル**の候補状態。
+3. `pub_date_value` / `pub_date_precision` / `pub_date_kind` の**分離**。
+4. explicit **edition / impression marker** と抽出根拠。
+5. **TOC delta**: node count・見出し一致率・階層差・page basis・coverage。
+6. grounded adoption率 と **ungrounded count（目標0）**。
+7. **triage後 disputed率** と conflict field別件数。
+8. **false-split / false-merge の gold評価**（§gold mini-set の状態語彙で）。
+9. source-family **二重計上防止**結果（provenance_collapse）。
+10. **unresolved / owner-review queue** と理由コード。
+11. proxy 1,470 / 847 との比較は **母集団差を明記して別表**に（同一視しない）。
+12. raw observation → candidate → adjudication → adopted projection の **追跡可能性**。
+
+**gold 状態語彙（年差≤2は review heuristic のみ・自動確定禁止）**: `same_work_manifestation_unresolved` / `likely_date_precision_or_impression_variant` / `explicit_distinct_edition` / `needs_toc_or_colophon_review` / `same_title_distinct_work_or_source_error`。
+
+**regression guard（監査§4）**:
+- identity-key ≠ attributes 原則を維持（**属性一致だけで item/edition identity を mint しない**）。
+- vendor/source family の票を独立証拠として**二重計上しない**。
+- OCR単独・書名一致単独を preferred/canonical へ昇格しない。
+- 501結果が出るまで 本番判定・DB・DDL・backfill・canonical promotion は **HOLD**。
+
 ## 6. L1 self-verify（全部通れば dry-run PASS）
 
 1. 501クラスタを処理（欠損・重複を列挙）。

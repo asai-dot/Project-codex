@@ -1,5 +1,12 @@
 # edition_suspected gold mini-set — proxy 34件(実測29件)の手動分類 2026-06-16
 
+> **【お目付け役反映 2026-06-19】** A/B/C/D分類は FP must-fix の必要性を示す evidence として妥当。ただし
+> **年差≤2 を機械的に `same_edition_impression_variant` へ確定しない**（review-priority heuristic に留める）。
+> 状態語彙は以下を使う（同版確定には版表示/奥付/ISBN/ページ数/TOC delta/出版者系列の追加証拠が必要）:
+> `same_work_manifestation_unresolved` / `likely_date_precision_or_impression_variant` /
+> `explicit_distinct_edition` / `needs_toc_or_colophon_review` / `same_title_distinct_work_or_source_error`。
+> 下表のA=`likely_date_precision_or_impression_variant`(未確定), B=`explicit_distinct_edition`(版表示明記分)/他は要TOC review, D=`same_title_distinct_work_or_source_error` と読み替える。
+
 - 出自: 縮小版proxy dry-run（蔵書↔弁コム 書名一致）の **出版年が食い違うペア**（read-only・DB無変更）。
 - 目的: お目付け役 FP review の should-fix「34件を 真の別版 / 表記揺れ / 同名異本 に分類して gold mini set 化」。
 - 使えた手掛かり: 蔵書側 `edition`(版表示)・`physical`(頁)・`subtitle`、両側の年、弁コム `toc_count`。

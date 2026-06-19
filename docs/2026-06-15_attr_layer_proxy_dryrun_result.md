@@ -1,5 +1,13 @@
 # 属性観測層 縮小版(proxy) dry-run 実行結果 — 2026-06-15
 
+> **【お目付け役反映 2026-06-19 / DESIGN_EVIDENCE_PASS_WITH_NOTES（result 2295018289446）】**
+> 本proxyは **machinery validation であって identity validation ではない**。固定すべき注意:
+> ・書名一致を「同一item/同一edition の証明」として扱わない。
+> ・847は「**積層machineryが動いた件数**」であり「正しく厚化できた件数」と断定しない。
+> ・2ソース低disputed率を **501×4ソース本番に一般化しない**。
+> ・title-match母集団だけから precision/recall を算出しない。
+> proxy＝machinery検証、identity検証は本番501（両側TOC・provenance_family・evidence-family計数）で。
+
 - 実行: 2026-06-15 / Claude（リモートセッション）/ Supabase `biblio`（**読み取りのみ・DB書込ゼロ**）
 - 位置づけ: Mac起動待ちの本番501 dry-run（WO `2286268562080`）の**前座**。設計 v0.2（`..._addendum_attr_observation_layer.md`）の**積層ロジックが実データで破綻しないか**を、この環境で到達可能な範囲で確認。
 - **本番ではない**。下記「限界」を必ず併読。
