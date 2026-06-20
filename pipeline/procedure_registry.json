@@ -1,0 +1,11 @@
+{
+  "version": 0.1,
+  "layer": "L1_registry",
+  "_comment": "【正準レジストリ(L1)】操作的定義を満たし owner ratify された procedure / family / variant の正本。起票時は空(owner_ratified 0件)。observed/candidate は L0 観測(procedure_inventory.json)から派生し、owner_ratified はここに owner が ratify メタ付きで手で書く。L2 roll-up(procedure_spine.json の24類型)へは legacy_rollup_id で橋渡し。GPT お目付け 20260619 DDPROGRESS_PASS_WITH_NOTES Q1 の三層化を実装。",
+  "status_lifecycle": ["observed", "candidate", "owner_ratified", "superseded", "deprecated"],
+  "promotion_rule": "candidate 昇格: 独立2 source_family、または 法令/公式1 source + 実務書1 source。owner_ratified への昇格は owner ratify のみ(ツールは候補提示だけ・自動昇格しない)。",
+  "ratify_note": "owner_ratified エントリは owner が ratified_by / ratified_at を付けて追記する。番頭(Claude)は候補提示と検算のみ。HOLD: 自動 procedure 確定・spine 正本置換・DB write。",
+  "kind_enum": ["procedure", "procedure_family", "procedure_variant"],
+  "entries": [],
+  "supersession": []
+}
