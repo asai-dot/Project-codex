@@ -21,11 +21,27 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from phase0_inventory import is_real_suspect, norm_isbn  # noqa: E402
+from edition_identity import APPLY_OK_STATUS  # noqa: E402
+from edition_identity_v2 import (  # noqa: E402
+    EDITION_IDENTITY_V2_VERSION, classify_edition_identity_v2,
+)
+from phase0_inventory import norm_isbn  # noqa: E402
 
-AA_REASON = "auto_accept_false_positive"          # 所見3
+AA_REASON = "auto_accept_false_positive"          # 所見3 (v2 再計算)
 DN_REASON = "defer_new_recall_isbn_in_canonical"  # 所見4
 RESEND_TO = "human_review"
+
+
+class DuplicateBookId(ValueError):
+    """legallib_book_id が重複 (fail-closed・後勝ち上書き禁止・監査 H6)。"""
+
+
+def _reclassify(r: dict) -> dict:
+    """raw bib に共有 isbn を注入して ratified classifier で再判定 (H6: v1 truth 不使用)。"""
+    isbn = r.get("isbn")
+    a = dict(r.get("canonical") or {}, isbn=isbn)
+    b = dict(r.get("legallib") or {}, isbn=isbn)
+    return classify_edition_identity_v2([a, b])
 
 
 def load_jsonl(p: Path) -> list[dict]:
@@ -36,27 +52,34 @@ def load_jsonl(p: Path) -> list[dict]:
 
 
 def build_candidates(ident_rows: list[dict]) -> list[dict]:
+    seen: set[str] = set()
     cands: list[dict] = []
     for r in ident_rows:
+        bid = str(r.get("legallib_book_id"))
+        if bid in seen:                       # H6: 重複 book_id は fail-closed。
+            raise DuplicateBookId(f"duplicate legallib_book_id={bid}")
+        seen.add(bid)
+
         bucket = r.get("resolver_bucket")
-        if bucket == "auto_accept" and is_real_suspect(r):
+        res = _reclassify(r)                  # H6: ratified classifier で raw から再計算。
+        recomputed_suspect = res["status"] not in APPLY_OK_STATUS
+        canonical_present = bool((r.get("canonical") or {}).get("title"))
+
+        if bucket == "auto_accept" and recomputed_suspect:
             reason = AA_REASON
-        elif bucket == "defer_new":
+        elif bucket == "defer_new" and canonical_present:
             reason = DN_REASON
         else:
             continue
         cands.append({
-            "legallib_book_id": str(r.get("legallib_book_id")),
+            "legallib_book_id": bid,
             "isbn": norm_isbn(r.get("isbn")),
             "from_bucket": bucket,
             "to_bucket": RESEND_TO,
             "resend_reason": reason,
-            "edition_status": r.get("status"),
-            "edition_reason": r.get("reason"),
-            "title_diff_kind": r.get("title_diff_kind"),
-            "year_gap": r.get("year_gap"),
-            "legallib_edition_sig": r.get("legallib_edition_sig"),
-            "canonical_edition_sig": r.get("canonical_edition_sig"),
+            "classifier_version": EDITION_IDENTITY_V2_VERSION,
+            "edition_status": res["status"],          # v2 再計算 (v1 status でない)
+            "edition_reason": res["reason"],
             "resolver_confidence": r.get("resolver_confidence"),
             "legallib_title": (r.get("legallib") or {}).get("title"),
             "canonical_title": (r.get("canonical") or {}).get("title"),
@@ -69,8 +92,7 @@ def build_candidates(ident_rows: list[dict]) -> list[dict]:
 def write_outputs(out: Path, cands: list[dict], resolver_path: Path) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     cols = ["legallib_book_id", "isbn", "from_bucket", "to_bucket", "resend_reason",
-            "edition_status", "edition_reason", "title_diff_kind", "year_gap",
-            "legallib_edition_sig", "canonical_edition_sig", "resolver_confidence",
+            "classifier_version", "edition_status", "edition_reason", "resolver_confidence",
             "legallib_title", "canonical_title"]
     with (out / "resolver_resend_candidates.csv").open("w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
@@ -99,8 +121,12 @@ def write_outputs(out: Path, cands: list[dict], resolver_path: Path) -> dict:
 
     from collections import Counter
     by_reason = dict(Counter(c["resend_reason"] for c in cands))
+    # H6: 行数 conservation (derived は原本と同行数・候補だけ bucket 変更)。
+    src_rows = len(load_jsonl(resolver_path))
     return {"candidates": len(cands), "by_reason": by_reason,
-            "rebucketed_in_derived": matched, "resolver_records": len(applied)}
+            "rebucketed_in_derived": matched, "resolver_records": len(applied),
+            "row_conservation_ok": src_rows == len(applied),
+            "classifier_version": EDITION_IDENTITY_V2_VERSION}
 
 
 def main(argv: list[str] | None = None) -> int:

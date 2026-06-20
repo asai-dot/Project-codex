@@ -60,21 +60,33 @@ def gate1_reproduces_projection(baseline: dict, candidate: dict) -> dict:
                      "ALOBookDX 実 631クラスタ baseline 到着でそのまま本実行。")}
 
 
-def gate2_edition_regression(known_conflict_rows: list[dict]) -> dict:
-    """gate_edition_identity_phase0_regression: 確実な別版を合議へ通さない。
+def gate2_edition_regression(gold_rows: list[dict]) -> dict:
+    """gate_edition_identity_phase0_regression: 独立 adversarial gold に対する双方向検証。
 
-    Mac Phase0 の known_conflict 実10冊 (legallib/canonical bib) を v2 で再判定し、
-    APPLY_OK (合議参加可) へ昇格しないことを固定する。
+    DD-EDIDENT-001-IMPL H5 是正: classifier 派生の known_conflict golden (false positive を含む)
+    でなく、人手 truth の adversarial gold (`a`/`b`/`expected`) で双方向に固定する:
+      * 真の別版/要レビュー (expected ∉ APPLY_OK) が合議参加 (APPLY_OK) へ昇格しない。
+      * 真の同一 (expected ∈ APPLY_OK) が誤って弾かれない。
+    旧形式 (legallib/canonical/v1_status) も後方互換で受ける (この場合は escape 検査のみ)。
     """
-    escaped = []
-    for r in known_conflict_rows:
-        sources = [r.get("legallib", {}), r.get("canonical", {})]
-        res = classify_edition_identity_v2(sources)
-        if res["status"] in APPLY_OK_STATUS:
-            escaped.append({"isbn": r.get("isbn"), "status": res["status"]})
+    escaped, false_block = [], []
+    for r in gold_rows:
+        if "a" in r and "b" in r:                      # 新 adversarial gold 形式
+            res = classify_edition_identity_v2([r["a"], r["b"]])
+            exp_apply = r.get("expected") in APPLY_OK_STATUS
+            got_apply = res["status"] in APPLY_OK_STATUS
+            if exp_apply and not got_apply:
+                false_block.append({"case_id": r.get("case_id"), "got": res["status"]})
+            if not exp_apply and got_apply:
+                escaped.append({"case_id": r.get("case_id"), "got": res["status"]})
+        else:                                          # 旧 known_conflict 形式 (escape のみ)
+            res = classify_edition_identity_v2([r.get("legallib", {}), r.get("canonical", {})])
+            if res["status"] in APPLY_OK_STATUS:
+                escaped.append({"isbn": r.get("isbn"), "status": res["status"]})
     return {"gate": "gate_edition_identity_phase0_regression",
-            "pass": not escaped, "escaped_to_cluster": escaped,
-            "checked": len(known_conflict_rows)}
+            "pass": not escaped and not false_block,
+            "escaped_to_cluster": escaped, "false_blocked_true_same": false_block,
+            "checked": len(gold_rows)}
 
 
 def gate3_no_rich_to_shallow(adoptions: list[dict], policy: dict | None = None) -> dict:

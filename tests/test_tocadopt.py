@@ -29,7 +29,7 @@ from toc_adopt import (  # noqa: E402
 from toc_adopt_gates import run_gates  # noqa: E402
 
 _FIXTURE = Path(__file__).resolve().parent / "golden" / "tocadopt" / "synthetic_multisource.jsonl"
-_KNOWN_CONFLICT = Path(__file__).resolve().parent / "golden" / "edition" / "known_conflict_10.jsonl"
+_KNOWN_CONFLICT = Path(__file__).resolve().parent / "golden" / "edition" / "adversarial_gold.jsonl"
 _PROVENANCE = ("source_system", "provenance_origin", "locator", "page_basis", "source_hash")
 
 _PASS = 0

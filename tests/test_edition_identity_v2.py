@@ -39,6 +39,10 @@ def _s(title, year="", publisher="", page_count=None):
     return {"title": title, "year": year, "publisher": publisher, "page_count": page_count}
 
 
+def _s2(title, year="", isbn="", publisher="", page_count=None):
+    return {"title": title, "year": year, "isbn": isbn, "publisher": publisher, "page_count": page_count}
+
+
 def test_unit_cases() -> None:
     check(classify_edition_identity_v2([_s("民法")])["status"] == INSUFFICIENT,
           "single source → insufficient")
@@ -48,10 +52,16 @@ def test_unit_cases() -> None:
     check(classify_edition_identity_v2([_s("特許法 第2版", "2017", "有斐閣"),
                                         _s("特許法〔第2版〕", "2017", "有斐閣")])["status"] == RESOLVED_SAME,
           "cosmetic 隅付き括弧差 → resolved_same")
+    # H2: substring 包含は positive 同一性証拠でない (ISBN 不明なら review)。
     check(classify_edition_identity_v2([
         _s("実務裁判例 交通事故における過失相殺率 自転車・駐車場事故を中心にして", "2020"),
-        _s("実務裁判例 交通事故における過失相殺率", "2020")])["status"] == RESOLVED_SAME,
-          "subtitle 包含 → resolved_same")
+        _s("実務裁判例 交通事故における過失相殺率", "2020")])["status"] == INSUFFICIENT,
+          "subtitle 包含・ISBN不明 → insufficient (H2)")
+    # ただし同 ISBN なら同一本として resolved。
+    check(classify_edition_identity_v2([
+        _s2("実務裁判例 過失相殺率 自転車編", "2020", isbn="978X"),
+        _s2("実務裁判例 過失相殺率", "2020", isbn="978X")])["status"] == RESOLVED_SAME,
+          "subtitle 包含・同ISBN → resolved")
     check(classify_edition_identity_v2([_s("意匠出願のてびき 第36版", "2022"),
                                         _s("意匠出願のてびき 第36版", "2023")])["status"] == RESOLVED_SAME,
           "同版で年±1 → 重版 resolved_same")
@@ -69,8 +79,14 @@ def test_unit_cases() -> None:
           "publisher 相違 → insufficient")
 
 
-def test_phase0_regression_freeze() -> None:
-    """§6 受入を実 2,082 対で凍結 (確実な別版を取りこぼさず偽陽性を回収)。"""
+def test_phase0_behavior_lock() -> None:
+    """実 2,082 対の挙動ロック (二次回帰)。
+
+    監査 H5 を受け、意味上の primary truth は独立 adversarial gold
+    (test_edition_adversarial.py) に移譲。本テストは「大きな回帰がないこと」の二次ロック。
+    Phase0 sample は resolver が **ISBN 一致**で対にしたものなので、共有 ISBN を両レコードに
+    注入して classifier に渡す (H1: classifier は isbn を読む)。
+    """
     if not _SAMPLE.exists():
         check(False, f"sample 不在: {_SAMPLE}")
         return
@@ -78,45 +94,34 @@ def test_phase0_regression_freeze() -> None:
     check(len(rows) == 2082, f"2,082 対 (実 {len(rows)})")
 
     overall = {RESOLVED_SAME: 0, SUSPECTED_DIFFERENT: 0, INSUFFICIENT: 0}
-    by_kind: dict = {}
+    ednum_status = {}
+    title_sig_mismatch_resolved = 0
     for d in rows:
-        r = classify_edition_identity_v2([d["canonical"], d["legallib"]])
-        st = r["status"]
-        overall[st] = overall.get(st, 0) + 1
-        k = d.get("title_diff_kind")
-        by_kind.setdefault(k, {}).setdefault(st, 0)
-        by_kind[k][st] += 1
+        a = dict(d["canonical"], isbn=d["isbn"])
+        b = dict(d["legallib"], isbn=d["isbn"])
+        r = classify_edition_identity_v2([a, b])
+        overall[r["status"]] = overall.get(r["status"], 0) + 1
+        if d.get("title_diff_kind") == "edition_number_conflict":
+            ednum_status[r["status"]] = ednum_status.get(r["status"], 0) + 1
+        ev = r.get("evidence") or {}
+        if ev.get("title_edition_sig") == "mismatch" and r["status"] == RESOLVED_SAME:
+            title_sig_mismatch_resolved += 1
 
-    # §6.1 確実な別版 (edition_number_conflict 26) を 1 件も取りこぼさない。
-    ednum = by_kind.get("edition_number_conflict", {})
-    check(ednum.get(SUSPECTED_DIFFERENT, 0) == 26 and sum(ednum.values()) == 26,
-          f"§6.1 真の別版 26/26 を suspected 保持 (実 {ednum})")
-    # §6.2 cosmetic 123 を全て resolved_same へ回収 (過検知 0)。
-    cos = by_kind.get("cosmetic", {})
-    check(cos.get(RESOLVED_SAME, 0) == 123 and sum(cos.values()) == 123,
-          f"§6.2 cosmetic 123 全回収 (実 {cos})")
-    # edition_marker_asymmetry 53 は全て insufficient (要レビュー・apply 不可)。
-    asym = by_kind.get("edition_marker_asymmetry", {})
-    check(asym.get(INSUFFICIENT, 0) == 53 and sum(asym.values()) == 53,
-          f"非対称 53 全 insufficient (実 {asym})")
-    # genuine_title_diff 30 は全て suspected (核相違は混ぜない)。
-    gen = by_kind.get("genuine_title_diff", {})
-    check(gen.get(SUSPECTED_DIFFERENT, 0) == 30 and sum(gen.values()) == 30,
-          f"genuine_title_diff 30 全 suspected (実 {gen})")
-    # 全体分布の凍結 (別版疑い v1 344 → v2 72)。
-    check(overall[SUSPECTED_DIFFERENT] == 72, f"suspected 総数 72 (実 {overall[SUSPECTED_DIFFERENT]})")
-    check(overall[INSUFFICIENT] == 53, f"insufficient 総数 53 (実 {overall[INSUFFICIENT]})")
-    check(overall[RESOLVED_SAME] == 1957, f"resolved_same 総数 1957 (実 {overall[RESOLVED_SAME]})")
-    # apply 許可集合は広がっていない (resolved_same のみが apply_ok、suspected/insufficient は不可)。
-    from edition_identity_v2 import is_apply_allowed_identity
-    check(not is_apply_allowed_identity(SUSPECTED_DIFFERENT)
-          and not is_apply_allowed_identity(INSUFFICIENT),
-          "§6.2 apply 許可集合不変 (suspected/insufficient は apply 不可)")
+    # 不変条件1: title 版番号衝突 26 は ISBN 一致でも resolved に倒さない (矛盾データを検出)。
+    check(ednum_status.get(SUSPECTED_DIFFERENT, 0) == 26 and sum(ednum_status.values()) == 26,
+          f"版番号衝突 26/26 を suspected 保持 (実 {ednum_status})")
+    # 不変条件2: title 版 signature mismatch のペアは決して resolved にならない。
+    check(title_sig_mismatch_resolved == 0, f"版signature mismatch を resolved にしない (実 {title_sig_mismatch_resolved})")
+    # 挙動ロック (観測値: isbn 注入で resolved 1917 / suspected 60 / insufficient 105。
+    # insufficient が多いのは Required note 2: 同 isbn でも年/頁/出版社の大差は review)。
+    check(overall[RESOLVED_SAME] == 1917, f"resolved_same 1917 (実 {overall[RESOLVED_SAME]})")
+    check(overall[SUSPECTED_DIFFERENT] == 60, f"suspected 60 (実 {overall[SUSPECTED_DIFFERENT]})")
+    check(overall[INSUFFICIENT] == 105, f"insufficient 105 (実 {overall[INSUFFICIENT]})")
 
 
 def main() -> int:
     for name, fn in (("test_unit_cases", test_unit_cases),
-                     ("test_phase0_regression_freeze", test_phase0_regression_freeze)):
+                     ("test_phase0_behavior_lock", test_phase0_behavior_lock)):
         print(f"• {name}")
         fn()
     print(f"\n{_PASS} passed, {_FAIL} failed")
