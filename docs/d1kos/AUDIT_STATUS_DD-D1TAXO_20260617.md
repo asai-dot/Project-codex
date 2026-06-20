@@ -1,6 +1,11 @@
-# DD-D1TAXO 監査ステータス（2026-06-17）— GO と HOLD を混ぜない
+# DD-D1TAXO 監査ステータス（2026-06-17 / 更新 2026-06-19）— GO と HOLD を混ぜない
 
 > 本線復帰判断（owner 2026-06-17）: author/KAKEN 整理は**一旦凍結**。D1TAXO の **apply 前ゲート対応を優先**。
+
+> **更新（2026-06-19）: 戸籍法1313 scratch canary lane CLOSED。** must-fix 4件（MF-A normalizer_version /
+> MF-B gate version discipline / MF-C G23 array guard / MF-D pending除外）を scratch evidence で closure。
+> Codex hand=PASS / GPTお目付け=PASS_WITH_NOTES / head=ACCEPT。検収詳細 → `HEAD_VERIFY_canary1313_MFclosure_20260619.md`。
+> **full batch / production は HOLD 継続・owner lift 待ち**（前提条件: pending-L3 resolver DD・v4 provenance 付与・scratch_scope_only フラグ・scratch PASS を batch 認可に流用しない）。
 
 ## 監査結果（2本・本日）
 
@@ -26,13 +31,13 @@
 |---|---|
 | external_kos RDB contract（設計） | **GO**（with notes） |
 | owner review packet | **GO** |
-| 戸籍法 canary | **CONDITIONAL GO**（MF-1 必須） |
-| v4 enumerator パッチ | **GO** |
-| **full batch** | **HOLD**（canary evidence 後） |
+| 戸籍法 canary（scratch scope） | **CLOSED / GO**（2026-06-19・must-fix 4件 closure 済） |
+| v4 enumerator パッチ | **GO**（provenance 付与を batch 前必須） |
+| **full batch** | **HOLD**（owner lift＋前提条件後） |
 | **DDL apply / DB write / production load** | **HOLD** |
 | **canonical promotion / claim-support / embedding / MCP** | **HOLD** |
 
-一行サマリ: **design/canary conditional GO, full batch HOLD, MF-1 required before canary.**
+一行サマリ（更新）: **戸籍法1313 scratch canary CLOSED（must-fix 4件 closure）。full batch / production は HOLD・owner lift 待ち。**
 
 ## 合意した実行順序
 
