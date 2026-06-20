@@ -69,12 +69,14 @@ def main():
         else:
             # 公表裁決・あっせん事例コーパスは原則 open / public
             conf, redist = "open", "public"
+        # can_global_index は導出値 (should_fix#2: 本番は保存列でなく view 推奨)。
         can_idx = (conf == "open" and redist == "public" and source != "jufu")
         rows.append({
             "source_system": source, "forum_type": ftype, "name": name,
             "category": "quasi_judicial", "jurisdiction": juris,
             "confidentiality_default": conf, "redistribution": redist,
             "can_global_index": can_idx, "seed_source": "quasi_judicial_台帳",
+            "recon_status": "reconstructed_from_residual_materials",  # must_fix#1
             "provenance": "recon_from_build_forum_registry_seed.QUASI",
         })
     for source, cat, conf, redist, note in CASE_SOURCES:
@@ -84,6 +86,7 @@ def main():
             "category": cat, "jurisdiction": "",
             "confidentiality_default": conf, "redistribution": redist,
             "can_global_index": can_idx, "seed_source": "31_case_layer_§4 + reality_check",
+            "recon_status": "reconstructed_from_residual_materials",  # must_fix#1
             "provenance": "recon_from_alo_source_priority",
         })
 
@@ -91,6 +94,22 @@ def main():
     with OUT.open("w", encoding="utf-8") as f:
         for r in rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+    # should_fix#1: 原本想定41行との差分10行を別queueとして開示 (推定カテゴリ)。
+    missing = {
+        "recon_status": "missing_recon_sources",
+        "expected_original_rows": 41,
+        "reconstructed_rows": len(rows),
+        "gap": 41 - len(rows),
+        "candidate_missing_categories": [
+            "裁判所支部別の source 細分 (forum seed の支部展開に対応)",
+            "分割コーパス (同一機関の公表/本文/添付PDF/匿名化前の record-level 細分)",
+            "在野・学術集約の追加 source (生活保護DB 以外)",
+        ],
+        "note": "原本逐語不在のため正確な10行内訳は不明。owner/DDCASESOURCE 確認まで暫定 queue。",
+    }
+    MISS = OUT.parent / "alo_source_registry_seed_missing_recon_sources_20260619.json"
+    MISS.write_text(json.dumps(missing, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     n_quasi = sum(1 for r in rows if r["category"] == "quasi_judicial")
     n_idx = sum(1 for r in rows if r["can_global_index"])
