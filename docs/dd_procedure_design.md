@@ -187,6 +187,34 @@ procedure_type(spine)
 - 本ツール `spine_reconcile.py` は観測を **kind 別に集計**し、過少解像/未マップ手続/未観測類型(`not_observed_in_current_sample`)/
   source coverage(冊数・系統) を機械出力する（サンプル依存を可視化）。
 
+### §10 記載事項の床の top-down 源 ＝ e-Gov 各号（read-only / 並行 GO）
+
+§5（記載事項の床）の **top-down 正準リスト＝条文各号** を、e-Gov 法令データから機械取得する
+`scripts/egov_fetch.py` を追加（stdlib のみ・GET のみ）。各号を **law/article/item anchor**
+（`{law}/a{条}/p{項}/i{号}`）として取り出し、`requirement_floor.py --canonical` が consume できる
+形（id/名称/号/aliases）で raw 保存する。巨人の肩: 各号の区切り（法令構造）は e-Gov 正本を
+**consume**、我々は anchor 正規化と床ツールへの受け渡しだけを担う。
+
+**境界（GPT RESULT §5/§4 の HOLD を厳守。コードの不変条件としてテスト固定）**:
+- 出力は全件 `layer=L0_observation` / `status=observed`。**procedure へ紐付けない**
+  （`procedure_id`/`spine_ref` を持たせない）。
+- **floor accepted化しない**：床への昇格は requirement_floor の N書式収束 + owner ratify を経る別工程。
+- **DB write しない**：raw 保存はファイルのみ。canonical mapping・MCP publication は HOLD。
+- offline parse パス（`--from-file`）と fixture（`tests/fixtures/egov_kaishaho_199.xml`）で
+  ネット非依存に検算（`tests/test_egov_fetch.py`）。**live 取得は outbound 許可の実行環境で**
+  （`--law-id` ＋ `--raw-dir`）走らせ、raw を持ち帰る。
+
+### 残タスク（owner ratify packet 待ち・自動正本化しない）
+
+| # | タスク | 状態 | 根拠 |
+|---|---|---|---|
+| T1 | **商事系の再分類**：組織再編6手続を `commercial_nonlitigation` 直下に置かず `corporate_reorganization` family 新設へ。会社非訟（検査役選任等）は別維持 | **parked（owner packet 化待ち）** | RESULT must_fix5 / §2-2 |
+| T2 | 法人類型 facet を疎な applicability crosswalk / `procedure_variant` で設計 | parked | RESULT Q3 |
+| T3 | L1 procedure_registry（owner-ratified・安定ID・supersession map）の起票 | parked | RESULT Q1 / must_fix6 |
+| T4 | inventory を独立2source（or 法令/公式1 + 実務書1）へ拡張、candidate 昇格条件の定義 | parked | RESULT should_fix3 |
+
+> T1 は今回 owner の指示で**タスクとして保留**（今 session では着手しない）。e-Gov 各号取得（§10）を先行。
+
 ---
 
 _v0.3（巨人の肩に乗る）。手続フローは**手作りしない**。出所＝手続法の条文構造(①/e-Gov・民訴刑訴は保有)

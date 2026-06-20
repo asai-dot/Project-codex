@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 法令標準XML を模した最小 fixture (会社法199条1項各号 / 合成・テスト用)。
+     実 e-Gov API の応答ではなく、egov_fetch のパーサ検算用の縮小サンプル。 -->
+<Law Era="Heisei" Year="17" Num="86" LawType="Act">
+  <LawNum>平成十七年法律第八十六号</LawNum>
+  <LawBody>
+    <LawTitle>会社法</LawTitle>
+    <MainProvision>
+      <Article Num="199">
+        <ArticleCaption>（募集事項の決定）</ArticleCaption>
+        <ArticleTitle>第百九十九条</ArticleTitle>
+        <Paragraph Num="1">
+          <ParagraphNum>１</ParagraphNum>
+          <ParagraphSentence>
+            <Sentence>株式会社は、その発行する株式…を引き受ける者の募集をしようとするときは、その都度、募集株式について次に掲げる事項を定めなければならない。</Sentence>
+          </ParagraphSentence>
+          <Item Num="1">
+            <ItemTitle>一</ItemTitle>
+            <ItemSentence><Sentence>募集株式の数</Sentence></ItemSentence>
+          </Item>
+          <Item Num="2">
+            <ItemTitle>二</ItemTitle>
+            <ItemSentence><Sentence>募集株式の払込金額又はその算定方法</Sentence></ItemSentence>
+          </Item>
+          <Item Num="3">
+            <ItemTitle>三</ItemTitle>
+            <ItemSentence><Sentence>金銭以外の財産を出資の目的とするときは、その旨並びに当該財産の内容及び価額</Sentence></ItemSentence>
+          </Item>
+          <Item Num="4">
+            <ItemTitle>四</ItemTitle>
+            <ItemSentence><Sentence>募集株式と引換えにする金銭の払込み又は財産の給付の期日又はその期間</Sentence></ItemSentence>
+          </Item>
+          <Item Num="5">
+            <ItemTitle>五</ItemTitle>
+            <ItemSentence><Sentence>株式を発行するときは、増加する資本金及び資本準備金に関する事項</Sentence></ItemSentence>
+          </Item>
+        </Paragraph>
+        <Paragraph Num="2">
+          <ParagraphNum>２</ParagraphNum>
+          <ParagraphSentence>
+            <Sentence>前項各号に掲げる事項…は、その募集ごとに、均等に定めなければならない。</Sentence>
+          </ParagraphSentence>
+        </Paragraph>
+      </Article>
+    </MainProvision>
+  </LawBody>
+</Law>

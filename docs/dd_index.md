@@ -48,6 +48,8 @@
   （`gakuyo-headless-migrate` #2）、KG の法令側（`kg-lit-precedent-rag` #11）。
 - **現状（申告）**: e-Gov定義 534（13法令）／学陽 見出し語↔条文 1,731リンク（326見出し語）／
   e-Gov条見出し 4,367条・3,267見出し（7法令）／DB全体 条文参照 mention 10,211。
+- **⑥手続との橋**: 条文**各号**の read-only anchor 取得 `scripts/egov_fetch.py`（§5 記載事項の床の
+  top-down 源。L0 observation / 床 accepted化・DB write は HOLD。詳細 `dd_procedure_design.md §10`）。
 
 ### ② 判例（precedent / case ＋ 引用グラフ・RAG）
 - **定義**: 判例の正本キー（和暦・事件番号・裁判所）と、文献↔判例↔法令の引用グラフ、③RAG。
