@@ -8,7 +8,10 @@ git_commit: 53879625d3608bfde96131a684260feef58c6518
 git_branch: claude/pipeline-collect-validation-EnNJM
 git_pr: https://github.com/asai-dot/Project-codex/pull/15
 result_expected_filename: 20260621_commercialreclass_v0.1_DDPROCREG_RESULT.md
-status: queued   # git docs/dd/ に起票のみ。Box to_gpt/ への投函は owner 運用領域(未投函)。
+status: dispatched
+dispatched_at: 2026-06-21   # Box gpt_ometsuke/to_gpt/ へ投函済 (owner 承認「どうぞ」)
+box_file_id: 2299571392411
+box_path: 浅井/claude/handoffs/gpt_ometsuke/to_gpt/20260621_commercialreclass_v0.1_DDPROCREG_REQUEST.md
 ---
 
 # 20260621 commercialreclass v0.1 — 商事再分類 **owner ratify packet**（DDPROCREG）
