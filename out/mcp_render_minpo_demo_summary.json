@@ -1,0 +1,29 @@
+{
+  "run_id": "minpo_demo",
+  "provisions": 5,
+  "disputed": 2,
+  "gates": {
+    "gate_no_assertive_output_flag": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_disputed_renders_both_sides": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_no_relied_upon_without_claim_support": {
+      "pass": true,
+      "detail": "claim_support framing leaked: []"
+    },
+    "gate_summary_not_assertive": {
+      "pass": true,
+      "detail": "[]"
+    },
+    "gate_every_claim_attributed": {
+      "pass": true,
+      "detail": "[]"
+    }
+  },
+  "all_gates_pass": true,
+  "db_writes": 0
+}

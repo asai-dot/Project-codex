@@ -1,0 +1,38 @@
+{
+  "run_id": "demo_judgment",
+  "rows": 5,
+  "by_treatment": {
+    "cited": 2,
+    "distinguished": 1,
+    "followed": 1,
+    "overruled": 1
+  },
+  "gates": {
+    "gate_treatment_all_candidate_status": {
+      "pass": true,
+      "detail": "non-candidate rows: []"
+    },
+    "gate_treatment_no_claim_support": {
+      "pass": true,
+      "detail": "claim_support leaked: []"
+    },
+    "gate_treatment_domain": {
+      "pass": true,
+      "detail": "out-of-domain: []"
+    },
+    "gate_treatment_has_evidence_span": {
+      "pass": true,
+      "detail": "missing evidence span: []"
+    },
+    "gate_strong_treatment_requires_cue": {
+      "pass": true,
+      "detail": "strong treatment without explicit cue: []"
+    },
+    "gate_no_high_confidence_from_rules": {
+      "pass": true,
+      "detail": "rule-based extraction must not claim high confidence: []"
+    }
+  },
+  "all_gates_pass": true,
+  "db_writes": 0
+}
