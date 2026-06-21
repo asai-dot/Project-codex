@@ -15,11 +15,31 @@
 
 | 作業 | 件数 | 検証 |
 |---|---|---|
-| `holding_bencom_link` (bencom_id 橋) | 1,737 | ✅ read-back 一致 |
+| `holding_bencom_link` 自動リンク (一意 fingerprint) | 1,737 | ✅ read-back 一致 |
+| `holding_bencom_link` review 確定リンク (衝突24グループ) | +50 | ✅ 2026-06-19 確定 |
+| **`holding_bencom_link` 合計 / `holdings.bencom_id` 充足** | **1,787** | ✅ review キュー → 0 |
 | scanned フラグ付与 | 611 | ✅ |
 | `books` ↔ `authpub` 橋 | 3,798 | ✅ |
 | セキュリティ硬化 (RLS / view 権限) | — | ✅ advisors 再チェック済み |
 | holdings 総数 (参考) | 6,524 | ✅ 2026-06-19 時点 |
+
+### review キュー 50行の確定 (2026-06-19)
+
+`v_holding_bencom_review` の 24 グループ 50 holdings を精査。candidates 側は fingerprint
+ごとに book_id が一意 (衝突0) のため、各グループは唯一の候補に対応。衝突は「別作品の
+同名」ではなく **同一作品の重複レコード** であった:
+
+- **パターンA (10グループ20件)**: ISBN記録 + `manual:title_*` 記録の二重登録 (同一本)。
+- **パターンB (14グループ30件)**: 同一 (title,publisher) に複数 ISBN = 別版/別刷。
+
+→ 50件すべてを唯一の候補 book_id にリンク (`match_basis=...(collision_reviewed)`,
+`confidence=medium(collision_reviewed)`, `matched_by=claude_review_20260619`)。
+`holdings.bencom_id` も同値セット。`v_holding_bencom_review` はリンク済み除外条件を
+追加し、キューは **0** に。
+
+注意フラグ (リンク可否に影響なし): grp「音楽著作権訴訟の論点80講」の ISBN
+`9784533524040` は接頭 4533 が日本評論社でない (兄弟は 4535)。1桁打ち間違いの疑い、
+別途 ISBN 棚卸しで要確認。
 
 ## §11 — identity 突合の確定ロジック (記録)
 
@@ -65,9 +85,11 @@ comment on view bookdx.v_holding_bencom_review is
 3. `insert into bookdx.holding_bencom_link (internal_id, book_id) values (...);`
 4. 再実行で当該 fingerprint がキューから外れることを確認。
 
-## 残タスク (承認が必要)
+## 残タスク
 
-- [ ] 本 §11 内容を Box `02_LIT_PHASE0_IDENTITY_DRYRUN_20260617.md` rev4 として反映
-      (`upload_file_version`、書込承認待ち)。
-- [ ] `v_holding_bencom_review` を本番へ apply (`apply_migration`、書込承認待ち)。
-- [ ] review キューの人手確定 (Owner 作業)。
+- [x] 本 §11 内容を Box に反映 → 別ファイル `02_LIT_PHASE0_IDENTITY_DRYRUN_REV4_§11_20260619.md`
+      (file 2297402938813) として作成。元ファイルには誘導コメント付与。
+- [x] `v_holding_bencom_review` を本番へ apply。さらにリンク済み除外条件を追加。
+- [x] review キューの確定 → 24グループ50件をリンク、キュー 0 (2026-06-19)。
+- [ ] (任意) grp「音楽著作権訴訟の論点80講」ISBN `9784533524040` の 4533/4535 桁誤り確認。
+- [ ] DD-LITID-001 biblio_item 収斂導入時に bencom_id 橋・books↔authpub 橋を観測 projection へ置換。
