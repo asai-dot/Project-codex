@@ -202,7 +202,15 @@ procedure_type(spine)
 - **DB write しない**：raw 保存はファイルのみ。canonical mapping・MCP publication は HOLD。
 - offline parse パス（`--from-file`）と fixture（`tests/fixtures/egov_kaishaho_199.xml`）で
   ネット非依存に検算（`tests/test_egov_fetch.py`）。**live 取得は outbound 許可の実行環境で**
-  （`--law-id` ＋ `--raw-dir`）走らせ、raw を持ち帰る。
+  （`--law-id` ＋ `--raw-dir`、または `--targets pipeline/egov_raw/_targets.json` で一括）走らせ、
+  raw を持ち帰る（`pipeline/egov_raw/README.md`）。
+
+**後続＝床突合（`scripts/floor_reconcile.py`・実装済）**: 各号 anchor（top-down）× N書式（bottom-up）を
+`requirement_floor` で突合し、法定の床／実務必須／**alias 要整備**（条文本文＝長文 anchor が書式の短語と
+未マッチで被覆0 ＝ curation の的）を出す。anchors の JSON は `{items:[{id,名称,号,aliases}]}` で
+`requirement_floor` がそのまま consume できる。**raw が落ちれば即通る**状態（fixture→anchors→床突合の
+端から端まで `tests/test_floor_reconcile.py` で固定）。⇒ owner が許可環境で fetch→raw コミットすれば、
+床突合は番頭が担当。
 
 ### 残タスク（owner ratify packet 待ち・自動正本化しない）
 
