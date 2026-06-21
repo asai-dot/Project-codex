@@ -1,21 +1,24 @@
-# 501 帰り便 summary (sample)
+# 属性観測層 501 dry-run summary (sample)
 
-- run_id: 501
-- generated_at_jst: 2026-06-21
-- lane: gpt_ometsuke / from_gpt (RESULT 受領後)
-- 目的: ビルド/監査 run 501 の成果を post-return-verdict にかけ、正本化前の GO 判定を得る
+- run_id: attr_layer_501_dryrun_20260615
+- WO: WO_attrlayer501_dryrun_20260615_1740.md（report-only / DB write・DDL・backfill 一切なし）
+- 戻り先: Box `_claude_dispatch/from_worker/attr_layer_501_dryrun_20260615/`
+- 目的: 3サイト共通501冊で属性観測層 v0.2 をメモリ上だけで回し、設計破綻なしと metrics を実測
 
-> これは post-return-verdict のサンプル入力。実 run では 501 のビルドが summary.md と
-> metrics.json を対で出力する。verdict は metrics.json から決定的に計算され、summary.md
-> は人間が読む添え状 (記録用) として保存される。
+> これは post-return-verdict のサンプル入力。実 run では Mac CC ワーカーが summary.md と
+> metrics.json を対で返す。verdict は metrics.json から決定的に計算する。
 
-## 12 項目の所在 (どのメトリクスがどのチェックに対応するか)
+## 12 項目の所在（どのメトリクスがどのチェックに対応するか）
 | ゲート | metrics.json キー | チェック item |
 |---|---|---|
-| G1 接地100% | grounding.{total,grounded,ungrounded_ids} | 1, 2 |
-| G2 false-merge≈0 | false_merge.{rate,false_merges,sampled} | 3, 4 |
-| G3 provenance二重計上防止 | provenance.{double_counted_ids,sources,distinct_sources} | 5, 6 |
-| G4 決定性 | determinism.{run_a_hash,run_b_hash} | 7, 8 |
-| G5 rights | rights.{blocked_ids,items,cleared} | 9, 10 |
-| G6 work遅延 | work_delay.{budget_min,actual_min,sla_breaches} | 11 |
-| G7 HOLD | hold.flags | 12 |
+| G1 接地100% | ungrounded_value_count / cohort.{processed,missing_ids,duplicate_ids} | 1, 2 |
+| G2 false-merge≈0 | classification_multi_preserved / disputed_rate_after_triage(+raw) | 3, 4 |
+| G3 provenance二重計上防止 | provenance_family_collapse_effective / provenance_collapse_count | 5, 6 |
+| G4 決定性 | determinism.{run_a_hash,run_b_hash,inputs_sha256_present} | 7, 8 |
+| G5 rights | rights_profile_coverage / rights_blocked_rate | 9, 10 |
+| G6 work遅延 | deliverables / adopted_value_coverage | 11 |
+| G7 HOLD | write_evidence / access_not_in_biblio_consensus / hold_flags | 12 |
+
+## 再現性
+- 同一入力を 2 回流して出力 hash 一致（determinism.run_a_hash == run_b_hash）。
+- inputs_sha256.txt を同梱（入力固定の証跡）。

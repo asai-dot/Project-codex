@@ -1,10 +1,26 @@
 {
-  "run_id": "501",
-  "grounding":   { "total": 1240, "grounded": 1240, "ungrounded_ids": [] },
-  "false_merge": { "sampled": 400, "false_merges": 0, "rate": 0.0, "merged_clusters": 318 },
-  "provenance":  { "sources": 1240, "distinct_sources": 1240, "double_counted_ids": [] },
-  "determinism": { "run_a_hash": "sha256:9f1c0ab3e7d2", "run_b_hash": "sha256:9f1c0ab3e7d2", "match": true },
-  "rights":      { "items": 1240, "cleared": 1240, "blocked_ids": [] },
-  "work_delay":  { "budget_min": 90, "actual_min": 72, "sla_breaches": [] },
-  "hold":        { "flags": [] }
+  "run_id": "attr_layer_501_dryrun_20260615",
+  "cohort": { "expected": 501, "processed": 501, "missing_ids": [], "duplicate_ids": [] },
+  "adopted_value_coverage": 0.985,
+  "single_authority_rate": 0.42,
+  "raw_disagreement_rate": 0.18,
+  "disputed_rate_after_triage": 0.03,
+  "disputed_all_true_conflict": true,
+  "rights_blocked_rate": 0.04,
+  "rights_profile_coverage": 1.0,
+  "ungrounded_value_count": 0,
+  "provenance_collapse_count": 137,
+  "provenance_family_collapse_effective": true,
+  "classification_multi_preserved": true,
+  "access_not_in_biblio_consensus": true,
+  "determinism": { "run_a_hash": "sha256:9f1c0ab3e7d2", "run_b_hash": "sha256:9f1c0ab3e7d2", "inputs_sha256_present": true },
+  "deliverables": {
+    "attr_observations_sim.jsonl": true,
+    "attr_canonical_sim.jsonl": true,
+    "disputed_after_triage.csv": true,
+    "metrics.json": true,
+    "summary.md": true
+  },
+  "write_evidence": { "db_writes": 0, "ddl": 0, "backfill": 0, "biblio_writes": 0, "scalar_overwrite": 0, "work_rollup": 0, "embedding": 0, "external_sends": 0 },
+  "hold_flags": []
 }

@@ -1,107 +1,108 @@
 $ post-return-verdict --metrics samples/metrics_GO.json --summary samples/summary.md
-============================================================
-# post-return-verdict — run 501
+================================================================
+# post-return-verdict — run attr_layer_501_dryrun_20260615 (属性観測層 501 dry-run)
 VERDICT: GO   (PASS 12 / WARN 0 / FAIL 0 / 12)
-------------------------------------------------------------
-  ✓ [ 1|G1|H] 接地率100%: 1240/1240 接地
-  ✓ [ 2|G1|H] 未接地ID列挙が空: 未接地 0 件
-  ✓ [ 3|G2|H] false-merge率==0: false-merge 0 件
-  ✓ [ 4|G2|s] サンプル数が下限以上: サンプル 400 >= 200
-  ✓ [ 5|G3|H] 二重計上ID列挙が空: 二重計上 0 件
-  ✓ [ 6|G3|s] distinct/総数の整合: distinct 1240 <= sources 1240
-  ✓ [ 7|G4|H] 再走ハッシュ一致: hash 一致 (sha256:9f1c0…)
-  ✓ [ 8|G4|H] 再走が2回実行された: run_a / run_b 両方存在
-  ✓ [ 9|G5|H] 権利ブロック0件: 権利未クリア 0 件
-  ✓ [10|G5|H] 権利評価カバレッジ完全: 評価 1240+0 >= items 1240
-  ✓ [11|G6|s] work遅延が予算内: actual 72min <= budget 90min, SLA違反0
-  ✓ [12|G7|H] HOLDフラグ無し: HOLD フラグ 0
-------------------------------------------------------------
-→ 次成果物: DDL/backfill 計画草案を出力可 (--emit-plan)。適用は owner-gated。
+----------------------------------------------------------------
+  ✓ [ 1|G1|H] ungrounded_value_count==0: 未接地 採用値 0 (接地100%)
+  ✓ [ 2|G1|H] 501処理・欠損/重複なし: 501/501 処理・欠損0・重複0
+  ✓ [ 3|G2|H] classification multi 未潰し: scheme併存・multi 保持 (誤統合なし)
+  ✓ [ 4|G2|s] disputed率 triage で低減: disputed 0.03 <= 生不一致 0.18 (true_conflictのみ)
+  ✓ [ 5|G3|H] provenance family畳みが効く: 弁コム×legallib 同一familyを独立計上せず
+  ✓ [ 6|G3|s] 畳み発生の証跡: provenance_collapse 137 件 (二重計上の芽を畳んだ)
+  ✓ [ 7|G4|H] 2回流して hash 一致: 再現hash 一致 (sha256:9f1c0…)
+  ✓ [ 8|G4|H] inputs_sha256 証跡あり: inputs_sha256.txt 存在 (入力固定)
+  ✓ [ 9|G5|H] rights_profile カバレッジ100%: 全観測に rights_profile 付与
+  ✓ [10|G5|s] rights_blocked_rate 閾値内: rights_blocked 0.040 <= 0.2
+  ✓ [11|G6|s] 成果物5点・完走・coverage: 成果物5点揃い・coverage 0.985 >= 0.95
+  ✓ [12|G7|H] report-only厳守(書込0/access非混入/hold無): DB/DDL/backfill/biblio/embedding/外部送信=0・access非混入・HOLD無
+----------------------------------------------------------------
+→ 次成果物: 属性層 投影/DDL/backfill 計画草案を出力可 (--emit-plan)。適用は owner-gated。
 
 $ post-return-verdict --metrics samples/metrics_CONDITIONAL.json
-============================================================
-# post-return-verdict — run 501
-VERDICT: CONDITIONAL   (PASS 10 / WARN 2 / FAIL 0 / 12)
-------------------------------------------------------------
-  ✓ [ 1|G1|H] 接地率100%: 1240/1240 接地
-  ✓ [ 2|G1|H] 未接地ID列挙が空: 未接地 0 件
-  ✓ [ 3|G2|H] false-merge率==0: false-merge 0 件
-  ▲ [ 4|G2|s] サンプル数が下限以上: サンプル 90 < 下限 200 (≈0 の確信不足)
-  ✓ [ 5|G3|H] 二重計上ID列挙が空: 二重計上 0 件
-  ✓ [ 6|G3|s] distinct/総数の整合: distinct 1240 <= sources 1240
-  ✓ [ 7|G4|H] 再走ハッシュ一致: hash 一致 (sha256:9f1c0…)
-  ✓ [ 8|G4|H] 再走が2回実行された: run_a / run_b 両方存在
-  ✓ [ 9|G5|H] 権利ブロック0件: 権利未クリア 0 件
-  ✓ [10|G5|H] 権利評価カバレッジ完全: 評価 1240+0 >= items 1240
-  ▲ [11|G6|s] work遅延が予算内: actual 131min vs budget 90min / SLA違反 1 件
-  ✓ [12|G7|H] HOLDフラグ無し: HOLD フラグ 0
-------------------------------------------------------------
+================================================================
+# post-return-verdict — run attr_layer_501_dryrun_20260615 (属性観測層 501 dry-run)
+VERDICT: CONDITIONAL   (PASS 9 / WARN 3 / FAIL 0 / 12)
+----------------------------------------------------------------
+  ✓ [ 1|G1|H] ungrounded_value_count==0: 未接地 採用値 0 (接地100%)
+  ✓ [ 2|G1|H] 501処理・欠損/重複なし: 501/501 処理・欠損0・重複0
+  ✓ [ 3|G2|H] classification multi 未潰し: scheme併存・multi 保持 (誤統合なし)
+  ✓ [ 4|G2|s] disputed率 triage で低減: disputed 0.03 <= 生不一致 0.18 (true_conflictのみ)
+  ✓ [ 5|G3|H] provenance family畳みが効く: 弁コム×legallib 同一familyを独立計上せず
+  ▲ [ 6|G3|s] 畳み発生の証跡: provenance_collapse_count==0 (畳み未発生＝要確認)
+  ✓ [ 7|G4|H] 2回流して hash 一致: 再現hash 一致 (sha256:9f1c0…)
+  ✓ [ 8|G4|H] inputs_sha256 証跡あり: inputs_sha256.txt 存在 (入力固定)
+  ✓ [ 9|G5|H] rights_profile カバレッジ100%: 全観測に rights_profile 付与
+  ▲ [10|G5|s] rights_blocked_rate 閾値内: rights_blocked 0.310 > 0.2 (権利ブロック多→人手確認)
+  ▲ [11|G6|s] 成果物5点・完走・coverage: coverage 0.910 < 0.95
+  ✓ [12|G7|H] report-only厳守(書込0/access非混入/hold無): DB/DDL/backfill/biblio/embedding/外部送信=0・access非混入・HOLD無
+----------------------------------------------------------------
 CONDITIONAL 要対応 (ソフト WARN):
-  - [item 4 G2] サンプル数が下限以上: サンプル 90 < 下限 200 (≈0 の確信不足)
-  - [item 11 G6] work遅延が予算内: actual 131min vs budget 90min / SLA違反 1 件
-------------------------------------------------------------
+  - [item 6 G3] 畳み発生の証跡: provenance_collapse_count==0 (畳み未発生＝要確認)
+  - [item 10 G5] rights_blocked_rate 閾値内: rights_blocked 0.310 > 0.2 (権利ブロック多→人手確認)
+  - [item 11 G6] 成果物5点・完走・coverage: coverage 0.910 < 0.95
+----------------------------------------------------------------
 → ソフト項目を解消するか、Owner が条件付き許可するまで GO にしない。
 
 $ post-return-verdict --metrics samples/metrics_NOGO.json
-============================================================
-# post-return-verdict — run 501
-VERDICT: NO-GO   (PASS 5 / WARN 0 / FAIL 7 / 12)
-------------------------------------------------------------
-  ✗ [ 1|G1|H] 接地率100%: 1232/1240 接地 (未接地 8)
-  ✗ [ 2|G1|H] 未接地ID列挙が空: 未接地 8 件: ['row-0044', 'row-0210', 'row-0511', 'row-0777', 'row-0801']…
-  ✗ [ 3|G2|H] false-merge率==0: false-merge 3 件 / rate=0.0075
-  ✓ [ 4|G2|s] サンプル数が下限以上: サンプル 400 >= 200
-  ✗ [ 5|G3|H] 二重計上ID列挙が空: 二重計上 2 件: ['src-77', 'src-219']
-  ✓ [ 6|G3|s] distinct/総数の整合: distinct 1240 <= sources 1240
-  ✗ [ 7|G4|H] 再走ハッシュ一致: hash 不一致 (sha256:9… != sha256:1…)
-  ✓ [ 8|G4|H] 再走が2回実行された: run_a / run_b 両方存在
-  ✗ [ 9|G5|H] 権利ブロック0件: 権利未クリア 2 件: ['doc-55', 'doc-980']
-  ✓ [10|G5|H] 権利評価カバレッジ完全: 評価 1238+2 >= items 1240
-  ✓ [11|G6|s] work遅延が予算内: actual 88min <= budget 90min, SLA違反0
-  ✗ [12|G7|H] HOLDフラグ無し: HOLD: ['rights-unresolved', 'determinism-drift']
-------------------------------------------------------------
+================================================================
+# post-return-verdict — run attr_layer_501_dryrun_20260615 (属性観測層 501 dry-run)
+VERDICT: NO-GO   (PASS 2 / WARN 3 / FAIL 7 / 12)
+----------------------------------------------------------------
+  ✗ [ 1|G1|H] ungrounded_value_count==0: 未接地 採用値 12 件 (出所なし)
+  ✗ [ 2|G1|H] 501処理・欠損/重複なし: processed 488/501 欠損3 重複1
+  ✗ [ 3|G2|H] classification multi 未潰し: classification が単一化されている (誤マージ)
+  ▲ [ 4|G2|s] disputed率 triage で低減: disputed 0.27 vs 生不一致 0.18 / true_conflict限定=False
+  ✗ [ 5|G3|H] provenance family畳みが効く: family畳み無効 (同一source二重計上の恐れ)
+  ▲ [ 6|G3|s] 畳み発生の証跡: provenance_collapse_count==0 (畳み未発生＝要確認)
+  ✗ [ 7|G4|H] 2回流して hash 一致: hash 不一致 (sha256:9… != sha256:1…)
+  ✓ [ 8|G4|H] inputs_sha256 証跡あり: inputs_sha256.txt 存在 (入力固定)
+  ✗ [ 9|G5|H] rights_profile カバレッジ100%: rights_profile 付与 0.930 < 1.0 (権利不明値あり)
+  ✓ [10|G5|s] rights_blocked_rate 閾値内: rights_blocked 0.050 <= 0.2
+  ▲ [11|G6|s] 成果物5点・完走・coverage: 欠落成果物 ['disputed_after_triage.csv'] / coverage 0.800 < 0.95
+  ✗ [12|G7|H] report-only厳守(書込0/access非混入/hold無): スコープ外書込 {'db_writes': 3, 'biblio_writes': 2} / access系が書誌合議に混入 / HOLD: ['scope-violation-db-write', 'determinism-drift']
+----------------------------------------------------------------
 NO-GO 理由 (ハードゲート FAIL):
-  - [item 1 G1] 接地率100%: 1232/1240 接地 (未接地 8)
-  - [item 2 G1] 未接地ID列挙が空: 未接地 8 件: ['row-0044', 'row-0210', 'row-0511', 'row-0777', 'row-0801']…
-  - [item 3 G2] false-merge率==0: false-merge 3 件 / rate=0.0075
-  - [item 5 G3] 二重計上ID列挙が空: 二重計上 2 件: ['src-77', 'src-219']
-  - [item 7 G4] 再走ハッシュ一致: hash 不一致 (sha256:9… != sha256:1…)
-  - [item 9 G5] 権利ブロック0件: 権利未クリア 2 件: ['doc-55', 'doc-980']
-  - [item 12 G7] HOLDフラグ無し: HOLD: ['rights-unresolved', 'determinism-drift']
-------------------------------------------------------------
-→ ハードゲート FAIL。再ビルド/再監査して 501 を返し直す。DDL/backfill は起票しない。
+  - [item 1 G1] ungrounded_value_count==0: 未接地 採用値 12 件 (出所なし)
+  - [item 2 G1] 501処理・欠損/重複なし: processed 488/501 欠損3 重複1
+  - [item 3 G2] classification multi 未潰し: classification が単一化されている (誤マージ)
+  - [item 5 G3] provenance family畳みが効く: family畳み無効 (同一source二重計上の恐れ)
+  - [item 7 G4] 2回流して hash 一致: hash 不一致 (sha256:9… != sha256:1…)
+  - [item 9 G5] rights_profile カバレッジ100%: rights_profile 付与 0.930 < 1.0 (権利不明値あり)
+  - [item 12 G7] report-only厳守(書込0/access非混入/hold無): スコープ外書込 {'db_writes': 3, 'biblio_writes': 2} / access系が書誌合議に混入 / HOLD: ['scope-violation-db-write', 'determinism-drift']
+----------------------------------------------------------------
+→ ハードゲート FAIL。dry-run をやり直して 501 を返し直す。投影/DDL/backfill は起票しない。
 
 $ post-return-verdict --metrics samples/metrics_GO.json --emit-plan
-# 501 GO → DDL / backfill 計画 (草案 / DRAFT)
+# 501 GO → 属性層 biblio/authority 投影 + DDL/backfill 計画 (草案 / DRAFT)
 
-> ⚠️ **owner-gated。** 本草案は post-return-verdict が GO を出したことで自動生成された
-> *叩き台* に過ぎない。DDL 適用・backfill・本番 DB 投入は **Owner ratify / T2 ゲート**
-> を経るまで実行しない (RUNBOOK §6 / APPROVAL_RULE)。本ツールは一切 DB を触らない。
+> ⚠️ **owner-gated。** WO「やらない」: final_toc apply / biblio・authority への書込 /
+> DDL / backfill / scalar上書き / work rollup / embedding / 外部送信。本草案は GO を受けた
+> *叩き台* で、適用は **Owner ratify / T2 ゲート**を経るまで実行しない。本ツールは DB を触らない。
 
-- run_id: 501
+- run_id: attr_layer_501_dryrun_20260615
 - verdict: GO (12/12 項目 PASS)
-- generated_from: summary.md + metrics.json (決定的判定)
+- 根拠: ungrounded=0 (接地100%) / classification multi保持 / family畳み有効 / 決定性hash一致 /
+  rights_profile 100% / report-only 厳守(書込ゼロ)。
 
-## 1. 前提 (GO の根拠)
-- 接地 100% / false-merge 0 / provenance 二重計上なし / 決定性一致 / rights クリア / HOLD なし。
-- 上記がメトリクス上で満たされているため、正本化 (accepted/canonical) と Generated Index
-  への backfill を **計画してよい段階** に入った (実行はまだ)。
+## 1. DDL 草案 (attr_canonical_sim → 正本スキーマ)
+- [ ] `attr_canonical` テーブル: item_id, attr_key, attr_scheme, canonical_value,
+      adopted_status, rollup_status(=item_only), agreement_count, projection_version,
+      rights_profile, provenance_group。
+- [ ] 一意制約 (item_id, attr_key, attr_scheme) で **二重計上を DB レベルで再防止**。
+- [ ] NOT NULL: provenance_group / rights_profile (接地100%・権利付与をスキーマで担保)。
+- [ ] classification は multi 保持できる行設計 (scheme併存を 1 行に潰さない)。
+- [ ] access 系 (held_by_office/shelf_locator/fulltext_access) は **fact_class=access** で
+      別系統に隔離 (書誌合議に混ぜない)。
 
-## 2. DDL 草案 (要レビュー)
-- [ ] 対象テーブル / カラムを確定 (canonical id, provenance ref, grounding ref, rights flag)。
-- [ ] stable_anchor_id の mint 規則を明記 (決定性ハッシュを再利用)。
-- [ ] 一意制約: provenance 二重計上を DB レベルでも防ぐ unique 制約。
-- [ ] NOT NULL: grounding ref を必須に (接地100%をスキーマで担保)。
-- [ ] migration は前方互換 (既存 index を壊さない) で起票。
+## 2. backfill 草案 (dry-run → apply は別承認)
+- [ ] dry-run backfill: 件数・衝突・既存 biblio との差分を観測 (書込なし)。
+- [ ] 冪等 upsert キー = (item_id, attr_key, attr_scheme, projection_version)。
+- [ ] 投入前に provenance_family 再畳みで agreement_count 水増しが無いか再検証。
+- [ ] disputed (true_conflict) 行は backfill 対象外 → 人手 review 経路へ。
+- [ ] ロールバック: projection_version 単位の限定削除キーを用意。
 
-## 3. backfill 草案 (要レビュー)
-- [ ] dry-run backfill (件数・衝突・既存 index との差分を観測、書込なし)。
-- [ ] 冪等性: 再実行で二重 insert しない upsert キーを定義。
-- [ ] provenance 二重計上ガード: 投入前に distinct_sources を再検証。
-- [ ] ロールバック手順 (migration down / 投入分の限定削除キー) を用意。
-
-## 4. owner ratify チェックポイント
+## 3. owner ratify チェックポイント
 - [ ] Owner に 5 行サマリで GO 根拠を提示。
-- [ ] T2 ゲート (DD accepted/canonical 昇格) を Owner 承認で通す。
+- [ ] DD-LITID-001-ATTR を accepted/canonical へ昇格 (T2 ゲート)。
 - [ ] 承認後にのみ DDL apply → backfill --apply (本ツール外・別手順)。
 
