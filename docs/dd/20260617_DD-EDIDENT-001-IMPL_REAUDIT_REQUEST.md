@@ -64,8 +64,9 @@ W8 unicode/marker gold / W9 candidate-only 維持 + stale v1 除去。
 
 ## 5. 残る自己申告 (正直開示)
 
-- **R1 (M)** publisher は normalize 後 exact mismatch を review にするのみ。社名 alias 辞書
-  (「有斐閣」↔「(株)有斐閣」) は未実装で、別表記を過剰に review にしうる (recall 低下方向・安全側)。
+- **R1 (M) → CLOSED** publisher 社名 alias を正規化実装済 (`publisher_norm.normalize_publisher`)。
+  法人格トークン (株式会社/(株)/㈱/有限会社 等) と記号・全半角差を畳み「有斐閣」↔「株式会社有斐閣」を
+  同一視。別社は区別維持。証拠: `test_publisher_norm` / gold `publisher_alias_same`→resolved。
 - **R2 (L)** 2082 二次ロックは isbn を注入して評価する (resolver が isbn 一致で対にした provenance に
   忠実)。実 pipeline で isbn 無し bib を比較する経路があれば floor が厳しく出る (review 増)。
 - **R3 (L)** edition grammar は和書の版表記中心。洋書 "2nd ed."・刷数表記は未カバー (未知→review に倒れる)。

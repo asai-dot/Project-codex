@@ -26,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from _toc_text import normalize_title  # noqa: E402
 from edition_grammar import parse_edition, title_volume  # noqa: E402
+from publisher_norm import normalize_publisher  # noqa: E402
 from edition_identity import (  # noqa: E402
     APPLY_OK_STATUS,
     INSUFFICIENT,
@@ -65,9 +66,9 @@ def _pages(v):
         return None
 
 
-def _str_ev(a, b):
+def _str_ev(a, b, normalizer=normalize_title):
     """両方 present → match/mismatch、片方でも欠 → unknown。"""
-    na, nb = normalize_title(str(a or "")), normalize_title(str(b or ""))
+    na, nb = normalizer(str(a or "")), normalizer(str(b or ""))
     if not na or not nb:
         return UNKNOWN
     return MATCH if na == nb else MISMATCH
@@ -153,7 +154,7 @@ def _classify_pair(a: dict, b: dict, *, page_tolerance: float, year_tolerance: i
     volume = _volume_ev(a, b)
     year, years = _year_ev(a, b, year_tolerance)
     page = _page_ev(a, b, page_tolerance)
-    publisher = _str_ev(a.get("publisher"), b.get("publisher"))
+    publisher = _str_ev(a.get("publisher"), b.get("publisher"), normalize_publisher)
     author = _str_ev(a.get("author"), b.get("author"))
     tev = _title_ev(a, b)
 

@@ -110,6 +110,11 @@ def cases() -> list[dict]:
            {"title": "民法", "publisher": "甲社", "year": "2020"},
            {"title": "民法", "publisher": "乙社", "year": "2020"},
            S_REVIEW, "publisher 不一致は確定不可 → review。"),
+        # class 補 (R1): publisher 法人格 alias 差は同一視 → 核+publisher+年で resolved。
+        _c("publisher_alias_same", "8_publisher_alias",
+           {"title": "債権総論", "publisher": "有斐閣", "year": "2020", "page_count": 400},
+           {"title": "債権総論", "publisher": "株式会社有斐閣", "year": "2020", "page_count": 402},
+           S_SAME, "「有斐閣」と「株式会社有斐閣」は同一出版社 (R1 alias 正規化)。"),
     ]
 
 
