@@ -28,8 +28,20 @@ sha256sum app/data/case_identity/forum_registry_seed.csv \
   `forum_registry_seed_runlog_YYYYMMDD.txt` に保存。
 - 上記 csv 2点 + SHA256 + runlog を Box `docs/alo` へ上げ、DD-CASEID-001/003 から参照。
 
-## 整合チェック（accept済の不変則）
-- forum_code の `forum_type` が DD-CASE-001 §2 case_type の既定 forum_type と矛盾しないこと。
-- 準司法23件（QUASI台帳）が `alo_source_registry_seed`(recon, Box 2295292633374) の23行と source_system 一致すること。
-- `jufu` は forum_code 上 court 扱いだが、出口は `lawyer_client_confidential / can_global_index=false`（AC-3）を維持。
-- `__REVIEW__` / unmapped（支部ローマ字未確定）は **canonical mint しない**。CASEID-002（符号正規化）と併せて人手確定（AC-6 HOLD）。
+## 整合チェック（自動化・accept済の不変則）
+生成後、自動 checker を回す：
+```bash
+python3 scripts/check_forum_registry_seed.py \
+    app/data/case_identity/forum_registry_seed.csv \
+    --source-registry docs/alo_source_registry_seed_v0.1-recon_20260619.jsonl
+# PASS=exit 0。checker 自体の妥当性は --selftest で確認可。
+```
+checker が検査する不変則（K1〜K6）：
+- **K1** forum_code 非空・一意。
+- **K2** forum_type 値域（court/administrative_tribunal/administrative_review/agency/adr/arbitration/other）。
+- **K3** `__REVIEW__`/unmapped は `canonical_ready` にしない（**mint しない**。CASEID-002 と人手確定・AC-6 HOLD）。
+- **K4** 準司法23件（QUASI台帳）が `alo_source_registry_seed`(Box 2295292633374) と source_system 一致。
+- **K5** parent_forum_code が実在 forum_code を指す。
+- **K6** `jufu` は forum_type=court だが source registry で `can_global_index=false`（AC-3 出口隔離）。
+
+> builder 出力に `canonical_ready` 列が無い場合、K3 は `__REVIEW__` を含む行を人手確定対象として一覧化する運用に読み替える（mint 前提の自動採用をしない）。
