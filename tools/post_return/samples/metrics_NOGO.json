@@ -1,0 +1,10 @@
+{
+  "run_id": "501",
+  "grounding":   { "total": 1240, "grounded": 1232, "ungrounded_ids": ["row-0044", "row-0210", "row-0511", "row-0777", "row-0801", "row-0903", "row-1100", "row-1233"] },
+  "false_merge": { "sampled": 400, "false_merges": 3, "rate": 0.0075, "merged_clusters": 318 },
+  "provenance":  { "sources": 1240, "distinct_sources": 1240, "double_counted_ids": ["src-77", "src-219"] },
+  "determinism": { "run_a_hash": "sha256:9f1c0ab3e7d2", "run_b_hash": "sha256:11ad77bc9001", "match": false },
+  "rights":      { "items": 1240, "cleared": 1238, "blocked_ids": ["doc-55", "doc-980"] },
+  "work_delay":  { "budget_min": 90, "actual_min": 88, "sla_breaches": [] },
+  "hold":        { "flags": ["rights-unresolved", "determinism-drift"] }
+}

@@ -1,0 +1,10 @@
+{
+  "run_id": "501",
+  "grounding":   { "total": 1240, "grounded": 1240, "ungrounded_ids": [] },
+  "false_merge": { "sampled": 90, "false_merges": 0, "rate": 0.0, "merged_clusters": 318 },
+  "provenance":  { "sources": 1240, "distinct_sources": 1240, "double_counted_ids": [] },
+  "determinism": { "run_a_hash": "sha256:9f1c0ab3e7d2", "run_b_hash": "sha256:9f1c0ab3e7d2", "match": true },
+  "rights":      { "items": 1240, "cleared": 1240, "blocked_ids": [] },
+  "work_delay":  { "budget_min": 90, "actual_min": 131, "sla_breaches": ["batch-7 over budget"] },
+  "hold":        { "flags": [] }
+}

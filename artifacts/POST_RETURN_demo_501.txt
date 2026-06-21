@@ -1,0 +1,107 @@
+$ post-return-verdict --metrics samples/metrics_GO.json --summary samples/summary.md
+============================================================
+# post-return-verdict — run 501
+VERDICT: GO   (PASS 12 / WARN 0 / FAIL 0 / 12)
+------------------------------------------------------------
+  ✓ [ 1|G1|H] 接地率100%: 1240/1240 接地
+  ✓ [ 2|G1|H] 未接地ID列挙が空: 未接地 0 件
+  ✓ [ 3|G2|H] false-merge率==0: false-merge 0 件
+  ✓ [ 4|G2|s] サンプル数が下限以上: サンプル 400 >= 200
+  ✓ [ 5|G3|H] 二重計上ID列挙が空: 二重計上 0 件
+  ✓ [ 6|G3|s] distinct/総数の整合: distinct 1240 <= sources 1240
+  ✓ [ 7|G4|H] 再走ハッシュ一致: hash 一致 (sha256:9f1c0…)
+  ✓ [ 8|G4|H] 再走が2回実行された: run_a / run_b 両方存在
+  ✓ [ 9|G5|H] 権利ブロック0件: 権利未クリア 0 件
+  ✓ [10|G5|H] 権利評価カバレッジ完全: 評価 1240+0 >= items 1240
+  ✓ [11|G6|s] work遅延が予算内: actual 72min <= budget 90min, SLA違反0
+  ✓ [12|G7|H] HOLDフラグ無し: HOLD フラグ 0
+------------------------------------------------------------
+→ 次成果物: DDL/backfill 計画草案を出力可 (--emit-plan)。適用は owner-gated。
+
+$ post-return-verdict --metrics samples/metrics_CONDITIONAL.json
+============================================================
+# post-return-verdict — run 501
+VERDICT: CONDITIONAL   (PASS 10 / WARN 2 / FAIL 0 / 12)
+------------------------------------------------------------
+  ✓ [ 1|G1|H] 接地率100%: 1240/1240 接地
+  ✓ [ 2|G1|H] 未接地ID列挙が空: 未接地 0 件
+  ✓ [ 3|G2|H] false-merge率==0: false-merge 0 件
+  ▲ [ 4|G2|s] サンプル数が下限以上: サンプル 90 < 下限 200 (≈0 の確信不足)
+  ✓ [ 5|G3|H] 二重計上ID列挙が空: 二重計上 0 件
+  ✓ [ 6|G3|s] distinct/総数の整合: distinct 1240 <= sources 1240
+  ✓ [ 7|G4|H] 再走ハッシュ一致: hash 一致 (sha256:9f1c0…)
+  ✓ [ 8|G4|H] 再走が2回実行された: run_a / run_b 両方存在
+  ✓ [ 9|G5|H] 権利ブロック0件: 権利未クリア 0 件
+  ✓ [10|G5|H] 権利評価カバレッジ完全: 評価 1240+0 >= items 1240
+  ▲ [11|G6|s] work遅延が予算内: actual 131min vs budget 90min / SLA違反 1 件
+  ✓ [12|G7|H] HOLDフラグ無し: HOLD フラグ 0
+------------------------------------------------------------
+CONDITIONAL 要対応 (ソフト WARN):
+  - [item 4 G2] サンプル数が下限以上: サンプル 90 < 下限 200 (≈0 の確信不足)
+  - [item 11 G6] work遅延が予算内: actual 131min vs budget 90min / SLA違反 1 件
+------------------------------------------------------------
+→ ソフト項目を解消するか、Owner が条件付き許可するまで GO にしない。
+
+$ post-return-verdict --metrics samples/metrics_NOGO.json
+============================================================
+# post-return-verdict — run 501
+VERDICT: NO-GO   (PASS 5 / WARN 0 / FAIL 7 / 12)
+------------------------------------------------------------
+  ✗ [ 1|G1|H] 接地率100%: 1232/1240 接地 (未接地 8)
+  ✗ [ 2|G1|H] 未接地ID列挙が空: 未接地 8 件: ['row-0044', 'row-0210', 'row-0511', 'row-0777', 'row-0801']…
+  ✗ [ 3|G2|H] false-merge率==0: false-merge 3 件 / rate=0.0075
+  ✓ [ 4|G2|s] サンプル数が下限以上: サンプル 400 >= 200
+  ✗ [ 5|G3|H] 二重計上ID列挙が空: 二重計上 2 件: ['src-77', 'src-219']
+  ✓ [ 6|G3|s] distinct/総数の整合: distinct 1240 <= sources 1240
+  ✗ [ 7|G4|H] 再走ハッシュ一致: hash 不一致 (sha256:9… != sha256:1…)
+  ✓ [ 8|G4|H] 再走が2回実行された: run_a / run_b 両方存在
+  ✗ [ 9|G5|H] 権利ブロック0件: 権利未クリア 2 件: ['doc-55', 'doc-980']
+  ✓ [10|G5|H] 権利評価カバレッジ完全: 評価 1238+2 >= items 1240
+  ✓ [11|G6|s] work遅延が予算内: actual 88min <= budget 90min, SLA違反0
+  ✗ [12|G7|H] HOLDフラグ無し: HOLD: ['rights-unresolved', 'determinism-drift']
+------------------------------------------------------------
+NO-GO 理由 (ハードゲート FAIL):
+  - [item 1 G1] 接地率100%: 1232/1240 接地 (未接地 8)
+  - [item 2 G1] 未接地ID列挙が空: 未接地 8 件: ['row-0044', 'row-0210', 'row-0511', 'row-0777', 'row-0801']…
+  - [item 3 G2] false-merge率==0: false-merge 3 件 / rate=0.0075
+  - [item 5 G3] 二重計上ID列挙が空: 二重計上 2 件: ['src-77', 'src-219']
+  - [item 7 G4] 再走ハッシュ一致: hash 不一致 (sha256:9… != sha256:1…)
+  - [item 9 G5] 権利ブロック0件: 権利未クリア 2 件: ['doc-55', 'doc-980']
+  - [item 12 G7] HOLDフラグ無し: HOLD: ['rights-unresolved', 'determinism-drift']
+------------------------------------------------------------
+→ ハードゲート FAIL。再ビルド/再監査して 501 を返し直す。DDL/backfill は起票しない。
+
+$ post-return-verdict --metrics samples/metrics_GO.json --emit-plan
+# 501 GO → DDL / backfill 計画 (草案 / DRAFT)
+
+> ⚠️ **owner-gated。** 本草案は post-return-verdict が GO を出したことで自動生成された
+> *叩き台* に過ぎない。DDL 適用・backfill・本番 DB 投入は **Owner ratify / T2 ゲート**
+> を経るまで実行しない (RUNBOOK §6 / APPROVAL_RULE)。本ツールは一切 DB を触らない。
+
+- run_id: 501
+- verdict: GO (12/12 項目 PASS)
+- generated_from: summary.md + metrics.json (決定的判定)
+
+## 1. 前提 (GO の根拠)
+- 接地 100% / false-merge 0 / provenance 二重計上なし / 決定性一致 / rights クリア / HOLD なし。
+- 上記がメトリクス上で満たされているため、正本化 (accepted/canonical) と Generated Index
+  への backfill を **計画してよい段階** に入った (実行はまだ)。
+
+## 2. DDL 草案 (要レビュー)
+- [ ] 対象テーブル / カラムを確定 (canonical id, provenance ref, grounding ref, rights flag)。
+- [ ] stable_anchor_id の mint 規則を明記 (決定性ハッシュを再利用)。
+- [ ] 一意制約: provenance 二重計上を DB レベルでも防ぐ unique 制約。
+- [ ] NOT NULL: grounding ref を必須に (接地100%をスキーマで担保)。
+- [ ] migration は前方互換 (既存 index を壊さない) で起票。
+
+## 3. backfill 草案 (要レビュー)
+- [ ] dry-run backfill (件数・衝突・既存 index との差分を観測、書込なし)。
+- [ ] 冪等性: 再実行で二重 insert しない upsert キーを定義。
+- [ ] provenance 二重計上ガード: 投入前に distinct_sources を再検証。
+- [ ] ロールバック手順 (migration down / 投入分の限定削除キー) を用意。
+
+## 4. owner ratify チェックポイント
+- [ ] Owner に 5 行サマリで GO 根拠を提示。
+- [ ] T2 ゲート (DD accepted/canonical 昇格) を Owner 承認で通す。
+- [ ] 承認後にのみ DDL apply → backfill --apply (本ツール外・別手順)。
+
