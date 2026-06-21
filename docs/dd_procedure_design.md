@@ -208,7 +208,7 @@ procedure_type(spine)
 
 | # | タスク | 状態 | 根拠 |
 |---|---|---|---|
-| T1 | **商事系の再分類**：組織再編6手続を `commercial_nonlitigation` 直下に置かず `corporate_reorganization` family 新設へ。会社非訟（検査役選任等）は別維持 | **parked（owner packet 化待ち）** | RESULT must_fix5 / §2-2 |
+| T1 | **商事系の再分類**：組織再編6手続を `commercial_nonlitigation` 直下に置かず `corporate_reorganization` family 新設へ。会社非訟（検査役選任等）は別維持 | **owner packet 起票済（`20260621_commercialreclass_v0.1_DDPROCREG_REQUEST`・queued/未投函）** | RESULT must_fix5 / §2-2 |
 | T2 | 法人類型 facet を疎な applicability crosswalk / `procedure_variant` で設計 | parked | RESULT Q3 |
 | T3 | L1 procedure_registry（owner-ratified・安定ID・supersession map）の起票 | **scaffolded（器+ゲート実装・owner_ratified 0件）** | RESULT Q1 / must_fix6 |
 | T4 | inventory を独立2source（or 法令/公式1 + 実務書1）へ拡張、candidate 昇格条件の定義 | **昇格条件は実装済（拡張は parked）** | RESULT should_fix3 |

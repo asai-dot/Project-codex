@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from egov_fetch import extract_law_xml, parse_items  # noqa: E402
+from egov_fetch import extract_law_xml, parse_items, run_targets  # noqa: E402
 from requirement_floor import analyze_floor  # noqa: E402
 
 _PASS = 0
@@ -84,9 +84,36 @@ def test_feeds_requirement_floor_shape():
     check(floor["n_forms"] == 1, "canonical 形として requirement_floor が消費可能")
 
 
+def test_run_targets_offline():
+    """一括取得の配線を、ネット注入(オフライン fetcher)で検算。raw + anchors を書く。"""
+    import tempfile
+
+    raw_bytes = FIXTURE.encode("utf-8")
+    calls = []
+
+    def fake_fetch(law_id, *, url=None, timeout=30):  # オフライン: fixture を返す
+        calls.append((law_id, url))
+        return raw_bytes
+
+    targets = [{"law_id": "405AC0000000086", "article": "199", "paragraph": "1",
+                "out": "k199.anchors.json"}]
+    with tempfile.TemporaryDirectory() as d:
+        raw_dir = Path(d) / "raw"
+        res = run_targets(targets, raw_dir=raw_dir, out_dir=raw_dir, fetch_fn=fake_fetch)
+        check(len(res) == 1 and res[0]["n_anchors"] == 5, "1対象=5各号を取得")
+        check((raw_dir / "405AC0000000086.xml").exists(), "raw XML を保存")
+        out = (raw_dir / "k199.anchors.json")
+        check(out.exists(), "anchors JSON を出力")
+        import json as _j
+        payload = _j.loads(out.read_text(encoding="utf-8"))
+        check(payload["layer"] == "L0_observation", "出力は L0(床ではない)")
+        check(calls == [("405AC0000000086", None)], "law_id で read-only 取得を呼ぶ")
+
+
 def main() -> int:
     for t in [test_parse_items_basic, test_readonly_l0_invariants, test_paragraph_filter,
-              test_extract_law_xml_from_json_envelope, test_feeds_requirement_floor_shape]:
+              test_extract_law_xml_from_json_envelope, test_feeds_requirement_floor_shape,
+              test_run_targets_offline]:
         print(f"• {t.__name__}")
         t()
     print(f"\n{_PASS} passed, {_FAIL} failed")

@@ -144,17 +144,57 @@ def save_raw(raw: bytes, raw_dir: Path, law_id: str) -> Path:
     return path
 
 
+def run_targets(targets: list[dict], *, raw_dir: Path, out_dir: Path,
+                fetch_fn=fetch_raw) -> list[dict]:
+    """対象リストを一括 read-only 取得 → raw 保存 + anchor JSON 出力。
+
+    targets: [{"law_id","article"?,"paragraph"?,"out"?,"url"?}, ...]
+    fetch_fn は live 取得関数（テスト時はオフライン注入可）。許可された outbound 環境で回す想定。
+    返り値: 各対象の {law_id, n_anchors, raw, out}。
+    """
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    results: list[dict] = []
+    for t in targets:
+        law_id = t["law_id"]
+        raw = fetch_fn(law_id, url=t.get("url"))
+        raw_path = save_raw(raw, raw_dir, law_id)
+        anchors = parse_items(extract_law_xml(raw), law_id=law_id,
+                              article=t.get("article"), paragraph=t.get("paragraph"))
+        out_name = t.get("out") or f"{law_id}_a{t.get('article','')}_p{t.get('paragraph','')}.anchors.json"
+        out_path = out_dir / out_name
+        out_path.write_text(json.dumps(
+            {"layer": LAYER, "source": SOURCE_LABEL,
+             "_comment": "条文各号の生 anchor(read-only)。procedure 紐付け/floor accepted化は HOLD。",
+             "items": anchors}, ensure_ascii=False, indent=2), encoding="utf-8")
+        results.append({"law_id": law_id, "n_anchors": len(anchors),
+                        "raw": str(raw_path), "out": str(out_path)})
+    return results
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="e-Gov 条文各号の read-only 取得 / anchor 抽出")
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--law-id", help="e-Gov 法令ID (例 会社法=405AC0000000086)。online 取得")
     src.add_argument("--from-file", help="取得済み/fixture の法令XML を parse (offline)")
+    src.add_argument("--targets", help="対象リスト JSON で一括 read-only 取得 (許可環境で)")
     ap.add_argument("--url", help="取得URLを明示上書き (版差対応・read-only)")
     ap.add_argument("--article", help="条番号で絞り込み (例 199)")
     ap.add_argument("--paragraph", help="項番号で絞り込み (例 1)")
-    ap.add_argument("--raw-dir", help="online 取得時の raw 保存先 (例 pipeline/egov_raw)")
+    ap.add_argument("--raw-dir", help="raw 保存先 (例 pipeline/egov_raw)")
     ap.add_argument("--out", help="anchor JSON の出力先。未指定なら標準出力に要約")
     args = ap.parse_args(argv)
+
+    if args.targets:
+        spec = json.loads(Path(args.targets).read_text(encoding="utf-8"))
+        targets = spec if isinstance(spec, list) else spec.get("targets", [])
+        raw_dir = Path(args.raw_dir) if args.raw_dir else Path(args.targets).resolve().parent
+        out_dir = Path(args.out) if args.out else raw_dir
+        res = run_targets(targets, raw_dir=raw_dir, out_dir=out_dir)
+        for r in res:
+            print(f"  {r['law_id']}: 各号 {r['n_anchors']}件 → {r['out']} (raw {r['raw']})")
+        print(f"完了: {len(res)}件取得 (read-only / L0 observation)")
+        return 0
 
     if args.from_file:
         raw = Path(args.from_file).read_bytes()
