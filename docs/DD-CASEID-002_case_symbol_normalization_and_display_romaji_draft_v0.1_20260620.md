@@ -49,7 +49,10 @@ DD-CASEID-001 が「正準は かな/漢字」を確定した上で、残る2点
 - forum_registry_seed（CASEID-003）と独立（符号は forum 非依存）。
 
 ## 4. verification（昇格条件・現状）
-- deterministic_self_verification = **pending**（N1〜N5 を fixture 化し、CASEID-001 実測解析率を回帰再現するテストを別途）。
+- deterministic_self_verification = **fixture-level done / corpus-level pending**:
+  - `case_number_norm.py`（N1〜N5 参照実装）＋ `test_case_number_norm.py` = **16/16 fixtures green（exit 0）**。N1元号・N2全角/漢数字/先頭ゼロ・N3符号保持・N4空白除去・N5枝番・同字異義(民事ワ≠刑事わ)・未解析→None を網羅。
+  - `check_case_symbol_romaji_seed.py` = PASS（symbol一意・romaji衝突 wa を許容報告）。
+  - **corpus-level**（NII 100.00% / D1 99.94% の回帰再現）は Mac CC 実データで別途（本リモートにデータ無）。
 - independent_meaning_audit = **未了**（本draftを DDCASEID ゲートへ）。
 - owner_approval = **未了**。
 
