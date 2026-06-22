@@ -1,53 +1,72 @@
-# RECONCILIATION — 既存 NDL/蔵書パイプラインに寄せる（再発明の撤回）
+# RECONCILIATION — 既存 NDL/蔵書パイプライン（実地調査で確定）
 
-- 作成日: 2026-06-20
-- 経緯: 当初ここに R1/R2/R3 のオフライン照合スクリプトを新規作成したが、**他スレ（事務所スクリプト群）に
-  同等資産が既存**と判明したため、新規スクリプトは撤回（git 履歴には残置）。本書は既存資産への対応表と再利用方針。
-- 監査整合: FORWARD_ROADMAP v0.3 WS-R/WS-A/WS-B。**reuse > rebuild**。
+- 作成: 2026-06-20 / 更新: 2026-06-20（Box 実地調査で確定）
+- 経緯: ここに R1/R2/R3 を新規作成したが、**成熟した既存パイプラインが存在**（月次自動運用中）と判明し撤回。
+  本書は所在・データフロー・対応表・再利用方針。出典は公式 `ndl_pipeline_manual.md` v1.0 と各スクリプト現物。
 
-## 1. 既存資産（Box `scripts/` ＝ 事務所自動化コードベース）
+## 1. 既存パイプラインの所在（確定）
 
-| 既存 script | 役割 | 私の(撤回した)再発明 |
+Box: `すべてのファイル/浅井/claude/事務所内本棚DX化計画/`（Mac mirror `C:\Users\Asai\Box\浅井\claude\事務所内本棚DX化計画\`）
+- `scripts/`（id 372082336187）: `ndl_harvest.py` / `ndl_normalize.py` / `ndl_integrate.py` / `ndl_clean.py` /
+  `enrich_ndl_publisher.py` / `cinii_opac_overlay.py` / `s_court_analysis.py` / `google_books_isbn_recovery.py` / `opac_*` 他
+- `scan_data/`（id 371757721226）: 稼働データ（下記）
+- `app/data/books.json`: **蔵書DB正本 6,384冊**
+- `docs/ndl_pipeline_manual.md`: 公式マニュアル v1.0（月次運用手順）
+- mirror: `浅井/CODEX/scripts/`（id 372095733257, `match_titles_to_ndl.py` 等）
+
+## 2. データフロー（マニュアルより。**OAI-PMH 月次差分**が本線）
+
+```
+NDL OAI-PMH API
+  └ ndl_harvest.py(月次差分, scheduled task "ndl-monthly-harvest")
+      → scan_data/ndl_harvest_delta.csv
+  └ ndl_normalize.py(--target delta)  → *_normalized.csv
+  └ ndl_integrate.py(--delta, books.json突合)
+      → ndl_shelf_matched.csv / ndl_law_books_ndc320.csv / ndl_isbn_index.csv
+```
+
+## 3. owner の2問への回答（確定）
+
+**Q1: 既存 scripts の所在** → §1 のとおり（`事務所内本棚DX化計画/scripts` ＋ `CODEX/scripts`）。
+
+**Q2: 16.7GB ダンプは `ndl_normalize` の入力元か** → **いいえ。**
+- 本線は **OAI-PMH の月次差分**（`ndl_harvest_delta.csv`）を normalize/integrate する**増分**運用。
+- 16.7GB `NDL_書誌情報_raw`(161分割) は **アーカイブ全件スナップショット（約900万件）**。マニュアル §6「元データの所在」に
+  記載の参照用。Box Drive では「オンラインのみ」推奨（同期しない）。
+- **派生 ISBN 索引 `scan_data/ndl_isbn_index.csv`（851万件 / 1.9GB）は既に構築済・維持中。**
+
+## 4. 既存成果物（＝私が作ろうとしたものは概ね存在）
+
+| roadmap WS | 私の(撤回)案 | 既存実体 |
 |---|---|---|
-| `ndl_normalize.py` | ISBN noise除去 / **ISBN10→13 / checkdigit** / NFC / 全角半角 / `isbn_status`分類。target に **`ndl_isbn_index.csv`** あり | `isbn_util.py`, `r2`の正規化 |
-| `ndl_integrate.py` | ISBN で蔵書突合し **`alo:book:isbn:{isbn13}` URI 生成**、NDC320-329 法律書サブセット | `r3_coverage.py` の蔵書突合 |
-| `ndl_pipeline.py` | normalize→enrich→integrate オーケストレータ | `run_all.sh` |
-| `match_titles_to_ndl.py` | **no-ISBN の title→NDL exact/contains/fuzzy 照合**。正規化で**版/刷を除去**（EDITION_RE） | 1,101件 no-ISBN generator 構想 |
-| `google_books_isbn_recovery.py` | no-ISBN レコードの **ISBN 復元** | （未着手だが構想と重複） |
-| `enrich_ndl_publisher.py` | OpenBD で publisher 補完 | — |
-| `opac_ndl_overlay_analysis.py` / `opac_temporal_*` | OPAC 突合・時系列 | — |
-| `bookshelf_pdf_match.py` / `export_bookshelf_master.py` | 蔵書PDF突合 / master 書き出し | — |
-| `build_object_links_from_ndl_matches.py` | NDL match → object link | — |
+| WS-R R2 ISBN索引 | r2_build_index.py | **`scan_data/ndl_isbn_index.csv`(851万件)** 既存・月次更新 |
+| WS-A1/A2 蔵書突合 | r3_coverage.py | `ndl_shelf_matched.csv`(5,257) / `ndl_shelf_integrated.csv` |
+| WS-A2 ISBN復元(421/no-isbn) | 構想のみ | `google_books_isbn_recovery.csv` ＋ SRU `ndl_bibid_recovery.csv` |
+| WS-B1 no-ISBN title照合(1,101) | 構想のみ | `match_titles_to_ndl.py`（版/刷除去込み） |
+| 法律書サブセット | — | `ndl_law_books_ndc320.csv`(118,458) |
+| 購入候補 | — | `s_court_analysis.csv`（購入候補 16,639冊） |
+| 雑誌ISSN | — | `magazine_issn_assignment.csv`(92.4%) / `cinii_opac_overlay.csv` |
 
-**重要**: `ndl_integrate.py` が生成する `alo:book:isbn:{isbn13}` は、現 DB `biblio.bib_records.bib_id` と同形式。
-＝ **今の bib_records（asai-bookshelf, ndl 76.7%）はこの既存パイプラインの出力**。R4 lineage 仮説は事実上ここで裏取れる。
+→ **WS-R/A2/B1 は新規構築不要**。既存出力を**読む**だけで cohort-A 被覆・421・1,101 の問いに答えられる。
 
-## 2. 撤回したもの（git 履歴に残置・HEAD から除去）
-
+## 5. 撤回（git 履歴に残置）
 `isbn_util.py` / `r1_probe.py` / `r2_build_index.py` / `r3_coverage.py` / `selftest.py` / `run_all.sh` /
-`README.md`(旧) / `RUNBOOK_local.md`(旧)。
-※ selftest は PASS していたが、機能が既存と重複のため不採用。
+旧 README / 旧 RUNBOOK。コードレビュー監査は投函中止。
 
-## 3. 残置（再利用可能な新規・データのみ）
+## 6. 整合の注意（DB ↔ CSV のズレ）
+- 既存 CSV は 2026-04 系。蔵書正本 `books.json`=6,384。
+- Supabase `bib_records`(asai-bookshelf)=**6,524**、NDL present=5,002。＝**DB は CSV の後段ロードだが別スナップショット**。
+- → cohort-A の「正」は要確定（§8）。数値が近い（ISBN率 82.9%↔82.7%）ので同系統。
 
-- `input/cohortA_isbn.tsv`（5,397, DB由来 read-only スナップショット）
-- `input/cohortA_noisbn.tsv`（1,127, 同）
-→ 既存 `ndl_integrate.py` の `books.json` / `bookshelf_master` と役割が重なる。**どちらを正とするか §5 で要確認**。
+## 7. DD-LITID の「真の新規」部分（既存と重複しない）
 
-## 4. 再利用方針（rebuild しない）
+既存パイプラインは **ISBN→NDL を manifestation 級で match** するが、以下は**やっていない**＝ここが DD-LITID の付加価値:
+- **版/刷の confirmed 区別**（版＝edition を識別子で束ね、刷は無視）
+- **2独立証拠での confirm / candidate≠confirmed / adjudication 記録**（D0/Q1 契約）
+- work/edition/holding/access のカウント分離、confusion buckets、cohort×decision_type ゲート
+→ ロードマップは「索引/突合の再実装」ではなく、**既存 match 出力の上に edition-identity ガバナンス層を載せる**ものと再定義。
 
-- **WS-R（オフライン索引）**: 新規作成せず、`ndl_normalize.py --target index`（`ndl_isbn_index.csv`）を
-  **16.7GB の `ndl_all_records_*.csv`** に向ける運用に寄せる。差分は「入力ファイル名/パスの差し替え」程度のはず。
-- **WS-A2（421 穴埋め）**: `ndl_integrate.py` の shelf 突合 + `google_books_isbn_recovery.py` を再走。
-- **WS-B1（1,101 no-ISBN）**: `match_titles_to_ndl.py`（版/刷除去済）を再利用。新規 generator は作らない。
-- v0.3 の監査ガード（candidate≠confirmed / lineage / no egress / Q1 非循環）は、既存出力を**そのまま confirmed 扱い
-  しない**形で上に被せる（既存は match までで、adjudication は別途）。
-
-## 5. owner / local に確認したいこと
-
-1. 既存 `scripts/` 一式の所在（Asai PC / Box）と、`ndl_all_records_*.csv`(16.7GB) が `ndl_normalize.py` の
-   harvest 入力（`ndl_isbn_index.csv` 等）の元データか。**重複生成を避けるため**。
-2. `books.json` / `bookshelf_master*.json`（既存）と 本 DB `bib_records`/本 `input/*.tsv` のどれを cohort-A の正とするか。
-3. 既存 `ndl_*_normalized.csv` / `ndl_shelf_integrated.csv` の最新版が Box にあるか（あれば R3 被覆は再走不要で読むだけ）。
-
-→ 上記が分かれば、**新規コードゼロで** WS-A1/A2/B1 の read-only 計測に入れる見込み。
+## 8. owner / local への確認（最小）
+1. cohort-A の「正」を DB(`bib_records`) と CSV(`books.json`/`ndl_shelf_matched.csv`) のどちらに置くか。
+2. 既存 `ndl_shelf_matched.csv` / `ndl_isbn_index.csv` の最新版を read-only で参照してよいか（被覆は**再走不要・読むだけ**）。
+3. 月次 harvest の最新実行日（`ndl_harvest_state.json`）＝鮮度基準。
