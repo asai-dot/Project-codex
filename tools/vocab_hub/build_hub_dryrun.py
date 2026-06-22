@@ -92,17 +92,22 @@ def is_bedrock(rank) -> bool:
     return s in ("101", "102")
 
 
+def _tid(t: dict) -> str:
+    """term の識別子. term_id が無ければ stg_term_key (実ゴールド) を使う."""
+    return str(t.get("term_id") or t.get("stg_term_key") or "")
+
+
 def _anchor_rule(terms: List[dict]) -> str:
-    """中立 anchor: e-Gov(rank100台) 優先 -> scheme_id 昇順 -> term_id 昇順."""
+    """中立 anchor: e-Gov(rank100台) 優先 -> scheme_id 昇順 -> term id 昇順."""
     def key(t):
         return (0 if str(t.get("authority_rank")).startswith("100") else 1,
-                str(t.get("scheme_id", "")), str(t.get("term_id", "")))
-    return sorted(terms, key=key)[0]["term_id"]
+                str(t.get("scheme_id", "")), _tid(t))
+    return _tid(sorted(terms, key=key)[0])
 
 
 def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
     """bedrock seed -> exact_match -> close_match -> specialty attach (DBなし)."""
-    by_tid = {str(t["term_id"]): t for t in terms}
+    by_tid = {_tid(t): t for t in terms}
     bedrock = [t for t in terms if is_bedrock(t.get("authority_rank")) and str(t.get("term_tier", "1")) == "1"]
     specialty = [t for t in terms if not is_bedrock(t.get("authority_rank"))]
 
@@ -123,7 +128,7 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
         anchor = by_tid[anchor_tid]
         merged, conflicts = [anchor], []
         for t in grp:
-            if t["term_id"] == anchor_tid:
+            if _tid(t) == anchor_tid:
                 continue
             ov = overlap(anchor.get("definition", ""), t.get("definition", ""))
             if len(grp) == 1 or ov >= threshold or str(t.get("scheme_id")) == str(anchor.get("scheme_id")):
@@ -141,10 +146,10 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
         })
         for m in merged:
             memberships.append({
-                "hub_id": hub_id, "term_id": m["term_id"], "scheme_id": m.get("scheme_id"),
+                "hub_id": hub_id, "term_id": _tid(m), "scheme_id": m.get("scheme_id"),
                 "authority_rank": m.get("authority_rank"),
                 "map_type": "bedrock_seed" if len(merged) == 1 else "skos_exact_match",
-                "is_anchor": m["term_id"] == anchor_tid,
+                "is_anchor": _tid(m) == anchor_tid,
                 "definition_overlap": round(overlap(anchor.get("definition", ""), m.get("definition", "")), 3),
             })
         # 低重なり = 同綴異義: 統合せず別 hub (homograph)
@@ -153,13 +158,13 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
             hub_seq += 1
             hid = f"hub:{hub_seq:06d}"
             hubs.append({
-                "hub_id": hid, "anchor_term_id": t["term_id"], "hub_label": pref, "reading": reading,
+                "hub_id": hid, "anchor_term_id": _tid(t), "hub_label": pref, "reading": reading,
                 "member_count": 1, "authority_ranks": [str(t.get("authority_rank"))],
                 "hub_status": "provisional", "identity_scope": "vocab_hub_provisional_noncanonical",
                 "homograph_conflict": True, "homograph_overlap": round(ov, 3),
             })
             memberships.append({
-                "hub_id": hid, "term_id": t["term_id"], "scheme_id": t.get("scheme_id"),
+                "hub_id": hid, "term_id": _tid(t), "scheme_id": t.get("scheme_id"),
                 "authority_rank": t.get("authority_rank"), "map_type": "homograph_split",
                 "is_anchor": True, "definition_overlap": round(ov, 3),
             })
@@ -172,7 +177,7 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
         if hid:
             specialty_attached += 1
             memberships.append({
-                "hub_id": hid, "term_id": t["term_id"], "scheme_id": t.get("scheme_id"),
+                "hub_id": hid, "term_id": _tid(t), "scheme_id": t.get("scheme_id"),
                 "authority_rank": t.get("authority_rank"), "map_type": "skos_close_match",
                 "is_anchor": False, "definition_overlap": None, "specialty_attach": True,
             })
@@ -180,13 +185,13 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
             hub_seq += 1
             hid = f"hub:{hub_seq:06d}"
             hubs.append({
-                "hub_id": hid, "anchor_term_id": t["term_id"], "hub_label": t.get("normalized_pref", ""),
+                "hub_id": hid, "anchor_term_id": _tid(t), "hub_label": t.get("normalized_pref", ""),
                 "reading": t.get("reading", ""), "member_count": 1,
                 "authority_ranks": [str(t.get("authority_rank"))], "hub_status": "provisional",
                 "identity_scope": "vocab_hub_provisional_noncanonical", "specialty_only": True,
             })
             memberships.append({
-                "hub_id": hid, "term_id": t["term_id"], "scheme_id": t.get("scheme_id"),
+                "hub_id": hid, "term_id": _tid(t), "scheme_id": t.get("scheme_id"),
                 "authority_rank": t.get("authority_rank"), "map_type": "specialty_seed",
                 "is_anchor": True, "definition_overlap": None, "specialty_attach": False,
             })
@@ -244,12 +249,17 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--labels", type=Path, default=None,
                     help="定義が labels側(label_type=='definition')にある実スキーマ向け. join する.")
     ap.add_argument("--term-key", default="stg_term_key", help="定義 join 用の term 側キー (既定 stg_term_key)")
-    ap.add_argument("--field-map", type=Path, default=None)
+    ap.add_argument("--field-map", default=None,
+                    help='term フィールド写像. インラインJSON \'{"term_id":"stg_term_key"}\' か JSONファイルパス. '
+                         '(term_id 不在時は stg_term_key を自動使用するので通常不要)')
     ap.add_argument("--overlap-threshold", type=float, default=DEFAULT_OVERLAP)
     ap.add_argument("--out", required=True, type=Path)
     args = ap.parse_args(argv)
 
-    fmap = json.loads(args.field_map.read_text(encoding="utf-8")) if args.field_map else None
+    fmap = None
+    if args.field_map:
+        s = args.field_map.strip()
+        fmap = json.loads(s) if s.startswith("{") else json.loads(Path(s).read_text(encoding="utf-8"))
     terms = list(read_jsonl(args.terms))
     if args.labels:  # 定義 join (remap 前: 生キー stg_term_key で突合)
         attach_definitions(terms, read_jsonl(args.labels), term_key=args.term_key)

@@ -120,6 +120,19 @@ class TestRealSchemaJoin(unittest.TestCase):
         self.assertEqual(stats["hubs"], 1)
         self.assertEqual(hubs[0]["anchor_term_id"], "t1")
 
+    def test_build_works_without_term_id_uses_stg_key(self):
+        # field-map 無しでも stg_term_key を識別子に使えること
+        terms = [
+            {"stg_term_key": "tA", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "占有", "reading": "せんゆう", "definition": "物を事実上支配", "term_tier": 1},
+            {"stg_term_key": "tB", "scheme_id": "hourei", "authority_rank": 102,
+             "normalized_pref": "占有", "reading": "せんゆう", "definition": "物を事実上支配する状態", "term_tier": 1},
+        ]
+        hubs, mem, stats = bh.build_hubs(terms)
+        self.assertEqual(stats["hubs"], 1)
+        self.assertIn(hubs[0]["anchor_term_id"], {"tA", "tB"})
+        self.assertTrue(all(m["term_id"] for m in mem))  # 空 id にならない
+
 
 if __name__ == "__main__":
     unittest.main()
