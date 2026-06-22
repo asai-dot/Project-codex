@@ -51,6 +51,24 @@ def remap_records(records: Iterable[dict], field_map: Optional[Dict[str, str]]) 
     return out
 
 
+def attach_definitions(terms: List[dict], labels: Iterable[dict],
+                       term_key: str = "stg_term_key", label_defkey: str = "stg_term_key") -> None:
+    """定義が labels 側(label_type=='definition')にある実スキーマ向け: term へ join.
+
+    有斐閣ゴールド(generate_staging_v3)は terms に definition を持たず, labels の
+    {"label_type":"definition","label_text":...,"stg_term_key":...} に持つ. join で term["definition"] を埋める.
+    """
+    def_by_key: Dict[str, str] = {}
+    for lb in labels:
+        if lb.get("label_type") == "definition":
+            k = lb.get(label_defkey)
+            if k is not None and k not in def_by_key:
+                def_by_key[str(k)] = lb.get("label_text", "")
+    for t in terms:
+        if not t.get("definition"):
+            t["definition"] = def_by_key.get(str(t.get(term_key, "")), "")
+
+
 def bigrams(text: str) -> set:
     t = (text or "").replace(" ", "").replace("　", "")
     if len(t) < 2:
@@ -223,13 +241,19 @@ def build_report(hubs, memberships, stats, threshold) -> str:
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description="P0 語彙Hub構築 dry-run (read-only)")
     ap.add_argument("--terms", required=True, type=Path)
+    ap.add_argument("--labels", type=Path, default=None,
+                    help="定義が labels側(label_type=='definition')にある実スキーマ向け. join する.")
+    ap.add_argument("--term-key", default="stg_term_key", help="定義 join 用の term 側キー (既定 stg_term_key)")
     ap.add_argument("--field-map", type=Path, default=None)
     ap.add_argument("--overlap-threshold", type=float, default=DEFAULT_OVERLAP)
     ap.add_argument("--out", required=True, type=Path)
     args = ap.parse_args(argv)
 
     fmap = json.loads(args.field_map.read_text(encoding="utf-8")) if args.field_map else None
-    terms = remap_records(read_jsonl(args.terms), fmap)
+    terms = list(read_jsonl(args.terms))
+    if args.labels:  # 定義 join (remap 前: 生キー stg_term_key で突合)
+        attach_definitions(terms, read_jsonl(args.labels), term_key=args.term_key)
+    terms = remap_records(terms, fmap)
     hubs, memberships, stats = build_hubs(terms, args.overlap_threshold)
 
     args.out.mkdir(parents=True, exist_ok=True)
