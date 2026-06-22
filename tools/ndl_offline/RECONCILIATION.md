@@ -53,10 +53,25 @@ NDL OAI-PMH API
 `isbn_util.py` / `r1_probe.py` / `r2_build_index.py` / `r3_coverage.py` / `selftest.py` / `run_all.sh` /
 旧 README / 旧 RUNBOOK。コードレビュー監査は投函中止。
 
-## 6. 整合の注意（DB ↔ CSV のズレ）
-- 既存 CSV は 2026-04 系。蔵書正本 `books.json`=6,384。
-- Supabase `bib_records`(asai-bookshelf)=**6,524**、NDL present=5,002。＝**DB は CSV の後段ロードだが別スナップショット**。
-- → cohort-A の「正」は要確定（§8）。数値が近い（ISBN率 82.9%↔82.7%）ので同系統。
+## 6. cohort-A の素性（lineage 確定）
+
+調査で系譜が判明:
+```
+物理蔵書 / 自炊スキャン / 手入力
+  → bookshelf_dx repo: app/data/books.json   ← ★正本(living source of truth)。H:\work\repos\bookshelf_dx
+  → NDL pipeline enrich（ndl_integrate: NDL bibid / alo:book:isbn URI 付与）
+  → bookshelf release candidate（export books.jsonl + toc_index 776,999 + covers 1,172）
+  → Supabase import → biblio.bib_records (source=asai-bookshelf)  ← 下流スナップショット
+```
+
+**それぞれの由来（owner Q1 への回答）**
+- **`books.json`（正本・上流）**: 蔵書アプリ `bookshelf_dx` の生きた蔵書DB。物理/スキャン/手入力＋NDL突合 enrich で更新。
+  2026-04-04 時点 6,384 → 04-22 dry-run で **6,525**（成長中）。TOC・表紙も保持＝bib_records より情報が多い。
+- **`bib_records`（Supabase・下流）**: 上記 release を **2026-06-03 18:59 に一括ロード**した時点スナップショット＝**6,524**。
+  `raw`/`source_url`/`source_hash` は**全て空**（素のロードで provenance 列は未投入）。04-22 dry-run の books=6,525 とほぼ一致。
+
+**結論**: **正本は `books.json`（bookshelf_dx）**。`bib_records` はその 2026-06-03 release snapshot。
+identity 作業は DB(`bib_records`) を作業面にしてよいが、**provenance ルートは books.json/release**。両者の差(6,524↔6,525↔6,384)は時点差。
 
 ## 7. DD-LITID の「真の新規」部分（既存と重複しない）
 
