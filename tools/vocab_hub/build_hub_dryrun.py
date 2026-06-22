@@ -24,12 +24,34 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import unicodedata
 from collections import Counter, defaultdict
 from itertools import combinations
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
 
 DEFAULT_OVERLAP = 0.6  # DD-DICT-008 Q2: 暫定. Wave0 実測で再校正
+_FW_ALNUM = str.maketrans(
+    "ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ０１２３４５６７８９",
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+
+
+def norm_pref(s: str) -> str:
+    """generate_staging_v3.normalize_pref 互換: NFC + 全角英数→半角. 辞書間でキーを揃える."""
+    return unicodedata.normalize("NFC", str(s or "")).strip().translate(_FW_ALNUM)
+
+
+def norm_reading(s: str) -> str:
+    """読みの正規化: NFKC + カタカナ→ひらがな + 記号/空白除去 (辞書間の読みキー統一)."""
+    r = unicodedata.normalize("NFKC", str(s or ""))
+    out = [chr(ord(c) - 0x60) if "ァ" <= c <= "ヴ" else c for c in r]
+    return "".join(out).replace(" ", "").replace("　", "").replace("・", "").replace("ー", "").strip()
+
+
+def _key(t: dict):
+    """グループ化キー: (正規化見出し, 正規化読み). normalized_pref が無ければ pref_label/headword から."""
+    pref = t.get("normalized_pref") or t.get("pref_label") or t.get("headword") or ""
+    return (norm_pref(pref), norm_reading(t.get("reading", "")))
 
 
 def read_jsonl(path: Path) -> Iterable[dict]:
@@ -111,10 +133,10 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
     bedrock = [t for t in terms if is_bedrock(t.get("authority_rank")) and str(t.get("term_tier", "1")) == "1"]
     specialty = [t for t in terms if not is_bedrock(t.get("authority_rank"))]
 
-    # key = (normalized_pref, reading)
+    # key = (正規化見出し, 正規化読み) — 辞書間でキーを揃える
     groups: Dict[tuple, List[dict]] = defaultdict(list)
     for t in bedrock:
-        groups[(t.get("normalized_pref", ""), t.get("reading", ""))].append(t)
+        groups[_key(t)].append(t)
 
     hubs: List[dict] = []
     memberships: List[dict] = []
@@ -172,7 +194,7 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
     # specialty (rank>=103): 同 key の bedrock hub に attach のみ. 無ければ provisional specialty hub.
     specialty_attached = 0
     for t in specialty:
-        key = (t.get("normalized_pref", ""), t.get("reading", ""))
+        key = _key(t)
         hid = hub_of_key.get(key)
         if hid:
             specialty_attached += 1
@@ -245,7 +267,8 @@ def build_report(hubs, memberships, stats, threshold) -> str:
 
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description="P0 語彙Hub構築 dry-run (read-only)")
-    ap.add_argument("--terms", required=True, type=Path)
+    ap.add_argument("--terms", required=True, type=Path, nargs="+",
+                    help="Term JSONL を複数可 (例: 有斐閣 + 学陽). 連結して 1 つの語彙空間で hub 構築.")
     ap.add_argument("--labels", type=Path, default=None,
                     help="定義が labels側(label_type=='definition')にある実スキーマ向け. join する.")
     ap.add_argument("--term-key", default="stg_term_key", help="定義 join 用の term 側キー (既定 stg_term_key)")
@@ -260,8 +283,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.field_map:
         s = args.field_map.strip()
         fmap = json.loads(s) if s.startswith("{") else json.loads(Path(s).read_text(encoding="utf-8"))
-    terms = list(read_jsonl(args.terms))
-    if args.labels:  # 定義 join (remap 前: 生キー stg_term_key で突合)
+    terms = []
+    for tp in args.terms:
+        terms.extend(read_jsonl(tp))
+    if args.labels:  # 定義 join (remap 前: 生キー stg_term_key で突合). 学陽はインライン定義なので skip される
         attach_definitions(terms, read_jsonl(args.labels), term_key=args.term_key)
     terms = remap_records(terms, fmap)
     hubs, memberships, stats = build_hubs(terms, args.overlap_threshold)
