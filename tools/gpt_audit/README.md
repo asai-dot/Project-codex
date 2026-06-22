@@ -1,174 +1,156 @@
-# alo-gpt-audit — GPT Pro 監査ループ運用ツール
+# alo-gpt-audit
 
-GPT Pro お目付け役の監査を「**返答で終わらせず、Claude の再思考まで回す**」ための
-依存ゼロ Python CLI。Owner が「監査を回して」「回しといて」「監査溜まってない？」と
-言ったときに動く、`gpt_ometsuke/` レーンの行き・帰り・**反映**処理を担う。
+GPT Pro 目付け役 監査レーン (`gpt_ometsuke/`) の **行き・帰り・完了処理**を機械化する単一書き手 CLI。
+設計書: `GPT_PRO_AUDIT_LANE_DESIGN_v0.2_20260606.md` (Box file_id 2269085336900) の実装。
 
-## 正本 (canonical references)
+> 設計仕様 v0.3（語彙アライン + 反映キュー）は [`docs/GPT_PRO_AUDIT_LANE_DESIGN_v0.3_20260607.md`](docs/GPT_PRO_AUDIT_LANE_DESIGN_v0.3_20260607.md)。
+> 正本は Box (`gpt_ometsuke/`, file_id 2269736541410)。本リポジトリのものは mirror。
 
-- `GPT_PRO_AUDIT_LOOP_RULE_v0.1_20260607.md`
-- `GPT_PRO_AUDIT_LANE_DESIGN_v0.3_20260607.md`
-- `GPT_PRO_AUDIT_LANE_APPROVAL_RULE_v0.1_20260606.md`
+## 中核ルール
 
-## 設計原則 (v0.2 から不変)
+> `to_gpt/` 直下は、GPT がまだ答えていない REQUEST だけにする。
+> RESULT を返したら、元 REQUEST は必ず `to_gpt/processed/` へ退避する。
 
-> **フォルダ位置を状態にする。`to_gpt/` 直下は未回答 REQUEST だけ。**
-> RESULT を返したら REQUEST を `to_gpt/processed/` へ退避する。
-> **だが退避は反映ではない。** `reflected:true` と lifecycle の `accepted`
-> (Owner ratify 経由) に到達して、監査は初めて閉じる。
+状態の SoT は **フォルダ位置とファイル実体**。台帳 (`_AUDIT_LEDGER.jsonl` / `.md`) はそこから派生する控え。
 
-## レーン構造 (root = `gpt_ometsuke/`)
+## レーン構成
 
-```
-gpt_ometsuke/
-├── to_gpt/                 # REQUEST 置き場。直下 = 未回答だけ
-│   ├── *_REQUEST.md        #   active (未回答)
-│   └── processed/          #   退避済み REQUEST (回答 1 回分は済)
-├── from_gpt/               # RESULT 置き場 (*_RESULT.md)
-├── approval_queue/         # next_action=ratify のカード
-├── patch_queue/            # next_action=patch のカード
-├── material_queue/         # next_action=required_materials のカード
-├── rejected_queue/         # next_action=reject のカード
-└── _AUDIT_LEDGER.jsonl     # 監査台帳 (append-only。SoT はフォルダ位置、台帳は派生控え)
-```
-
-## インストール / 実行
-
-依存なし (Python 3.9+)。root は Box Drive 同期パスを指す。
-実 Box で回す手順は **`RUNBOOK_macCC.md`** (Mac 単一書き手向け) を参照。
-
-```bash
-export ALO_GPT_AUDIT_ROOT="$HOME/Library/CloudStorage/Box-Box/.../gpt_ometsuke"
-python3 tools/gpt_audit/alo_gpt_audit.py status
-# または --root で明示
-python3 tools/gpt_audit/alo_gpt_audit.py --root /path/to/gpt_ometsuke status
-```
-
-> **単一書き手**で実行すること (退避とリネームの競合を避ける)。
-
-## コマンド
-
-| コマンド | 役割 | 承認 |
+| folder | 役割 | 中身 |
 |---|---|---|
-| `status [-v]` | 三点照合でレーン状態 (読取) | 不要 |
-| `close <id> [--apply]` | 1 件 close (退避+台帳+route)。既定 dry-run | 不要 |
-| `close-all [--apply]` | answered を一括 close。既定 dry-run | 不要 |
-| `action-queue` | `reflected:false` の一覧 = Claude の次手 | 不要 |
-| `owner-digest [--all]` | Owner 5 行サマリ | 不要 |
-| `reflect <id> [--apply]` | RESULT を反映済みにする (`reflected:true`) | 不要 |
-| `lint` | REQUEST preflight (T2 必須キー) | 不要 |
-| `health [--json]` | 監査レーン health report | 不要 |
-| `gate-check <op>` | 操作の承認要否を判定 | — |
+| `<root>/to_gpt/` | GPT 未回答の ACTIVE REQUEST | `*_REQUEST.md` |
+| `<root>/from_gpt/` | RESULT 正本アーカイブ | `*_RESULT.md` |
+| `<root>/to_gpt/processed/` | 退避済み REQUEST の控え | RESULT 作成後の元 REQUEST |
 
-## 監査ループ (理想形)
+`<root>` は Box folder `gpt_ometsuke/` (387373370306) を Box Drive で同期したローカル実パス。
+GPT が毎回 Box をいじるのではなく、**最後の 1 プロセス (Mac CC / 単一書き手)** が退避を実行する。
 
-```
-Owner: 「監査を回して」「監査溜まってない？」
-  ↓ (GPT Pro が REQUEST を監査し from_gpt に RESULT)
-alo-gpt-audit status        # 未回答 / answered_not_processed / bad_label を確認
-  ↓
-alo-gpt-audit close-all --apply
-  # 1) answered REQUEST を to_gpt/processed/ へ退避  (承認不要)
-  # 2) _AUDIT_LEDGER.jsonl に追記                    (承認不要)
-  # 3) result_label -> next_action_type で振分けカード作成 (承認不要)
-  ↓
-alo-gpt-audit action-queue  # Claude が読む: patch / 資料補充 / 再投函 / ratify待ち / reject
-  ↓ (Claude が patch / 再投函 等を実施)
-alo-gpt-audit reflect <id> --apply   # reflected:true。ループが 1 周閉じる
-  ↓
-alo-gpt-audit owner-digest  # Owner には 5 行サマリだけ返す
-```
-
-## result_label → next_action_type (LOOP_RULE §3)
-
-| result_label | next_action_type | queue | loop_state(初期) | Owner |
-|---|---|---|---|---|
-| `*_PASS` | ratify | approval_queue | ratify_wait | ratify必要 |
-| `*_PASS_WITH_NOTES` (blocking 無) | ratify | approval_queue | ratify_wait | ratify必要 |
-| `*_PASS_WITH_NOTES` (blocking 有) | **patch** | patch_queue | returned | 判断必要 |
-| `*_MODIFY_REQUIRED` | patch | patch_queue | returned | 不要 |
-| `*_NEED_MORE` | required_materials | material_queue | returned | 不要/判断 |
-| `*_FAIL` / `*_REJECT` | reject | rejected_queue | returned | 判断必要 |
-
-`*_ESCALATE_OWNER` は `NEED_MORE` (need_more_type=ambiguity_owner) として扱う。
-
-## 三点照合 (DESIGN v0.3 §I) — 二重回答防止
-
-REQUEST ↔ RESULT の対応を次の優先順で確定する:
-
-1. `result_expected_filename` (front-matter) == RESULT ファイル名 — 最強・言語非依存
-2. ファイル名規約 (`_REQUEST.md` → `_RESULT.md`)
-3. `request_id` が RESULT 本文/ファイル名に含まれ、かつ gate 一致
-
-いずれも満たさない → `missing_result` (移動しない)。
-RESULT 先頭行が `<GATE>_<VERDICT>` でない → `bad_label` (移動しない)。
-
-## 承認不要 / 承認必要 (APPROVAL_RULE)
-
-**このツールが行うのは「監査の帰り便 = 承認不要な事務」だけ。**
-
-- 承認不要: RESULT 保存 / REQUEST の processed 退避 / 台帳追記 / action queue 更新。
-- 承認必要 (**このツールは絶対に実行しない**): DD accepted/canonical 化、Generated
-  Index backfill、本番 DB 投入・DDL、SF 書戻し、外部送信・公開。
-
-`gate-check <op>` で要否を判定できる (owner-gated は exit code 2)。
-
-## 台帳 (`_AUDIT_LEDGER.jsonl`) 1 レコードの項目
-
-append-only JSONL。`reflect` も新イベント行として追記し、`action-queue` は
-request_id ごとに最新行 (後勝ち) で状態を判定する。
-
-```json
-{
-  "ts": "2026-06-07T20:00:00+09:00",
-  "event": "close",
-  "request_id": "...", "request_filename": "...", "result_filename": "...",
-  "result_label": "DDX_MODIFY_REQUIRED", "verdict": "MODIFY_REQUIRED", "gate": "DDX",
-  "next_action_type": "patch", "ratify_required": false, "requeue_expected": true,
-  "need_more_type": null, "reflected": false,
-  "blocking_before_ratify": [], "missing_materials": [],
-  "owner_digest_5line": "監査: ...\n結論: ...\n...",
-  "claude_rethink_prompt": "[DDX] MODIFY: ...",
-  "loop_state": "returned",
-  "queue": "patch_queue", "approval_required_to_act": false
-}
-```
-
-`loop_state`: `returned`(返却・未反映) → `reflected`(反映済) / `requeued`(再投函) /
-`ratify_wait`(PASS で ratify 待ち) → `closed`(反映済かつ次アクション無)。
-
-## テスト / 検収 (DESIGN v0.3 §H)
+## インストール
 
 ```bash
-python3 -m unittest discover -s tools/gpt_audit/tests -v
+cd tools/gpt_audit
+pip install -e .
 ```
+
+`pip` を使わず単体実行も可能:
+
+```bash
+PYTHONPATH=src python -m alo_gpt_audit status --root /path/to/gpt_ometsuke
+```
+
+## 使い方
+
+root は `--root` または環境変数 `ALO_GPT_OMETSUKE_ROOT` で指定する。
+
+```bash
+export ALO_GPT_OMETSUKE_ROOT="$HOME/Library/CloudStorage/Box/.../gpt_ometsuke"
+
+# 1) レーン状態の確認 (読み取りのみ)
+alo-gpt-audit status
+alo-gpt-audit status --json
+
+# 2) 1 件を退避 (検証 + 移動 + 台帳追記)
+alo-gpt-audit close 20260605_quasijudicial_v0.4_DDCASESOURCE
+
+# 3) answered_not_processed を一括退避 (既定 dry-run。--apply で実行)
+alo-gpt-audit close-all
+alo-gpt-audit close-all --apply
+
+# 4) 反映キュー: RESULT を消化するための next_action を表示
+alo-gpt-audit action-queue
+alo-gpt-audit action-queue --json
+
+# 5) REQUEST の preflight 検査 (scope境界 / target_mode / source_hash)
+alo-gpt-audit lint
+alo-gpt-audit lint --strict   # 警告があれば exit 1
+```
+
+## 反映キュー (action-queue) — 監査の出口を閉じる
+
+退避 (`processed/`) は **「GPT 照会 1 回分は回答済み」** を意味するだけで、
+**「設計に反映済み」ではない**。RESULT が返っただけで止まると「赤入れをもらった
+だけ」事故になる。`action-queue` は from_gpt の全 RESULT を読み、ラベルから
+次アクションを導出して反映キュー (Box フォルダを増やさず台帳派生ビュー) を出す。
+
+| RESULT label | next_action_type | flags |
+|---|---|---|
+| `PASS` / `PASS_WITH_NOTES` | `ratify` | `ratify_required` (PASS_WITH_NOTES は `blocking_before_ratify` を ratify 前に反映必須) |
+| `MODIFY_REQUIRED` | `patch` | `requeue_expected` |
+| `NEED_MORE` | `required_materials` | `requeue_expected`, `need_more_type`, `missing_materials` |
+| `FAIL` | `reject` | — |
+
+RESULT 本文に次の任意項目があれば抽出して表示する (§2 PASS_WITH_NOTES 粒度 / §5 NEED_MORE 細分):
+
+```yaml
+need_more_type: material_absent|context_insufficient|evidence_unverified|ambiguity_owner
+missing_materials:
+  - ...
+blocking_before_ratify:    # PASS_WITH_NOTES でも ratify 前に必須の修正
+  - ...
+```
+
+退避済み (`processed_done`) の RESULT も消化対象として出し続ける — ここが
+「監査結果が返っただけで設計に反映されない」事故を防ぐ要。
+
+## lint — REQUEST preflight (監査スコープ境界 §4 / target_mode §6)
+
+T2 監査 (accepted化・規範新設・本番投入前) の REQUEST が、揃っているべき
+front-matter キーを持つか検査する (advisory。`--strict` で exit 1)。
+
+```yaml
+review_scope:          # include / exclude。exclude が特に重要 (確定事項を蒸し返さない)
+regression_anchors:    # 矛盾してはいけない accepted/canonical の Box ID
+decision_requested:    # PASS可否 / accepted化可否 / backfill可否
+target_mode:           # inline_embedded | box_hash_locked | box_pointer_only
+source_hash:           # T2 は box_hash_locked 推奨 (unresolved を弾く)
+```
+
+## lane status (三点照合 §6)
+
+`A`=to_gpt直下にある / `B`=from_gpt に RESULT あり / `C`=processed にある。
+
+| lane_status | A | B | C | 意味 / 処理 |
+|---|---|---|---|---|
+| `active` | ✓ | ✗ | ✗ | queued・GPT 未回答 (正常な待ち) |
+| `blocked_active` | ✓ | ✗ | ✗ | `blocked/superseded/cancelled` で待ち |
+| `answered_not_processed` | ✓ | ✓ | ✗ | **close 対象** (RESULT あり・未退避) |
+| `duplicate_in_processed` | ✓ | ✓ | ✓ | 重複 → 同内容なら集約、差異なら要人間確認 |
+| `processed_without_result` | ✓ | ✗ | ✓ | 事故 → 自動処理せず人間確認 |
+
+## close の検証 (§5 完了条件)
+
+1. `from_gpt/<result_expected_filename>` が存在する
+2. RESULT 先頭行が `<gate>_{PASS,PASS_WITH_NOTES,MODIFY_REQUIRED,FAIL,NEED_MORE}` のいずれか
+3. RESULT 本文の `request_id` が REQUEST と一致 (不一致は拒否 / 欠落は警告)
+4. 元 REQUEST を `to_gpt/processed/` へ移動
+5. 台帳へ追記
+
+`NEED_MORE` / `MODIFY_REQUIRED` でも退避する。これは「案件完了」ではなく
+「その GPT 照会 1 回分は回答済み」を意味する (§7, §8)。`blocked` + `NEED_MORE` も退避対象。
+
+## テスト
+
+```bash
+cd tools/gpt_audit
+PYTHONPATH=src python -m pytest -q
+```
+
+テストフィクスチャは 2 系統:
+
+- `lane_root`: 2026-06-06 時点の**実 Box 状態**を再現
+  (真の `answered_not_processed` は quasijudicial の 1 件のみ、
+  再投函済みの statusregistry v0.2 / legaldb v0.5.1 は `active`)。
+- `design_lane_root`: 設計書 §13 の**理想シナリオ** (answered=4, processed 空)。
+  検収テスト用。
+
+### 検収テスト (TEST-1〜6)
+
+`tests/test_acceptance.py` が Mac CC 実装の受け入れ基準を固定する:
 
 | test | 内容 |
 |---|---|
-| TEST-1 status | answered_not_processed を正しく数える |
-| TEST-2 dry-run | 退避予定表示・NEED_MORE/MODIFY も対象・何も動かさない |
-| TEST-3 execute | REQUEST→processed、to_gpt 直下 answered=0、RESULT 残置 |
-| TEST-4 idempotency | 再実行で二重移動・二重台帳・二重カードなし |
-| TEST-5 missing-result | RESULT 無し REQUEST は移動しない |
+| TEST-1 status | answered_not_processed が正しく数えられる |
+| TEST-2 dry-run | 退避予定が表示され、NEED_MORE/MODIFY_REQUIRED も対象。何も動かさない |
+| TEST-3 execute | REQUEST が processed へ移動、to_gpt 直下は 0、from_gpt RESULT は残る |
+| **TEST-4 idempotency** | **再実行で二重移動・二重台帳追記しない (no-op)** |
+| TEST-5 missing-result | RESULT のない REQUEST は移動しない |
 | TEST-6 bad-label | 先頭行が不正な RESULT は移動しない |
-| + action-queue | `reflected:false` が出る / reflect で消える |
-| + classification | PASS→ratify / MODIFY→patch / NEED_MORE→materials / blocking→patch |
-| + approval | owner-gated は実行されない (exit 2) |
-| + owner-digest | 5 行 |
-| + ledger-fields | LOOP_RULE 必須項目すべて |
-
-## デモ / 成果物生成
-
-```bash
-python3 tools/gpt_audit/demo_run.py   # artifacts/ に dry-run / 実行 / health を生成
-```
-
-生成物: `artifacts/DRYRUN_demo_4items.txt`, `artifacts/EXEC_demo_4items.txt`,
-`artifacts/HEALTH_demo_lane.md`。実レーン観測は `artifacts/HEALTH_real_lane_20260607.md`。
-
-## 原則文
-
-> 監査は一回の返答ではなく、Claude の再思考まで含む品質改善ループである。
-> Owner の短い合図で REQUEST を拾い、GPT Pro が別 family 監査を返し、Claude が
-> それを読んで次の仕事を始める。Owner には 5 行サマリだけを返し、詳細は Box 上の
-> 監査記録 (`_AUDIT_LEDGER.jsonl` / action queue) に残す。
