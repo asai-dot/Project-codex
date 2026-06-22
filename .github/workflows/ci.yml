@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run purchase_recommender engine tests (stdlib only, no external data)
+        run: python tests/test_purchase_recommender.py
+      - name: Run Supabase data-source tests (fake query_runner, no DB)
+        run: python tests/test_supabase_source.py
