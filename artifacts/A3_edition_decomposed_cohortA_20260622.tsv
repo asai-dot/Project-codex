@@ -1,0 +1,425 @@
+bib_id	edition_raw	edition_statement	printing_no	date_role	decomp_type
+alo:book:isbn:9784130311922	第4版	第4版			edition_only
+alo:book:isbn:9784130312141	第4版	第4版			edition_only
+alo:book:isbn:9784130324014	第5版	第5版			edition_only
+alo:book:isbn:9784263455708	第2刷		第2刷		printing_only
+alo:book:isbn:9784296203987	第4版	第4版			edition_only
+alo:book:isbn:9784313511323	2025/10/03			2025/10/03	date_only
+alo:book:isbn:9784313511668	改訂版	改訂版			edition_only
+alo:book:isbn:9784322108125	第6刷		第6刷		printing_only
+alo:book:isbn:9784322108132	第1刷		第1刷		printing_only
+alo:book:isbn:9784322113013	第2版	第2版			edition_only
+alo:book:isbn:9784322116250	第2版	第2版			edition_only
+alo:book:isbn:9784322117462	第2版	第2版			edition_only
+alo:book:isbn:9784322117479	第2版	第2版			edition_only
+alo:book:isbn:9784322135411	第3版	第3版			edition_only
+alo:book:isbn:9784322135534	第1版	第1版			edition_only
+alo:book:isbn:9784322135565	第4版	第4版			edition_only
+alo:book:isbn:9784322141429	第5版	第5版			edition_only
+alo:book:isbn:9784322141436	第5版	第5版			edition_only
+alo:book:isbn:9784322145052	第5版	第5版			edition_only
+alo:book:isbn:9784322145489	第2版	第2版			edition_only
+alo:book:isbn:9784322145588	2025/09/25			2025/09/25	date_only
+alo:book:isbn:9784324092231	[N/A]				na_placeholder
+alo:book:isbn:9784324096970	第2版	第2版			edition_only
+alo:book:isbn:9784324096987	第2版	第2版			edition_only
+alo:book:isbn:9784324096994	第2版	第2版			edition_only
+alo:book:isbn:9784324106433	2019年09月			2019年09月	date_only
+alo:book:isbn:9784324107539	第5版	第5版			edition_only
+alo:book:isbn:9784324110034	第1刷		第1刷		printing_only
+alo:book:isbn:9784324110256	第3版	第3版			edition_only
+alo:book:isbn:9784324110324	第3版補訂版	第3版補訂版			edition_only
+alo:book:isbn:9784324110492	2021年11月			2021年11月	date_only
+alo:book:isbn:9784324110867	第3版	第3版			edition_only
+alo:book:isbn:9784324110874	第3版	第3版			edition_only
+alo:book:isbn:9784324113127	第3版	第3版			edition_only
+alo:book:isbn:9784324113554	2024年03月			2024年03月	date_only
+alo:book:isbn:9784324113561	2024年04月			2024年04月	date_only
+alo:book:isbn:9784324113622	改訂版	改訂版			edition_only
+alo:book:isbn:9784324114148	第7版	第7版			edition_only
+alo:book:isbn:9784324114155	第7版	第7版			edition_only
+alo:book:isbn:9784324114162	[N/A]				na_placeholder
+alo:book:isbn:9784324114179	[N/A]				na_placeholder
+alo:book:isbn:9784324114186	[N/A]				na_placeholder
+alo:book:isbn:9784326403059	第2版	第2版			edition_only
+alo:book:isbn:9784326403066	第2版	第2版			edition_only
+alo:book:isbn:9784326404322	第1刷		第1刷		printing_only
+alo:book:isbn:9784335304552	第2版	第2版			edition_only
+alo:book:isbn:9784335315602	第13版	第13版			edition_only
+alo:book:isbn:9784335354083	2007年12月			2007年12月	date_only
+alo:book:isbn:9784335355608	第3版	第3版			edition_only
+alo:book:isbn:9784335355738	第2版	第2版			edition_only
+alo:book:isbn:9784335356025	[N/A]				na_placeholder
+alo:book:isbn:9784335357510	第6版	第6版			edition_only
+alo:book:isbn:9784335357589	第4版	第4版			edition_only
+alo:book:isbn:9784335358265	第3版	第3版			edition_only
+alo:book:isbn:9784335358340	第2版	第2版			edition_only
+alo:book:isbn:9784335359163	第3版	第3版			edition_only
+alo:book:isbn:9784335359262	第5版	第5版			edition_only
+alo:book:isbn:9784335359279	第4版補訂版	第4版補訂版			edition_only
+alo:book:isbn:9784335360053	[N/A]				na_placeholder
+alo:book:isbn:9784335360268	第3版	第3版			edition_only
+alo:book:isbn:9784335360312	第5版	第5版			edition_only
+alo:book:isbn:9784335360336	第1版	第1版			edition_only
+alo:book:isbn:9784335360671	第1刷		第1刷		printing_only
+alo:book:isbn:9784384047752	第1刷		第1刷		printing_only
+alo:book:isbn:9784385137278	第2版	第2版			edition_only
+alo:book:isbn:9784417013563	新版	新版			edition_only
+alo:book:isbn:9784417014164	2006年07月			2006年07月	date_only
+alo:book:isbn:9784417014478	[N/A]				na_placeholder
+alo:book:isbn:9784417014706	改訂版	改訂版			edition_only
+alo:book:isbn:9784417014713	第三版	第三版			edition_only
+alo:book:isbn:9784417015543	第三版	第三版			edition_only
+alo:book:isbn:9784417015697	新版	新版			edition_only
+alo:book:isbn:9784417017547	第2版	第2版			edition_only
+alo:book:isbn:9784417017981	第3版第1刷	第3版	第1刷		edition_and_print
+alo:book:isbn:9784417018025	2020年11月			2020年11月	date_only
+alo:book:isbn:9784417018162	改訂版	改訂版			edition_only
+alo:book:isbn:9784417018179	改訂版	改訂版			edition_only
+alo:book:isbn:9784417018506	2023年01月			2023年01月	date_only
+alo:book:isbn:9784417018551	第2版	第2版			edition_only
+alo:book:isbn:9784417018575	2023年07月			2023年07月	date_only
+alo:book:isbn:9784417018698	第1刷		第1刷		printing_only
+alo:book:isbn:9784417018957	第3版	第3版			edition_only
+alo:book:isbn:9784417076380	改訂版	改訂版			edition_only
+alo:book:isbn:9784419049621	初版第1刷	初版	第1刷		edition_and_print
+alo:book:isbn:9784419066079	第2版	第2版			edition_only
+alo:book:isbn:9784419067519	第2版	第2版			edition_only
+alo:book:isbn:9784419067663	第11版	第11版			edition_only
+alo:book:isbn:9784433631468	第4刷		第4刷		printing_only
+alo:book:isbn:9784433744137	第8版	第8版			edition_only
+alo:book:isbn:9784433746032	第4版	第4版			edition_only
+alo:book:isbn:9784433762445	第5版	第5版			edition_only
+alo:book:isbn:9784433775124	第4版	第4版			edition_only
+alo:book:isbn:9784474010383	第2版	第2版			edition_only
+alo:book:isbn:9784474019467	第2版	第2版			edition_only
+alo:book:isbn:9784474025592	[N/A]				na_placeholder
+alo:book:isbn:9784474032941	初版第2刷	初版	第2刷		edition_and_print
+alo:book:isbn:9784474032958	2015年06月			2015年06月	date_only
+alo:book:isbn:9784474059924	第2刷		第2刷		printing_only
+alo:book:isbn:9784474063372	第4版	第4版			edition_only
+alo:book:isbn:9784474063662	新版	新版			edition_only
+alo:book:isbn:9784474064355	初版	初版			edition_only
+alo:book:isbn:9784474065758	第1刷		第1刷		printing_only
+alo:book:isbn:9784474068926	初版	初版			edition_only
+alo:book:isbn:9784474069213	初版	初版			edition_only
+alo:book:isbn:9784474069275	第2版	第2版			edition_only
+alo:book:isbn:9784474072008	改訂版	改訂版			edition_only
+alo:book:isbn:9784474075870	債権法改正対応版	債権法改正対応版			edition_only
+alo:book:isbn:9784474076723	改訂版	改訂版			edition_only
+alo:book:isbn:9784474077034	第8版	第8版			edition_only
+alo:book:isbn:9784474078765	第3版	第3版			edition_only
+alo:book:isbn:9784474078949	2023年02月			2023年02月	date_only
+alo:book:isbn:9784474091429	第2版	第2版			edition_only
+alo:book:isbn:9784474091436	第2版	第2版			edition_only
+alo:book:isbn:9784474091443	第2版	第2版			edition_only
+alo:book:isbn:9784474091450	第2版	第2版			edition_only
+alo:book:isbn:9784474091467	第2版	第2版			edition_only
+alo:book:isbn:9784474093546	第4版	第4版			edition_only
+alo:book:isbn:9784474093638	第4版	第4版			edition_only
+alo:book:isbn:9784474096325	第4版	第4版			edition_only
+alo:book:isbn:9784474097025	[N/A]				na_placeholder
+alo:book:isbn:9784474098992	第2版	第2版			edition_only
+alo:book:isbn:9784474103146	[N/A]				na_placeholder
+alo:book:isbn:9784478065099	改訂第3版	改訂第3版			edition_only
+alo:book:isbn:9784484981017	新版	新版			edition_only
+alo:book:isbn:9784492533987	2018年04月			2018年04月	date_only
+alo:book:isbn:9784492534397	第2版	第2版			edition_only
+alo:book:isbn:9784495200114	初版	初版			edition_only
+alo:book:isbn:9784502038006	第4版	第4版			edition_only
+alo:book:isbn:9784502050206	2011年12月			2011年12月	date_only
+alo:book:isbn:9784502123917	第2版	第2版			edition_only
+alo:book:isbn:9784502144516	[N/A]				na_placeholder
+alo:book:isbn:9784502147517	第2版	第2版			edition_only
+alo:book:isbn:9784502154515	2016年01月(または02月)			2016年01月(または02月)	date_only
+alo:book:isbn:9784502155512	第2版	第2版			edition_only
+alo:book:isbn:9784502197116	[N/A]				na_placeholder
+alo:book:isbn:9784502212413	[N/A]				na_placeholder
+alo:book:isbn:9784502230813	2017年07月			2017年07月	date_only
+alo:book:isbn:9784502231919	2017年06月			2017年06月	date_only
+alo:book:isbn:9784502267512	第2版	第2版			edition_only
+alo:book:isbn:9784502274718	第2版	第2版			edition_only
+alo:book:isbn:9784502293115	第3版第1刷	第3版	第1刷		edition_and_print
+alo:book:isbn:9784502311512	第1刷		第1刷		printing_only
+alo:book:isbn:9784502311611	第1版第4刷	第1版	第4刷		edition_and_print
+alo:book:isbn:9784502314117	2019年10月			2019年10月	date_only
+alo:book:isbn:9784502316111	第3版	第3版			edition_only
+alo:book:isbn:9784502375613	第3版	第3版			edition_only
+alo:book:isbn:9784502387012	2021年05月			2021年05月	date_only
+alo:book:isbn:9784502387517	第2版	第2版			edition_only
+alo:book:isbn:9784502388019	第1版第8刷	第1版	第8刷		edition_and_print
+alo:book:isbn:9784502406010	第2版	第2版			edition_only
+alo:book:isbn:9784502409110	第2版	第2版			edition_only
+alo:book:isbn:9784502430213	第3版	第3版			edition_only
+alo:book:isbn:9784502434013	[N/A]				na_placeholder
+alo:book:isbn:9784502445408	第1版第1刷	第1版	第1刷		edition_and_print
+alo:book:isbn:9784502447815	第4版	第4版			edition_only
+alo:book:isbn:9784502459511	第4版	第4版			edition_only
+alo:book:isbn:9784502465314	第3版	第3版			edition_only
+alo:book:isbn:9784502478314	第2版	第2版			edition_only
+alo:book:isbn:9784502491016	2024年03月			2024年03月	date_only
+alo:book:isbn:9784502504419	第2版	第2版			edition_only
+alo:book:isbn:9784502510717	第2版	第2版			edition_only
+alo:book:isbn:9784502527616	第3版	第3版			edition_only
+alo:book:isbn:9784502544316	第2版	第2版			edition_only
+alo:book:isbn:9784502558214	第2版	第2版			edition_only
+alo:book:isbn:9784502965203	2008年06月			2008年06月	date_only
+alo:book:isbn:9784502965302	2008年07月			2008年07月	date_only
+alo:book:isbn:9784502965401	2009年04月			2009年04月	date_only
+alo:book:isbn:9784502965500	[N/A]				na_placeholder
+alo:book:isbn:9784502976209	第2版	第2版			edition_only
+alo:book:isbn:9784535002050	2014年08月			2014年08月	date_only
+alo:book:isbn:9784535002074	2016年04月			2016年04月	date_only
+alo:book:isbn:9784535002081	[N/A]				na_placeholder
+alo:book:isbn:9784535002098	2019年03月			2019年03月	date_only
+alo:book:isbn:9784535003507	第3版	第3版			edition_only
+alo:book:isbn:9784535003514	第3版	第3版			edition_only
+alo:book:isbn:9784535003538	第2版	第2版			edition_only
+alo:book:isbn:9784535402850	第2版	第2版			edition_only
+alo:book:isbn:9784535520905	2015年07月			2015年07月	date_only
+alo:book:isbn:9784535522220	2017年09月			2017年09月	date_only
+alo:book:isbn:9784535522879	第2版	第2版			edition_only
+alo:book:isbn:9784535523319	第4版	第4版			edition_only
+alo:book:isbn:9784535523845	2019/08/25			2019/08/25	date_only
+alo:book:isbn:9784535525498	第2版	第2版			edition_only
+alo:book:isbn:9784535527966	第2版	第2版			edition_only
+alo:book:isbn:9784539725955	改訂版	改訂版			edition_only
+alo:book:isbn:9784539726327	初版	初版			edition_only
+alo:book:isbn:9784539726631	2019年05月			2019年05月	date_only
+alo:book:isbn:9784539729106	第2版	第2版			edition_only
+alo:book:isbn:9784539730256	第3版	第3版			edition_only
+alo:book:isbn:9784641000308	第5版	第5版			edition_only
+alo:book:isbn:9784641000315	第6版	第6版			edition_only
+alo:book:isbn:9784641018648	初版第1刷	初版	第1刷		edition_and_print
+alo:book:isbn:9784641042988	第3版	第3版			edition_only
+alo:book:isbn:9784641115279	第5版	第5版			edition_only
+alo:book:isbn:9784641115286	第5版	第5版			edition_only
+alo:book:isbn:9784641115521	第6版	第6版			edition_only
+alo:book:isbn:9784641125346	三訂版	三訂版			edition_only
+alo:book:isbn:9784641126121	第2版	第2版			edition_only
+alo:book:isbn:9784641126244	第2版	第2版			edition_only
+alo:book:isbn:9784641126268	第2版	第2版			edition_only
+alo:book:isbn:9784641126640	第1刷		第1刷		printing_only
+alo:book:isbn:9784641136441	第3版	第3版			edition_only
+alo:book:isbn:9784641136984	2015年12月			2015年12月	date_only
+alo:book:isbn:9784641137448	第4版	第4版			edition_only
+alo:book:isbn:9784641137769	第4版	第4版			edition_only
+alo:book:isbn:9784641138070	第3刷		第3刷		printing_only
+alo:book:isbn:9784641138148	第2版	第2版			edition_only
+alo:book:isbn:9784641138483	第8版	第8版			edition_only
+alo:book:isbn:9784641138490	第7版	第7版			edition_only
+alo:book:isbn:9784641138872	第2版	第2版			edition_only
+alo:book:isbn:9784641151017	第2版	第2版			edition_only
+alo:book:isbn:9784641179288	第2版	第2版			edition_only
+alo:book:isbn:9784641215061	2014年11月			2014年11月	date_only
+alo:book:isbn:9784641221413	第5版	第5版			edition_only
+alo:book:isbn:9784641227835	第7版	第7版			edition_only
+alo:book:isbn:9784641228665	第6版	第6版			edition_only
+alo:book:isbn:9784641228887	第8版	第8版			edition_only
+alo:book:isbn:9784641233324	第9版	第9版			edition_only
+alo:book:isbn:9784641233522	第3版	第3版			edition_only
+alo:book:isbn:9784641233577	初版第1刷	初版	第1刷		edition_and_print
+alo:book:isbn:9784641233614	第1刷		第1刷		printing_only
+alo:book:isbn:9784641233638	第1刷		第1刷		printing_only
+alo:book:isbn:9784641243088	第8版	第8版			edition_only
+alo:book:isbn:9784651042988	第3版	第3版			edition_only
+alo:book:isbn:9784754725112	初版	初版			edition_only
+alo:book:isbn:9784765742009	第9版	第9版			edition_only
+alo:book:isbn:9784766822168	[N/A]				na_placeholder
+alo:book:isbn:9784766823875	第1版	第1版			edition_only
+alo:book:isbn:9784767833637	第2版	第2版			edition_only
+alo:book:isbn:9784778313098	第1刷		第1刷		printing_only
+alo:book:isbn:9784779307881	第15版第1刷	第15版	第1刷		edition_and_print
+alo:book:isbn:9784785712778	改訂版	改訂版			edition_only
+alo:book:isbn:9784785715007	[N/A]				na_placeholder
+alo:book:isbn:9784785716783	第2版	第2版			edition_only
+alo:book:isbn:9784785719890	初版第1刷	初版	第1刷		edition_and_print
+alo:book:isbn:9784785720018	第1刷		第1刷		printing_only
+alo:book:isbn:9784785720278	第2刷		第2刷		printing_only
+alo:book:isbn:9784785721398	第2版	第2版			edition_only
+alo:book:isbn:9784785721589	第2版	第2版			edition_only
+alo:book:isbn:9784785722999	2015年06月			2015年06月	date_only
+alo:book:isbn:9784785723088	第2版	第2版			edition_only
+alo:book:isbn:9784785724573	第2版第2刷	第2版	第2刷		edition_and_print
+alo:book:isbn:9784785724801	2016年12月			2016年12月	date_only
+alo:book:isbn:9784785724870	第2版	第2版			edition_only
+alo:book:isbn:9784785725358	第2版	第2版			edition_only
+alo:book:isbn:9784785725389	初版第2刷	初版	第2刷		edition_and_print
+alo:book:isbn:9784785725440	2017年08月			2017年08月	date_only
+alo:book:isbn:9784785725631	第4版	第4版			edition_only
+alo:book:isbn:9784785725747	2017年12月			2017年12月	date_only
+alo:book:isbn:9784785725990	2018年03月			2018年03月	date_only
+alo:book:isbn:9784785727062	第2版補訂版	第2版補訂版			edition_only
+alo:book:isbn:9784785727086	第2版	第2版			edition_only
+alo:book:isbn:9784785727246	第2版	第2版			edition_only
+alo:book:isbn:9784785727406	2019年09月			2019年09月	date_only
+alo:book:isbn:9784785727451	第4版	第4版			edition_only
+alo:book:isbn:9784785727512	2019年12月			2019年12月	date_only
+alo:book:isbn:9784785728007	第3版	第3版			edition_only
+alo:book:isbn:9784785728366	第2版	第2版			edition_only
+alo:book:isbn:9784785728618	第2版	第2版			edition_only
+alo:book:isbn:9784785728700	第3版	第3版			edition_only
+alo:book:isbn:9784785728915	第2版	第2版			edition_only
+alo:book:isbn:9784785729141	第2版	第2版			edition_only
+alo:book:isbn:9784785729165	第3版	第3版			edition_only
+alo:book:isbn:9784785729219	第2版	第2版			edition_only
+alo:book:isbn:9784785729356	第1刷		第1刷		printing_only
+alo:book:isbn:9784785729493	2022年05月			2022年05月	date_only
+alo:book:isbn:9784785729509	2022年05月			2022年05月	date_only
+alo:book:isbn:9784785729516	[N/A]				na_placeholder
+alo:book:isbn:9784785729707	第2版	第2版			edition_only
+alo:book:isbn:9784785730062	初版第1刷	初版	第1刷		edition_and_print
+alo:book:isbn:9784785730109	第5版	第5版			edition_only
+alo:book:isbn:9784785730147	第2版	第2版			edition_only
+alo:book:isbn:9784785730314	初版第1刷	初版	第1刷		edition_and_print
+alo:book:isbn:9784785730338	第2版	第2版			edition_only
+alo:book:isbn:9784785730673	2024年01月			2024年01月	date_only
+alo:book:isbn:9784785731236	第2版	第2版			edition_only
+alo:book:isbn:9784785731946	第2版	第2版			edition_only
+alo:book:isbn:9784785731984	第2版	第2版			edition_only
+alo:book:isbn:9784785732080	全訂第2版	全訂第2版			edition_only
+alo:book:isbn:9784785732097	全訂第2版	全訂第2版			edition_only
+alo:book:isbn:9784788281158	2016年04月			2016年04月	date_only
+alo:book:isbn:9784788283596	初版	初版			edition_only
+alo:book:isbn:9784788284869	初版	初版			edition_only
+alo:book:isbn:9784788286283	改訂版	改訂版			edition_only
+alo:book:isbn:9784788286597	2019年12月			2019年12月	date_only
+alo:book:isbn:9784788288027	2020年11月			2020年11月	date_only
+alo:book:isbn:9784788289222	初版	初版			edition_only
+alo:book:isbn:9784788290464	2022年06月			2022年06月	date_only
+alo:book:isbn:9784788290662	初版	初版			edition_only
+alo:book:isbn:9784788291249	第3版	第3版			edition_only
+alo:book:isbn:9784788293779	改訂版	改訂版			edition_only
+alo:book:isbn:9784788294028	補訂版	補訂版			edition_only
+alo:book:isbn:9784788715783	初版	初版			edition_only
+alo:book:isbn:9784788718999	改訂版	改訂版			edition_only
+alo:book:isbn:9784789210836	改訂版	改訂版			edition_only
+alo:book:isbn:9784789210839	増補改訂版	増補改訂版			edition_only
+alo:book:isbn:9784792325220	第3版	第3版			edition_only
+alo:book:isbn:9784792325619	第3版	第3版			edition_only
+alo:book:isbn:9784793124877	改訂版	改訂版			edition_only
+alo:book:isbn:9784793128493	第4版	第4版			edition_only
+alo:book:isbn:9784798186627	[N/A]				na_placeholder
+alo:book:isbn:9784802615150	2025年07月			2025年07月	date_only
+alo:book:isbn:9784802832748	改訂版	改訂版			edition_only
+alo:book:isbn:9784802834223	第26版	第26版			edition_only
+alo:book:isbn:9784802834605	改訂版	改訂版			edition_only
+alo:book:isbn:9784803726237	新版三訂版	新版三訂版			edition_only
+alo:book:isbn:9784803742886	2022年04月			2022年04月	date_only
+alo:book:isbn:9784806530497	改訂3版	改訂3版			edition_only
+alo:book:isbn:9784809012594	3訂版	3訂版			edition_only
+alo:book:isbn:9784809014079	第1刷		第1刷		printing_only
+alo:book:isbn:9784809014178	3訂版	3訂版			edition_only
+alo:book:isbn:9784809014727	19訂版	19訂版			edition_only
+alo:book:isbn:9784809015045	第3版補訂版	第3版補訂版			edition_only
+alo:book:isbn:9784811906706	第1版	第1版			edition_only
+alo:book:isbn:9784817840417	初版	初版			edition_only
+alo:book:isbn:9784817840431	改訂新版第六訂	改訂新版第六訂			edition_only
+alo:book:isbn:9784817841308	初版	初版			edition_only
+alo:book:isbn:9784817841711	2014年7月			2014年7月	date_only
+alo:book:isbn:9784817843845	補正	補正			edition_only
+alo:book:isbn:9784817843906	第3版	第3版			edition_only
+alo:book:isbn:9784817844194	第3版	第3版			edition_only
+alo:book:isbn:9784817845085	2018年09月			2018年09月	date_only
+alo:book:isbn:9784817845757	初版	初版			edition_only
+alo:book:isbn:9784817847188	第2刷		第2刷		printing_only
+alo:book:isbn:9784817848109	第2版	第2版			edition_only
+alo:book:isbn:9784817848352	第2版	第2版			edition_only
+alo:book:isbn:9784817848420	第2版	第2版			edition_only
+alo:book:isbn:9784817848659	初版	初版			edition_only
+alo:book:isbn:9784817848857	第2版	第2版			edition_only
+alo:book:isbn:9784817849427	第2版	第2版			edition_only
+alo:book:isbn:9784817849670	2024年08月			2024年08月	date_only
+alo:book:isbn:9784817850164	初版	初版			edition_only
+alo:book:isbn:9784818511019	第7版	第7版			edition_only
+alo:book:isbn:9784827107982	第2版	第2版			edition_only
+alo:book:isbn:9784844027575	全訂版	全訂版			edition_only
+alo:book:isbn:9784845115648	第2版	第2版			edition_only
+alo:book:isbn:9784845117116	第2版	第2版			edition_only
+alo:book:isbn:9784845119080	初版第1刷	初版	第1刷		edition_and_print
+alo:book:isbn:9784845243730	第4版	第4版			edition_only
+alo:book:isbn:9784860880200	第4版	第4版			edition_only
+alo:book:isbn:9784860960001	第3版	第3版			edition_only
+alo:book:isbn:9784860960827	新版	新版			edition_only
+alo:book:isbn:9784862763105	改訂新版	改訂新版			edition_only
+alo:book:isbn:9784863263994	改訂版	改訂版			edition_only
+alo:book:isbn:9784865560015	第3版	第3版			edition_only
+alo:book:isbn:9784865560985	第2版	第2版			edition_only
+alo:book:isbn:9784865561449	第2刷		第2刷		printing_only
+alo:book:isbn:9784865561869	第5刷		第5刷		printing_only
+alo:book:isbn:9784865562156	第2刷		第2刷		printing_only
+alo:book:isbn:9784865562828	第1刷		第1刷		printing_only
+alo:book:isbn:9784865563900	第1刷		第1刷		printing_only
+alo:book:isbn:9784865563962	全訂8版補訂版	全訂8版補訂版			edition_only
+alo:book:isbn:9784865564280	2021年05月			2021年05月	date_only
+alo:book:isbn:9784865564310	補訂版	補訂版			edition_only
+alo:book:isbn:9784865564532	2021年11月			2021年11月	date_only
+alo:book:isbn:9784865566161	六版	六版			edition_only
+alo:book:isbn:9784865566567	第3版	第3版			edition_only
+alo:book:isbn:9784865566819	第2版	第2版			edition_only
+alo:book:isbn:9784865566857	第2版	第2版			edition_only
+alo:book:isbn:9784866840222	第1版第1刷	第1版	第1刷		edition_and_print
+alo:book:isbn:9784866840321	10訂版	10訂版			edition_only
+alo:book:isbn:9784866840932	改訂版	改訂版			edition_only
+alo:book:isbn:9784882602088	改訂版	改訂版			edition_only
+alo:book:isbn:9784882602828	改訂版	改訂版			edition_only
+alo:book:isbn:9784887134616	第2版	第2版			edition_only
+alo:book:isbn:9784890170135	三訂版	三訂版			edition_only
+alo:book:isbn:9784891861612	2009年10月			2009年10月	date_only
+alo:book:isbn:9784891861629	第1版第5刷	第1版	第5刷		edition_and_print
+alo:book:isbn:9784891861957	第2版	第2版			edition_only
+alo:book:isbn:9784896284621	第3版	第3版			edition_only
+alo:book:isbn:9784896285847	第5版	第5版			edition_only
+alo:book:isbn:9784896286021	全訂5版	全訂5版			edition_only
+alo:book:isbn:9784896286458	2010年10月			2010年10月	date_only
+alo:book:isbn:9784896286748	第2版	第2版			edition_only
+alo:book:isbn:9784896287080	第2版	第2版			edition_only
+alo:book:isbn:9784896287165	第1刷		第1刷		printing_only
+alo:book:isbn:9784896287943	第3版	第3版			edition_only
+alo:book:isbn:9784896289343	第2刷		第2刷		printing_only
+alo:book:isbn:9784896289954	第2版	第2版			edition_only
+alo:book:isbn:9784902625776	[N/A]				na_placeholder
+alo:book:isbn:9784902717372	令和7度版	令和7度版			edition_only
+alo:book:isbn:9784903425900	第2版	第2版			edition_only
+alo:book:isbn:9784903867069	第2版	第2版			edition_only
+alo:book:isbn:9784903867113	第2版補訂版	第2版補訂版			edition_only
+alo:book:isbn:9784904192962	[N/A]				na_placeholder
+alo:book:isbn:9784905278276	改訂版	改訂版			edition_only
+alo:book:isbn:9784905366614	改訂増補	改訂増補			edition_only
+alo:book:isbn:9784906929481	三訂版	三訂版			edition_only
+alo:book:isbn:9784906929528	5訂版	5訂版			edition_only
+alo:book:isbn:9784906929603	2017年06月			2017年06月	date_only
+alo:book:isbn:9784906929658	2017年09月			2017年09月	date_only
+alo:book:isbn:9784906929665	三訂補訂版	三訂補訂版			edition_only
+alo:book:isbn:9784907554712	第2版	第2版			edition_only
+alo:book:isbn:9784907593131	第2版	第2版			edition_only
+alo:book:isbn:9784907593148	第2版	第2版			edition_only
+alo:book:isbn:9784908108136	第1版第2刷	第1版	第2刷		edition_and_print
+alo:book:isbn:9784908108938	第3版第1刷	第3版	第1刷		edition_and_print
+alo:book:isbn:9784908621086	改訂版	改訂版			edition_only
+alo:book:isbn:9784944027576	全訂版	全訂版			edition_only
+alo:book:manual:title_1206	第1版	第1版			edition_only
+alo:book:manual:title_1555	新版	新版			edition_only
+alo:book:manual:title_1760	2005年02月01日			2005年02月01日	date_only
+alo:book:manual:title_1775	第1版	第1版			edition_only
+alo:book:manual:title_1798	第2版	第2版			edition_only
+alo:book:manual:title_1839	改訂版	改訂版			edition_only
+alo:book:manual:title_1944	第3刷		第3刷		printing_only
+alo:book:manual:title_1993	第3版	第3版			edition_only
+alo:book:manual:title_2020	第2刷		第2刷		printing_only
+alo:book:manual:title_2058	初版	初版			edition_only
+alo:book:manual:title_2095	9訂版	9訂版			edition_only
+alo:book:manual:title_2213	補正第三版	補正第三版			edition_only
+alo:book:manual:title_2309	9訂版	9訂版			edition_only
+alo:book:manual:title_2313	全訂新版	全訂新版			edition_only
+alo:book:manual:title_2393	第3版	第3版			edition_only
+alo:book:manual:title_2395	第10版	第10版			edition_only
+alo:book:manual:title_2396	第6版	第6版			edition_only
+alo:book:manual:title_2397	第6版	第6版			edition_only
+alo:book:manual:title_2398	第6版	第6版			edition_only
+alo:book:manual:title_2399	第8版	第8版			edition_only
+alo:book:manual:title_2400	第8版	第8版			edition_only
+alo:book:manual:title_2401	第2版	第2版			edition_only
+alo:book:manual:title_2402	第4版	第4版			edition_only
+alo:book:manual:title_2403	第8版	第8版			edition_only
+alo:book:manual:title_2404	第8版	第8版			edition_only
