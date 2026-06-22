@@ -98,5 +98,28 @@ class TestHubBuild(unittest.TestCase):
         self.assertEqual(stats["specialty_terms"], 1)
 
 
+class TestRealSchemaJoin(unittest.TestCase):
+    def test_attach_definitions_from_labels(self):
+        # 有斐閣実スキーマ: 定義は labels(label_type=definition) 側. stg_term_key で join.
+        terms = [{"stg_term_key": "t1", "normalized_pref": "占有", "reading": "せんゆう"}]
+        labels = [
+            {"stg_term_key": "t1", "label_type": "reading", "label_text": "せんゆう"},
+            {"stg_term_key": "t1", "label_type": "definition", "label_text": "物を事実上支配すること"},
+        ]
+        bh.attach_definitions(terms, labels)
+        self.assertEqual(terms[0]["definition"], "物を事実上支配すること")
+
+    def test_field_map_termid_from_stg_key(self):
+        # term_id ← stg_term_key の field-map で build が回る
+        terms = [
+            {"stg_term_key": "t1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "債権", "reading": "さいけん", "definition": "給付請求権", "term_tier": 1},
+        ]
+        mapped = bh.remap_records(terms, {"term_id": "stg_term_key"})
+        hubs, _, stats = bh.build_hubs(mapped)
+        self.assertEqual(stats["hubs"], 1)
+        self.assertEqual(hubs[0]["anchor_term_id"], "t1")
+
+
 if __name__ == "__main__":
     unittest.main()

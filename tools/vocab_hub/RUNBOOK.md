@@ -10,15 +10,32 @@
 | 学陽『法令用語辞典』entries (rank102) | `sources/dict_ocr_hourei/hourei_all_entries_v0.2_20260612.jsonl`（2,662） |
 | 2辞書 突合 | `staging/dict_overlay_v0.2_clean_20260612.jsonl`（参考） |
 
-## 2. 期待スキーマと写像
+## 2. 実スキーマと写像（generate_staging_v3.py で確認済・2026-06-21）
 
-`build_hub_dryrun.py` の期待 Term スキーマ:
+**★重要: 有斐閣ゴールドは `term_id` でなく `stg_term_key`、定義は terms でなく labels 側**にある。
+
+`yuhikaku_legal_dict_terms_stg_v3.jsonl`（1件）:
 ```json
-{"term_id","scheme_id","authority_rank":101,"normalized_pref":"占有","reading":"せんゆう","definition":"...","term_tier":1}
+{"stg_term_key":"tstg_...","scheme_id":"yuhikaku_legal_dict","authority_rank":101,
+ "term_tier":1,"pref_label":"占有","normalized_pref":"占有","reading":"せんゆう","review_state":"accepted"}
 ```
-実フィールド名が違う場合は `head -n3` で確認し `--field-map`（`{expected: actual}`）で吸収。
-- 有斐閣/学陽の rank は `authority_rank`（101/102）。e-Gov定義があれば rank100。
-- 学陽は `definition` が畳み込み済（sense_sub 反映）。空定義は overlap=0（exact 統合されにくい→安全側）。
+`yuhikaku_legal_dict_labels_stg_v3.jsonl`（定義はここ）:
+```json
+{"stg_term_key":"tstg_...","label_type":"definition","label_text":"<定義文>"}
+```
+
+→ 本ツールは **`--labels` で定義を join** できる（実スキーマ対応済）。`--field-map` で `term_id←stg_term_key`:
+```bash
+echo '{"term_id":"stg_term_key"}' > field_map.json
+python3 tools/vocab_hub/build_hub_dryrun.py \
+  --terms  staging/yuhikaku_legal_dict_terms_stg_v3.jsonl \
+  --labels staging/yuhikaku_legal_dict_labels_stg_v3.jsonl \
+  --term-key stg_term_key --field-map field_map.json \
+  --overlap-threshold 0.6 --out out/hub_20260621
+```
+- 学陽（rank102）も terms＋labels を同様に渡す（または 2 辞書を結合して 1 本に）。
+- 有斐閣 staging は既に **homograph_variant_ix** で同綴を分離済（meta）。本ツールの homograph 検出はその上で重なり率を見る。
+- e-Gov 定義があれば rank100（anchor 優先）。
 
 ## 3. 実行
 
