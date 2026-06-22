@@ -1,10 +1,12 @@
-# HANDOFF_SCHEMA_APPENDIX v0.3 — 共有パケットスキーマ登録簿（**規範的単一正本**）
+# HANDOFF_SCHEMA_APPENDIX v0.4 — 共有パケットスキーマ登録簿（**規範的単一正本**）
 
 - status: **draft (未ratify・未実装)**
-- date: 2026-06-21
-- revision: v0.2 → v0.3。`HANDOFF_MODIFY_REQUIRED`
-  (`20260620_head_hand_handoff_design_v0.3_GPTPRO_AUDIT_RESULT.md` / 2299340018054)
-  の v0.4 must_fix 10件を反映。
+- date: 2026-06-22
+- revision: v0.3 → v0.4。`HANDOFF_MODIFY_REQUIRED`
+  (`20260621_head_hand_handoff_design_v0.4_GPTPRO_AUDIT_RESULT.md` / 2300911710513)
+  の v0.5 blocking（#5 per-attempt reconciliation / #6 hash runtime_envelope・unavailable /
+  MF-2 resource_descriptor・audit_sensitive 直交化・free_bounded 上限）を反映。
+- 前 revision: v0.2 → v0.3 で v0.4 must_fix 10件（3軸分離ほか）を反映済み。
 - **規範性宣言**: 本付録が `assignee`/`role`/パケットスキーマ/3軸 effect 判定/
   reconciliation の**唯一の規範的正本**。`HEAD_HAND_HANDOFF_DESIGN` /
   `WORKER_DELEGATION_DESIGN` 本文の YAML は **non-normative example**。本付録は他文書へ
@@ -34,7 +36,8 @@
 | `next_action_type` | `design_patch`, `doc_patch`, `code_patch`, `test_patch`, `refactor`, `required_materials`, `reject`, `ratify`, `none` |
 | `mutation_class` | `non_mutating`, `mutating` |
 | `egress_decision` | `none`, `allowed`, `blocked` |
-| `resource_effect_class` | `none`, `free_bounded`, `quota_metered`, `paid`, `rate_limited`, `audit_sensitive` |
+| `resource_effect_class` | `none`, `free_bounded`, `quota_metered`, `paid`, `rate_limited`（**`audit_sensitive` を撤去**・§4.5 で直交属性化） |
+| `external_audit_logging`（直交属性・MF-2B） | `none`, `expected`, `sensitive` |
 | `result_status` | `done`, `blocked`, `needs_more`, `proposal` |
 | `index_status` | `queued`, `dispatched`, `result_in`, `closing`, `closed` |
 | `reconciliation_relation` | `representative`, `duplicate`, `stale_generation`, `invalid`, `conflict` |
@@ -86,18 +89,18 @@ DISPATCH（実行パケット）が持てる `execution_role` は `worker`|`dete
 
 `owner_pending`（ratify 待ち）は `index_status` に含めず別キュー。
 
-## 3. DISPATCH スキーマ（規範。`packet_schema_version: handoff-dispatch/0.4`）
+## 3. DISPATCH スキーマ（規範。`packet_schema_version: handoff-dispatch/0.5`）
 
 identity/integrity（§6）, routing, **3軸 effect（§4）**, gate/access（§7）, work,
 size/staleness（§8）, return（§3.1）。主要 field:
 
 | field | req/opt | 備考 |
 |---|---|---|
-| `packet_schema_version` | req | `handoff-dispatch/0.4` |
+| `packet_schema_version` | req | `handoff-dispatch/0.5` |
 | `packet_id` / `packet_generation` / `packet_created_at_jst` | req | generation は修正版で +1 |
 | `hash_algorithm` | req | `sha256` |
 | `hash_basis` | req | `rfc8785_jcs`（§6・単一方式） |
-| `hash_scope_version` | req | `handoff-packet-hash/2` |
+| `hash_scope_version` | req | `handoff-packet-hash/3` |
 | `packet_hash` | req | local が render 後・公開前に計算。**`attempt_id` を含めない**（§5.1） |
 | `excluded_from_hash` | req | hash 除外 field の完全列挙（§6） |
 | `source_queue_item_id` / `decision_id` | req | |
@@ -112,7 +115,8 @@ size/staleness（§8）, return（§3.1）。主要 field:
 | `resource_effect_class` | req | local 導出（§4） |
 | `side_effect_flags` | req | §4.1（**状態変更のみ**） |
 | `egress_descriptor` | cond | egress を伴う場合 req（§4.4） |
-| `resource_descriptor` | cond | resource_effect ≠ none 時 req（§4.5） |
+| `resource_descriptor` | cond | resource_effect ≠ none 時 req（規範 schema §4.5） |
+| `external_audit_logging` | req | `none`\|`expected`\|`sensitive`（resource と直交・§4.5 MF-2B） |
 | `result_artifact_exception` | req | bool（§4.2・一意 RESULT 本体に限定） |
 | `lease_required` | req | bool（mutating ⇒ true） |
 | `resource_permit_required` | req | bool（quota_metered/paid/rate_limited ⇒ true） |
@@ -149,10 +153,11 @@ effect は3独立軸。local dispatcher が決定的に導出。front-matter/wor
 動かせない。**各軸 unknown は安全側（mutating / egress blocked / resource は permit 要求）。**
 
 ```text
-mutation_class        = non_mutating | mutating         → 永続/共有状態 write に lease
-egress_decision       = none | allowed | blocked        → egress_descriptor + data_access_class
-resource_effect_class = none | free_bounded | quota_metered | paid | rate_limited | audit_sensitive
+mutation_class         = non_mutating | mutating        → 永続/共有状態 write に lease
+egress_decision        = none | allowed | blocked       → egress_descriptor + data_access_class
+resource_effect_class  = none | free_bounded | quota_metered | paid | rate_limited
                                                         → resource permit / semaphore
+external_audit_logging = none | expected | sensitive    → resource と直交（§4.5 MF-2B）
 ```
 
 ### 4.1 side_effect_flags（**状態変更のみ**。paid/egress は除外）
@@ -186,19 +191,50 @@ metadata 更新は含めない**（含めば mutating）。
 `external_logging_profile`, `retention_or_terms_profile`。公開 GET も外部観測（URL/query/
 IP/認証主体）を生むため「対象外」にせず `public_query` として明示 allowlist。
 
-### 4.5 resource_descriptor ＋ fail-closed（owner 決定）
+### 4.5 resource_descriptor schema ＋ fail-closed（MF-2A/2B/2C）
 
-`resource_effect_class ∈ {quota_metered, paid, rate_limited}` は `resource_permit_required:
-true`。
+**MF-2A: `resource_descriptor` を規範 schema 化**（resource_effect_class ≠ none 時 req）。
+
+| field | req/opt | 備考 |
+|---|---|---|
+| `resource_policy_id` | req | |
+| `resource_policy_version` | req | |
+| `provider_or_service` | req | |
+| `operation_class` | req | |
+| `resource_effect_class` | req | §1.1 enum |
+| `estimated_units` | cond | 不明時は §safe default |
+| `unit_type` | req | call / token / byte / request 等 |
+| `maximum_units` | req | 上限。超過は blocked |
+| `budget_or_quota_scope` | req | |
+| `permit_ref` | cond | permit 必須クラスで req |
+| `permit_expires_at` | cond | permit_ref 有時 req |
+| `semaphore_or_rate_key` | cond | rate_limited 時 req |
+| `external_logging_profile` | req | `external_audit_logging` と連動 |
+
+`estimated_units` 不明時の safe default = **`maximum_units` を要求し、無ければ
+permit-required へ倒す**（保守側）。
+
+**permit 判定 ＋ fail-closed**: `resource_effect_class ∈ {quota_metered, paid,
+rate_limited}` は `resource_permit_required: true`。
 
 ```text
 resource_permit_required == true AND resource_permit_subsystem_available == false
   => dispatchable=false ; result_status=blocked ; block_reason=resource_permit_unavailable
 ```
 
-override 不可。permit subsystem 実装まで該当 call は配布・実行しない。`free_bounded`
-（無償・非機密・固定 rate・cache 可）は permit 不要で広く通す。`audit_sensitive` は
-egress/permit と独立に外部ログ痕跡を記録する call。
+override 不可。permit subsystem 実装まで該当 call は配布・実行しない。
+
+**MF-2B: `audit_sensitive` を直交属性化。** `resource_effect_class` enum からは撤去し、
+`external_audit_logging = none | expected | sensitive` を**独立 field**として持つ
+（resource class と直積で評価）。これにより `paid かつ audit-sensitive` のような複合状態を
+表現できる。`external_audit_logging=sensitive` は audit permit 又は明示 policy
+acknowledgement を必須とし、無ければ blocked。第4軸ではなく resource descriptor 内の
+直交属性である。
+
+**MF-2C: `free_bounded` の bounded 条件を registry 化。** 「無償・固定 rate・cache 可」だけ
+では local が決定できないため、policy registry に `max_requests` / `time_window` /
+`payload_limit` / `retry_ceiling` / `cache_write_allowed` を置く。**上限不明は
+`rate_limited`（permit-required）へ倒す**。retry 超過・上限超過も blocked。
 
 ## 5. attempt と重複結果調停（規範）
 
@@ -210,22 +246,36 @@ egress/permit と独立に外部ログ痕跡を記録する call。
   generation dedup group から外れる）。
 - RESULT へ echo。`create_new_no_overwrite` で一意性確保。
 
-### 5.2 reconciliation event schema（local-only・v0.4 must_fix #5）
+### 5.2 reconciliation event schema（local-only・per-attempt・#5 blocking 反映）
 
-`needs_head_resolution` 等の保存先として規範化。
+event 単一 `relation` では representative＋duplicate＋invalid 混在を表現できないため、
+**per-attempt relation を必須化**する（v0.4 監査 #5）。
 
-| field | 備考 |
-|---|---|
-| `reconciliation_id` | |
-| `source_queue_item_id` | |
-| `packet_generation` | |
-| `packet_hash` | |
-| `attempt_ids` | list |
-| `representative_attempt_id` | |
-| `relation` | `reconciliation_relation` enum |
-| `needs_head_resolution` | bool |
-| `basis` | 選定根拠 |
-| `recorded_at` | |
+| field | req/opt | 備考 |
+|---|---|---|
+| `reconciliation_id` | req | |
+| `grouping_key` | req | `source_queue_item_id + packet_generation + packet_hash`（§5.3） |
+| `source_queue_item_id` | req | |
+| `packet_generation` | req | |
+| `packet_hash` | req | |
+| `attempt_relations` | req | list（下記）。各 attempt の関係を個別表現 |
+| `representative_attempt_id` | **nullable** | conflict / 全 invalid 時は `null`（常時 req にはできない） |
+| `needs_head_resolution` | req | bool |
+| `recorded_at` | req | |
+
+`attempt_relations[]` の要素:
+
+| field | req/opt | 備考 |
+|---|---|---|
+| `attempt_id` | req | |
+| `relation` | req | `reconciliation_relation` enum |
+| `related_to_attempt_id` | cond | duplicate/stale 等の基準 attempt |
+| `basis_codes` | req | 選定根拠コード list |
+| `acceptance_grade` | req | local 算定（worker 自己申告でない） |
+| `output_hash_state` | req | 例: matches_representative / divergent / absent |
+
+`representative_attempt_id` の required/nullable: 代表が一意に決まる場合 req、
+`conflict`（意味衝突）又は全 `invalid` の場合は `null`＋`needs_head_resolution=true`。
 
 ### 5.3 grouping / 代表選定
 
@@ -246,10 +296,15 @@ egress/permit と独立に外部ログ痕跡を記録する call。
 ## 6. hash / source version（規範・v0.4 must_fix #6）
 
 - `hash_algorithm: sha256`、`hash_basis: rfc8785_jcs`（**単一方式**。exact bytes 方式は廃止）、
-  `hash_scope_version: handoff-packet-hash/2`。
+  `hash_scope_version: handoff-packet-hash/3`。
 - canonicalization: RFC 8785 (JCS)。ALO 前処理として文字列 NFC 正規化・改行 LF 統一を明記。
-- `excluded_from_hash`: `packet_hash` 自身・`attempt_id`・runtime envelope を完全列挙。
-  計算前後で payload 不変であることを fixture で確認。
+- `excluded_from_hash`（**包括語廃止・完全列挙**・#6）: `packet_hash` 自身、および
+  `runtime_envelope` object の全 field。runtime が付加しうる値は独立 object
+  `runtime_envelope` に隔離し packet hash 外に置く。`runtime_envelope` の規範 field:
+  `attempt_id`, `attempt_started_at`, `runner_id`, `session_id`, `transport_meta`。
+  hash 対象は **allowlist 方式**（hash 対象 schema を明示）とし、計算前後で payload 不変で
+  あることを fixture（§10 F7）で確認。normative field 追加は hash 変化、runtime_envelope
+  追加は hash 不変。
 - `source_artifacts[]`:
 
   | field | req | 備考 |
@@ -266,6 +321,13 @@ egress/permit と独立に外部ログ痕跡を記録する call。
   ③worker が output hash 計算し RESULT 記載 → ④local closer が echo/active generation/
   output existence・hash/acceptance を検証して index/ledger 更新。
 - RESULT の `packet_hash` echo は必須。
+- **`hash_status=unavailable` の扱い（#6 blocking）**: digest unavailable を無条件には許さない。
+  1. integrity-required gate（owner/auditor/production/canonical 等）では digest unavailable は
+     **`blocked`（`block_reason=stale_packet`）** に倒す。
+  2. unavailable を許す非 integrity gate でも `version_ref`＋取得主体（fetcher）＋
+     `unavailable_reason`＋**staleness 代替検査**（version_ref のみでの一致確認）を必須化。
+  3. staleness_policy（§8）が `artifact_version_and_digest` を要求する gate では、digest 欠落は
+     代替検査では満たせず `blocked`。
 
 ## 7. access / gate 境界（規範・v0.4 must_fix #8/#9）
 
@@ -280,6 +342,11 @@ egress/permit と独立に外部ログ痕跡を記録する call。
 - `hold_echo` は local が source gate から導出。worker/head の欠落・縮小は reject。
 - `output_root`/`upload_target_root` は allowlisted root 配下のみ。traversal・任意 Box は reject。
 - `gated_by`: gate metadata field として規範化（governance_role と対）。
+- **egress 判定の補足（#3 note）**: destination URI と destination_class の優先順位は
+  **明示 URI allowlist 優先**。redirect 時は遷移先で**再判定**（allowlist 外なら blocked）。
+  DNS/CDN alias・query value の secret scan を行う。これらは §10 の fixture で検証。
+- **単一正本 lint（#7 note）**: 旧 document（v0.1 等）が規範として再参照されないことを
+  lint で検出。旧 `patch` enum は migration fixture（§10）で新 next_action_type へ変換。
 
 ## 8. サイズ / staleness（規範）
 
@@ -294,11 +361,11 @@ egress/permit と独立に外部ログ痕跡を記録する call。
     max_age_minutes: <int, optional>
   ```
 
-## 9. RESULT スキーマ（規範。`result_schema_version: handoff-result/0.4`）
+## 9. RESULT スキーマ（規範。`result_schema_version: handoff-result/0.5`）
 
 | field | req/opt | 備考 |
 |---|---|---|
-| `result_schema_version` | req | `handoff-result/0.4` |
+| `result_schema_version` | req | `handoff-result/0.5` |
 | `packet_id` / `packet_generation` / `packet_hash` | req | echo（packet_hash 必須） |
 | `attempt_id` | req | §5.1 |
 | `source_queue_item_id` | req | echo |
@@ -336,8 +403,21 @@ test 名でなく入力＋期待値の表。各 fixture は以下列を持つ:
 | F6 ratify | — / — / — / — | — | — | — | false | ratify_not_dispatchable |
 | F7 unknown access | none / **unknown** / — / — | non_mutating | blocked(安全側) | — | false | access_class_unknown |
 
-その他 fixture: stale-generation / duplicate-output-collision / valid-but-conflicting→
-conflict+needs_head_resolution / hash-canonicalization(JCS) / invalid-assignee / oversize。
+v0.4 監査 §4 が要求する追加 fixture（必須）:
+
+1. representative＋duplicate＋invalid が同一 group に混在する reconciliation（per-attempt
+   relation を検証）。
+2. `conflict` で representative なし・`needs_head_resolution=true`・`representative_attempt_id=null`。
+3. all-invalid group。
+4. `external_audit_logging=sensitive` 単独、および `paid + audit_sensitive` の複合。
+5. `free_bounded` 上限不明（→rate_limited へ倒す）／上限超過／retry 超過。
+6. source digest unavailable ＋ integrity-required gate → `blocked`。
+7. runtime_envelope field 追加で packet_hash 不変・normative field 追加で hash 変化。
+8. redirect 先が egress allowlist 外へ変わる public GET（再判定で blocked）。
+9. egress/resource descriptor 欠落の fail-closed。
+
+その他 fixture: stale-generation / duplicate-output-collision / hash-canonicalization(JCS) /
+invalid-assignee / oversize / 旧 `patch`→新 next_action_type の migration（#7）。
 
 ## 11. 不変条件（両設計が共有）
 
