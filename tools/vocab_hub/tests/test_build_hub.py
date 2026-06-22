@@ -134,5 +134,54 @@ class TestRealSchemaJoin(unittest.TestCase):
         self.assertTrue(all(m["term_id"] for m in mem))  # 空 id にならない
 
 
+class TestCrossDictAndNorm(unittest.TestCase):
+    def test_reading_normalization_katakana_hiragana(self):
+        self.assertEqual(bh.norm_reading("センユウ"), bh.norm_reading("せんゆう"))
+
+    def test_norm_pref_fullwidth(self):
+        self.assertEqual(bh.norm_pref("ＡＢ会社"), "AB会社")
+
+    def test_cross_dict_merge_yuhikaku_plus_hourei(self):
+        # 有斐閣(101, normalized_pref) + 学陽(102, headword生) 同義+読み(カナ/かな差) -> 1 hub に統合
+        terms = [
+            {"stg_term_key": "y1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "占有", "reading": "せんゆう", "definition": "物を事実上支配すること", "term_tier": 1},
+            {"stg_term_key": "h1", "scheme_id": "hourei_yougo_jiten_11", "authority_rank": 102,
+             "pref_label": "占有", "normalized_pref": "占有", "reading": "センユウ",
+             "definition": "物を事実上支配する状態をいう", "term_tier": 1},
+        ]
+        hubs, mem, stats = bh.build_hubs(terms, threshold=0.3)
+        self.assertEqual(stats["hubs"], 1)
+        self.assertEqual(hubs[0]["member_count"], 2)
+        self.assertEqual(set(hubs[0]["authority_ranks"]), {"101", "102"})
+
+    def test_cross_dict_low_overlap_homograph_split(self):
+        terms = [
+            {"stg_term_key": "y1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "社員", "reading": "しゃいん", "definition": "会社法上の構成員たる地位", "term_tier": 1},
+            {"stg_term_key": "h1", "scheme_id": "hourei_yougo_jiten_11", "authority_rank": 102,
+             "normalized_pref": "社員", "reading": "しゃいん", "definition": "労働者一般を指す日常語", "term_tier": 1},
+        ]
+        _, _, stats = bh.build_hubs(terms, threshold=0.6)
+        self.assertEqual(stats["homograph_conflicts"], 1)
+        self.assertEqual(stats["hubs"], 2)
+
+
+class TestHoureiAdapter(unittest.TestCase):
+    def test_adapt_sets_rank_and_pref(self):
+        import adapt_hourei as ah
+        entries = [{"scheme_id": "hourei_yougo_jiten_11", "entry_id": "h__00001",
+                    "headword": "明渡裁決", "reading": "あけわたしさいけつ", "definition": "..."}]
+        terms = ah.adapt(entries, "hourei_yougo_jiten_11", 102)
+        self.assertEqual(terms[0]["authority_rank"], 102)
+        self.assertEqual(terms[0]["term_tier"], 1)
+        self.assertEqual(terms[0]["normalized_pref"], "明渡裁決")
+        self.assertEqual(terms[0]["definition"], "...")
+
+    def test_adapt_skips_empty_headword(self):
+        import adapt_hourei as ah
+        self.assertEqual(ah.adapt([{"headword": "", "definition": "x"}], "s", 102), [])
+
+
 if __name__ == "__main__":
     unittest.main()
