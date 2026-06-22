@@ -1,0 +1,5 @@
+out/
+out_selftest/
+_selftest_*
+__pycache__/
+*.pyc
