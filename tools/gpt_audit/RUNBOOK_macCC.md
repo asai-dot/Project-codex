@@ -16,12 +16,9 @@
 
 ```bash
 cd ~/path/to/Project-codex
-git fetch origin claude/gpt-pro-audit-loop-g0FyC
-git checkout claude/gpt-pro-audit-loop-g0FyC
-git pull origin claude/gpt-pro-audit-loop-g0FyC
+git checkout main
+git pull origin main
 ```
-
-（main へマージ済みなら `git checkout main && git pull` でよい）
 
 ---
 
@@ -36,10 +33,10 @@ Box Drive の標準マウントなら:
 # まず候補を探す（環境で名称が違うことがある）
 ls -d ~/Library/CloudStorage/Box-Box 2>/dev/null || ls -d ~/Box 2>/dev/null
 
-export ALO_GPT_AUDIT_ROOT="$HOME/Library/CloudStorage/Box-Box/浅井/claude/handoffs/gpt_ometsuke"
+export ALO_GPT_OMETSUKE_ROOT="$HOME/Library/CloudStorage/Box-Box/浅井/claude/handoffs/gpt_ometsuke"
 
 # 確認（to_gpt / from_gpt / _AUDIT_LEDGER.jsonl が見えるはず）
-ls "$ALO_GPT_AUDIT_ROOT"
+ls "$ALO_GPT_OMETSUKE_ROOT"
 ```
 
 見つからない場合:
@@ -56,9 +53,10 @@ find ~/Library/CloudStorage ~/Box -maxdepth 6 -type d -name gpt_ometsuke 2>/dev/
 ## 2. 現況確認（読み取りのみ・安全）
 
 ```bash
-ALO=tools/gpt_audit/alo_gpt_audit.py
+export PYTHONPATH=tools/gpt_audit/src   # パッケージ版 (src レイアウト)。`pip install -e tools/gpt_audit` 済みなら不要
+ALO="-m alo_gpt_audit"
 
-python3 $ALO status -v        # answered_not_processed / missing_result / bad_label
+python3 $ALO status        # answered_not_processed / processed_without_result / duplicate を三点照合で表示
 python3 $ALO health           # レーン全体の健全性
 python3 $ALO lint             # 未回答 REQUEST の preflight（任意）
 ```
@@ -95,7 +93,7 @@ python3 $ALO close-all --apply
 旧運用で `to_gpt/` 直下に残った `*_REQUEST.processed.md` を `processed/` へ移す:
 
 ```bash
-cd "$ALO_GPT_AUDIT_ROOT/to_gpt"
+cd "$ALO_GPT_OMETSUKE_ROOT/to_gpt"
 mkdir -p processed
 for f in *_REQUEST.processed.md; do
   [ -e "$f" ] || continue
@@ -103,7 +101,7 @@ for f in *_REQUEST.processed.md; do
   mv -n "$f" "processed/${f%.processed.md}.md"
 done
 cd -
-python3 $ALO status -v   # 旧式 = 0 になるか確認
+python3 $ALO status   # 旧式 = 0 になるか確認
 ```
 
 > 対応 RESULT が `from_gpt/` にあることは §2 health で確認済み。`mv -n` で上書き回避。
@@ -148,10 +146,11 @@ python3 $ALO action-queue     # 反映済みは消える。reflected:true まで
 ## 7. 典型セッション（Owner「監査を回して」への一括応答）
 
 ```bash
-export ALO_GPT_AUDIT_ROOT="$HOME/Library/CloudStorage/Box-Box/浅井/claude/handoffs/gpt_ometsuke"
-ALO=tools/gpt_audit/alo_gpt_audit.py
+export ALO_GPT_OMETSUKE_ROOT="$HOME/Library/CloudStorage/Box-Box/浅井/claude/handoffs/gpt_ometsuke"
+export PYTHONPATH=tools/gpt_audit/src   # パッケージ版 (src レイアウト)。`pip install -e tools/gpt_audit` 済みなら不要
+ALO="-m alo_gpt_audit"
 
-python3 $ALO status -v          # 1) 溜まり確認
+python3 $ALO status          # 1) 溜まり確認
 python3 $ALO close-all          # 2) dry-run
 python3 $ALO close-all --apply  # 3) 退避＋台帳＋振分け（承認不要）
 python3 $ALO action-queue       # 4) Claude の次手
