@@ -18,10 +18,10 @@
 付与する列:
   journal_raw       … _source_file の親フォルダ名（証跡, 無加工）
   journal_norm      … 正規化後（接尾辞/検索語ゴミ除去・NFKC・空白畳み）
-  journal_canonical … フォルダ群の正式名（掲載誌名が在ればそれを正に採用）
+  journal_canonical … 正規化フォルダ名を正（少数の表記ゆれのみ _ALIAS で吸収）。掲載誌名では上書きしない
   journal_source    … 'folder+meishi' / 'folder'
-  match_status      … 'meishi_match' / 'meishi_conflict' / 'folder_only'
-                       （priority.json 指定時は canonical の在不在で 'in_priority'/'unmapped' も付与）
+  match_status      … 'meishi_match' / 'meishi_conflict'（canonicalは保持）/ 'folder_only'
+                       （priority.json 指定時は canonical の在不在で in_priority も付与）
 """
 import json
 import sys
