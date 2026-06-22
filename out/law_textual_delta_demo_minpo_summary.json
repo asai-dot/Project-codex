@@ -1,0 +1,39 @@
+{
+  "run_id": "demo_minpo",
+  "rows": 7,
+  "by_kind": {
+    "insertion": 1,
+    "no_change": 3,
+    "repeal": 1,
+    "split": 1,
+    "substitution": 1
+  },
+  "gates": {
+    "gate_delta_kind_domain": {
+      "pass": true,
+      "detail": "out-of-domain: []"
+    },
+    "gate_no_substantive_fields": {
+      "pass": true,
+      "detail": "textual delta must not carry substantive fields: []"
+    },
+    "gate_rows_have_provenance": {
+      "pass": true,
+      "detail": "missing provenance: []"
+    },
+    "gate_renumber_justified": {
+      "pass": true,
+      "detail": "renumber lacks high similarity or block-shift basis: []"
+    },
+    "gate_no_change_rows_text_unchanged": {
+      "pass": true,
+      "detail": "no_change but changed: []"
+    },
+    "gate_split_join_have_counterparts": {
+      "pass": true,
+      "detail": "split/join needs >=2 counterparts: []"
+    }
+  },
+  "all_gates_pass": true,
+  "db_writes": 0
+}
