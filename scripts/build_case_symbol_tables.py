@@ -84,16 +84,30 @@ def main():
         for row in M:
             w.writerow([row[0], row[1], SCHEME, "1"])
 
+    # MF-2(再監査): source 証跡列を追加。公式 doc の version/hash は本リモートで取得不可
+    # (no web)→ pending_capture。固定できない行は confirmed に上げず pending_source_fixation。
     with sem.open("w", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
         w.writerow(["symbol_norm", "forum_level", "procedure_kind", "case_category",
-                    "valid_from", "valid_to", "source_basis", "status"])
+                    "valid_from", "valid_to", "meaning_basis",
+                    "source_ref", "source_captured_at", "source_hash", "status"])
         for s, r, fl, pk, cc, vf, vt, sb, st in M:
-            w.writerow([s, fl, pk, cc, vf, vt, sb, st])
+            official = (sb == "court_official")
+            meaning_basis = "court_official_definition" if official else "alo_provisional"
+            source_ref = "court:裁判例検索/符号の説明" if official else ""
+            # K7: valid 欠損は空でなく unknown(明示)
+            vf = vf or "unknown"
+            vt = vt or "unknown"
+            # 旧 confirmed は doc hash 未固定ゆえ pending_source_fixation。旧 review は review。
+            status = "pending_source_fixation" if st == "confirmed" else "review"
+            w.writerow([s, fl, pk, cc, vf, vt, meaning_basis,
+                        source_ref, "pending_capture", "pending_capture", status])
 
-    conf = sum(1 for x in M if x[8] == "confirmed")
+    pend = sum(1 for x in M if x[8] == "confirmed")
     print(f"romanization: {len(M)} 行 / semantics: {len(M)} 行 "
-          f"(confirmed={conf}, review={len(M)-conf})")
+          f"(pending_source_fixation={pend}, review={len(M)-pend})")
+    print(f"  ※source version/hash は no-web のため pending_capture。confirmed は付与しない")
+    print(f"     (MF-2: 固定できない行は confirmed に上げず保留)。Mac CC/web で公式doc固定後に昇格。")
     print(f"  romaji衝突(display許容): wa = 民事ワ + 刑事わ")
     print(f"  MF-2訂正: 行サ=上告提起 / 行フ=許可抗告 / 行ケ=行政訴訟第一審 / 行ス=抗告提起(新規)")
     print(f"出力: {rom.name}, {sem.name}")
