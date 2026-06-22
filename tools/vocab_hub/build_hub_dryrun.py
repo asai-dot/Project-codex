@@ -1,0 +1,250 @@
+#!/usr/bin/env python3
+"""P0: 辞書ゴールド -> bedrock Hub 構築 dry-run (read-only, DBに書かない).
+
+DD-DICT-008 §2.4 Stage1-3(+5) を JSONL で回す. 依存ゼロ (Python 3.9+).
+
+監査/設計の不変条件:
+  - DBに書かない. canonical 化しない (全 hub_status=provisional).
+  - bedrock = authority_rank 100-102 (e-Gov定義/基本辞典/法令用語辞典). 対等 (Q1).
+  - exact_match は normalized_pref + reading 一致 かつ 定義重なり率 >= 閾値 のみ (表層一致だけで統合しない).
+  - 同綴異義 (同 normalized_pref で reading 違い / 低重なり) は **統合せず別 hub** + homograph フラグ.
+  - specialty (rank>=103) は bedrock hub に attach のみ. canonical 昇格しない.
+  - anchor は中立規則: e-Gov(rank100) 優先 -> scheme_id 昇順 -> term_id 昇順 (優劣ではない).
+
+入力 (read-only, 既存ゴールド staging):
+  --terms  Term JSONL. 期待スキーマ:
+    {"term_id","scheme_id","authority_rank":101,"normalized_pref":"占有","reading":"せんゆう",
+     "definition":"...", "term_tier":1}
+
+出力 (candidate のみ. 本番 write なし):
+  <out>/hub_candidate.jsonl / hub_membership_candidate.jsonl / hub_build_report.md
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from collections import Counter, defaultdict
+from itertools import combinations
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional
+
+DEFAULT_OVERLAP = 0.6  # DD-DICT-008 Q2: 暫定. Wave0 実測で再校正
+
+
+def read_jsonl(path: Path) -> Iterable[dict]:
+    with path.open(encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if line:
+                yield json.loads(line)
+
+
+def remap_records(records: Iterable[dict], field_map: Optional[Dict[str, str]]) -> List[dict]:
+    out = []
+    for r in records:
+        if field_map:
+            for expected, actual in field_map.items():
+                if expected not in r and actual in r:
+                    r[expected] = r[actual]
+        out.append(r)
+    return out
+
+
+def bigrams(text: str) -> set:
+    t = (text or "").replace(" ", "").replace("　", "")
+    if len(t) < 2:
+        return {t} if t else set()
+    return {t[i:i + 2] for i in range(len(t) - 1)}
+
+
+def overlap(def_a: str, def_b: str) -> float:
+    """定義の char-bigram Jaccard. 定義欠落時は 0.0."""
+    a, b = bigrams(def_a), bigrams(def_b)
+    if not a or not b:
+        return 0.0
+    return len(a & b) / len(a | b)
+
+
+def is_bedrock(rank) -> bool:
+    """rank 100-102 (100系列 100a-100d 文字列含む) は bedrock canonical 候補."""
+    s = str(rank)
+    if s[:3] in ("100",):
+        return True
+    return s in ("101", "102")
+
+
+def _anchor_rule(terms: List[dict]) -> str:
+    """中立 anchor: e-Gov(rank100台) 優先 -> scheme_id 昇順 -> term_id 昇順."""
+    def key(t):
+        return (0 if str(t.get("authority_rank")).startswith("100") else 1,
+                str(t.get("scheme_id", "")), str(t.get("term_id", "")))
+    return sorted(terms, key=key)[0]["term_id"]
+
+
+def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
+    """bedrock seed -> exact_match -> close_match -> specialty attach (DBなし)."""
+    by_tid = {str(t["term_id"]): t for t in terms}
+    bedrock = [t for t in terms if is_bedrock(t.get("authority_rank")) and str(t.get("term_tier", "1")) == "1"]
+    specialty = [t for t in terms if not is_bedrock(t.get("authority_rank"))]
+
+    # key = (normalized_pref, reading)
+    groups: Dict[tuple, List[dict]] = defaultdict(list)
+    for t in bedrock:
+        groups[(t.get("normalized_pref", ""), t.get("reading", ""))].append(t)
+
+    hubs: List[dict] = []
+    memberships: List[dict] = []
+    homograph_conflicts = 0
+    hub_of_key: Dict[tuple, str] = {}
+    hub_seq = 0
+
+    for (pref, reading), grp in groups.items():
+        # exact_match: 群内で anchor と定義重なり>=閾値の term を 1 hub に統合
+        anchor_tid = _anchor_rule(grp)
+        anchor = by_tid[anchor_tid]
+        merged, conflicts = [anchor], []
+        for t in grp:
+            if t["term_id"] == anchor_tid:
+                continue
+            ov = overlap(anchor.get("definition", ""), t.get("definition", ""))
+            if len(grp) == 1 or ov >= threshold or str(t.get("scheme_id")) == str(anchor.get("scheme_id")):
+                merged.append(t)
+            else:
+                conflicts.append((t, ov))
+
+        hub_seq += 1
+        hub_id = f"hub:{hub_seq:06d}"
+        hub_of_key[(pref, reading)] = hub_id
+        hubs.append({
+            "hub_id": hub_id, "anchor_term_id": anchor_tid, "hub_label": pref, "reading": reading,
+            "member_count": len(merged), "authority_ranks": sorted({str(m.get("authority_rank")) for m in merged}),
+            "hub_status": "provisional", "identity_scope": "vocab_hub_provisional_noncanonical",
+        })
+        for m in merged:
+            memberships.append({
+                "hub_id": hub_id, "term_id": m["term_id"], "scheme_id": m.get("scheme_id"),
+                "authority_rank": m.get("authority_rank"),
+                "map_type": "bedrock_seed" if len(merged) == 1 else "skos_exact_match",
+                "is_anchor": m["term_id"] == anchor_tid,
+                "definition_overlap": round(overlap(anchor.get("definition", ""), m.get("definition", "")), 3),
+            })
+        # 低重なり = 同綴異義: 統合せず別 hub (homograph)
+        for t, ov in conflicts:
+            homograph_conflicts += 1
+            hub_seq += 1
+            hid = f"hub:{hub_seq:06d}"
+            hubs.append({
+                "hub_id": hid, "anchor_term_id": t["term_id"], "hub_label": pref, "reading": reading,
+                "member_count": 1, "authority_ranks": [str(t.get("authority_rank"))],
+                "hub_status": "provisional", "identity_scope": "vocab_hub_provisional_noncanonical",
+                "homograph_conflict": True, "homograph_overlap": round(ov, 3),
+            })
+            memberships.append({
+                "hub_id": hid, "term_id": t["term_id"], "scheme_id": t.get("scheme_id"),
+                "authority_rank": t.get("authority_rank"), "map_type": "homograph_split",
+                "is_anchor": True, "definition_overlap": round(ov, 3),
+            })
+
+    # specialty (rank>=103): 同 key の bedrock hub に attach のみ. 無ければ provisional specialty hub.
+    specialty_attached = 0
+    for t in specialty:
+        key = (t.get("normalized_pref", ""), t.get("reading", ""))
+        hid = hub_of_key.get(key)
+        if hid:
+            specialty_attached += 1
+            memberships.append({
+                "hub_id": hid, "term_id": t["term_id"], "scheme_id": t.get("scheme_id"),
+                "authority_rank": t.get("authority_rank"), "map_type": "skos_close_match",
+                "is_anchor": False, "definition_overlap": None, "specialty_attach": True,
+            })
+        else:
+            hub_seq += 1
+            hid = f"hub:{hub_seq:06d}"
+            hubs.append({
+                "hub_id": hid, "anchor_term_id": t["term_id"], "hub_label": t.get("normalized_pref", ""),
+                "reading": t.get("reading", ""), "member_count": 1,
+                "authority_ranks": [str(t.get("authority_rank"))], "hub_status": "provisional",
+                "identity_scope": "vocab_hub_provisional_noncanonical", "specialty_only": True,
+            })
+            memberships.append({
+                "hub_id": hid, "term_id": t["term_id"], "scheme_id": t.get("scheme_id"),
+                "authority_rank": t.get("authority_rank"), "map_type": "specialty_seed",
+                "is_anchor": True, "definition_overlap": None, "specialty_attach": False,
+            })
+
+    stats = {
+        "terms_total": len(terms), "bedrock_terms": len(bedrock), "specialty_terms": len(specialty),
+        "hubs": len(hubs), "homograph_conflicts": homograph_conflicts,
+        "specialty_attached": specialty_attached,
+        "exact_merged_hubs": sum(1 for h in hubs if h["member_count"] > 1),
+    }
+    return hubs, memberships, stats
+
+
+def build_report(hubs, memberships, stats, threshold) -> str:
+    sizes = Counter()
+    for h in hubs:
+        b = h["member_count"]
+        sizes["1" if b == 1 else "2" if b == 2 else "3+"] += 1
+    canonical_eligible = sum(1 for h in hubs
+                             if all(str(r).startswith(("100", "101", "102")) for r in h["authority_ranks"]))
+    lines = [
+        "# 語彙Hub 構築 dry-run レポート (read-only / DBに書かない)",
+        "",
+        "> DD-DICT-008 Stage1-3(+5). 全 hub_status=provisional. canonical 昇格なし.",
+        f"> 定義重なり率 閾値: {threshold} (Q2: 暫定. Wave0 実測で再校正)",
+        "",
+        f"- Term 総数: **{stats['terms_total']}**  (bedrock {stats['bedrock_terms']} / specialty {stats['specialty_terms']})",
+        f"- 生成 hub: **{stats['hubs']}**  (exact統合 {stats['exact_merged_hubs']} / canonical昇格可(rank≤102のみ) {canonical_eligible})",
+        f"- 同綴異義 homograph_conflict(統合せず別hub): **{stats['homograph_conflicts']}**",
+        f"- specialty attach(rank≥103, attachのみ): **{stats['specialty_attached']}**",
+        "",
+        "## hub member数 分布",
+        "| member | hub数 |",
+        "|---|---|",
+    ]
+    for k in ["1", "2", "3+"]:
+        if sizes.get(k):
+            lines.append(f"| {k} | {sizes[k]} |")
+    lines += [
+        "",
+        "## 監査整合の確認",
+        "- exact_match は normalized_pref+reading 一致かつ定義重なり≥閾値のみ(表層一致merge なし).",
+        "- 同綴異義は統合せず homograph_split(別hub). 重なり率を保存.",
+        "- specialty(rank≥103)は attach のみ. canonical 昇格しない.",
+        "- anchor は中立規則(e-Gov優先→scheme_id→term_id). 優劣ではない.",
+        "",
+        "_dry-run. candidate JSONL 出力のみ. DB write/canonical mint なし._",
+    ]
+    return "\n".join(lines)
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    ap = argparse.ArgumentParser(description="P0 語彙Hub構築 dry-run (read-only)")
+    ap.add_argument("--terms", required=True, type=Path)
+    ap.add_argument("--field-map", type=Path, default=None)
+    ap.add_argument("--overlap-threshold", type=float, default=DEFAULT_OVERLAP)
+    ap.add_argument("--out", required=True, type=Path)
+    args = ap.parse_args(argv)
+
+    fmap = json.loads(args.field_map.read_text(encoding="utf-8")) if args.field_map else None
+    terms = remap_records(read_jsonl(args.terms), fmap)
+    hubs, memberships, stats = build_hubs(terms, args.overlap_threshold)
+
+    args.out.mkdir(parents=True, exist_ok=True)
+    with (args.out / "hub_candidate.jsonl").open("w", encoding="utf-8") as fh:
+        for h in hubs:
+            fh.write(json.dumps(h, ensure_ascii=False) + "\n")
+    with (args.out / "hub_membership_candidate.jsonl").open("w", encoding="utf-8") as fh:
+        for m in memberships:
+            fh.write(json.dumps(m, ensure_ascii=False) + "\n")
+    (args.out / "hub_build_report.md").write_text(
+        build_report(hubs, memberships, stats, args.overlap_threshold), encoding="utf-8")
+    print(f"[vocab-hub] terms={stats['terms_total']} hubs={stats['hubs']} "
+          f"homograph={stats['homograph_conflicts']} -> {args.out}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
