@@ -64,6 +64,43 @@ alo-gpt-audit lint
 alo-gpt-audit lint --strict   # 警告があれば exit 1
 ```
 
+## 台帳派生の運用コマンド (owner-digest / reflect / gate-check / health / consumed)
+
+`close` 時に台帳 (`_AUDIT_LEDGER.jsonl`) は enrich され、`event` / `ts` (JST iso) /
+`verdict` / `loop_state` / `owner_digest_5line` / `claude_rethink_prompt` /
+`queue` / `approval_required_to_act` を 1 行に持つ。以下のコマンドはこの台帳を
+派生ビューとして読む (request_id ごと後勝ち、`reflected:false` かつ
+`loop_state != closed` を未消化とみなす)。
+
+```bash
+# Owner 向け 5 行サマリ。既定は未消化 (action_queue) のみ、--all で reflected 済みも。
+alo-gpt-audit owner-digest
+alo-gpt-audit owner-digest --all
+
+# RESULT を反映済みにする (reflected:true を append-only 追記)。既定 dry-run。
+# next_action が none/reject なら loop_state=closed、それ以外は reflected。
+alo-gpt-audit reflect <request_id>
+alo-gpt-audit reflect <request_id> --apply
+
+# 操作の承認要否。承認不要は exit 0、owner-gated / 未知は exit 2 (安全側)。
+alo-gpt-audit gate-check status          # -> 0
+alo-gpt-audit gate-check production_db    # -> 2
+
+# レーン health report (lane_status 内訳 / 未反映 action item / route queue サイズ)。
+alo-gpt-audit health
+alo-gpt-audit health --json
+
+# 台帳から CONSUMED.md (消化状態ビュー) を <root>/CONSUMED.md に生成 / 検査。
+# check は generated_at 行を無視して比較し、ドリフトがあれば exit 1。
+alo-gpt-audit consumed build
+alo-gpt-audit consumed check
+alo-gpt-audit consumed build --ledger /path/to/_AUDIT_LEDGER.jsonl --generated-at 2026-06-22T00:00:00+09:00
+```
+
+`consumed` は台帳を消化状態 (`未反映` / `ratify待ち` / `反映済(後続へ)` /
+`反映済` / `closed`) 別に並べた Markdown を `<root>/CONSUMED.md` へ書き出す。
+入力台帳は既定で `<root>/_AUDIT_LEDGER.jsonl` (`--ledger` で上書き可)。
+
 ## 反映キュー (action-queue) — 監査の出口を閉じる
 
 退避 (`processed/`) は **「GPT 照会 1 回分は回答済み」** を意味するだけで、

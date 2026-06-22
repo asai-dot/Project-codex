@@ -15,7 +15,7 @@ import os
 import sys
 from typing import List, Optional
 
-from . import __version__, ledger
+from . import __version__, consumed, ledger
 from .classify import ACTION_ORDER, build_action_queue, derive_action
 from .lane import (
     ANSWERED_NOT_PROCESSED,
@@ -29,6 +29,27 @@ from .lane import (
 )
 
 ENV_ROOT = "ALO_GPT_OMETSUKE_ROOT"
+
+# 承認不要 / 承認必要 (APPROVAL_RULE §1, §2 — flat からの移植)
+APPROVAL_FREE_OPS = {
+    "result_save",
+    "request_retreat",
+    "ledger_append",
+    "action_queue_update",
+    "status",
+    "dry_run",
+}
+OWNER_GATED_OPS = {
+    "accepted_promotion",
+    "canonical_designation",
+    "index_backfill",
+    "production_db",
+    "sf_writeback",
+    "external_send",
+}
+
+# health: route カードを置くキューのディレクトリ
+QUEUE_DIRS = ["approval_queue", "patch_queue", "material_queue", "rejected_queue"]
 
 _STATUS_ORDER = [
     ANSWERED_NOT_PROCESSED,
@@ -231,6 +252,196 @@ def cmd_lint(args) -> int:
     return 1 if args.strict else 0
 
 
+# --- owner-digest (Owner 5行サマリ) ----------------------------------------
+def cmd_owner_digest(args) -> int:
+    root = _resolve_root(args.root)
+    if args.all:
+        items = list(ledger.latest_state_per_request(root).values())
+    else:
+        items = ledger.action_queue(root)
+    print("# Owner 5行サマリ — {} 件\n".format(len(items)))
+    for e in items:
+        print(e.get("owner_digest_5line", "(no digest)"))
+        print("---")
+    return 0
+
+
+# --- reflect (RESULT を反映済みにする) -------------------------------------
+def cmd_reflect(args) -> int:
+    root = _resolve_root(args.root)
+    rid = args.request_id
+    latest = ledger.latest_state_per_request(root).get(rid)
+    if not latest:
+        print("error: 台帳に request_id={} がありません".format(rid))
+        return 1
+    if latest.get("reflected"):
+        print("既に reflected: {}".format(rid))
+        return 0
+    entry = dict(latest)
+    entry["ts"] = ledger.now_jst_iso()
+    entry["event"] = "reflect"
+    entry["reflected"] = True
+    entry["loop_state"] = (
+        "closed"
+        if entry.get("next_action_type") in ("none", "reject")
+        else "reflected"
+    )
+    if args.apply:
+        ledger.append(root, entry)
+        print("REFLECTED {} -> loop_state={}".format(rid, entry["loop_state"]))
+    else:
+        print("WOULD REFLECT {} -> loop_state={} (--apply で実行)".format(
+            rid, entry["loop_state"]))
+    return 0
+
+
+# --- gate-check (承認要否) --------------------------------------------------
+def cmd_gate_check(args) -> int:
+    op = args.operation
+    if op in APPROVAL_FREE_OPS:
+        print("{}: 承認不要 (監査レーン内の事務処理)".format(op))
+        return 0
+    if op in OWNER_GATED_OPS:
+        print("{}: 承認必要 (Owner ratify / 所定 T2 ゲート)。このツールは実行しません。".format(op))
+        return 2
+    print("{}: 未知の操作。安全側で承認必要とみなします。".format(op))
+    return 2
+
+
+# --- health (レーン health report) -----------------------------------------
+def _count_inplace_processed(root: str) -> int:
+    """旧式 *_REQUEST.processed.md を to_gpt/ 配下から数える (なければ 0)。"""
+    to_gpt = lane_dirs(root)["to_gpt"]
+    if not os.path.isdir(to_gpt):
+        return 0
+    return sum(
+        1
+        for n in os.listdir(to_gpt)
+        if n.endswith("_REQUEST.processed.md")
+        and os.path.isfile(os.path.join(to_gpt, n))
+    )
+
+
+def health_report(root: str) -> dict:
+    lane = scan(root)
+    counts = lane.counts()
+    q = ledger.action_queue(root)
+    by_action: dict = {}
+    for e in q:
+        a = e.get("next_action_type", "none")
+        by_action[a] = by_action.get(a, 0) + 1
+    queue_sizes = {}
+    for d in QUEUE_DIRS:
+        p = os.path.join(root, d)
+        queue_sizes[d] = (
+            sum(1 for n in os.listdir(p) if n.endswith(".md"))
+            if os.path.isdir(p)
+            else 0
+        )
+    rows = ledger.load(root)
+    return {
+        "generated_at_jst": ledger.now_jst_iso(),
+        "root": root,
+        "active_requests": len(lane.requests),
+        "lane_status_counts": {
+            k: v
+            for k, v in counts.items()
+            if k not in ("active_requests", "processed", "results")
+        },
+        "inplace_processed_pending_relocate": _count_inplace_processed(root),
+        "results_total": len(lane.result_names),
+        "processed_requests": len(lane.processed_by_name),
+        "ledger_events": len(rows),
+        "unreflected_action_items": len(q),
+        "action_queue_by_type": by_action,
+        "route_queue_sizes": queue_sizes,
+        "action_items": [
+            {
+                "request_id": e.get("request_id"),
+                "result_label": e.get("result_label"),
+                "next_action_type": e.get("next_action_type"),
+                "loop_state": e.get("loop_state"),
+            }
+            for e in q
+        ],
+    }
+
+
+def render_health_md(r: dict) -> str:
+    lines = [
+        "# 監査レーン health report",
+        "",
+        "- generated_at_jst: {}".format(r["generated_at_jst"]),
+        "- root: {}".format(r["root"]),
+        "",
+        "## サマリ",
+        "- to_gpt 直下 active REQUEST: {}".format(r["active_requests"]),
+        "- 未反映 action item (reflected:false): {}".format(r["unreflected_action_items"]),
+        "- from_gpt RESULT 総数: {}".format(r["results_total"]),
+        "- processed REQUEST: {}".format(r["processed_requests"]),
+        "- 台帳イベント数: {}".format(r["ledger_events"]),
+        "- 旧式 *_REQUEST.processed.md (要 relocate): {}".format(
+            r["inplace_processed_pending_relocate"]),
+        "",
+        "## lane_status 内訳",
+    ]
+    for k, v in sorted(r["lane_status_counts"].items()):
+        lines.append("- {}: {}".format(k, v))
+    lines += ["", "## next_action 内訳"]
+    if r["action_queue_by_type"]:
+        for k, v in sorted(r["action_queue_by_type"].items()):
+            lines.append("- {}: {}".format(k, v))
+    else:
+        lines.append("- (未反映なし)")
+    lines += ["", "## route queue サイズ"]
+    for k, v in r["route_queue_sizes"].items():
+        lines.append("- {}: {}".format(k, v))
+    if r["action_items"]:
+        lines += ["", "## 未反映 action item"]
+        for it in r["action_items"]:
+            lines.append(
+                "- {} [{}] -> {} ({})".format(
+                    it["request_id"], it["result_label"],
+                    it["next_action_type"], it["loop_state"]))
+    health = "GREEN"
+    if r["lane_status_counts"].get("processed_without_result"):
+        health = "RED (processed_without_result あり)"
+    elif r["unreflected_action_items"] > 0:
+        health = "YELLOW (未反映 action item あり)"
+    lines += ["", "## health: {}".format(health)]
+    return "\n".join(lines)
+
+
+def cmd_health(args) -> int:
+    root = _resolve_root(args.root)
+    report = health_report(root)
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(render_health_md(report))
+    return 0
+
+
+# --- consumed (CONSUMED.md 派生ビュー) -------------------------------------
+def cmd_consumed(args) -> int:
+    root = _resolve_root(args.root)
+    ledger_path = args.ledger or consumed.default_ledger_path(root)
+    out_path = consumed.default_consumed_path(root)
+    if args.mode == "build":
+        consumed.build(root, ledger_path=ledger_path, out_path=out_path,
+                       generated_at=args.generated_at)
+        print("CONSUMED 書き出し: {} (台帳: {})".format(out_path, ledger_path))
+        return 0
+    # check
+    ok = consumed.check(root, ledger_path=ledger_path, out_path=out_path,
+                        generated_at=args.generated_at)
+    if ok:
+        print("CONSUMED は最新です (ドリフトなし): {}".format(out_path))
+        return 0
+    print("CONSUMED にドリフトがあります (build で再生成してください): {}".format(out_path))
+    return 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="alo-gpt-audit",
@@ -265,6 +476,31 @@ def build_parser() -> argparse.ArgumentParser:
     pl = sub.add_parser("lint", help="REQUEST の preflight 検査 (scope/target_mode/hash)")
     pl.add_argument("--strict", action="store_true", help="警告があれば exit 1")
     pl.set_defaults(func=cmd_lint)
+
+    pod = sub.add_parser("owner-digest", help="Owner 向け 5 行サマリ (台帳派生)")
+    pod.add_argument("--all", action="store_true",
+                     help="reflected 済みも含む (既定は action_queue のみ)")
+    pod.set_defaults(func=cmd_owner_digest)
+
+    pr = sub.add_parser("reflect", help="RESULT を反映済みにする (reflected:true)")
+    pr.add_argument("request_id", help="台帳上の request_id")
+    pr.add_argument("--apply", action="store_true", help="実際に追記 (未指定は dry-run)")
+    pr.set_defaults(func=cmd_reflect)
+
+    pg = sub.add_parser("gate-check", help="操作の承認要否を判定")
+    pg.add_argument("operation", help="判定する操作名")
+    pg.set_defaults(func=cmd_gate_check)
+
+    ph = sub.add_parser("health", help="監査レーン health report")
+    ph.add_argument("--json", action="store_true", help="JSON で出力")
+    ph.set_defaults(func=cmd_health)
+
+    pco = sub.add_parser("consumed", help="CONSUMED.md 派生ビュー (build / check)")
+    pco.add_argument("mode", choices=["build", "check"], help="build=書き出し / check=ドリフト検査")
+    pco.add_argument("--ledger", help="入力台帳 jsonl (既定 <root>/_AUDIT_LEDGER.jsonl)")
+    pco.add_argument("--generated-at", dest="generated_at",
+                     help="generated_at の固定値 (既定 JST 現在時刻)")
+    pco.set_defaults(func=cmd_consumed)
 
     return p
 
