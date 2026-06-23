@@ -8,7 +8,7 @@ review_scope: LEASE_SUBSYSTEM_DESIGN_v0.1_20260623.md の設計妥当性 (mutati
 regression_anchors: HANDOFF_SCHEMA_APPENDIX_v0.5 §4.4 / HANDOFF_OPERATIONAL_IMPL_DESIGN_v0.1 / handoff_proto/validator.py
 decision_requested: この設計で mutating レーンを解禁してよいか / §3 の block 集合は fail-closed として十分か / §7 の 4 問への判断
 target_mode: design_review
-source_hash: (fill at submit; git rev of LEASE_SUBSYSTEM_DESIGN_v0.1_20260623.md)
+source_hash: blob:366c1da0ff357854f417c1e9e6c18697f0800592 commit:b03d7a2
 ---
 
 # REQUEST 20260623_lease_subsystem_v0.1
