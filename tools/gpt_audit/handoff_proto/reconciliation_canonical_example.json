@@ -1,0 +1,42 @@
+{
+  "reconciliation_id": "REC_Q1_1",
+  "grouping_key": "Q1+1+sha256:aaa",
+  "source_queue_item_id": "Q1",
+  "packet_generation": 1,
+  "packet_hash": "sha256:aaa",
+  "attempt_relations": [
+    {
+      "attempt_id": "ATT-A",
+      "relation": "representative",
+      "related_to_attempt_id": null,
+      "basis_codes": [
+        "acceptance_pass"
+      ],
+      "acceptance_grade": "pass",
+      "output_hash_state": "matches_representative"
+    },
+    {
+      "attempt_id": "ATT-B",
+      "relation": "duplicate",
+      "related_to_attempt_id": "ATT-A",
+      "basis_codes": [
+        "duplicate_output"
+      ],
+      "acceptance_grade": "pass",
+      "output_hash_state": "matches_representative"
+    },
+    {
+      "attempt_id": "ATT-C",
+      "relation": "invalid",
+      "related_to_attempt_id": null,
+      "basis_codes": [
+        "schema_invalid"
+      ],
+      "acceptance_grade": "fail",
+      "output_hash_state": "absent"
+    }
+  ],
+  "representative_attempt_id": "ATT-A",
+  "needs_head_resolution": false,
+  "recorded_at": "2026-06-23T01:07:00"
+}
