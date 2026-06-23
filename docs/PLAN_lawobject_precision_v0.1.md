@@ -119,6 +119,17 @@ PR が producer テスト＋不変 gate を必ず通る。回帰は CI で赤く
 ### 出口
 L1 ゴールドセットに実ラベルを充填できる状態。最初は「債権法改正の数十条＋判決十数件」で十分。
 
+### 進捗（2026-06-23, real-lane 実証 ✅ — サンドボックスで実行）
+e-Gov API は 403 だが **GitHub clone は通る**ことを使い、**実 e-Gov 標準 XML で lawdelta を実走できた**:
+- 実民法 XML 2 版を GitHub から取得（`japanese_law_xml_schema` のテスト XML=2023-06-14 / `gitlaw-jp`
+  の current=2025-10-01 施行）。**XML 本体はリポジトリに入れない**（外部データ）。
+- 結果: 1164 条パース（枝番・削除 shell 含む）→ diff 1167 行（**substitution14/insertion4/repeal2/join1
+  = 21 条の実改正**）、**全 gate pass**。＝producer が fixture でなく**実データで動く**ことを実証。
+- 成果物: 手順 [`scripts/lawdelta/REALLANE.md`](../scripts/lawdelta/REALLANE.md) ＋ **候補 gold ワークリスト**
+  `tests/gold/lawdelta_minpo_20230614_20251001.candidate.jsonl`（21 条・producer 予測・`verified:false`）。
+- **残: 新旧対照表での人手検証**（asai）→ `delta_kind` 記入＝real gold 化 → `scripts.eval --min-f1` で
+  pattern 単位 P/R 較正。＝L1 の物差しに**実データの一発目**が乗る一歩手前。
+
 ---
 
 ## 5. L4 — 同定の地盤：article_path 正規化＋lawtime 接続 🟡
