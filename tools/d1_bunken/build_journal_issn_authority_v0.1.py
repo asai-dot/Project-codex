@@ -102,14 +102,16 @@ def journal_counts(labeled_path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--labeled", required=True)
-    ap.add_argument("--ndl", required=True)
-    ap.add_argument("--seed", required=True)
+    ap.add_argument("--ndl", default=None, help="NDL書誌バルク(jsonl/tsv)。無指定ならNDL突合をスキップ")
+    ap.add_argument("--seed", default=None, help="検証済み頭部authority CSV。無指定ならseed override無し")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
 
     counts = journal_counts(a.labeled)
-    seed = load_seed(a.seed)
-    ndl = load_ndl_index(a.ndl)
+    seed = load_seed(a.seed) if a.seed else {}
+    ndl = load_ndl_index(a.ndl) if a.ndl else {}
+    if not a.ndl:
+        print("[info] --ndl 未指定: NDL突合スキップ。seed以外は unresolved として全誌を出力します。", file=sys.stderr)
 
     rows, agg = [], collections.Counter()
     for journal, n in counts.most_common():
