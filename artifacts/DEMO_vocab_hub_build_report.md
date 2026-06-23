@@ -6,6 +6,7 @@
 - Term 総数: **10**  (bedrock 9 / specialty 1)
 - 生成 hub: **7**  (exact統合 2 / canonical昇格可(rank≤102のみ) 7)
 - 同綴異義 homograph_conflict(統合せず別hub): **1**
+- 読み欠落 bedrock: **0**  (定義一致で hub へ救済 **0** / 単独hub 0)
 - specialty attach(rank≥103, attachのみ): **1**
 
 ## hub member数 分布
