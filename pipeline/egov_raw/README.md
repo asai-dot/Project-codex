@@ -17,7 +17,7 @@ python scripts/egov_fetch.py --targets pipeline/egov_raw/_targets.json \
     --raw-dir pipeline/egov_raw --out pipeline/egov_raw
 
 # 単発（例: 会社法199条1項各号）
-python scripts/egov_fetch.py --law-id 405AC0000000086 --article 199 --paragraph 1 \
+python scripts/egov_fetch.py --law-id 417AC0000000086 --article 199 --paragraph 1 \
     --raw-dir pipeline/egov_raw --out pipeline/egov_raw/kaishaho_199_1.anchors.json
 ```
 

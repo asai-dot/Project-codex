@@ -21,7 +21,7 @@ GPT お目付け (20260619 DDPROGRESS_PASS_WITH_NOTES §5/§4) の指示:
   # offline: 取得済み/fixture の法令XMLから各号 anchor を抽出（本 session はこちら）
   python scripts/egov_fetch.py --from-file law.xml --article 199 --paragraph 1
   # online: e-Gov から read-only 取得し raw 保存（要・outbound 許可の実行環境）
-  python scripts/egov_fetch.py --law-id 405AC0000000086 --article 199 --paragraph 1 \
+  python scripts/egov_fetch.py --law-id 417AC0000000086 --article 199 --paragraph 1 \
       --raw-dir pipeline/egov_raw --out pipeline/egov_raw/kaishaho_199_1.anchors.json
 """
 
@@ -34,14 +34,15 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
-# e-Gov 法令API v2 の法令データ取得。read-only(GET) のみに使う。
-EGOV_API_V2 = "https://laws.e-gov.go.jp/api/2/law_data/{law_id}"
-SOURCE_LABEL = "e-Gov 法令API"
+# e-Gov 法令API。v1 lawdata は 法令標準XML(<DataRoot>…<LawFullText><Law>)を直接返すため、
+# ElementTree でそのまま各号を抽出できる(v2 /law_data は構造化 JSON で別パーサが要る)。read-only(GET)のみ。
+EGOV_API = "https://laws.e-gov.go.jp/api/1/lawdata/{law_id}"
+SOURCE_LABEL = "e-Gov 法令API v1 (lawdata)"
 LAYER = "L0_observation"  # 生 anchor。床として accepted ではない(HOLD)。
 
 
 def build_url(law_id: str) -> str:
-    return EGOV_API_V2.format(law_id=law_id)
+    return EGOV_API.format(law_id=law_id)
 
 
 def fetch_raw(law_id: str, *, timeout: int = 30, url: str | None = None) -> bytes:
@@ -175,7 +176,7 @@ def run_targets(targets: list[dict], *, raw_dir: Path, out_dir: Path,
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="e-Gov 条文各号の read-only 取得 / anchor 抽出")
     src = ap.add_mutually_exclusive_group(required=True)
-    src.add_argument("--law-id", help="e-Gov 法令ID (例 会社法=405AC0000000086)。online 取得")
+    src.add_argument("--law-id", help="e-Gov 法令ID (例 会社法=417AC0000000086)。online 取得")
     src.add_argument("--from-file", help="取得済み/fixture の法令XML を parse (offline)")
     src.add_argument("--targets", help="対象リスト JSON で一括 read-only 取得 (許可環境で)")
     ap.add_argument("--url", help="取得URLを明示上書き (版差対応・read-only)")

@@ -1,9 +1,9 @@
 {
-  "_comment": "e-Gov 各号 read-only 取得の対象リスト。許可された outbound 環境で `python scripts/egov_fetch.py --targets pipeline/egov_raw/_targets.json --raw-dir pipeline/egov_raw --out pipeline/egov_raw` を回すと raw + anchors が落ちる。law_id は e-Gov 法令ID。記載事項の床(§5)の top-down 源を最小から育てる。",
+  "_comment": "e-Gov 各号 read-only 取得の対象リスト。許可された outbound 環境で `python3 scripts/egov_fetch.py --targets pipeline/egov_raw/_targets.json --raw-dir pipeline/egov_raw --out pipeline/egov_raw` を回すと raw + anchors が落ちる。law_id は e-Gov 法令ID(会社法=平成17年法律第86号=417AC0000000086)。v1 lawdata は法令全文XMLを返し、article/paragraph で各号を絞る。記載事項の床(§5)の top-down 源を最小から育てる。",
   "targets": [
-    {"law_id": "405AC0000000086", "law_name": "会社法", "article": "199", "paragraph": "1",
+    {"law_id": "417AC0000000086", "law_name": "会社法", "article": "199", "paragraph": "1",
      "out": "kaishaho_199_1.anchors.json", "note": "募集株式の発行 募集事項(199①各号)。requirement_floor の検証ペアと対応"},
-    {"law_id": "405AC0000000086", "law_name": "会社法", "article": "911", "paragraph": "3",
-     "out": "kaishaho_911_3.anchors.json", "note": "株式会社設立登記の登記事項(各号)"}
+    {"law_id": "417AC0000000086", "law_name": "会社法", "article": "911", "paragraph": "3",
+     "out": "kaishaho_911_3.anchors.json", "note": "株式会社設立登記の登記事項(911③各号)"}
   ]
 }
