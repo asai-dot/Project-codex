@@ -1,5 +1,10 @@
 # 文献オブジェクト TOC 2コーパス統合棚卸し（実測ギャップ表）
 
+> ⚠️ 帰属注記（2026-06-23 追記）: 本書の**構造論点（canonical一本化・最精度選択・source/status）は
+> 既存の監査済み設計 DD-TOCATTACH / DD-TOCADOPT / DD-TOCNODES に帰属**する（再発明だった）。
+> 詳細は `dd/DD-LITID_TOC_RECONCILIATION_20260623.md`。
+> 本書で**新規に効く実測**は §2 のルート横断重なり（1,509 / 810）＝既存設計が待つ cross-source gold 候補のみ。
+
 - 作成日: 2026-06-22
 - 目的: マスター契約（golden/silver・最精度選択規則）設計の**前提実測**。設計語彙を実データの形に根ざす。
 - 方法: DB read-only（Supabase nixfjmwxmgugiiuqfuym）＋ Box read-only（folder 観測のみ）。**書込・DDL・egress なし**。
