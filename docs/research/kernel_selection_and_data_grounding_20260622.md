@@ -46,33 +46,18 @@
 2. カーネル＝建物賃貸借・信頼関係破壊解除の要件事実（要件事実2冊＋裁判例/実務1冊）を第一候補として固定（PDF 突合で最終確定）。
 3. `toc_nodes.embedding` 0行＝T軸検索は Phase 2 で kernel subset から生成（本番 backfill は Phase 5）。
 
-## 5. ★Phase 1 着手可能集合の確定（asset 同定の実測・2026-06-23 追記）
-結合経路を実測し、**TOC↔PDF が現状で解決する集合**を確定した。
+## 5. ★asset 同定は DD-LITID が統べる（2026-06-23 訂正・前版の単一join計測は撤回）
+**訂正**：本メモ初版で「holding_bencom_link / title_norm 突合で 34〜84/611 しか繋がらない」と書いたが、これは**計測器が誤り**。biblio↔bookdx（自所スキャン蔵書 vs 収集TOC）の asset 同定は、既存の専用設計 **`DD-LITID`**（`DD-LITID_FORWARD_ROADMAP v0.4` ROADMAP_PASS_WITH_NOTES・Box 2303250332731）が統べる。単一 route の exact/trigram join で overlap を数えて「ギャップ」と断じるのは、DD-LITID が N1/N6 で明確に戒める誤り（未校正 route スコアを linkage と同一視・route 独立性無視）。**前版 §5/§6 の 34/84 という数値判断は撤回する。**
 
-**結合チェーン**：`biblio.toc_nodes/books(book_id)` ↔ `bookdx.holding_bencom_link(book_id ↔ internal_id)` ↔ `bookdx.holdings(internal_id → pdf_folder_id)`。
-（`bookdx.candidates.isbn` 経路は isbn が 6 冊しか無く不成立。`holding_bencom_link` 経路が実効。）
+DD-LITID の構造（read-only candidate 段階・mint/confirm は HOLD）：
+- **複数 route**：WS-A 自所版同定 / WS-B 既存 shadow 遡及 / WS-C 未投入 source 取り込み / WS-D NDL ハブ。
+- route 出力は `candidate`/`observation`（confirmed は人手 or ratified policy）。append-only candidate/decision lineage。
+- `unknown/not_observed` と negative evidence を分離。content/observation independence を記録。
+- promotion は Q評価ゲート（independent gold・route別 precision/recall・FP上限・snapshot固定）を経る。
+- **GO**：read-only inventory・coverage計測・route別評価・review packet。**HOLD**：mint・canonical昇格・backfill・production write。
 
-**実測（深刻なギャップ）**：
-| 指標 | 値 |
-|---|---|
-| PDF 付き holdings | 611 |
-| holding_bencom_link 行 | 1,787 |
-| **PDF holdings が biblio book_id に連結** | **34 のみ**（全て TOC 有） |
-| candidates.isbn 非NULL | 6 |
-
-→ **「TOC→PDF」が現状で繋がるのは 34/611 冊だけ**。残り 577 PDF は背骨に未連結＝asset 同定が大規模に未完。
-
-**含意（カーネル再選定）**：
-- 当初候補（要件事実マニュアル／民事裁判実務［要件事実編］等）は **34冊に含まれない**（TOC はあるが PDF 未連結）。要件事実シリーズで行くなら asset 同定を先に要する。
-- **解決済み34冊で論点が近い3冊**（契約解除/解消・全て PDF 即利用可）：
-  | 書名 | toc_n | kernel_hits | pdf_folder_id |
-  |---|---|---|---|
-  | 契約解消の法律実務 | 140 | 7 | 368661731521 |
-  | 不動産の法務 | 497 | 10 | 363425995153 |
-  | 新民法対応 契約審査手続マニュアル | 147 | 8 | 356533691864 |
-- **推奨**：Phase 1 パイロット・カーネル＝「**契約解除/解消**」を上記3冊で組む（asset 同定を待たず即着手可・table/structure/text facet 比較が成立）。当初の賃貸借要件事実は、asset 同定の機械化（Phase 1 後半 or 専用 DD-LITID 作業）で 577 PDF を背骨に連結した後に拡張。
-
-## 6. ロードマップ Phase 1 タスク更新
-- **T1（必須・前提）**：asset 同定の実装。`holding_bencom_link` を正規経路に据え、未連結 577 PDF の book_id 解決（title_norm/著者/出版社の trigram 突合＋人手確認）。カーネル3冊は連結済みなので即進める。
-- **T2**：カーネル3冊の軽量PDF（folder 368661731521 / 363425995153 / 356533691864）に Docling+DocLayNet → page_block artifact。
-- **T3**：toc_nodes(print_page) ↔ page_block アンカー → 「目次→軽量PDF領域」を3冊で実証。
+## 6. Phase 1 への正しい接続（DD-LITID と整合）
+- **カーネルの asset 同定は DD-LITID の read-only route 候補で行う**（生 join で「繋がっている/いない」を断じない）。これは GO 範囲。
+- Phase 1 パイロットは、DD-LITID route で **identity candidate が強い（複数 route 合意 or 人手確定済み）書籍**から選ぶ。「契約解除/解消」3冊（契約解消の法律実務・不動産の法務・新民法対応 契約審査手続マニュアル）は holding_bencom_link で book_id 連結が既にあり candidate が強い→パイロット適格。当初の要件事実シリーズは DD-LITID route 候補を確認してから可否判断（生 join の不在＝未連結 と即断しない）。
+- ロードマップ Phase 1 の「asset 同定」前提タスクは、**新規実装ではなく DD-LITID の read-only route を XDOC/LAYOUT スライスに接続する**こと（巨人の肩・再発明しない）。
+- スケール（611冊の背骨連結）も DD-LITID の workstream で進む（本スレッドで独自に reconcile しない）。
