@@ -75,6 +75,47 @@ CREATE OR REPLACE VIEW lawtime.gate_succession_no_ambiguous_overlap AS
     AND (a.lineage_event_id IS DISTINCT FROM b.lineage_event_id
          OR a.lineage_event_id IS NULL);
 
+-- ── N-1 (audit 2026-06-23). resolver fallback の非決定性を gate で潰す ───────
+-- fn_resolve_law_reference_at は succession 不在のとき
+--   `alo_statutes WHERE law_work_id = p_law_work_id LIMIT 1` で law_id を fallback する。
+-- ORDER BY/一意制約が無いため、同一 law_work_id が複数 law_id を持つと非決定。
+-- 監査推奨（option A: gate で潰す。LIMIT 1 互換は維持）に従い、succession で
+-- 解決されない law_work が複数 law_id を持たないことを検査する。0 件が VALIDATE/apply 前提。
+CREATE OR REPLACE VIEW lawtime.gate_law_work_single_fallback_law_id AS
+  SELECT s.law_work_id
+  FROM lawtime.alo_statutes s
+  WHERE NOT EXISTS (
+          SELECT 1 FROM lawtime.alo_law_succession_edge se
+          WHERE se.law_work_id = s.law_work_id
+            AND se.relation_type <> 'unknown' )
+  GROUP BY s.law_work_id
+  HAVING count(DISTINCT s.law_id) > 1;
+
+-- ── N-2 (audit 2026-06-23). statute revision の as_of 区間重なり検出 ──────────
+-- resolver tier2 は `ORDER BY valid_from DESC NULLS LAST LIMIT 1`。同一 law_id の
+-- 版区間 [valid_from, valid_to) が重なると tier2 も非決定になる。半開区間の重なり判定
+-- （af < bt AND bf < at、NULL は開区間）で同一 law_id の重複版を検出する。
+CREATE OR REPLACE VIEW lawtime.gate_statute_revision_no_ambiguous_overlap AS
+  SELECT a.law_revision_id AS revision_id_a, b.law_revision_id AS revision_id_b
+  FROM lawtime.alo_statutes a
+  JOIN lawtime.alo_statutes b
+    ON a.law_id = b.law_id
+   AND a.law_revision_id < b.law_revision_id
+   AND (a.valid_from IS NULL OR b.valid_to IS NULL OR a.valid_from < b.valid_to)
+   AND (b.valid_from IS NULL OR a.valid_to IS NULL OR b.valid_from < a.valid_to);
+
+-- ── N-3/N-4 (audit 2026-06-23). formal status の状態整合検出 ──────────────────
+-- v_lawtime_formal_status は CurrentEnforced 優先で集約するため、データ異常
+-- （同一 law_id に CurrentEnforced 複数 / CurrentEnforced と Repeal 同居）を隠す。
+-- 異常検知 gate を view とセットで持つ（監査 N-3/N-4）。0 件が production 前提。
+CREATE OR REPLACE VIEW lawtime.gate_formal_status_inconsistent_revision_status AS
+  SELECT s.law_id
+  FROM lawtime.alo_statutes s
+  GROUP BY s.law_id
+  HAVING count(*) FILTER (WHERE s.revision_status = 'CurrentEnforced') > 1
+      OR ( bool_or(s.revision_status = 'CurrentEnforced')
+       AND bool_or(s.revision_status = 'Repeal') );
+
 -- ── R-1. resolved lawtime views (DD-LAWSUBTRANS connection point) ───────────
 CREATE OR REPLACE VIEW lawtime.v_lawtime_formal_status AS
   SELECT s.law_id,

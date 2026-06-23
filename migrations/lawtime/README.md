@@ -1,6 +1,11 @@
-# migrations/lawtime — DD-LAWTIME-001 base (v0.2.2) + production patch (v0.2.3)
+# migrations/lawtime — DD-LAWTIME-001 base (v0.2.2) + production patch (v0.2.3 / 2026-06-23 notes 反映 = v0.2.3a)
 
 > **status: candidate（RECONSTRUCTED）。監査 + owner ratify が前提。本番未 apply。**
+>
+> 2026-06-23 監査（`DDLAWTIME_MODIFY_REQUIRED`）の must_fix / notes を反映:
+> 列 provenance・enum 丸め規則は **[`COVERAGE.md`](./COVERAGE.md)**、
+> resolver 非決定性・formal-status 整合の追加 gate（N-1/N-2/N-3/N-4）は `010_patch` に収録。
+> production apply / materialize は依然 **HOLD**（owner ratify 待ち）。
 
 ## なぜ「reconstructed」か
 オリジナルの **v0.2.2 base DDL がこのリポジトリに存在しなかった**（`docs/dd/DD-LAWTIME-001_v0.2.3_production_patch.md` という
@@ -29,8 +34,9 @@
 | # | ファイル | 内容 |
 |---|---|---|
 | 001 | `001_base_v0.2.2.sql` | alo_law_work / alo_statutes / alo_edges(D2列含む) / alo_law_succession_edge / alo_law_ref_temporal_eval_event / fn_resolve_law_reference_at(二段・LIMIT 1) / eval append-only |
-| 010 | `010_patch_v0.2.3.sql` | P0-1 (NOT VALID→backfill→VALIDATE) / P0-2 両端検査 / P0-3 current,superseded 絞り / P0-4 succession 曖昧検出 / R-1 view (v_lawtime_formal_status, v_lawtime_resolved_ref) |
-| ── | `verify_dry_run.sql` | lawtime gate 群が 0 件であることを assert |
+| 010 | `010_patch_v0.2.3.sql` | P0-1 (NOT VALID→backfill→VALIDATE) / P0-2 両端検査 / P0-3 current,superseded 絞り / P0-4 succession 曖昧検出 / **N-1 fallback law_id 一意 / N-2 版区間重なり / N-3,N-4 formal-status 整合** / R-1 view (v_lawtime_formal_status, v_lawtime_resolved_ref) |
+| ── | `verify_dry_run.sql` | lawtime gate 群（P0-2/3/4 + N-1/N-2/N-3/N-4）が 0 件であることを assert |
+| ── | `COVERAGE.md` | 列 provenance（P/L/R 分類）・enum 値域と丸め規則・resolver 非決定性保証（監査 must_fix #1/#3/#4） |
 
 `001` の `alo_edges` は **two-tier CHECK を持たない**（legacy 行を temporal_status NULL で表現できる）。
 CHECK は `010` が NOT VALID で先置き → backfill → `gate_backfill_unknown_unchecked` 空 → VALIDATE で入る。
@@ -42,10 +48,14 @@ CHECK は `010` が NOT VALID で先置き → backfill → `gate_backfill_unkno
   ⚠️ これは構造検査。backfill/formal_status/lawtime_resolved の**実データ**検証は materialize 済み環境を要する。
 - 本番 dry-run は別途（materialize 先決定後）。本セッションは owner 指示により**課金なし＝ローカル構造スモークのみ**。
 
-## 未確定 / TODO（audit で要確認）
-- `fn_resolve_law_reference_at` のシグネチャ・tier1/2 の正確な挙動（v0.2.2 正本との一致）。
-- `(recon)` 値域（as_of_basis / temporal_status / temporal_caveat / revision_status / relation_type / confidence）。
-- v0.2.2 が持っていた**他の gate view**（patch doc は P0-2/3/4 のみ明示。網羅性は正本要確認）。
+## 監査で閉じた点（2026-06-23 RESULT 反映）
+- `fn_resolve_law_reference_at` の LIMIT 1 非決定性 → N-1/N-2 gate で 0 件保証（`COVERAGE.md` §4）。
+- `(recon)` 値域の出典分類と丸め規則 → `COVERAGE.md` §2/§3。
+- formal-status の状態整合（CurrentEnforced 重複 / Repeal 同居）→ N-3/N-4 gate。
+
+## 未確定 / TODO（ratify 前に残る）
+- `fn_resolve_law_reference_at` のシグネチャ・tier1/2 の挙動の**正本 v0.2.2 との最終一致**（gate で非決定性は封じたが正本照合は別）。
+- `revision_status` 状態機械の corpus 実態での最終照合（N-3 強化）。
 - `alo_edges` の generic 列（src_id/dst_id は最小再構成）。**実 D2 edge レイヤの設計と要整合**
   （本ファイルの alo_edges は lawtime スキーマ内のスタンドイン。実 D2 が別スキーマ/別形なら移設・接続が要る）。
 - lawtime を `lawtime` スキーマに置いたことで、将来 D2/lawsubtrans を実体化する際の
