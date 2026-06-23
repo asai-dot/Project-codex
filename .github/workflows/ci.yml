@@ -25,6 +25,8 @@ jobs:
             tests.test_assembler tests.test_mcprender
       - name: Run article-path identity tests (L4 — canonicalization + crosswalk)
         run: python -m unittest -v tests.test_articlepath
+      - name: Run 改め文 parser tests (gold generator from official amendment text)
+        run: python -m unittest -v tests.test_amendparse
       - name: Run producer safety invariants (L2 — no accepted/claim_support shipped)
         run: python -m unittest -v tests.test_producer_invariants
       - name: Run precision eval harness + its tests (L1 — measuring stick)

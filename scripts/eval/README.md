@@ -21,6 +21,8 @@ python -m scripts.eval --task <名前> \
 - `--label`: 正解と予測を比べる列（例 `delta_kind`、`change_type`、`treatment_relation`）。
 - 片側にしか無いキーは「取りこぼし(FN)」「過剰生成(FP)」として計上される。
 - `--min-f1`: micro-F1 がこれ未満なら exit 2（**gold が非空のときだけ**発火）。
+- `--gold-is-subset`: **audit モード**。gold に含まれるキーだけ採点する。改め文ベース gold が
+  改正対象条のみを持ち、producer は法令全条を予測する場合に使う（未検証条の予測を FP に計上しない）。
 
 ## 空 gold でも緑（CI 常駐の前提）
 gold が空/未配置なら **no-op で exit 0**（"no gold labels yet" を表示）。

@@ -120,9 +120,17 @@ class Eval:
         }
 
 
-def evaluate(gold: Dict[str, str], pred: Dict[str, str]) -> Eval:
+def evaluate(gold: Dict[str, str], pred: Dict[str, str],
+             *, gold_is_subset: bool = False) -> Eval:
+    """Score pred against gold.
+
+    Default mode joins on union(gold,pred) — a pred not in gold is a FP.
+    ``gold_is_subset=True`` restricts scoring to gold's keys (useful when the
+    gold is a verified audit of N specific provisions out of many; we should
+    not punish the producer for predicting on the unverified rest).
+    """
     ev = Eval(n_gold=len(gold), n_pred=len(pred))
-    keys = set(gold) | set(pred)
+    keys = set(gold) if gold_is_subset else set(gold) | set(pred)
     ev.n_keys = len(keys)
 
     def score(label: str) -> LabelScore:

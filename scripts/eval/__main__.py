@@ -40,11 +40,14 @@ def main(argv=None) -> int:
     ap.add_argument("--out", default=None, help="output prefix (writes <prefix>_summary.json)")
     ap.add_argument("--min-f1", type=float, default=None,
                     help="fail (exit 2) if micro-F1 below this AND gold is non-empty")
+    ap.add_argument("--gold-is-subset", action="store_true",
+                    help="score only the keys present in gold (audit subset; "
+                         "predictions on unverified keys are not counted as FP)")
     args = ap.parse_args(argv)
 
     gold = load_labeled(args.gold, args.key, args.label)
     pred = load_labeled(args.pred, args.key, args.label)
-    ev = evaluate(gold, pred)
+    ev = evaluate(gold, pred, gold_is_subset=args.gold_is_subset)
     report = {"task": args.task, "key": args.key, "label": args.label,
               "gold_path": args.gold, "pred_path": args.pred, **ev.to_dict()}
 

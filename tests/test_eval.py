@@ -59,6 +59,18 @@ class TestMetrics(unittest.TestCase):
         self.assertTrue(ev["empty_gold"])
         self.assertIsNone(ev["micro"])
 
+    def test_gold_is_subset_audit(self):
+        # Audit mode: only 'a' is verified; producer also predicts on 'b' (unverified)
+        gold = {"a": "repeal"}
+        pred = {"a": "repeal", "b": "substitution"}
+        ev = evaluate(gold, pred, gold_is_subset=True)
+        m = ev.micro()
+        self.assertEqual(m["precision"], 1.0)
+        self.assertEqual(m["recall"], 1.0)
+        # 'b' must NOT be counted as a substitution FP
+        labels = {s["label"] for s in ev.to_dict()["per_label"]}
+        self.assertNotIn("substitution", labels)
+
 
 class TestLoad(unittest.TestCase):
     def test_load_skips_blank_and_missing_key(self):
