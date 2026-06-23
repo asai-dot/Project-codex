@@ -20,8 +20,14 @@ def _can_global_index(meta: dict) -> bool:
     return meta.get("confidentiality_class") == "open" and meta.get("redistribution") == "public"
 
 
-def validate_bundle(bundle: dict, known_cases: dict, canonical_sources: set) -> dict:
-    """known_cases[uri]={full_text_len, confidentiality_class, redistribution}。
+# matter 機密に属するクラス (V8 認可対象)
+MATTER_CLASSES = {"matter_scoped_only", "matter_confirmed", "lawyer_client_confidential"}
+
+
+def validate_bundle(bundle: dict, known_cases: dict, canonical_sources: set,
+                    requester_matters: set | None = None) -> dict:
+    """known_cases[uri]={full_text_len, confidentiality_class, redistribution[, matter_id]}。
+    requester_matters: 要求者が閲覧権を持つ matter_id 集合 (None=matter権限なし=fail-closed)。
 
     returns {ok, violations:[{claim, code, detail}]}。
     """
@@ -47,6 +53,12 @@ def validate_bundle(bundle: dict, known_cases: dict, canonical_sources: set) -> 
             elif scope == "global" and not _can_global_index(known_cases[u]):
                 # V7 egress: global で open∧public 以外を引用しない
                 v.append({"claim": cid, "code": "V7_egress_non_open_cited", "detail": u})
+            elif known_cases[u].get("confidentiality_class") in MATTER_CLASSES:
+                # V8 (v0.2 note): matter機密 cite は要求者が当該 matter を認可されている必要
+                mid = known_cases[u].get("matter_id")
+                if requester_matters is None or mid not in requester_matters:
+                    v.append({"claim": cid, "code": "V8_matter_not_authorized",
+                              "detail": f"{u} matter_id={mid}"})
         # V3
         if not evid:
             v.append({"claim": cid, "code": "V3_no_evidence", "detail": "claim has no evidence"})

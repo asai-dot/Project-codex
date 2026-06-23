@@ -71,6 +71,22 @@ def decide_bindings(observations: list[dict]):
     return assignment, tiers, review
 
 
+def detect_cross_source_conflicts(assignment: dict, obs_by_id: dict) -> list[dict]:
+    """G6 (v0.2 note): 同一外部参照 'source:id' が複数 case_key に跨る矛盾を検出。
+
+    一つの源が「同じレコード」と言うものを採番が割れて束ねた=取りこぼし/誤りの信号。
+    merge はせず review に出す(③CORROB conflict_review と同じ非merge方針)。
+    """
+    ref_to_cases = defaultdict(set)
+    for oid, ck in assignment.items():
+        o = obs_by_id.get(oid, {})
+        if o.get("external_id"):
+            ref_to_cases[f'{o.get("external_source","")}:{o["external_id"]}'].add(ck)
+    return [{"external_ref": r, "case_keys": sorted(cs),
+             "reason": "same_extref_multi_case", "action": "human_review"}
+            for r, cs in sorted(ref_to_cases.items()) if len(cs) > 1]
+
+
 def auto_bound_assignment(observations: list[dict]) -> dict:
     """自動bind(Tier A)のみを採用した assignment。
 

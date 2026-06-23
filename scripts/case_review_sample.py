@@ -9,8 +9,28 @@
 read-only・決定的(seed)。DB/DDL なし。検証は test_case_review_sample.py。
 """
 from __future__ import annotations
+import math
 import random
 from collections import defaultdict
+
+
+def required_sample_size(p: float = 0.99, margin: float = 0.02, z: float = 1.96) -> int:
+    """目標 precision p を ±margin・信頼 z(既定95%) で推定するのに要する標本数 (v0.2 note)。
+
+    正規近似 n = z^2 p(1-p) / margin^2。owner が margin/信頼を調整(既定は提案値)。
+    """
+    return math.ceil(z * z * p * (1 - p) / (margin * margin))
+
+
+def wilson_ci(correct: int, n: int, z: float = 1.96):
+    """precision の Wilson 信頼区間 (小標本でも安定)。n=0 は (None,None)。"""
+    if n == 0:
+        return (None, None)
+    ph = correct / n
+    d = 1 + z * z / n
+    center = (ph + z * z / (2 * n)) / d
+    half = (z * math.sqrt(ph * (1 - ph) / n + z * z / (4 * n * n))) / d
+    return (round(center - half, 4), round(center + half, 4))
 
 # 人手レビュー最小表示項目 (CASEID-001 should_fix①)
 DISPLAY_FIELDS = ["forum_code", "decision_date", "case_number_raw", "case_number_norm",
@@ -63,13 +83,20 @@ def estimate_precision(reviewed: list[dict]) -> dict:
 
     tiers = {}
     drift = []
+    total = {"correct": 0, "false_merge": 0, "false_split": 0, "unsure": 0}
     for t, c in sorted(by_tier.items()):
         p = prec(c)
-        tiers[t] = {"precision": p, "n_decisive": c["correct"] + c["false_merge"],
-                    "false_merge": c["false_merge"], "target": PRECISION_TARGET.get(t)}
+        nd = c["correct"] + c["false_merge"]
+        for k in total:
+            total[k] += c[k]
+        tiers[t] = {"precision": p, "n_decisive": nd, "false_merge": c["false_merge"],
+                    "ci95": wilson_ci(c["correct"], nd), "target": PRECISION_TARGET.get(t),
+                    "recommended_n": required_sample_size(PRECISION_TARGET[t]) if t in PRECISION_TARGET else None}
         tgt = PRECISION_TARGET.get(t)
         if tgt is not None and p is not None and p < tgt:
             drift.append({"tier": t, "precision": p, "target": tgt})
+    n_all = sum(total.values())
     return {"by_tier": tiers,
             "by_stratum": {s: prec(c) for s, c in sorted(by_stratum.items())},
+            "unsure_rate": round(total["unsure"] / n_all, 4) if n_all else 0.0,
             "drift": drift, "drift_detected": bool(drift)}
