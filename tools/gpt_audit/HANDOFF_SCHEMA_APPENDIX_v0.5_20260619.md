@@ -1,12 +1,18 @@
-# HANDOFF_SCHEMA_APPENDIX v0.4 — 共有パケットスキーマ登録簿（**規範的単一正本**）
+# HANDOFF_SCHEMA_APPENDIX v0.5 — 共有パケットスキーマ登録簿（**規範的単一正本**）
 
-- status: **draft (未ratify・未実装)**
-- date: 2026-06-22
-- revision: v0.3 → v0.4。`HANDOFF_MODIFY_REQUIRED`
-  (`20260621_head_hand_handoff_design_v0.4_GPTPRO_AUDIT_RESULT.md` / 2300911710513)
-  の v0.5 blocking（#5 per-attempt reconciliation / #6 hash runtime_envelope・unavailable /
-  MF-2 resource_descriptor・audit_sensitive 直交化・free_bounded 上限）を反映。
-- 前 revision: v0.2 → v0.3 で v0.4 must_fix 10件（3軸分離ほか）を反映済み。
+- status: **RATIFIED (design/schema)** — owner ratify 2026-06-23。実装は段階 gate
+  （`fixture-bound prototype` のみ着手可。operational/外部/課金/変更系は HOLD）。
+- ratify_record: `RATIFY_head_hand_handoff_v0.5_20260623.md`
+- audit: `20260622_head_hand_handoff_design_v0.5_GPTPRO_AUDIT_RESULT.md`
+  (`HANDOFF_PASS_WITH_NOTES` / 2302723874091)
+- date: 2026-06-23
+- **document revision == v0.5、packet schema family == `*/0.5`**（dispatch/0.5・result/0.5・
+  packet-hash/3）。文書 revision と packet_schema_version の対応を本行で明示
+  （v0.5 監査 note #1: filename/version 整合）。
+- revision 履歴: v0.3（v0.4 must_fix 10件）→ v0.4（v0.5 blocking: per-attempt reconciliation /
+  hash runtime_envelope・unavailable / resource_descriptor・audit 直交化・free_bounded）→
+  **v0.5（ratify。filename を internal schema 0.5 に整合・integrity gate registry 化・
+  prototype 境界明記）**。
 - **規範性宣言**: 本付録が `assignee`/`role`/パケットスキーマ/3軸 effect 判定/
   reconciliation の**唯一の規範的正本**。`HEAD_HAND_HANDOFF_DESIGN` /
   `WORKER_DELEGATION_DESIGN` 本文の YAML は **non-normative example**。本付録は他文書へ
@@ -14,11 +20,25 @@
 - owner 決定（2026-06-20 / 2026-06-21）:
   - role モデル = **governance_role / execution_role 分離**（§1.2）。
   - **effect は3軸**（§4）: `mutation_class`（lease）/ `egress_decision`（機密送信）/
-    `resource_effect_class`（課金・quota・rate-limit・外部ログ）。read は **mutation 軸では
-    non_mutating**。無償 public read は広く通す。**有料/quota/rate-limited read は resource
-    permit 必須＝permit subsystem 不在なら fail-closed で blocked**（owner 決定）。
+    `resource_effect_class`（課金・quota・rate-limit）＋直交属性 `external_audit_logging`。
+    read は **mutation 軸では non_mutating**。無償 public read は広く通す。**有料/quota/
+    rate-limited read は resource permit 必須＝permit subsystem 不在なら fail-closed で
+    blocked**（owner 決定）。
 
 凡例: req=必須 / opt=任意 / cond=条件付き必須。
+
+## 0. integrity-required gate registry（v0.5 監査 must_fix #2）
+
+`hash_status=unavailable` を `blocked/stale_packet` に倒す対象 gate を散逸させないため列挙する。
+
+| integrity_required_gate | 例 |
+|---|---|
+| `owner_gated` | accepted/canonical 昇格、本番DB、SF 書戻し |
+| `auditor_gated` | GPT Pro 監査投函物 |
+| `production` | 本番影響 |
+| `canonical` | canonical promotion |
+
+将来 gate 追加時は本表に追記する（registry の唯一正）。
 
 ---
 

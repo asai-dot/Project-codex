@@ -1,7 +1,9 @@
 # HEAD_HAND_HANDOFF_DESIGN v0.5 — ヘッド↔ハンドのシームレス受け渡し設計
 
-- status: **draft (未ratify・未実装)**
-- date: 2026-06-22
+- status: **RATIFIED (design)** — owner ratify 2026-06-23。実装は `fixture-bound prototype`
+  のみ着手可、operational/外部/課金/変更系は HOLD。ratify_record:
+  `RATIFY_head_hand_handoff_v0.5_20260623.md`
+- date: 2026-06-23
 - gate: `HANDOFF`
 - revision: v0.4 → v0.5。`HANDOFF_MODIFY_REQUIRED`
   (`20260621_head_hand_handoff_design_v0.4_GPTPRO_AUDIT_RESULT.md` / 2300911710513)
@@ -9,7 +11,7 @@
   列挙＋`hash_status=unavailable` の blocked（#6）/ `resource_descriptor` 規範 schema・
   `audit_sensitive` 直交化（`external_audit_logging`）・`free_bounded` 上限（MF-2）。
   3軸・**第4軸不要**・governance/execution 分離は accepted 維持。
-- **スキーマの正本**: `HANDOFF_SCHEMA_APPENDIX_v0.4_20260619.md`（規範的単一正本）。
+- **スキーマの正本**: `HANDOFF_SCHEMA_APPENDIX_v0.5_20260619.md`（規範的単一正本）。
   本文 YAML/field は **non-normative example**。
 - owner 決定:
   - role = **governance_role / execution_role 分離**。

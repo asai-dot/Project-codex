@@ -1,0 +1,101 @@
+{
+  "_note": "Fixture-bound prototype inputs (appendix §10). Offline only — no external calls, no writes. Each dispatch fixture lists input packet + env + expected verdict.",
+  "dispatch": [
+    {
+      "name": "F1_local_read",
+      "packet": {"next_action_type": "doc_patch", "assignee": "local", "execution_role": "deterministic", "data_access_class": "internal", "side_effect_flags": []},
+      "env": {},
+      "expect": {"dispatchable": true, "block_reason": null, "mutation_class": "non_mutating", "egress_decision": "none", "resource_effect_class": "none"}
+    },
+    {
+      "name": "F2_public_get",
+      "packet": {"next_action_type": "required_materials", "assignee": "local", "execution_role": "deterministic", "data_access_class": "public", "side_effect_flags": [], "egress_descriptor": {"destination_class": "public_query", "outbound_payload_class": "public"}, "resource_descriptor": {"resource_effect_class": "free_bounded", "bounds_known": true}},
+      "env": {},
+      "expect": {"dispatchable": true, "block_reason": null, "mutation_class": "non_mutating", "egress_decision": "allowed", "resource_effect_class": "free_bounded"}
+    },
+    {
+      "name": "F3_paid_read_no_permit",
+      "packet": {"next_action_type": "required_materials", "assignee": "codex", "execution_role": "worker", "data_access_class": "public", "side_effect_flags": [], "egress_descriptor": {"destination_class": "public_query", "outbound_payload_class": "public"}, "resource_descriptor": {"resource_effect_class": "paid"}},
+      "env": {"resource_permit_subsystem_available": false},
+      "expect": {"dispatchable": false, "block_reason": "resource_permit_unavailable", "mutation_class": "non_mutating", "egress_decision": "allowed", "resource_effect_class": "paid"}
+    },
+    {
+      "name": "F3b_paid_read_with_permit",
+      "packet": {"next_action_type": "required_materials", "assignee": "codex", "execution_role": "worker", "data_access_class": "public", "side_effect_flags": [], "egress_descriptor": {"destination_class": "public_query", "outbound_payload_class": "public"}, "resource_descriptor": {"resource_effect_class": "paid"}},
+      "env": {"resource_permit_subsystem_available": true},
+      "expect": {"dispatchable": true, "block_reason": null, "resource_effect_class": "paid"}
+    },
+    {
+      "name": "F4_confidential_egress",
+      "packet": {"next_action_type": "required_materials", "assignee": "local", "execution_role": "deterministic", "data_access_class": "confidential", "side_effect_flags": [], "egress_descriptor": {"destination_class": "external", "outbound_payload_class": "confidential"}},
+      "env": {},
+      "expect": {"dispatchable": false, "block_reason": "egress_forbidden", "egress_decision": "blocked"}
+    },
+    {
+      "name": "F5_file_move_no_lease",
+      "packet": {"next_action_type": "code_patch", "assignee": "local", "execution_role": "deterministic", "data_access_class": "internal", "side_effect_flags": ["file_move"]},
+      "env": {"lease_subsystem_available": false},
+      "expect": {"dispatchable": false, "block_reason": "lease_required_but_unavailable", "mutation_class": "mutating"}
+    },
+    {
+      "name": "F6_ratify_not_dispatchable",
+      "packet": {"next_action_type": "ratify", "assignee": "local", "execution_role": "deterministic", "data_access_class": "internal"},
+      "env": {},
+      "expect": {"dispatchable": false, "block_reason": "ratify_not_dispatchable"}
+    },
+    {
+      "name": "F7_unknown_access",
+      "packet": {"next_action_type": "doc_patch", "assignee": "local", "execution_role": "deterministic", "data_access_class": "mystery", "side_effect_flags": []},
+      "env": {},
+      "expect": {"dispatchable": false, "block_reason": "access_class_unknown"}
+    },
+    {
+      "name": "F8_invalid_assignee",
+      "packet": {"next_action_type": "doc_patch", "assignee": "claudehead", "execution_role": "deterministic", "data_access_class": "internal"},
+      "env": {},
+      "expect": {"dispatchable": false, "block_reason": "invalid_assignee"}
+    },
+    {
+      "name": "F9_assignee_incompatible",
+      "packet": {"next_action_type": "code_patch", "assignee": "worker_cc", "execution_role": "worker", "data_access_class": "internal", "allowed_assignees": ["local", "codex"]},
+      "env": {},
+      "expect": {"dispatchable": false, "block_reason": "assignee_incompatible"}
+    },
+    {
+      "name": "F10_audit_sensitive_no_permit",
+      "packet": {"next_action_type": "required_materials", "assignee": "codex", "execution_role": "worker", "data_access_class": "public", "external_audit_logging": "sensitive", "egress_descriptor": {"destination_class": "public_query", "outbound_payload_class": "public"}, "resource_descriptor": {"resource_effect_class": "free_bounded", "bounds_known": true}},
+      "env": {"audit_permit_available": false},
+      "expect": {"dispatchable": false, "block_reason": "resource_permit_unavailable"}
+    },
+    {
+      "name": "F11_paid_plus_audit_sensitive",
+      "packet": {"next_action_type": "required_materials", "assignee": "codex", "execution_role": "worker", "data_access_class": "public", "external_audit_logging": "sensitive", "egress_descriptor": {"destination_class": "public_query", "outbound_payload_class": "public"}, "resource_descriptor": {"resource_effect_class": "paid"}},
+      "env": {"resource_permit_subsystem_available": true, "audit_permit_available": true},
+      "expect": {"dispatchable": true, "block_reason": null, "resource_effect_class": "paid"}
+    },
+    {
+      "name": "F12_free_bounded_unknown_bounds_becomes_rate_limited",
+      "packet": {"next_action_type": "required_materials", "assignee": "local", "execution_role": "deterministic", "data_access_class": "public", "egress_descriptor": {"destination_class": "public_query", "outbound_payload_class": "public"}, "resource_descriptor": {"resource_effect_class": "free_bounded", "bounds_known": false}},
+      "env": {"resource_permit_subsystem_available": false},
+      "expect": {"dispatchable": false, "block_reason": "resource_permit_unavailable", "resource_effect_class": "rate_limited"}
+    },
+    {
+      "name": "F13_digest_unavailable_integrity_gate_blocked",
+      "packet": {"next_action_type": "doc_patch", "assignee": "local", "execution_role": "deterministic", "data_access_class": "internal", "gate": "canonical", "source_artifacts": [{"ref": "x", "hash_status": "unavailable"}]},
+      "env": {},
+      "expect": {"dispatchable": false, "block_reason": "stale_packet"}
+    },
+    {
+      "name": "F14_digest_unavailable_non_integrity_gate_ok",
+      "packet": {"next_action_type": "doc_patch", "assignee": "local", "execution_role": "deterministic", "data_access_class": "internal", "gate": "routine", "source_artifacts": [{"ref": "x", "hash_status": "unavailable", "version_ref": "v1", "unavailable_reason": "no_digest_api"}]},
+      "env": {},
+      "expect": {"dispatchable": true, "block_reason": null}
+    },
+    {
+      "name": "F15_oversize_no_reason",
+      "packet": {"next_action_type": "design_patch", "assignee": "worker_cc", "execution_role": "worker", "data_access_class": "internal", "_oversize": true},
+      "env": {},
+      "expect": {"dispatchable": false, "block_reason": "oversize_no_reason"}
+    }
+  ]
+}
