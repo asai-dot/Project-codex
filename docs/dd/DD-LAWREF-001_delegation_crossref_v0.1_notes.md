@@ -118,6 +118,25 @@ Akoma Ntoso（OASIS LegalDocML v1.0）は**委任専用要素を持たず**、(1
   （これは DD-SUBTRANS の assertion）。＝AKN 流（ref＋activeRef/passiveRef＋オントロジー）を範に、
   **参照抽出層の出力の上に分類・評価レイヤだけを自前で乗せる**。これは MILESTONE §9 の「事務所の判断資産」と一致。
 
+### 4.5 パース層の選択 — Python(ja-law-parser) vs Rust(japanese-law-analysis スタック)【決定点】
+`analysis_*` 群を辿って分かったこと: japanese-law-analysis（puripuri2100/金子尚樹, 2023, MIT）は
+`japanese_law_xml_schema`(crate v4.0.2＝標準 XML v3 型付パーサ) を土台に **jplaw_text / listup_law /
+analysis_yomikae(読替)** が揃った**一貫した Rust スタック**。各部品の実体（src 精読済）:
+
+| 部品 | 実体（確認済） | codex への価値 |
+|---|---|---|
+| **jplaw_text**（MIT, 474行, 依存=quick-xml のみ・軽量） | `xml_to_law_text(xml)->Vec<LawText>`。`Article{article, paragraph, item, sub_item}` で**条・項・号粒度**の locator＋本文を返す | **高**。lawdelta が食う `(article_path, text)` 単位そのもの。**精度 L5（項・号粒度）に直結** |
+| **listup_law**（MIT, binary） | 法令 XML フォルダ→`japanese_law_xml_schema` で 法令番号・題名・公布日 を抽出し JSON 索引化 | 中。法令カタログ。**取得層 gitlaw-jp と役割が重なる** |
+| **japanese_law_xml_schema**（crate v4.0.2） | 標準 XML v3 の型付パーサ | 高。Rust 版の基盤パーサ（Python の ja-law-parser に相当） |
+
+**決定点（owner 判断・本ノートでは保留）**: codex producer は Python(stdlib)。パース層を
+(A) **Python の takuyaa/ja-law-parser** で単一言語に揃える（連携摩擦ゼロ）か、
+(B) **Rust スタック**（jplaw_text の項号粒度＋同エコシステムの **読替(yomikae)** を低コストで取り込める）を
+JSON 受け渡しで採るか。
+**暫定推奨**: パース層は (A) Python ja-law-parser で開始（パイプライン単一言語の利を優先）。
+ただし **読替(yomikae) を `reads_as` edge に使う段で (B) の jplaw_text+japanese_law_xml_schema を
+部品採用**（読替解析が Rust 側にしか無いため、その一画だけ Rust→JSON で受ける）。＝言語は用途で割る。
+
 ---
 
 ## §5. 精度（PLAN_lawobject_precision）との接続
@@ -132,14 +151,17 @@ Akoma Ntoso（OASIS LegalDocML v1.0）は**委任専用要素を持たず**、(1
 ## §6. 次アクション（このノートの宿題）
 1. ~~`analysis_law_reference` の src/ 精読~~ **✅ 完了（2026-06-23）**: 略称辞書ビルダーと判明（§4.2 訂正）。
    流用は「略称名寄せ部品」＋依存の `jplaw_text`/`listup_law` に限定。
-2. **参照抽出の本体 = Lawtext の評価 PoC**（次の最重要点）。Lawtext で同一法令の条文参照抽出を回し、
+2. ~~`jplaw_text`/`listup_law` の中身確認~~ **✅ 完了（2026-06-23）**: §4.5 に整理。jplaw_text は
+   条・項・号粒度の本文抽出器で価値高（L5 直結）だが Rust。パース層は Python ja-law-parser を暫定推奨、
+   読替の一画だけ Rust 部品採用、と方向づけ（最終は owner 判断）。
+3. **参照抽出の本体 = Lawtext の評価 PoC**（次の最重要点）。Lawtext で同一法令の条文参照抽出を回し、
    出力を `references` edge 形に写像、precision を L1 ハーネス（新 task `lawref`）で測る。
    TS 実装なので Python パイプラインとの連携形（CLI/JSON 受け渡し）も併せて検討。
-3. e-Gov 法令 API v2 OAS の**全文確認**（一部 HTTP 403 で未取得）→ 条文単位取得・改正履歴の仕様確定。
-4. `alo_edges` への接続軸 edge 型の DDL 案（DD-LAWTIME/SUBTRANS と同じ append-only・gate 様式）。
-5. 自前部分の最小化設計: 参照抽出層の出力に **委任 typing（`delegates_to`）＋委任限界の評価 assertion**
+4. e-Gov 法令 API v2 OAS の**全文確認**（一部 HTTP 403 で未取得）→ 条文単位取得・改正履歴の仕様確定。
+5. `alo_edges` への接続軸 edge 型の DDL 案（DD-LAWTIME/SUBTRANS と同じ append-only・gate 様式）。
+6. 自前部分の最小化設計: 参照抽出層の出力に **委任 typing（`delegates_to`）＋委任限界の評価 assertion**
    だけを乗せる境界を明確化（形式 edge は機械、評価は DD-SUBTRANS の出典付き assertion）。
-6. 本ノートを GPT お目付け役 gate `DDLAWREF` に投函 → owner ratify で DD 昇格。
+7. 本ノートを GPT お目付け役 gate `DDLAWREF` に投函 → owner ratify で DD 昇格。
 
 ## §7. 不確実な点（推測で埋めない）
 - **lawvis** はデータ/コードの GitHub 公開を確認できず（可視化結果サイトのみ）。粒度は法令単位。
@@ -157,3 +179,7 @@ Akoma Ntoso（OASIS LegalDocML v1.0）は**委任専用要素を持たず**、(1
   過大評価で、実体は略称辞書ビルダー（条文参照も委任も抽出せず・法令名取得は未実装）**と判明。
   参照抽出の本体は **Lawtext** に確定し直し、analysis_law_reference は略称名寄せ部品に格下げ、依存の
   `jplaw_text`/`listup_law` をパース層部品として評価。§4.2/§4.1/§6/§7 を訂正。look-before-adopt の実地適用。
+- v0.1 追補 (2026-06-23, parse 層 src 精読): `jplaw_text`/`listup_law` を clone 精読し §4.5 を追加。
+  jplaw_text は条・項・号粒度の本文抽出器（軽量・L5 直結）だが Rust。japanese-law-analysis は
+  `japanese_law_xml_schema` を土台にした一貫 Rust スタックと判明。**パース層は Python ja-law-parser
+  暫定推奨・読替の一画のみ Rust 部品採用**という言語分割の決定点を明文化（最終は owner 判断）。
