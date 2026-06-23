@@ -127,11 +127,23 @@ def _anchor_rule(terms: List[dict]) -> str:
     return _tid(sorted(terms, key=key)[0])
 
 
-def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
-    """bedrock seed -> exact_match -> close_match -> specialty attach (DBなし)."""
+def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP, reading_missing: str = "defmatch"):
+    """bedrock seed -> exact_match -> close_match -> specialty attach (DBなし).
+
+    reading_missing: 片側辞書で読み欠落(OCR)時の扱い.
+      "defmatch" (既定): 読み無し term は同 pref の hub に定義重なり>=閾値で attach (漏れ救済).
+      "strict": 読みも一致条件にする(従来動作).
+    """
     by_tid = {_tid(t): t for t in terms}
-    bedrock = [t for t in terms if is_bedrock(t.get("authority_rank")) and str(t.get("term_tier", "1")) == "1"]
+    bedrock_all = [t for t in terms if is_bedrock(t.get("authority_rank")) and str(t.get("term_tier", "1")) == "1"]
     specialty = [t for t in terms if not is_bedrock(t.get("authority_rank"))]
+
+    # defmatch: 読み欠落 bedrock を分離して第2パスで処理 (groups は読みあり term のみで作る)
+    if reading_missing == "defmatch":
+        bedrock = [t for t in bedrock_all if norm_reading(t.get("reading", ""))]
+        bedrock_noread = [t for t in bedrock_all if not norm_reading(t.get("reading", ""))]
+    else:
+        bedrock, bedrock_noread = bedrock_all, []
 
     # key = (正規化見出し, 正規化読み) — 辞書間でキーを揃える
     groups: Dict[tuple, List[dict]] = defaultdict(list)
@@ -142,6 +154,7 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
     memberships: List[dict] = []
     homograph_conflicts = 0
     hub_of_key: Dict[tuple, str] = {}
+    hub_by_pref: Dict[str, List[tuple]] = defaultdict(list)  # pref -> [(hub_id, anchor_term)]
     hub_seq = 0
 
     for (pref, reading), grp in groups.items():
@@ -161,6 +174,7 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
         hub_seq += 1
         hub_id = f"hub:{hub_seq:06d}"
         hub_of_key[(pref, reading)] = hub_id
+        hub_by_pref[pref].append((hub_id, anchor))
         hubs.append({
             "hub_id": hub_id, "anchor_term_id": anchor_tid, "hub_label": pref, "reading": reading,
             "member_count": len(merged), "authority_ranks": sorted({str(m.get("authority_rank")) for m in merged}),
@@ -191,6 +205,44 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
                 "is_anchor": True, "definition_overlap": round(ov, 3),
             })
 
+    # 第2パス: 読み欠落 bedrock term を同 pref の hub へ定義重なりで attach (OCR読み漏れ救済)
+    hub_by_id = {h["hub_id"]: h for h in hubs}
+    reading_missing_matched = 0
+    reading_missing_seed = 0
+    for t in bedrock_noread:
+        pref = _key(t)[0]
+        cands = hub_by_pref.get(pref, [])
+        best_hid, best_ov = None, -1.0
+        for hid, anchor in cands:
+            ov = overlap(anchor.get("definition", ""), t.get("definition", ""))
+            if ov > best_ov:
+                best_hid, best_ov = hid, ov
+        if best_hid is not None and best_ov >= threshold:
+            reading_missing_matched += 1
+            hub_by_id[best_hid]["member_count"] += 1
+            ar = set(hub_by_id[best_hid]["authority_ranks"]) | {str(t.get("authority_rank"))}
+            hub_by_id[best_hid]["authority_ranks"] = sorted(ar)
+            memberships.append({
+                "hub_id": best_hid, "term_id": _tid(t), "scheme_id": t.get("scheme_id"),
+                "authority_rank": t.get("authority_rank"), "map_type": "reading_missing_def_match",
+                "is_anchor": False, "definition_overlap": round(best_ov, 3),
+            })
+        else:  # 同 pref hub が無い or 重なり不足 -> 読み無し provisional hub (review 対象)
+            reading_missing_seed += 1
+            hub_seq += 1
+            hid = f"hub:{hub_seq:06d}"
+            hubs.append({
+                "hub_id": hid, "anchor_term_id": _tid(t), "hub_label": pref, "reading": "",
+                "member_count": 1, "authority_ranks": [str(t.get("authority_rank"))],
+                "hub_status": "provisional", "identity_scope": "vocab_hub_provisional_noncanonical",
+                "reading_missing": True,
+            })
+            memberships.append({
+                "hub_id": hid, "term_id": _tid(t), "scheme_id": t.get("scheme_id"),
+                "authority_rank": t.get("authority_rank"), "map_type": "reading_missing_seed",
+                "is_anchor": True, "definition_overlap": round(best_ov, 3) if best_ov >= 0 else None,
+            })
+
     # specialty (rank>=103): 同 key の bedrock hub に attach のみ. 無ければ provisional specialty hub.
     specialty_attached = 0
     for t in specialty:
@@ -219,9 +271,12 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP):
             })
 
     stats = {
-        "terms_total": len(terms), "bedrock_terms": len(bedrock), "specialty_terms": len(specialty),
+        "terms_total": len(terms), "bedrock_terms": len(bedrock_all), "specialty_terms": len(specialty),
+        "bedrock_reading_missing": len(bedrock_noread),
         "hubs": len(hubs), "homograph_conflicts": homograph_conflicts,
         "specialty_attached": specialty_attached,
+        "reading_missing_matched": reading_missing_matched,
+        "reading_missing_seed": reading_missing_seed,
         "exact_merged_hubs": sum(1 for h in hubs if h["member_count"] > 1),
     }
     return hubs, memberships, stats
@@ -243,6 +298,8 @@ def build_report(hubs, memberships, stats, threshold) -> str:
         f"- Term 総数: **{stats['terms_total']}**  (bedrock {stats['bedrock_terms']} / specialty {stats['specialty_terms']})",
         f"- 生成 hub: **{stats['hubs']}**  (exact統合 {stats['exact_merged_hubs']} / canonical昇格可(rank≤102のみ) {canonical_eligible})",
         f"- 同綴異義 homograph_conflict(統合せず別hub): **{stats['homograph_conflicts']}**",
+        f"- 読み欠落 bedrock: **{stats.get('bedrock_reading_missing', 0)}**  "
+        f"(定義一致で hub へ救済 **{stats.get('reading_missing_matched', 0)}** / 単独hub {stats.get('reading_missing_seed', 0)})",
         f"- specialty attach(rank≥103, attachのみ): **{stats['specialty_attached']}**",
         "",
         "## hub member数 分布",
@@ -276,6 +333,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                     help='term フィールド写像. インラインJSON \'{"term_id":"stg_term_key"}\' か JSONファイルパス. '
                          '(term_id 不在時は stg_term_key を自動使用するので通常不要)')
     ap.add_argument("--overlap-threshold", type=float, default=DEFAULT_OVERLAP)
+    ap.add_argument("--reading-missing", choices=["defmatch", "strict"], default="defmatch",
+                    help="片側辞書の読み欠落(OCR)時: defmatch=定義一致でhub救済(既定) / strict=読みも一致条件")
     ap.add_argument("--out", required=True, type=Path)
     args = ap.parse_args(argv)
 
@@ -289,7 +348,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.labels:  # 定義 join (remap 前: 生キー stg_term_key で突合). 学陽はインライン定義なので skip される
         attach_definitions(terms, read_jsonl(args.labels), term_key=args.term_key)
     terms = remap_records(terms, fmap)
-    hubs, memberships, stats = build_hubs(terms, args.overlap_threshold)
+    hubs, memberships, stats = build_hubs(terms, args.overlap_threshold, args.reading_missing)
 
     args.out.mkdir(parents=True, exist_ok=True)
     with (args.out / "hub_candidate.jsonl").open("w", encoding="utf-8") as fh:

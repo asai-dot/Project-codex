@@ -167,6 +167,37 @@ class TestCrossDictAndNorm(unittest.TestCase):
         self.assertEqual(stats["hubs"], 2)
 
 
+class TestReadingMissing(unittest.TestCase):
+    def _terms(self):
+        return [
+            {"stg_term_key": "y1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "占有", "reading": "せんゆう", "definition": "物を事実上支配すること", "term_tier": 1},
+            # 学陽: 読み欠落(OCR), 定義は近い
+            {"stg_term_key": "h1", "scheme_id": "hourei_yougo_jiten_11", "authority_rank": 102,
+             "normalized_pref": "占有", "reading": None, "definition": "物を事実上支配する状態をいう", "term_tier": 1},
+        ]
+
+    def test_defmatch_rescues_reading_missing(self):
+        hubs, mem, stats = bh.build_hubs(self._terms(), threshold=0.3, reading_missing="defmatch")
+        self.assertEqual(stats["reading_missing_matched"], 1)
+        self.assertEqual(stats["hubs"], 1)  # 1 hub に救済統合
+        rm = [m for m in mem if m["map_type"] == "reading_missing_def_match"]
+        self.assertEqual(len(rm), 1)
+        self.assertEqual(set(hubs[0]["authority_ranks"]), {"101", "102"})
+
+    def test_strict_keeps_reading_missing_separate(self):
+        _, _, stats = bh.build_hubs(self._terms(), threshold=0.3, reading_missing="strict")
+        self.assertEqual(stats.get("reading_missing_matched", 0), 0)
+        self.assertEqual(stats["hubs"], 2)  # 読み違いで別 hub
+
+    def test_defmatch_low_overlap_makes_own_hub(self):
+        terms = self._terms()
+        terms[1]["definition"] = "全く無関係な別の概念xyz"
+        _, _, stats = bh.build_hubs(terms, threshold=0.6, reading_missing="defmatch")
+        self.assertEqual(stats["reading_missing_seed"], 1)  # 重なり不足 -> 単独hub
+        self.assertEqual(stats["hubs"], 2)
+
+
 class TestHoureiAdapter(unittest.TestCase):
     def test_adapt_sets_rank_and_pref(self):
         import adapt_hourei as ah
