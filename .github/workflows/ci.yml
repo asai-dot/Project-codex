@@ -18,6 +18,8 @@ jobs:
         run: python tests/test_purchase_recommender.py
       - name: Run Supabase data-source tests (fake query_runner, no DB)
         run: python tests/test_supabase_source.py
+      - name: Run pipeline dashboard/probe tests (stdlib only, synthetic manifest)
+        run: python tests/test_pipeline.py
       - name: Install pytest (for packaged tools)
         run: pip install pytest
       - name: Run alo-gpt-audit package tests (stdlib only, synthetic lanes)
