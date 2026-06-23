@@ -190,5 +190,38 @@ class TestPatchMigration(unittest.TestCase):
         self.assertEqual(migrate_next_action_type("refactor"), "refactor")
 
 
+class TestOperationalDefaultLane(unittest.TestCase):
+    """must_fix #3: while lease/permit subsystems are unimplemented (the default),
+    only the non_mutating + non-permit + non-confidential lane may dispatch.
+    This locks the operational rollout boundary as code."""
+
+    def test_default_env_blocks_mutating_and_permit(self):
+        env = Env()  # all subsystems unavailable — the real current state
+        mutating = {
+            "next_action_type": "code_patch", "assignee": "local",
+            "execution_role": "deterministic", "data_access_class": "internal",
+            "side_effect_flags": ["file_move"],
+        }
+        paid = {
+            "next_action_type": "required_materials", "assignee": "codex",
+            "execution_role": "worker", "data_access_class": "public",
+            "egress_descriptor": {"destination_class": "public_query", "outbound_payload_class": "public"},
+            "resource_descriptor": {"resource_effect_class": "paid"},
+        }
+        self.assertEqual(validate_dispatch(mutating, env).block_reason,
+                         "lease_required_but_unavailable")
+        self.assertEqual(validate_dispatch(paid, env).block_reason,
+                         "resource_permit_unavailable")
+
+    def test_default_env_allows_non_mutating_lane(self):
+        env = Env()
+        ok = {
+            "next_action_type": "doc_patch", "assignee": "worker_cc",
+            "execution_role": "worker", "data_access_class": "internal",
+            "side_effect_flags": [],
+        }
+        self.assertTrue(validate_dispatch(ok, env).dispatchable)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
