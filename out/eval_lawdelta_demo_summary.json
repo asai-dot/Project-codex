@@ -1,0 +1,103 @@
+{
+  "task": "lawdelta",
+  "key": "article_path",
+  "label": "delta_kind",
+  "gold_path": "tests/gold/lawdelta_demo_minpo.gold.jsonl",
+  "pred_path": "out/law_textual_delta_demo_minpo.jsonl",
+  "n_keys": 7,
+  "n_gold": 7,
+  "n_pred": 7,
+  "empty_gold": false,
+  "micro": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "tp": 7,
+    "fp": 0,
+    "fn": 0
+  },
+  "macro": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "per_label": [
+    {
+      "label": "insertion",
+      "support": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "label": "no_change",
+      "support": 3,
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "label": "repeal",
+      "support": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "label": "split",
+      "support": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "label": "substitution",
+      "support": 1,
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  ],
+  "confusion": [
+    {
+      "gold": "insertion",
+      "pred": "insertion",
+      "n": 1
+    },
+    {
+      "gold": "no_change",
+      "pred": "no_change",
+      "n": 3
+    },
+    {
+      "gold": "repeal",
+      "pred": "repeal",
+      "n": 1
+    },
+    {
+      "gold": "split",
+      "pred": "split",
+      "n": 1
+    },
+    {
+      "gold": "substitution",
+      "pred": "substitution",
+      "n": 1
+    }
+  ]
+}

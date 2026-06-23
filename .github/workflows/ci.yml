@@ -18,3 +18,20 @@ jobs:
         run: python tests/test_purchase_recommender.py
       - name: Run Supabase data-source tests (fake query_runner, no DB)
         run: python tests/test_supabase_source.py
+      - name: Run law-object producer tests (stdlib only, no DB) — DD-LAWSUBTRANS-001
+        run: |
+          python -m unittest -v \
+            tests.test_lawdelta tests.test_drafterintent tests.test_casetreatment \
+            tests.test_assembler tests.test_mcprender
+      - name: Run article-path identity tests (L4 — canonicalization + crosswalk)
+        run: python -m unittest -v tests.test_articlepath
+      - name: Run producer safety invariants (L2 — no accepted/claim_support shipped)
+        run: python -m unittest -v tests.test_producer_invariants
+      - name: Run precision eval harness + its tests (L1 — measuring stick)
+        run: |
+          python -m unittest -v tests.test_eval
+          python -m scripts.eval --task lawdelta \
+            --gold tests/gold/lawdelta_demo_minpo.gold.jsonl \
+            --pred out/law_textual_delta_demo_minpo.jsonl \
+            --key article_path --label delta_kind \
+            --out out/eval_lawdelta_demo --min-f1 1.0
