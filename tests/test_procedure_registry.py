@@ -16,7 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from procedure_registry import (  # noqa: E402
-    crosswalk, promotion_report, validate_registry, validate_transition)
+    crosswalk, promotion_report, validate_family_membership, validate_registry,
+    validate_transition)
 
 _PASS = 0
 _FAIL = 0
@@ -42,10 +43,22 @@ def test_lifecycle_transitions():
     check(not validate_transition("superseded", "candidate"), "superseded は終端")
 
 
-def test_validate_empty_registry_ok():
+def test_real_registry_v02_healthy():
+    """v0.2 registry(商事再分類 candidate)が不変条件を満たす。owner_ratified は依然0件。"""
     reg = _load("pipeline/procedure_registry.json")
-    check(validate_registry(reg) == [], "起票時の空 registry は健全")
-    check(reg["entries"] == [], "owner_ratified 0件で起票(自動鋳造しない)")
+    spine_ids = {t["id"] for t in _load("pipeline/procedure_spine.json")["procedure_types"]}
+    check(validate_registry(reg, spine_ids) == [], "v0.2 registry は健全")
+    ratified = [e for e in reg["entries"] if e.get("status") == "owner_ratified"]
+    check(ratified == [], "owner_ratified 0件のまま(本番 HOLD・自動鋳造しない)")
+    check(all(e.get("status") == "candidate" for e in reg["entries"]), "全 entry が candidate 止め")
+    # MF-1: family membership が family→6手続を張る。
+    members = [m["procedure_id"] for m in reg["family_membership"]
+               if m["family_id"] == "corporate_reorganization"]
+    check(set(members) == {"merger", "company_split", "share_exchange", "share_transfer",
+                           "entity_conversion", "share_delivery"}, "組織再編 family に6手続が membership")
+    # MF-4: ordinary_liquidation は candidate。
+    ol = next(e for e in reg["entries"] if e["id"] == "ordinary_liquidation")
+    check(ol["status"] == "candidate" and ol.get("definition"), "通常清算=candidate+操作的定義")
 
 
 def test_validate_invariants():
@@ -53,10 +66,18 @@ def test_validate_invariants():
     bad = {"entries": [{"id": "x", "name": "X", "kind": "procedure", "status": "owner_ratified"}]}
     errs = validate_registry(bad)
     check(any("ratified_by" in e for e in errs), "owner_ratified に ratify メタ必須")
-    # ratify メタ付きなら通る。
+    # MF-3: ratified_by/at だけでは不足(根拠類型/refs/note が要る)。
+    meta_only = {"entries": [{"id": "x", "name": "X", "kind": "procedure", "status": "owner_ratified",
+                              "ratified_by": "asai", "ratified_at": "2026-06-20"}]}
+    check(any("ratification_basis_type" in e for e in validate_registry(meta_only)),
+          "owner_ratified に ratification_basis_type 必須(MF-3)")
+    # 根拠まで揃えば通る。
     good = {"entries": [{"id": "x", "name": "X", "kind": "procedure", "status": "owner_ratified",
-                         "ratified_by": "asai", "ratified_at": "2026-06-20"}]}
-    check(validate_registry(good) == [], "ratify メタ付き owner_ratified は健全")
+                         "ratified_by": "asai", "ratified_at": "2026-06-20",
+                         "ratification_basis_type": "owner_legal_judgment",
+                         "ratification_basis_refs": ["owner note 1"],
+                         "ratification_note": "owner の独立判断"}]}
+    check(validate_registry(good) == [], "根拠付き owner_ratified は健全")
     # superseded の参照先が無い → 違反。
     dangling = {"entries": [{"id": "x", "name": "X", "kind": "procedure",
                              "status": "superseded", "superseded_by": "zzz"}]}
@@ -106,6 +127,48 @@ def test_promotion_eligibility_rules():
     check(not rep["p_same"]["eligible_for_candidate"], "同一上流2回は独立でない=不適格")
 
 
+def test_family_membership_invariants():
+    """MF-1: membership の参照/kind/自己参照/重複 を検査。"""
+    base = [
+        {"id": "fam", "name": "F", "kind": "procedure_family", "status": "candidate"},
+        {"id": "p1", "name": "P1", "kind": "procedure", "status": "candidate"},
+    ]
+    ok = {"entries": base, "family_membership": [{"family_id": "fam", "procedure_id": "p1"}]}
+    check(validate_family_membership(ok) == [], "正しい membership は健全")
+    # 参照先なし。
+    bad_ref = {"entries": base, "family_membership": [{"family_id": "fam", "procedure_id": "ghost"}]}
+    check(any("ghost" in e for e in validate_family_membership(bad_ref)), "member 参照先なしを検出")
+    # family_id が procedure_family でない。
+    bad_kind = {"entries": base, "family_membership": [{"family_id": "p1", "procedure_id": "p1"}]}
+    errs = validate_family_membership(bad_kind)
+    check(any("procedure_family でない" in e for e in errs), "family が procedure_family 種でないと違反")
+    check(any("自己参照" in e for e in errs), "自己参照を検出")
+    # 重複。
+    dup = {"entries": base, "family_membership": [
+        {"family_id": "fam", "procedure_id": "p1"}, {"family_id": "fam", "procedure_id": "p1"}]}
+    check(any("重複" in e for e in validate_family_membership(dup)), "重複 membership を検出")
+
+
+def test_rollup_silent_narrowing_guard():
+    """MF-2: rollup の意味縮小には supersession 記録を要求(説明文だけの暗黙縮小を弾く)。"""
+    spine_ids = {"commercial_nonlitigation"}
+    # keep_unchanged は supersession 不要。
+    keep = {"entries": [], "rollup_notes": [
+        {"rollup_id": "commercial_nonlitigation", "action": "keep_unchanged", "semantic": "..."}]}
+    check(validate_registry(keep, spine_ids) == [], "keep_unchanged は記録不要で健全")
+    # narrow なのに supersession 無し → 違反。
+    narrow = {"entries": [], "rollup_notes": [
+        {"rollup_id": "commercial_nonlitigation", "action": "narrow", "semantic": "..."}]}
+    check(any("silent narrowing" in e for e in validate_registry(narrow, spine_ids)),
+          "narrow に supersession 無しは違反(MF-2)")
+    # supersession 記録を添えれば通る。
+    narrow_ok = {"entries": [], "rollup_notes": [
+        {"rollup_id": "commercial_nonlitigation", "action": "narrow", "semantic": "..."}],
+        "supersession": [{"rollup_id": "commercial_nonlitigation", "note": "split 記録"}]}
+    check(not any("silent narrowing" in e for e in validate_registry(narrow_ok, spine_ids)),
+          "supersession 付き narrow は許容")
+
+
 def test_crosswalk():
     spine = _load("pipeline/procedure_spine.json")
     reg = {"entries": [
@@ -118,7 +181,8 @@ def test_crosswalk():
 
 
 def main() -> int:
-    for t in [test_lifecycle_transitions, test_validate_empty_registry_ok, test_validate_invariants,
+    for t in [test_lifecycle_transitions, test_real_registry_v02_healthy, test_validate_invariants,
+              test_family_membership_invariants, test_rollup_silent_narrowing_guard,
               test_promotion_real_inventory_holds, test_promotion_eligibility_rules, test_crosswalk]:
         print(f"• {t.__name__}")
         t()

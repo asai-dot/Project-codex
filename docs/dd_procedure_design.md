@@ -222,7 +222,7 @@ L0 observation のまま（procedure 紐付け/floor accepted化/DB write は HO
 
 | # | タスク | 状態 | 根拠 |
 |---|---|---|---|
-| T1 | **商事系の再分類**：組織再編6手続を `commercial_nonlitigation` 直下に置かず `corporate_reorganization` family 新設へ。会社非訟（検査役選任等）は別維持 | **owner packet 起票済（`20260621_commercialreclass_v0.1_DDPROCREG_REQUEST`・queued/未投函）** | RESULT must_fix5 / §2-2 |
+| T1 | **商事系の再分類**：組織再編6手続を `commercial_nonlitigation` 直下に置かず `corporate_reorganization` family 新設へ。会社非訟（検査役選任等）は別維持 | **v0.2 schema patch 実装済（DDPROCREG_MODIFY_REQUIRED 反映・candidate 止め・再投函は owner 判断）** | RESULT must_fix5 / §2-2 |
 | T2 | 法人類型 facet を疎な applicability crosswalk / `procedure_variant` で設計 | parked | RESULT Q3 |
 | T3 | L1 procedure_registry（owner-ratified・安定ID・supersession map）の起票 | **scaffolded（器+ゲート実装・owner_ratified 0件）** | RESULT Q1 / must_fix6 |
 | T4 | inventory を独立2source（or 法令/公式1 + 実務書1）へ拡張、candidate 昇格条件の定義 | **昇格条件は実装済（拡張は parked）** | RESULT should_fix3 |
@@ -243,7 +243,20 @@ L0 observation のまま（procedure 紐付け/floor accepted化/DB write は HO
 - **crosswalk**: L1 entry → L2 roll-up の被覆レポート。
 
 HOLD 厳守: owner_ratified への昇格は **owner の手**（ratify メタ追記）でのみ。番頭は spine 正本も
-registry の owner_ratified も自動で書かない。テスト `tests/test_procedure_registry.py`（20 checks）で固定。
+registry の owner_ratified も自動で書かない。テスト `tests/test_procedure_registry.py` で固定。
+
+**v0.2 patch（DDPROCREG_MODIFY_REQUIRED 反映・本番 write なし）**:
+- **MF-1 family membership**: `family_membership` crosswalk（`{family_id, procedure_id, valid_from,
+  valid_to, source_basis, status}`）で family→procedure を規範表現。validator が参照存在・kind 整合
+  （family=procedure_family / member=procedure|variant）・自己参照・重複を検査。
+- **MF-2 stable-ID**: `commercial_nonlitigation` は **scope narrowing しない**（`rollup_notes` で
+  keep_unchanged 宣言）。意味を狭める action（narrow/split/deprecate）には supersession 記録を validator
+  が必須化（silent narrowing を弾く）。court 会社非訟用の新ID/split は owner 判断 + L2 migration で HOLD。
+- **MF-3 ratification basis**: owner_ratified は `ratification_basis_type`(enum) + refs +
+  `ratification_note` を validator が必須化（証拠と判断を区別して監査可能に）。
+- **MF-4**: 商事6手続 + `ordinary_liquidation` を **candidate として dry-run 生成**（owner_ratified 0件・
+  操作的定義/start_trigger/terminal_state 付き）。share_delivery は `flow_ref`（別ゲート・identity 証拠に
+  数えない）。**再投函（v0.2 再監査）は owner 判断**。
 
 ---
 

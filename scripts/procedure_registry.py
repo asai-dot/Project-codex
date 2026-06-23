@@ -26,6 +26,9 @@ from pathlib import Path
 
 STATUS = ["observed", "candidate", "owner_ratified", "superseded", "deprecated"]
 KIND_ENUM = ["procedure", "procedure_family", "procedure_variant"]
+MEMBER_KINDS = {"procedure", "procedure_variant"}  # family の member になれる kind
+# owner_ratified の根拠類型(MF-3)。証拠と判断を区別して監査可能にする。
+RATIFICATION_BASIS_TYPES = ["owner_legal_judgment", "statutory_plus_practice", "multi_source"]
 
 # status lifecycle の許可遷移。owner_ratified は ratify を経た時だけ。終端は superseded/deprecated。
 ALLOWED_TRANSITIONS: dict[str, set[str]] = {
@@ -109,8 +112,18 @@ def validate_registry(registry: dict, spine_ids: set[str] | None = None) -> list
             errs.append(f"{eid}: status 不正 ({e.get('status')!r})")
         if e.get("kind") not in KIND_ENUM:
             errs.append(f"{eid}: kind 不正 ({e.get('kind')!r})")
-        if e.get("status") == "owner_ratified" and not (e.get("ratified_by") and e.get("ratified_at")):
-            errs.append(f"{eid}: owner_ratified には ratified_by/ratified_at が必須(自動昇格禁止)")
+        if e.get("status") == "owner_ratified":
+            if not (e.get("ratified_by") and e.get("ratified_at")):
+                errs.append(f"{eid}: owner_ratified には ratified_by/ratified_at が必須(自動昇格禁止)")
+            # MF-3: 証拠と判断の区別。根拠類型 + 根拠 + note を要求。
+            if e.get("ratification_basis_type") not in RATIFICATION_BASIS_TYPES:
+                errs.append(f"{eid}: owner_ratified には ratification_basis_type が必須 "
+                            f"({'/'.join(RATIFICATION_BASIS_TYPES)})")
+            if not e.get("ratification_note"):
+                errs.append(f"{eid}: owner_ratified には ratification_note が必須")
+            if not (e.get("ratification_basis_refs") or e.get("statutory_or_official_refs")):
+                errs.append(f"{eid}: owner_ratified には ratification_basis_refs か "
+                            f"statutory_or_official_refs が必須")
         if e.get("status") == "superseded":
             tgt = e.get("superseded_by")
             if not tgt:
@@ -132,6 +145,59 @@ def validate_registry(registry: dict, spine_ids: set[str] | None = None) -> list
                 break
             seen.add(cur)
             cur = graph[cur]
+
+    errs += validate_family_membership(registry)
+    errs += _check_rollup_semantics(registry, spine_ids)
+    return errs
+
+
+def validate_family_membership(registry: dict) -> list[str]:
+    """MF-1: family membership crosswalk の規範検査。
+
+    参照先存在 / kind 整合(family=procedure_family, member=procedure|variant) / 自己参照 /
+    重複 / status 妥当。kind が排他なので循環は構造上生じないが、念のため kind を厳格化する。
+    """
+    errs: list[str] = []
+    by_id = {e.get("id"): e for e in registry.get("entries", []) if e.get("id")}
+    seen: set[tuple] = set()
+    for m in registry.get("family_membership", []):
+        fid, pid = m.get("family_id"), m.get("procedure_id")
+        if not fid or not pid:
+            errs.append(f"family_membership: family_id/procedure_id 必須 ({m})")
+            continue
+        if fid == pid:
+            errs.append(f"family_membership: 自己参照 {fid}")
+        if fid not in by_id:
+            errs.append(f"family_membership: family_id={fid} が registry に無い")
+        elif by_id[fid].get("kind") != "procedure_family":
+            errs.append(f"family_membership: family_id={fid} は procedure_family でない")
+        if pid not in by_id:
+            errs.append(f"family_membership: procedure_id={pid} が registry に無い")
+        elif by_id[pid].get("kind") not in MEMBER_KINDS:
+            errs.append(f"family_membership: procedure_id={pid} は procedure/variant でない")
+        if m.get("status") and m["status"] not in STATUS:
+            errs.append(f"family_membership: status 不正 ({m.get('status')!r})")
+        if (fid, pid) in seen:
+            errs.append(f"family_membership: 重複 ({fid},{pid})")
+        seen.add((fid, pid))
+    return errs
+
+
+def _check_rollup_semantics(registry: dict, spine_ids: set[str] | None) -> list[str]:
+    """MF-2: stable-ID の silent な意味変更を防ぐ。
+
+    rollup_notes で扱いが宣言された rollup_id は spine(L2) に存在すべき。意味を狭める(narrow/split/
+    deprecate)宣言には supersession 記録を要求する(keep_unchanged は不要)。説明文だけの暗黙縮小を弾く。
+    """
+    errs: list[str] = []
+    superseded = {s.get("rollup_id") or s.get("from") for s in registry.get("supersession", [])}
+    for n in registry.get("rollup_notes", []):
+        rid, action = n.get("rollup_id"), n.get("action")
+        if rid and spine_ids is not None and rid not in spine_ids:
+            errs.append(f"rollup_notes: rollup_id={rid} が spine(L2) に無い")
+        if action in {"narrow", "split", "deprecate"} and rid not in superseded:
+            errs.append(f"rollup_notes: {rid} の action={action} には supersession 記録が必須"
+                        f"(silent narrowing 禁止=MF-2)")
     return errs
 
 
@@ -165,11 +231,21 @@ def main(argv: list[str] | None = None) -> int:
     spine_ids = {t["id"] for t in spine.get("procedure_types", [])}
 
     errs = validate_registry(registry, spine_ids)
-    n_ratified = sum(1 for e in registry.get("entries", []) if e.get("status") == "owner_ratified")
-    print(f"registry(L1): entries {len(registry.get('entries', []))}件 / owner_ratified {n_ratified}件 "
+    entries = registry.get("entries", [])
+    n_ratified = sum(1 for e in entries if e.get("status") == "owner_ratified")
+    n_cand = sum(1 for e in entries if e.get("status") == "candidate")
+    print(f"registry(L1 v{registry.get('version','?')}): entries {len(entries)}件 "
+          f"(candidate {n_cand} / owner_ratified {n_ratified}) "
           + ("✅健全" if not errs else f"❌不変条件 {len(errs)}件"))
     for m in errs:
         print(f"    ! {m}")
+
+    # family membership(MF-1)の要約。
+    fams = [e for e in entries if e.get("kind") == "procedure_family"]
+    for f in fams:
+        members = [m["procedure_id"] for m in registry.get("family_membership", [])
+                   if m.get("family_id") == f["id"]]
+        print(f"■ family {f['id']}({f['name']}) ← {len(members)}手続: {', '.join(members)}")
 
     rep = promotion_report(inventory.get("procedures", []), registry)
     elig = [r for r in rep if r["eligible_for_candidate"]]
