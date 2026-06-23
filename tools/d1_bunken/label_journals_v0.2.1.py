@@ -30,6 +30,13 @@ _ALIAS = {
     "Patents Licensing": "Patents & Licensing",
 }
 
+# 同一誌が複数の正式名で出るものの統合（最終 canonical に対して適用）。
+# 例: 法学教室の本体は catch-all 法学から「月刊法学教室」として救出されるが、
+# 独立フォルダ「法学教室」も存在するため、両者を1誌に寄せる。
+_MERGE = {
+    "月刊法学教室": "法学教室",
+}
+
 # catch-all 判定: フォルダ件数がこの値以上で、配下レコードの掲載誌等先頭(=実誌名)が
 # 「最頻誌のシェア < _MAX_DOMINANT」かつ「実質_MIN_DISTINCT誌以上に散る」場合のみ寄せ集めとみなす。
 # 単一誌が表記ゆれで複数名になっているだけ（最頻誌が支配的）のフォルダは分割しない。
@@ -168,6 +175,7 @@ def main():
             else:
                 canonical = fc
                 source = "folder"
+            canonical = _MERGE.get(canonical, canonical)   # 同一誌の別名統合
             meishi_norm = normalize(r.get("掲載誌名") or "")
             if meishi_norm:
                 source = source + "+meishi"
