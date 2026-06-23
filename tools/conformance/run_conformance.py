@@ -26,7 +26,7 @@ DD_MAP = {
     "DD-XMODAL-001": ["test_xmodal_agreement"],
     "DD-XDOC-001": [
         "test_xdoc_canonical", "test_xdoc_eligibility",
-        "test_xdoc_coverage", "test_xdoc_support", "test_xdoc_ranges",
+        "test_xdoc_coverage", "test_xdoc_support", "test_xdoc_ranges", "test_xdoc_method",
     ],
 }
 
