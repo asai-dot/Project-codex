@@ -46,3 +46,20 @@ law&technology,,issn,1346-812X,verified,ndl,
 ビジネスガイド,,ncid,AN0026915X,correction,cinii,旧seed 0387-7035は未登録の誤付与
 businesslawjournal,,issn,1882-7640,verified,existing_canonical,
 判例時報,,issn,0438-5888,verified,ndl,
+手形研究,3165,issn,0494-9692,verified,cinii,継続誌=銀行法務21
+民事研修,2053,issn,0912-1587,verified,cinii/ndl,みんけん:民事研修1342-2766は改題後
+中央労働時報,2008,issn,1342-5269,verified,ndl,別冊中央労働時報は別
+日本労働研究雑誌,1521,issn,0916-3808,verified,jil/ndl,
+自治研究,1388,issn,0287-5209,verified,ndl,第一法規
+法と民主主義,1198,issn,0385-034X,verified,cinii/ndl,日本民主法律家協会
+会社法務A2Z,1196,issn,1882-059X,verified,cinii/ndl,第一法規
+賃金と社会保障,1093,issn,0911-4718,verified,ndl,旬報社
+損害保険研究,1035,issn,0287-6337,verified,jstage,print(online 2434-060X)
+実践成年後見,988,issn,1347-0108,verified,ndl,民事法研究会
+労働経済判例速報,1146,ncid,AN00327835,correction,cinii,旧seedで誤付与是正済(registry)。ISSN無→NCID
+法曹,5505,ncid,AN00327187,ncid_fallback,cinii,月刊「法曹」(法曹会)。法曹時報とは別誌
+速報判例解説,1786,ncid,AA12241495,ncid_fallback,cinii,法学セミナー増刊(新・判例解説Watch)。増刊系
+地方税,1599,ncid,AN00126094,ncid_fallback,cinii,地方財務協会。公開ISSN確認できず
+民事月報,1177,ncid,AN00327733,ncid_fallback,cinii,法務省民事局。公開ISSN確認できず
+判例評論,5858,issn,,pending,,判例時報の評釈別冊。自前ISSN/0438-5888共用かを要確認
+銀行法務,3827,issn,,pending,,銀行法務21(1341-1179)との同一性を要確認(数字破壊回避)
