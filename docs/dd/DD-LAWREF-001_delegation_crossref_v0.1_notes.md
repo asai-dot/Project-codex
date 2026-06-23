@@ -79,21 +79,39 @@ Akoma Ntoso（OASIS LegalDocML v1.0）は**委任専用要素を持たず**、(1
 
 ---
 
-## §4. OSS 戦略（そのまま採用 / 修正採用 / 自前）
+## §4. OSS 戦略 — **ゼロイチを避け、既存を踏み台に**（owner 方針 2026-06-23）
 
-調査結論: **委任チェーン・法令間参照グラフを構造化提供する OSS は発見できず**。取得・パース層は既製を
-修正採用し、接続グラフは自前構築する（MILESTONE §9 の「公的機関・汎用ツールに作れない事務所の判断資産」
-という戦略的位置づけと一致）。
+> **owner 方針**: 委任/参照グラフを**ゼロイチで自前構築しない**。同じ痛みの legaltech/法律家は多く、
+> 公開された先行事例がある。**既存を参考・修正採用し、その上に上乗せ**する。
+> v0.1 ノートの「接続グラフは自前構築」は、狙い撃ち再調査で**部分的に反証された**ため下記に改める。
 
+### 4.1 再調査の結論（v0.1 からの修正）
+| 軸 | v0.1 の結論 | 改訂後 |
+|---|---|---|
+| **参照グラフ（`references`）** | 「OSS 不在・自前」 | **踏み台あり＝格下げ**。Lawtext＋`analysis_law_reference` の上乗せで作る（ゼロイチではない） |
+| **委任チェーン（`delegates_to`/`implements`）** | 「自前」 | **公開物は依然不在**だが、**参照層の typed subset** として参照抽出の上に乗せる＝ゼロイチではない。`reads_as`(読替) を委任の実質手掛かりに |
+
+### 4.2 取得・パース・参照抽出（踏み台にする既製物）
 | 候補 | 採否 | 用途・評価 |
 |---|---|---|
-| **aluqas/gitlaw-jp**（MIT, Python） | **そのまま採用（取得層）** | e-Gov API から**政令・省令含む全種別**を改正履歴付き取得（`--all-law-types`）。DD-LAWTIME の時点データ取得に即戦力 |
-| **takuyaa/ja-law-parser**（MIT, Python） | **修正採用（パース層）** | 標準 XML→型付きモデル。憲法〜府省令対応。**単一法令内のみ＝委任/参照は自前で上乗せ** |
-| **yamachig/Lawtext**（MIT, TS） | **修正採用（参照抽出）** | 最も成熟・活発。**条文参照・定義語解析を持つ**→参照 edge の初期抽出器に価値大。委任チェーンは未対応 |
-| **japanese-law-analysis/analysis_yomikae**（Rust） | **部品的に修正採用** | **読替規定解析**＝委任先での語の読替＝**委任の実質に最も近い既製資産**。`reads_as` edge の種に |
-| **lwhb/lawhub** | 参考のみ | 差分追跡の発想は近いが「正当性無保証・機械更新」。設計参照に留める |
-| e-Gov MCP ラッパ各種 | 補助 | API アクセスの LLM 接続には便利だが付加価値なし |
-| **委任/参照グラフ本体** | **自前構築** | OSS 不在。AKN 流（ref＋activeRef/passiveRef＋オントロジー）を範に codex の edge/assertion として実装 |
+| **aluqas/gitlaw-jp**（MIT, Python） | **そのまま採用（取得層）** | e-Gov API から**政令・省令含む全種別**を改正履歴付き取得（`--all-law-types`）。DD-LAWTIME の時点取得に即戦力 |
+| **takuyaa/ja-law-parser**（MIT, Python） | **修正採用（パース層）** | 標準 XML→型付きモデル。憲法〜府省令対応。単一法令内のみ |
+| **yamachig/Lawtext**（MIT, TS） | **修正採用（参照抽出）** | 最成熟・活発。条文参照・定義語解析を持つ→`references` edge の初期抽出器 |
+| **japanese-law-analysis/analysis_law_reference**（Rust, MIT, 2023, 金子尚樹） | **要現物確認のうえ修正採用（参照抽出）** | **v0.1 が見落とした直球リポジトリ**。README は無いが Cargo.toml 依存（`listup_law`/`jplaw_text`/`quick-xml`/`daachorse`(Aho-Corasick)/`regex`/serde_json）から**標準 XML をパースし参照を抽出して JSON 化する実体とほぼ確定**。`analysis_yomikae` と同一作者＝統合コスト低。**src 精読で採否確定** |
+| **japanese-law-analysis/analysis_yomikae**（Rust, MIT） | **部品的に修正採用** | 読替規定解析＝委任先での語の読替＝委任の実質に最も近い既製資産。`reads_as` edge の種に |
+
+### 4.3 参考にする可視化・先行事例（そのままは使わないが発想/検証に）
+| 事例 | 位置づけ | 出典 |
+|---|---|---|
+| **可視化法学 / lawvis**（芝尾幸一郎・個人） | **参考のみ**（＝owner が X で見た「作った人」の正体とほぼ確定）。法令間参照を Gephi でネットワーク可視化。ただし**粒度が法令単位で条文単位でない**ため edge 素材には粗い | https://www.lawvis.info/ ・ X:@lawvis ・ https://note.com/ichigaya_houmu/n/n543526879679 |
+| **JaLII RefVis**（名大 法情報研究センター／佐野智也・角田系） | **参考のみ**。明治民法各条を Jaccard 類似度で参照可視化。機械的参照解決でなく**文字列類似ベース** | https://www.law.nagoya-u.ac.jp/jalii/refvis/about.html |
+| **デジタル庁 法令 API ハッカソン作品**（2023/2025） | **参考のみ**。「参照先条文ポップアップ」「建築法令をグラフ DB 化」等＝参照解決/グラフ化は既に実証済み（自前構築の難度が現実的である傍証）。作者/repo は未特定 | https://www.digital.go.jp/en/news/9fb5ef8e-c631-4974-96d9-0b145304c553 |
+| **lwhb/lawhub** | 参考のみ（差分追跡。正当性無保証） | — |
+
+### 4.4 自前で作る部分（縮小した）
+- **委任の typing**（参照のうち「政令/省令への授権」を `delegates_to` と判定）と、**委任の限界・趣旨の評価**
+  （これは DD-SUBTRANS の assertion）。＝AKN 流（ref＋activeRef/passiveRef＋オントロジー）を範に、
+  **参照抽出層の出力の上に分類・評価レイヤだけを自前で乗せる**。これは MILESTONE §9 の「事務所の判断資産」と一致。
 
 ---
 
@@ -107,15 +125,30 @@ Akoma Ntoso（OASIS LegalDocML v1.0）は**委任専用要素を持たず**、(1
 ---
 
 ## §6. 次アクション（このノートの宿題・未着手）
-1. e-Gov 法令 API v2 OAS の**全文確認**（本調査は一部 HTTP 403 で未取得）→ 条文単位取得・改正履歴の
-   正確なエンドポイント仕様を確定。
-2. gitlaw-jp / ja-law-parser / Lawtext / analysis_yomikae のライセンス・最新性を実機で再確認
-   （本調査のスター数・更新日は閲覧時点の概数）。
-3. `alo_edges` への接続軸 edge 型の DDL 案（DD-LAWTIME/SUBTRANS と同じ append-only・gate 様式）。
-4. 「委任の限界」評価を DD-SUBTRANS の assertion 型として持てるかの整理（形式 edge と評価 assertion の境界）。
-5. 本ノートを GPT お目付け役 gate `DDLAWREF` に投函 → owner ratify で DD 昇格。
+1. **`analysis_law_reference` の src/ 精読で採否確定**（採否を左右する最重要点）。README が無いため
+   `src/*.rs` と出力 JSON 形を読み、`references` edge 抽出器として修正採用できるかを判断。
+   （本ノートでは Cargo.toml 依存まで一次確認済 → 参照抽出ツールとほぼ確定だが機能詳細は未確認）。
+2. **踏み台の比較 PoC**: Lawtext（TS・成熟）vs analysis_law_reference（Rust・同エコシステム）で、
+   同一法令の参照抽出 precision を L1 ハーネス（新 task `lawref`）で測り、どちらに上乗せするか決める。
+3. e-Gov 法令 API v2 OAS の**全文確認**（一部 HTTP 403 で未取得）→ 条文単位取得・改正履歴の仕様確定。
+4. `alo_edges` への接続軸 edge 型の DDL 案（DD-LAWTIME/SUBTRANS と同じ append-only・gate 様式）。
+5. 自前部分の最小化設計: 参照抽出層の出力に **委任 typing（`delegates_to`）＋委任限界の評価 assertion**
+   だけを乗せる境界を明確化（形式 edge は機械、評価は DD-SUBTRANS の出典付き assertion）。
+6. 本ノートを GPT お目付け役 gate `DDLAWREF` に投函 → owner ratify で DD 昇格。
 
 ## §7. 不確実な点（推測で埋めない）
-- v2 OAS 本文・OASIS 逐語定義の一部は環境側 HTTP 403 で未取得（機能差分はリリース告知＋複数二次情報の一致に基づく）。
-- `jstatutree`（自治体例規の木構造系として言及される候補）は**実在/所在を一次確認できず**。
-- 各 OSS のスター数・最終更新日は閲覧時点の概数。GitHub メタデータの API 確認は本セッションのスコープ外。
+- **`analysis_law_reference` の具体機能**: README 不在。本ノートは Cargo.toml 依存（XML パース＋参照抽出を
+  強く示唆）まで一次確認。入出力・委任対応の有無は src 精読待ち。
+- **lawvis** はデータ/コードの GitHub 公開を確認できず（可視化結果サイトのみ）。粒度は法令単位。
+- **デジタル庁ハッカソン作品**の作者/repo 名は公式 PDF が 403 で未特定。公開 OSS かデモかも未確認。
+- v2 OAS 本文・OASIS 逐語定義の一部は環境側 HTTP 403 で未取得。
+- `jstatutree`（自治体例規系の候補）は実在/所在を一次確認できず。
+- 各 OSS のスター数・最終更新日は閲覧時点の概数。
+
+## §8. changelog
+- v0.1 (2026-06-23 初版): 接続軸の問題提起。e-Gov は政令/省令テキストを持つが委任/参照/告示の
+  「接続」が無いことを一次情報で確定。OSS 戦略を「取得/パースは既製・接続グラフは自前」と整理。
+- v0.1 改訂 (2026-06-23, owner 方針反映): 「ゼロイチ自前を避け既存を踏み台に」を受け、委任/参照
+  グラフの先行事例を狙い撃ち再調査。**参照グラフは踏み台あり（`analysis_law_reference` 発掘・Cargo
+  依存で参照抽出ツールと一次確認、lawvis/JaLII RefVis/ハッカソンを参考事例に追加）→ §4 を全面改訂**。
+  委任チェーンは公開物なお不在だが参照層の上乗せに縮小。自前は「委任 typing＋限界評価」のみ。
