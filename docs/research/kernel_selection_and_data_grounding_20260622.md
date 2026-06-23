@@ -45,3 +45,34 @@
 1. Phase 1 に「kernel asset 同定（biblio↔bookdx）」を前提タスク追加。
 2. カーネル＝建物賃貸借・信頼関係破壊解除の要件事実（要件事実2冊＋裁判例/実務1冊）を第一候補として固定（PDF 突合で最終確定）。
 3. `toc_nodes.embedding` 0行＝T軸検索は Phase 2 で kernel subset から生成（本番 backfill は Phase 5）。
+
+## 5. ★Phase 1 着手可能集合の確定（asset 同定の実測・2026-06-23 追記）
+結合経路を実測し、**TOC↔PDF が現状で解決する集合**を確定した。
+
+**結合チェーン**：`biblio.toc_nodes/books(book_id)` ↔ `bookdx.holding_bencom_link(book_id ↔ internal_id)` ↔ `bookdx.holdings(internal_id → pdf_folder_id)`。
+（`bookdx.candidates.isbn` 経路は isbn が 6 冊しか無く不成立。`holding_bencom_link` 経路が実効。）
+
+**実測（深刻なギャップ）**：
+| 指標 | 値 |
+|---|---|
+| PDF 付き holdings | 611 |
+| holding_bencom_link 行 | 1,787 |
+| **PDF holdings が biblio book_id に連結** | **34 のみ**（全て TOC 有） |
+| candidates.isbn 非NULL | 6 |
+
+→ **「TOC→PDF」が現状で繋がるのは 34/611 冊だけ**。残り 577 PDF は背骨に未連結＝asset 同定が大規模に未完。
+
+**含意（カーネル再選定）**：
+- 当初候補（要件事実マニュアル／民事裁判実務［要件事実編］等）は **34冊に含まれない**（TOC はあるが PDF 未連結）。要件事実シリーズで行くなら asset 同定を先に要する。
+- **解決済み34冊で論点が近い3冊**（契約解除/解消・全て PDF 即利用可）：
+  | 書名 | toc_n | kernel_hits | pdf_folder_id |
+  |---|---|---|---|
+  | 契約解消の法律実務 | 140 | 7 | 368661731521 |
+  | 不動産の法務 | 497 | 10 | 363425995153 |
+  | 新民法対応 契約審査手続マニュアル | 147 | 8 | 356533691864 |
+- **推奨**：Phase 1 パイロット・カーネル＝「**契約解除/解消**」を上記3冊で組む（asset 同定を待たず即着手可・table/structure/text facet 比較が成立）。当初の賃貸借要件事実は、asset 同定の機械化（Phase 1 後半 or 専用 DD-LITID 作業）で 577 PDF を背骨に連結した後に拡張。
+
+## 6. ロードマップ Phase 1 タスク更新
+- **T1（必須・前提）**：asset 同定の実装。`holding_bencom_link` を正規経路に据え、未連結 577 PDF の book_id 解決（title_norm/著者/出版社の trigram 突合＋人手確認）。カーネル3冊は連結済みなので即進める。
+- **T2**：カーネル3冊の軽量PDF（folder 368661731521 / 363425995153 / 356533691864）に Docling+DocLayNet → page_block artifact。
+- **T3**：toc_nodes(print_page) ↔ page_block アンカー → 「目次→軽量PDF領域」を3冊で実証。
