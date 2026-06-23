@@ -12,52 +12,32 @@ from typing import Dict, List, Optional, Set, Tuple
 
 try:
     from . import xdoc_canonical as _xc
+    from . import xdoc_ranges as _rng
 except ImportError:  # pragma: no cover
     import xdoc_canonical as _xc
+    import xdoc_ranges as _rng
 
-
-# ---- interval_1d adapter（half-open [start,end)・非空必須） ------------------------
-Range = Tuple[int, int]
+Range = Tuple  # interval_1d=(s,e) / grid_2d=(rs,re,cs,ce) / rect_2d=(p,x0,y0,x1,y1,sys)
 
 
 class CoverageValidationError(ValueError):
     pass
 
 
-def _check_nonempty(ranges: List[Range]) -> None:
-    for s, e in ranges:
-        if not (s < e):
-            raise CoverageValidationError(f"degenerate range [{s},{e}) は非空必須")
+# ---- interval_1d ヘルパ（後方互換・既存テスト用に再エクスポート） --------------------
+_IV = _rng.get_adapter("char_offset")  # interval_1d adapter
 
 
-def _merge(ranges: List[Range]) -> List[Range]:
-    """正規化: ソート + overlap/隣接 [a,b)[b,c) を結合。"""
-    _check_nonempty(ranges)
-    out: List[Range] = []
-    for s, e in sorted(ranges):
-        if out and s <= out[-1][1]:  # overlap or touch（half-open なので == も結合）
-            out[-1] = (out[-1][0], max(out[-1][1], e))
-        else:
-            out.append((s, e))
-    return out
+def union(ranges):
+    return _rng._iv_union(list(ranges)) if ranges else []
 
 
-def union(ranges: List[Range]) -> List[Range]:
-    return _merge(list(ranges)) if ranges else []
+def contains(covered, required) -> bool:
+    return _IV.contains(covered, required)
 
 
-def contains(covered: List[Range], required: List[Range]) -> bool:
-    """required の全区間が covered の union に包含されるか。covered=[] は非空 required を包含不可。"""
-    cov = union(covered)
-    for s, e in union(required):
-        if not any(cs <= s and e <= ce for cs, ce in cov):
-            return False
-    return True
-
-
-def intersects(a: List[Range], b: List[Range]) -> bool:
-    ua, ub = union(a), union(b)
-    return any(as_ < be and bs < ae for as_, ae in ua for bs, be in ub)
+def intersects(a, b) -> bool:
+    return _IV.intersects(a, b)
 
 
 # ---- records（§9-2） ---------------------------------------------------------------
@@ -93,8 +73,9 @@ class CoverageAssessment:
     assessment_id: str = field(init=False)
 
     def __post_init__(self):
-        _check_nonempty(self.covered_ranges)
-        _check_nonempty(self.unknown_ranges)
+        adapter = _rng.get_adapter(self.coordinate_space)
+        adapter.check_nonempty(self.covered_ranges)
+        adapter.check_nonempty(self.unknown_ranges)
         # B17: logical key に coordinate_space と policy_id を含む
         self.key_id = _xc.sha256_hex(_xc.canonical_json({
             "alignment_observation_id": self.alignment_observation_id,
@@ -125,7 +106,7 @@ class CoverageClaimScope:
     def __post_init__(self):
         if not self.required_ranges:
             raise CoverageValidationError("required_ranges は minItems=1（空 scope 禁止・B14）")
-        _check_nonempty(self.required_ranges)
+        _rng.get_adapter(self.required_coordinate_space).check_nonempty(self.required_ranges)
 
 
 @dataclass
@@ -179,14 +160,16 @@ class CoverageStore:
         if ca is None:
             return False
         p = self.policy
+        if ca.coordinate_space != scope.required_coordinate_space:
+            return False
+        adapter = _rng.get_adapter(ca.coordinate_space)  # range_class 別 set 演算
         return (
             self.coverage_status(ca) == "current"
             and ca.selector_state == "complete"
             and ca.ocr_quality_score >= p.minimum_ocr_quality
             and ca.layout_quality_score >= p.minimum_layout_quality
-            and ca.coordinate_space == scope.required_coordinate_space
-            and contains(ca.covered_ranges, scope.required_ranges)
-            and not intersects(ca.unknown_ranges, scope.required_ranges)
+            and adapter.contains(ca.covered_ranges, scope.required_ranges)
+            and not adapter.intersects(ca.unknown_ranges, scope.required_ranges)
         )
 
     # --- B14: 必要scope完全性 ---
