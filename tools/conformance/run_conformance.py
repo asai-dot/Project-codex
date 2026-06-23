@@ -27,7 +27,7 @@ DD_MAP = {
     "DD-XDOC-001": [
         "test_xdoc_canonical", "test_xdoc_eligibility",
         "test_xdoc_coverage", "test_xdoc_support", "test_xdoc_ranges", "test_xdoc_method",
-        "test_xdoc_claim", "test_xdoc_scope_binding",
+        "test_xdoc_claim", "test_xdoc_scope_binding", "test_xdoc_support_revision",
     ],
 }
 

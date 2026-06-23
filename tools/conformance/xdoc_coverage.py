@@ -102,11 +102,23 @@ class CoverageClaimScope:
     required_coordinate_space: str
     required_ranges: List[Range]  # minItems=1
     coverage_assessment_id: str
+    scope_key_id: str = field(init=False)            # B20 (v0.9 §9-3)
+    coverage_claim_scope_id: str = field(init=False)
 
     def __post_init__(self):
         if not self.required_ranges:
             raise CoverageValidationError("required_ranges は minItems=1（空 scope 禁止・B14）")
         _rng.get_adapter(self.required_coordinate_space).check_nonempty(self.required_ranges)
+        # B20: logical key = (use_assessment_key, member, coordinate_space) / scope id = (key, assessment)
+        self.scope_key_id = _xc.sha256_hex(_xc.canonical_json({
+            "use_assessment_key_id": self.use_assessment_key_id,
+            "member_ref": self.member_ref,
+            "required_coordinate_space": self.required_coordinate_space,
+        }))
+        self.coverage_claim_scope_id = _xc.sha256_hex(_xc.canonical_json({
+            "scope_key_id": self.scope_key_id,
+            "coverage_assessment_id": self.coverage_assessment_id,
+        }))
 
 
 @dataclass
