@@ -88,16 +88,21 @@ Akoma Ntoso（OASIS LegalDocML v1.0）は**委任専用要素を持たず**、(1
 ### 4.1 再調査の結論（v0.1 からの修正）
 | 軸 | v0.1 の結論 | 改訂後 |
 |---|---|---|
-| **参照グラフ（`references`）** | 「OSS 不在・自前」 | **踏み台あり＝格下げ**。Lawtext＋`analysis_law_reference` の上乗せで作る（ゼロイチではない） |
+| **参照グラフ（`references`）** | 「OSS 不在・自前」 | **踏み台あり＝格下げ**。本体は **Lawtext**（条文参照解析）。略称名寄せは analysis_law_reference / `jplaw_text` を部品流用。＝ゼロイチではない |
 | **委任チェーン（`delegates_to`/`implements`）** | 「自前」 | **公開物は依然不在**だが、**参照層の typed subset** として参照抽出の上に乗せる＝ゼロイチではない。`reads_as`(読替) を委任の実質手掛かりに |
+
+> **訂正注（2026-06-23, src 精読）**: v0.1 改訂時に `analysis_law_reference` を「参照抽出器とほぼ確定」と
+> 書いたのは **Cargo.toml 依存からの推定に基づく過大評価**だった。ソースを読むと**略称辞書ビルダー**
+> （条文参照も委任も抽出しない・法令名取得は未実装）。参照抽出の本体は **Lawtext** が担う、と訂正。
+> ＝「現物を読む前に採用判断しない」(look-before-adopt) を実地で適用した結果。
 
 ### 4.2 取得・パース・参照抽出（踏み台にする既製物）
 | 候補 | 採否 | 用途・評価 |
 |---|---|---|
 | **aluqas/gitlaw-jp**（MIT, Python） | **そのまま採用（取得層）** | e-Gov API から**政令・省令含む全種別**を改正履歴付き取得（`--all-law-types`）。DD-LAWTIME の時点取得に即戦力 |
 | **takuyaa/ja-law-parser**（MIT, Python） | **修正採用（パース層）** | 標準 XML→型付きモデル。憲法〜府省令対応。単一法令内のみ |
-| **yamachig/Lawtext**（MIT, TS） | **修正採用（参照抽出）** | 最成熟・活発。条文参照・定義語解析を持つ→`references` edge の初期抽出器 |
-| **japanese-law-analysis/analysis_law_reference**（Rust, MIT, 2023, 金子尚樹） | **要現物確認のうえ修正採用（参照抽出）** | **v0.1 が見落とした直球リポジトリ**。README は無いが Cargo.toml 依存（`listup_law`/`jplaw_text`/`quick-xml`/`daachorse`(Aho-Corasick)/`regex`/serde_json）から**標準 XML をパースし参照を抽出して JSON 化する実体とほぼ確定**。`analysis_yomikae` と同一作者＝統合コスト低。**src 精読で採否確定** |
+| **yamachig/Lawtext**（MIT, TS） | **修正採用（参照抽出の本体）** | 最成熟・活発。条文参照・定義語解析を持つ→`references` edge の**主たる初期抽出器**。analysis_law_reference が参照抽出器でなかったため、参照本体はここが担う |
+| **japanese-law-analysis/analysis_law_reference**（Rust, MIT, 2023, 金子尚樹） | **限定採用（部品：略称解決の前処理）** | **src 精読で実体確定（2026-06-23）**: 名前に反し**条文間参照も委任も抽出しない**。やっているのは法令 XML から**略称定義**（「…第十三号。以下「○○改正法」という。」）を正規表現で拾い **法令番号→略称** 辞書を作るだけ。法令名取得ループは `main.rs` で `// TODO` 未実装、`get_law_name.rs` は空、0★/8commits。→ **参照解決の前処理（被参照法令名の名寄せ）部品**としてのみ価値。**依存の `jplaw_text`（XML→条文テキスト＋Article 構造）・`listup_law`（法令一覧）の方がパース層部品として再利用価値が高い** |
 | **japanese-law-analysis/analysis_yomikae**（Rust, MIT） | **部品的に修正採用** | 読替規定解析＝委任先での語の読替＝委任の実質に最も近い既製資産。`reads_as` edge の種に |
 
 ### 4.3 参考にする可視化・先行事例（そのままは使わないが発想/検証に）
@@ -124,12 +129,12 @@ Akoma Ntoso（OASIS LegalDocML v1.0）は**委任専用要素を持たず**、(1
 
 ---
 
-## §6. 次アクション（このノートの宿題・未着手）
-1. **`analysis_law_reference` の src/ 精読で採否確定**（採否を左右する最重要点）。README が無いため
-   `src/*.rs` と出力 JSON 形を読み、`references` edge 抽出器として修正採用できるかを判断。
-   （本ノートでは Cargo.toml 依存まで一次確認済 → 参照抽出ツールとほぼ確定だが機能詳細は未確認）。
-2. **踏み台の比較 PoC**: Lawtext（TS・成熟）vs analysis_law_reference（Rust・同エコシステム）で、
-   同一法令の参照抽出 precision を L1 ハーネス（新 task `lawref`）で測り、どちらに上乗せするか決める。
+## §6. 次アクション（このノートの宿題）
+1. ~~`analysis_law_reference` の src/ 精読~~ **✅ 完了（2026-06-23）**: 略称辞書ビルダーと判明（§4.2 訂正）。
+   流用は「略称名寄せ部品」＋依存の `jplaw_text`/`listup_law` に限定。
+2. **参照抽出の本体 = Lawtext の評価 PoC**（次の最重要点）。Lawtext で同一法令の条文参照抽出を回し、
+   出力を `references` edge 形に写像、precision を L1 ハーネス（新 task `lawref`）で測る。
+   TS 実装なので Python パイプラインとの連携形（CLI/JSON 受け渡し）も併せて検討。
 3. e-Gov 法令 API v2 OAS の**全文確認**（一部 HTTP 403 で未取得）→ 条文単位取得・改正履歴の仕様確定。
 4. `alo_edges` への接続軸 edge 型の DDL 案（DD-LAWTIME/SUBTRANS と同じ append-only・gate 様式）。
 5. 自前部分の最小化設計: 参照抽出層の出力に **委任 typing（`delegates_to`）＋委任限界の評価 assertion**
@@ -137,8 +142,6 @@ Akoma Ntoso（OASIS LegalDocML v1.0）は**委任専用要素を持たず**、(1
 6. 本ノートを GPT お目付け役 gate `DDLAWREF` に投函 → owner ratify で DD 昇格。
 
 ## §7. 不確実な点（推測で埋めない）
-- **`analysis_law_reference` の具体機能**: README 不在。本ノートは Cargo.toml 依存（XML パース＋参照抽出を
-  強く示唆）まで一次確認。入出力・委任対応の有無は src 精読待ち。
 - **lawvis** はデータ/コードの GitHub 公開を確認できず（可視化結果サイトのみ）。粒度は法令単位。
 - **デジタル庁ハッカソン作品**の作者/repo 名は公式 PDF が 403 で未特定。公開 OSS かデモかも未確認。
 - v2 OAS 本文・OASIS 逐語定義の一部は環境側 HTTP 403 で未取得。
@@ -149,6 +152,8 @@ Akoma Ntoso（OASIS LegalDocML v1.0）は**委任専用要素を持たず**、(1
 - v0.1 (2026-06-23 初版): 接続軸の問題提起。e-Gov は政令/省令テキストを持つが委任/参照/告示の
   「接続」が無いことを一次情報で確定。OSS 戦略を「取得/パースは既製・接続グラフは自前」と整理。
 - v0.1 改訂 (2026-06-23, owner 方針反映): 「ゼロイチ自前を避け既存を踏み台に」を受け、委任/参照
-  グラフの先行事例を狙い撃ち再調査。**参照グラフは踏み台あり（`analysis_law_reference` 発掘・Cargo
-  依存で参照抽出ツールと一次確認、lawvis/JaLII RefVis/ハッカソンを参考事例に追加）→ §4 を全面改訂**。
-  委任チェーンは公開物なお不在だが参照層の上乗せに縮小。自前は「委任 typing＋限界評価」のみ。
+  グラフの先行事例を狙い撃ち再調査。lawvis/JaLII RefVis/ハッカソンを参考事例に追加、§4 を全面改訂。
+- v0.1 訂正 (2026-06-23, src 精読): `analysis_law_reference` を clone して精読 → **「参照抽出器」は
+  過大評価で、実体は略称辞書ビルダー（条文参照も委任も抽出せず・法令名取得は未実装）**と判明。
+  参照抽出の本体は **Lawtext** に確定し直し、analysis_law_reference は略称名寄せ部品に格下げ、依存の
+  `jplaw_text`/`listup_law` をパース層部品として評価。§4.2/§4.1/§6/§7 を訂正。look-before-adopt の実地適用。
