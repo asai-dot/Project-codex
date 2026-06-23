@@ -161,7 +161,9 @@ JSON 受け渡しで採るか。
 5. `alo_edges` への接続軸 edge 型の DDL 案（DD-LAWTIME/SUBTRANS と同じ append-only・gate 様式）。
 6. 自前部分の最小化設計: 参照抽出層の出力に **委任 typing（`delegates_to`）＋委任限界の評価 assertion**
    だけを乗せる境界を明確化（形式 edge は機械、評価は DD-SUBTRANS の出典付き assertion）。
-7. 本ノートを GPT お目付け役 gate `DDLAWREF` に投函 → owner ratify で DD 昇格。
+7. ~~本ノートを GPT お目付け役 gate `DDLAWREF` に投函~~ **✅ REQUEST 作成済（2026-06-23）**:
+   `docs/audit/DDLAWREF_v0.1_20260623_REQUEST.md`（`alo_gpt_audit lint` 通過・source_hash で版固定）。
+   **残: owner が Box `gpt_ometsuke/to_gpt/` に投函 → GPT Pro 監査 → RESULT → owner ratify で DD 昇格**。
 
 ## §7. 不確実な点（推測で埋めない）
 - **lawvis** はデータ/コードの GitHub 公開を確認できず（可視化結果サイトのみ）。粒度は法令単位。
