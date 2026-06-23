@@ -12,7 +12,7 @@ DECLARE
   ];
 BEGIN
   FOREACH g IN ARRAY gates LOOP
-    EXECUTE format('SELECT count(*) FROM %I', g) INTO n;
+    EXECUTE format('SELECT count(*) FROM lawtime.%I', g) INTO n;
     RAISE NOTICE 'lawtime gate % => % row(s)', g, n;
     IF n <> 0 THEN bad := COALESCE(bad,'') || g || '(' || n || ') '; END IF;
   END LOOP;
