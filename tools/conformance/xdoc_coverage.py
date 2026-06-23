@@ -191,3 +191,29 @@ class CoverageStore:
         if not scopes:
             return False
         return all(self.coverage_complete_for_scope(s) for s in scopes)
+
+    # --- B20 (v0.9): coverage_claim_scope ↔ coverage_assessment の binding 整合 ---
+    def coverage_scope_binding_valid(self, scope: "CoverageClaimScope",
+                                     use_assessment_alignment_id: str,
+                                     member_side: str, alignment_facet: str) -> bool:
+        """scope が参照する coverage_assessment が同一 member/alignment/side/facet/policy か。
+
+        member_side = alignment 内で scope.member_ref が属する side（呼び出し側が解決）。
+        無関係 member の完全 coverage を差し替えられないことを保証する（B20）。
+        """
+        ca = self.get(scope.coverage_assessment_id)
+        if ca is None:
+            return False
+        # 同一 scope key（key_id）に current assessment がちょうど1件
+        peers = self._by_key.get(ca.key_id, [])
+        currents = [x for x in peers if self.coverage_status(x) == "current"]
+        if len(currents) != 1:
+            return False
+        return (
+            scope.member_ref == ca.member_ref
+            and ca.alignment_observation_id == use_assessment_alignment_id
+            and ca.side == member_side
+            and ca.facet == alignment_facet
+            and ca.coverage_policy_id == self.policy.policy_id
+            and ca.coverage_policy_version == self.policy.policy_version
+        )
