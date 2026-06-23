@@ -30,10 +30,13 @@ _ALIAS = {
     "Patents Licensing": "Patents & Licensing",
 }
 
-# catch-all 判定: フォルダ件数がこの値以上で、かつ掲載誌等先頭の
-# フォルダ名一致率がこの閾値未満なら「寄せ集め」とみなし掲載誌等で割り直す。
+# catch-all 判定: フォルダ件数がこの値以上で、配下レコードの掲載誌等先頭(=実誌名)が
+# 「最頻誌のシェア < _MAX_DOMINANT」かつ「実質_MIN_DISTINCT誌以上に散る」場合のみ寄せ集めとみなす。
+# 単一誌が表記ゆれで複数名になっているだけ（最頻誌が支配的）のフォルダは分割しない。
 _CATCHALL_MIN_SIZE = 300
-_CATCHALL_MAX_AGREEMENT = 0.5
+_CATCHALL_MAX_DOMINANT = 0.5
+_CATCHALL_MIN_DISTINCT = 4
+_CATCHALL_MIN_CONSTITUENT = 20
 
 
 def normalize(name: str) -> str:
@@ -103,9 +106,9 @@ def main():
     priority = sys.argv[2] if len(sys.argv) > 2 else None
     priority_names = load_priority_names(priority) if priority else None
 
-    # ---- pass1: フォルダ canonical ごとに件数と「掲載誌等先頭==フォルダ名」一致数を集計 ----
+    # ---- pass1: フォルダ canonical ごとに、配下レコードの掲載誌等先頭(=実誌名)の分布を集計 ----
     folder_total = collections.Counter()
-    folder_agree = collections.Counter()
+    folder_etc = collections.defaultdict(collections.Counter)
     with open(src, encoding="utf-8") as f:
         for line in f:
             line = line.strip()
@@ -115,18 +118,29 @@ def main():
             fc = folder_canonical_of(r.get("_source_file", ""))
             folder_total[fc] += 1
             etc_j = journal_from_etc(r.get("掲載誌等", ""))
-            if etc_j and etc_j == fc:
-                folder_agree[fc] += 1
+            if etc_j:
+                folder_etc[fc][etc_j] += 1
 
+    # 寄せ集め判定: 最頻誌のシェアが低く(<_MAX_DOMINANT)、かつ実質_MIN_DISTINCT誌以上に散る。
+    # 単一誌の表記ゆれ（最頻誌が支配的）は分割しない＝金融法務事情↔旬刊金融法務事情の誤分裂を防ぐ。
     catchall = set()
     catchall_report = []
     for fc, total in folder_total.items():
         if not fc or total < _CATCHALL_MIN_SIZE:
             continue
-        share = folder_agree[fc] / total
-        if share < _CATCHALL_MAX_AGREEMENT:
+        etcc = folder_etc.get(fc)
+        if not etcc:
+            continue
+        dom, dom_n = etcc.most_common(1)[0]
+        dom_share = dom_n / total
+        distinct = sum(1 for v in etcc.values() if v >= _CATCHALL_MIN_CONSTITUENT)
+        if dom_share < _CATCHALL_MAX_DOMINANT and distinct >= _CATCHALL_MIN_DISTINCT:
             catchall.add(fc)
-            catchall_report.append({"folder": fc, "size": total, "agreement": round(share, 3)})
+            catchall_report.append({
+                "folder": fc, "size": total,
+                "dominant": dom, "dominant_share": round(dom_share, 3),
+                "distinct_journals": distinct,
+            })
     catchall_report.sort(key=lambda d: -d["size"])
 
     # ---- pass2: 出力。catch-all フォルダは掲載誌等で誌名を割り直す ----
@@ -192,7 +206,7 @@ def main():
     print(f"canonical 誌数        : {len(by_canonical)}")
     print(f"catch-all フォルダ     : {[d['folder'] for d in catchall_report]}")
     for d in catchall_report:
-        print(f"    {d['folder']}  size={d['size']} agreement={d['agreement']} → 掲載誌等で分割")
+        print(f"    {d['folder']}  size={d['size']} 最頻={d['dominant']}({d['dominant_share']}) 実質{d['distinct_journals']}誌 → 掲載誌等で分割")
     print(f"source               : {dict(source_counter)}")
     print("--- by_journal_canonical TOP35 ---")
     for k, v in by_canonical.most_common(35):
