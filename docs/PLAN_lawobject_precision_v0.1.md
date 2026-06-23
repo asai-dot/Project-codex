@@ -127,8 +127,10 @@ e-Gov API は 403 だが **GitHub clone は通る**ことを使い、**実 e-Gov
   = 21 条の実改正**）、**全 gate pass**。＝producer が fixture でなく**実データで動く**ことを実証。
 - 成果物: 手順 [`scripts/lawdelta/REALLANE.md`](../scripts/lawdelta/REALLANE.md) ＋ **候補 gold ワークリスト**
   `tests/gold/lawdelta_minpo_20230614_20251001.candidate.jsonl`（21 条・producer 予測・`verified:false`）。
-- **残: 新旧対照表での人手検証**（asai）→ `delta_kind` 記入＝real gold 化 → `scripts.eval --min-f1` で
-  pattern 単位 P/R 較正。＝L1 の物差しに**実データの一発目**が乗る一歩手前。
+- **残: 公式データから gold を機械生成**＝改正法の「改め文」(e-Gov v2 改正履歴 / 名大16パターンで解析)
+  または公式新旧対照表から `delta_kind` を自動付与 → `scripts.eval --min-f1` で較正。**人手目視ではない**
+  （改め文が操作を断定している）。本サンドボックスは e-Gov が allowlist 外(403) かつ gitlaw に該当改正法が
+  無いため未取得＝**環境/アクセスの問題**。要 e-Gov allowlist。
 
 ---
 

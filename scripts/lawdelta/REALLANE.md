@@ -35,25 +35,42 @@ python -m scripts.lawdelta <OLD.xml> <NEW.xml> \
 - **全 gate pass**（実データでも実質フィールド非混入・provenance 完備 等が成立）。
 - ＝ producer が fixture でなく**実 e-Gov 標準 XML で動く**ことを実証。
 
-## 4. gold への昇格（asai の検証ステップ）
-real-lane の diff 出力（producer 予測）を、**権威ある新旧対照表で人手検証**して L1 gold にする:
-1. 候補ワークリスト: [`tests/gold/lawdelta_minpo_20230614_20251001.candidate.jsonl`](../../tests/gold/lawdelta_minpo_20230614_20251001.candidate.jsonl)
-   ＝上記 21 条の **producer 予測（`delta_kind_pred`）と空の `delta_kind`（要記入）・`verified:false`**。
-2. 各条を **官報/e-Gov の新旧対照表**（民法 2023-06-14→2025-10-01 施行分: 令和4年法律102号 親子法制 /
-   令和5年法律53号 IT化 等）と照合し、正しい `delta_kind` を記入、`verified:true` に更新。
-   → 検証済みファイルを `lawdelta_minpo_20230614_20251001.gold.jsonl`（`delta_kind` 列が正解）として保存。
-3. 採点:
-   ```sh
-   python -m scripts.eval --task lawdelta \
-     --gold tests/gold/lawdelta_minpo_20230614_20251001.gold.jsonl \
-     --pred out/law_textual_delta_reallane_minpo.jsonl \
-     --key article_path --label delta_kind --out out/eval_reallane_minpo --min-f1 0.9
-   ```
-   → pattern（delta_kind）単位 P/R が出る。ここで初めて lawdelta 閾値（`SUBST_MIN`/`RENUMBER_SIM` 等）を
-   **数字で**較正できる（L1 の目的達成）。
+## 4. gold への昇格（**公式データから機械生成**。人手目視ではない）
+gold の正解 `delta_kind` は**改正法の「改め文」が公式に明記している**（「第七百三十三条を削る」＝repeal、
+「第七百七十二条を次のように改める」＝substitution、「…の次に次の一条を加える」＝insertion）。
+したがって gold は**権威ある公式データから機械生成**する。人手は最終スポット監査のみ（21 条を目視で
+ラベル付けする作業ではない）。これは PLAN_DD-LAWSUBTRANS P3／本リポの `tests/gold/README.md` が
+当初から定めた方針（**名大「改め文」16 パターン・公式新旧対照表を検証器に**）と同じ。
+
+**gold ソース（優先順）**:
+1. **e-Gov 法令 API v2 改正履歴/改め文**（`law_revisions` 等）＝機械可読の一次データ。
+   ＊本サンドボックスは e-Gov が allowlist 外で HTTP 403。**取得には e-Gov の allowlist 追加が必要**
+   （環境設定の問題であって、人手検証が要るわけではない）。
+2. **改正法の標準 XML の改め文**を 改め文パーサ（名大16パターン）で解析 → (対象条, 操作) を抽出。
+   ＊該当改正法（令和4年法律102号 親子法制 / 令和5年法律53号 IT化）は gitlaw-jp の本クローンには
+   未収録（溶け込み済み現行法のみ保持）。要 e-Gov もしくは改正法を含むミラー。
+3. **公式新旧対照表**（法務省/各府省が法案附属で公開, moj.go.jp 等）。表を機械パース。
+
+**gold 生成 → 採点**（ソースが揃ったら）:
+- 改め文/改正履歴から `tests/gold/lawdelta_minpo_20230614_20251001.gold.jsonl`（`delta_kind`＝公式由来）を
+  自動生成（candidate ワークリストの `delta_kind` を埋める）。
+  ```sh
+  python -m scripts.eval --task lawdelta \
+    --gold tests/gold/lawdelta_minpo_20230614_20251001.gold.jsonl \
+    --pred out/law_textual_delta_reallane_minpo.jsonl \
+    --key article_path --label delta_kind --out out/eval_reallane_minpo --min-f1 0.9
+  ```
+  → delta_kind 単位 P/R で lawdelta 閾値（`SUBST_MIN`/`RENUMBER_SIM`）を**数字で**較正（L1 達成）。
+
+> **示唆**: 改め文が操作を断定している以上、**改め文パースは text-diff より上位の真実源**。lawdelta の
+> text-diff は「改め文が取れない/溶け込み済みしか無い」場合の代替・補完と位置づけ、改め文が取れるなら
+> そちらを gold かつ第一次抽出に使うのが筋（→ DD-LAWREF/接続軸の改め文レーンとして要検討）。
 
 ## 5. 留意（不確実点・honest）
-- candidate の `delta_kind_pred` は **producer 予測であって正解ではない**。verified=false のまま gold に使わない。
+- candidate の `delta_kind_pred` は **producer 予測であって正解ではない**。gold は §4 の公式データ由来で埋める。
+- OLD/NEW は出所が異なる（テスト fixture vs gitlaw projection）。両者とも民法標準 XML だが、**projection 差**
+  （施行時点の違い）を見ているので、単一改正法でなく**期間内の複数改正の合算**である点に注意。
+  単一改正の純粋な P/R を測るなら、その改正の施行直前/直後の 2 版を揃える。
 - OLD/NEW は出所が異なる（テスト fixture vs gitlaw projection）。両者とも民法標準 XML だが、**projection 差**
   （施行時点の違い）を見ているので、単一改正法でなく**期間内の複数改正の合算**である点に注意。
   単一改正の純粋な P/R を測るなら、その改正の施行直前/直後の 2 版を揃える。
