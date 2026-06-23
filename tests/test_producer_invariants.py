@@ -35,7 +35,12 @@ def _jsonl(pattern):
 
 
 def _summaries():
+    # Producer summaries only. The eval harness (scripts.eval) also writes
+    # out/eval_*_summary.json, which has a different shape (no db_writes /
+    # all_gates_pass) — it is not a producer and is excluded here.
     for path in sorted(glob.glob(os.path.join(OUT, "*_summary.json"))):
+        if os.path.basename(path).startswith("eval_"):
+            continue
         with open(path, encoding="utf-8") as f:
             yield path, json.load(f)
 
