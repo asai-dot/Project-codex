@@ -190,11 +190,27 @@ class TestReadingMissing(unittest.TestCase):
         self.assertEqual(stats.get("reading_missing_matched", 0), 0)
         self.assertEqual(stats["hubs"], 2)  # 読み違いで別 hub
 
-    def test_defmatch_low_overlap_makes_own_hub(self):
+    def test_cross_scheme_low_overlap_still_attaches(self):
+        # cross-scheme では定義が乖離していても pref 一致で attach する
+        # (異辞書間は同概念でも bigram Jaccard が構造的に低い)
         terms = self._terms()
         terms[1]["definition"] = "全く無関係な別の概念xyz"
+        hubs, mem, stats = bh.build_hubs(terms, threshold=0.6, reading_missing="defmatch")
+        self.assertEqual(stats["reading_missing_matched"], 1)  # cross-scheme -> 常に attach
+        self.assertEqual(stats["hubs"], 1)
+        rm = [m for m in mem if m["map_type"] == "reading_missing_def_match"]
+        self.assertTrue(rm[0]["cross_scheme"])
+
+    def test_same_scheme_low_overlap_makes_own_hub(self):
+        # 同一スキーマ内で読み欠落 + 定義不一致 -> 単独 hub (homograph 防止)
+        terms = [
+            {"stg_term_key": "y1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "占有", "reading": "せんゆう", "definition": "物を事実上支配すること", "term_tier": 1},
+            {"stg_term_key": "y2", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "占有", "reading": None, "definition": "全く無関係な別の概念xyz", "term_tier": 1},
+        ]
         _, _, stats = bh.build_hubs(terms, threshold=0.6, reading_missing="defmatch")
-        self.assertEqual(stats["reading_missing_seed"], 1)  # 重なり不足 -> 単独hub
+        self.assertEqual(stats["reading_missing_seed"], 1)  # 同スキーマ重なり不足 -> 単独hub
         self.assertEqual(stats["hubs"], 2)
 
 

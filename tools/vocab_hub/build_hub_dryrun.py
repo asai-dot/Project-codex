@@ -205,19 +205,26 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP, reading_mi
                 "is_anchor": True, "definition_overlap": round(ov, 3),
             })
 
-    # 第2パス: 読み欠落 bedrock term を同 pref の hub へ定義重なりで attach (OCR読み漏れ救済)
+    # 第2パス: 読み欠落 bedrock term を同 pref の hub へ attach (OCR読み漏れ救済)
+    # 異スキーマ間は bigram Jaccard が構造的に低い(同一概念でも長文 vs 短文)ため
+    # cross-scheme では pref 一致のみで attach し、定義重なりは参考値として記録するだけ.
+    # 同スキーマ内(通常起きないが念のため)は threshold を維持して homograph を防ぐ.
     hub_by_id = {h["hub_id"]: h for h in hubs}
     reading_missing_matched = 0
     reading_missing_seed = 0
     for t in bedrock_noread:
         pref = _key(t)[0]
         cands = hub_by_pref.get(pref, [])
-        best_hid, best_ov = None, -1.0
+        best_hid, best_ov, best_cross = None, -1.0, False
         for hid, anchor in cands:
             ov = overlap(anchor.get("definition", ""), t.get("definition", ""))
-            if ov > best_ov:
-                best_hid, best_ov = hid, ov
-        if best_hid is not None and best_ov >= threshold:
+            cross = str(t.get("scheme_id")) != str(anchor.get("scheme_id"))
+            # cross-scheme: pref hit だけで候補確定 (最高 ov のものを選ぶ)
+            # same-scheme: threshold が必要
+            if ov > best_ov or (cross and best_hid is None):
+                best_hid, best_ov, best_cross = hid, ov, cross
+        gate_ok = best_hid is not None and (best_cross or best_ov >= threshold)
+        if gate_ok:
             reading_missing_matched += 1
             hub_by_id[best_hid]["member_count"] += 1
             ar = set(hub_by_id[best_hid]["authority_ranks"]) | {str(t.get("authority_rank"))}
@@ -225,9 +232,10 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP, reading_mi
             memberships.append({
                 "hub_id": best_hid, "term_id": _tid(t), "scheme_id": t.get("scheme_id"),
                 "authority_rank": t.get("authority_rank"), "map_type": "reading_missing_def_match",
-                "is_anchor": False, "definition_overlap": round(best_ov, 3),
+                "is_anchor": False, "definition_overlap": round(best_ov, 3) if best_ov >= 0 else None,
+                "cross_scheme": best_cross,
             })
-        else:  # 同 pref hub が無い or 重なり不足 -> 読み無し provisional hub (review 対象)
+        else:  # 同 pref hub が無い or 同スキーマ重なり不足 -> 読み無し provisional hub (review 対象)
             reading_missing_seed += 1
             hub_seq += 1
             hid = f"hub:{hub_seq:06d}"
