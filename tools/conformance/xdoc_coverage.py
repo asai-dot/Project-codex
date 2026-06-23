@@ -1,0 +1,210 @@
+"""xdoc_coverage — DD-XDOC-001 v0.8 §9（coverage 完全性・logical key・numeric revision）。
+
+依存ゼロ・read-only 純関数。受入試験6（必要scope完全性）と B17（v9/v10 → numeric revision で
+決定的 current 選択）、B16 の coverage 側（current かつ complete）を機械証明する。
+
+interval_1d adapter のみ実装（page/char_offset/token）。grid_2d/rect_2d は同契約で後続。
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Set, Tuple
+
+try:
+    from . import xdoc_canonical as _xc
+except ImportError:  # pragma: no cover
+    import xdoc_canonical as _xc
+
+
+# ---- interval_1d adapter（half-open [start,end)・非空必須） ------------------------
+Range = Tuple[int, int]
+
+
+class CoverageValidationError(ValueError):
+    pass
+
+
+def _check_nonempty(ranges: List[Range]) -> None:
+    for s, e in ranges:
+        if not (s < e):
+            raise CoverageValidationError(f"degenerate range [{s},{e}) は非空必須")
+
+
+def _merge(ranges: List[Range]) -> List[Range]:
+    """正規化: ソート + overlap/隣接 [a,b)[b,c) を結合。"""
+    _check_nonempty(ranges)
+    out: List[Range] = []
+    for s, e in sorted(ranges):
+        if out and s <= out[-1][1]:  # overlap or touch（half-open なので == も結合）
+            out[-1] = (out[-1][0], max(out[-1][1], e))
+        else:
+            out.append((s, e))
+    return out
+
+
+def union(ranges: List[Range]) -> List[Range]:
+    return _merge(list(ranges)) if ranges else []
+
+
+def contains(covered: List[Range], required: List[Range]) -> bool:
+    """required の全区間が covered の union に包含されるか。covered=[] は非空 required を包含不可。"""
+    cov = union(covered)
+    for s, e in union(required):
+        if not any(cs <= s and e <= ce for cs, ce in cov):
+            return False
+    return True
+
+
+def intersects(a: List[Range], b: List[Range]) -> bool:
+    ua, ub = union(a), union(b)
+    return any(as_ < be and bs < ae for as_, ae in ua for bs, be in ub)
+
+
+# ---- records（§9-2） ---------------------------------------------------------------
+@dataclass
+class CoveragePolicy:
+    policy_id: str
+    policy_version: str
+    facet: str
+    required_coordinate_space: str
+    minimum_ocr_quality: float
+    minimum_layout_quality: float
+
+
+@dataclass
+class CoverageAssessment:
+    alignment_observation_id: str
+    member_ref: str
+    side: str
+    facet: str
+    coordinate_space: str
+    asset_hash: str
+    source_text_revision_id: str
+    selector_state: str  # complete | partial | failed | not_applicable
+    covered_ranges: List[Range]
+    unknown_ranges: List[Range]
+    ocr_quality_score: float
+    layout_quality_score: float
+    coverage_policy_id: str
+    coverage_policy_version: str
+    coverage_revision_seq: int  # B17: integer（string 順序非依存）
+    key_id: str = field(init=False)
+    payload_digest: str = field(init=False)
+    assessment_id: str = field(init=False)
+
+    def __post_init__(self):
+        _check_nonempty(self.covered_ranges)
+        _check_nonempty(self.unknown_ranges)
+        # B17: logical key に coordinate_space と policy_id を含む
+        self.key_id = _xc.sha256_hex(_xc.canonical_json({
+            "alignment_observation_id": self.alignment_observation_id,
+            "member_ref": self.member_ref, "side": self.side, "facet": self.facet,
+            "coordinate_space": self.coordinate_space, "coverage_policy_id": self.coverage_policy_id,
+        }))
+        self.payload_digest = _xc.sha256_hex(_xc.canonical_json({
+            "asset_hash": self.asset_hash, "source_text_revision_id": self.source_text_revision_id,
+            "selector_state": self.selector_state,
+            "covered_ranges": [list(r) for r in self.covered_ranges],
+            "unknown_ranges": [list(r) for r in self.unknown_ranges],
+            "ocr_quality_score": self.ocr_quality_score, "layout_quality_score": self.layout_quality_score,
+        }))
+        self.assessment_id = _xc.sha256_hex(_xc.canonical_json({
+            "coverage_assessment_key_id": self.key_id, "coverage_revision_seq": self.coverage_revision_seq,
+            "coverage_policy_version": self.coverage_policy_version, "coverage_payload_digest": self.payload_digest,
+        }))
+
+
+@dataclass
+class CoverageClaimScope:
+    use_assessment_key_id: str
+    member_ref: str
+    required_coordinate_space: str
+    required_ranges: List[Range]  # minItems=1
+    coverage_assessment_id: str
+
+    def __post_init__(self):
+        if not self.required_ranges:
+            raise CoverageValidationError("required_ranges は minItems=1（空 scope 禁止・B14）")
+        _check_nonempty(self.required_ranges)
+
+
+@dataclass
+class ClaimContext:
+    use_assessment_key_id: str
+    claim_kind: str  # presence | absence | difference | none
+    claimed_side: str  # a | b | both
+    claimed_member_refs: List[str]  # minItems=1
+    required_coordinate_space: str
+
+    @property
+    def is_absence_or_difference(self) -> bool:
+        return self.claim_kind in ("absence", "difference")
+
+
+# ---- store + 完全性判定（§9-2/9-3） ------------------------------------------------
+class CoverageStore:
+    def __init__(self, policy: CoveragePolicy):
+        self.policy = policy
+        self._by_id: Dict[str, CoverageAssessment] = {}
+        self._by_key: Dict[str, List[CoverageAssessment]] = {}
+        self._scopes_by_uakey: Dict[str, List[CoverageClaimScope]] = {}
+
+    def add_assessment(self, ca: CoverageAssessment) -> CoverageAssessment:
+        if (ca.key_id, ca.coverage_revision_seq) in {
+            (x.key_id, x.coverage_revision_seq) for x in self._by_key.get(ca.key_id, [])
+        }:
+            raise CoverageValidationError("UNIQUE(key, revision_seq) 違反")
+        self._by_id[ca.assessment_id] = ca
+        self._by_key.setdefault(ca.key_id, []).append(ca)
+        return ca
+
+    def add_scope(self, scope: CoverageClaimScope) -> None:
+        self._scopes_by_uakey.setdefault(scope.use_assessment_key_id, []).append(scope)
+
+    def get(self, assessment_id: str) -> Optional[CoverageAssessment]:
+        return self._by_id.get(assessment_id)
+
+    def coverage_status(self, ca: CoverageAssessment) -> str:
+        """B17: current = max(revision_seq) over key（numeric）。"""
+        peers = self._by_key.get(ca.key_id, [])
+        max_seq = max(x.coverage_revision_seq for x in peers)
+        return "current" if ca.coverage_revision_seq == max_seq else "superseded"
+
+    def current_for_key(self, key_id: str) -> Optional[CoverageAssessment]:
+        peers = self._by_key.get(key_id, [])
+        return max(peers, key=lambda x: x.coverage_revision_seq) if peers else None
+
+    def coverage_complete_for_scope(self, scope: CoverageClaimScope) -> bool:
+        ca = self.get(scope.coverage_assessment_id)
+        if ca is None:
+            return False
+        p = self.policy
+        return (
+            self.coverage_status(ca) == "current"
+            and ca.selector_state == "complete"
+            and ca.ocr_quality_score >= p.minimum_ocr_quality
+            and ca.layout_quality_score >= p.minimum_layout_quality
+            and ca.coordinate_space == scope.required_coordinate_space
+            and contains(ca.covered_ranges, scope.required_ranges)
+            and not intersects(ca.unknown_ranges, scope.required_ranges)
+        )
+
+    # --- B14: 必要scope完全性 ---
+    def required_scope_keys(self, ctx: ClaimContext) -> Set[Tuple[str, str]]:
+        return {(m, ctx.required_coordinate_space) for m in ctx.claimed_member_refs}
+
+    def actual_scope_keys(self, ua_key: str) -> Set[Tuple[str, str]]:
+        return {
+            (s.member_ref, s.required_coordinate_space)
+            for s in self._scopes_by_uakey.get(ua_key, [])
+        }
+
+    def coverage_complete_for_use_assessment(self, ctx: ClaimContext) -> bool:
+        ua_key = ctx.use_assessment_key_id
+        # 必要 key が actual に全て含まれるか（未登録 member/scope → false）
+        if not self.required_scope_keys(ctx) <= self.actual_scope_keys(ua_key):
+            return False
+        scopes = self._scopes_by_uakey.get(ua_key, [])
+        if not scopes:
+            return False
+        return all(self.coverage_complete_for_scope(s) for s in scopes)
