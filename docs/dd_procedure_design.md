@@ -205,6 +205,12 @@ procedure_type(spine)
   （`--law-id` ＋ `--raw-dir`、または `--targets pipeline/egov_raw/_targets.json` で一括）走らせ、
   raw を持ち帰る（`pipeline/egov_raw/README.md`）。
 
+**取得 landing（2026-06-23・実データ）**: owner Mac で `egov_fetch.command`(または `--targets`)を実走し、
+会社法 raw + 各号 anchor を取得・push 済（**199条1項=5各号 / 911条3項=30各号**、`pipeline/egov_raw/`）。
+L0 observation のまま（procedure 紐付け/floor accepted化/DB write は HOLD）。`derive_alias` が定義括弧型
+（例「募集株式の数（種類株式…）」→「募集株式の数」）に短縮 alias を自動付与し、条件節型は owner curation
+に残す。owner の取得は **Finder ダブルクリック1発**（`scripts/egov_fetch.command`）で回せる。
+
 **後続＝床突合（`scripts/floor_reconcile.py`・実装済）**: 各号 anchor（top-down）× N書式（bottom-up）を
 `requirement_floor` で突合し、法定の床／実務必須／**alias 要整備**（条文本文＝長文 anchor が書式の短語と
 未マッチで被覆0 ＝ curation の的）を出す。anchors の JSON は `{items:[{id,名称,号,aliases}]}` で

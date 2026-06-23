@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
@@ -90,6 +91,24 @@ def _text(el: ET.Element | None) -> str:
     return "".join(el.itertext()).strip()
 
 
+_PAREN = re.compile(r"[（(][^（）()]*[）)]")
+
+
+def derive_alias(text: str, *, max_len: int = 24) -> str | None:
+    """号本文から短縮名 alias 候補を機械生成（last-mile 正規化・authoring ではない）。
+
+    各号は「<短い名称>（<定義・読替>）」型が多い。**定義括弧を剥いた残り**が短ければ、書式の
+    短語と突合できる alias 候補になる(例「募集株式の数（種類株式…）」→「募集株式の数」)。
+    括弧の無い条件節型(例「金銭以外の財産を…ときは、…」)は短縮できないので None(=curation 対象)。
+    名称(raw)は一切変えない。aliases に候補を足すだけ。
+    """
+    prev, s = None, text
+    while prev != s:                 # 入れ子括弧も剥く
+        prev, s = s, _PAREN.sub("", s)
+    s = s.strip("、。 　　")
+    return s if (s and s != text and len(s) <= max_len) else None
+
+
 def _law_num(root: ET.Element) -> str:
     ln = root.find(".//LawNum")
     return _text(ln) if ln is not None else (root.attrib.get("Num", ""))
@@ -128,9 +147,10 @@ def parse_items(xml_text: str, *, law_id: str = "", article: str | None = None,
                     "anchor": f"{(_text(root.find('.//LawTitle')) or key)}{anum}条"
                               + (f"{pnum}項" if pnum else "") + f"{go}号",
                     "article_caption": art_caption,
-                    "名称": body,          # 生の号本文。短縮名/aliases は owner curation(別工程)。
+                    "名称": body,          # 生の号本文(raw・不変)。
                     "text": body,
-                    "aliases": [],
+                    # 定義括弧を剥いた短縮名を alias 候補に(機械正規化)。残りは owner curation。
+                    "aliases": [a] if (a := derive_alias(body)) else [],
                     "source": SOURCE_LABEL, "retrieved_at": retrieved,
                     "layer": LAYER, "status": "observed",
                 })

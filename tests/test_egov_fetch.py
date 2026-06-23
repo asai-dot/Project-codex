@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from egov_fetch import extract_law_xml, parse_items, run_targets  # noqa: E402
+from egov_fetch import derive_alias, extract_law_xml, parse_items, run_targets  # noqa: E402
 from requirement_floor import analyze_floor  # noqa: E402
 
 _PASS = 0
@@ -84,6 +84,30 @@ def test_feeds_requirement_floor_shape():
     check(floor["n_forms"] == 1, "canonical 形として requirement_floor が消費可能")
 
 
+def test_derive_alias():
+    # 定義括弧型: 括弧を剥いた短縮名が alias に。
+    check(derive_alias("募集株式の数（種類株式発行会社にあっては、募集株式の種類及び数。）") == "募集株式の数",
+          "定義括弧を剥いて短縮名を生成")
+    check(derive_alias("商号") == "商号" or derive_alias("商号") is None, "括弧無しの短語はそのまま/None")
+    # 条件節型(括弧なし・長文)は短縮できない → None(curation 対象)。
+    check(derive_alias("金銭以外の財産を出資の目的とするときは、その旨並びに当該財産の内容及び価額") is None,
+          "条件節型(長文)は alias 生成しない=owner curation 対象")
+    # 入れ子括弧も剥ける。
+    check(derive_alias("資本金の額（外国通貨（米ドル等）建てを含む）") == "資本金の額", "入れ子括弧も剥く")
+
+
+def test_aliases_attached_on_parse():
+    # 定義括弧つきの号(実データ型)を inline XML で。parse 時に短縮 alias が付くこと。
+    xml = ("<Law><LawBody><MainProvision><Article Num='1'><Paragraph Num='1'>"
+           "<Item Num='1'><ItemTitle>一</ItemTitle><ItemSentence><Sentence>"
+           "募集株式の数（種類株式発行会社にあっては、募集株式の種類及び数。）"
+           "</Sentence></ItemSentence></Item>"
+           "</Paragraph></Article></MainProvision></LawBody></Law>")
+    one = parse_items(xml, article="1", paragraph="1")[0]
+    check(one["aliases"] == ["募集株式の数"], "定義括弧つき号に短縮 alias が自動付与される")
+    check(one["名称"].startswith("募集株式の数（"), "名称(raw)は短縮しない")
+
+
 def test_run_targets_offline():
     """一括取得の配線を、ネット注入(オフライン fetcher)で検算。raw + anchors を書く。"""
     import tempfile
@@ -113,7 +137,7 @@ def test_run_targets_offline():
 def main() -> int:
     for t in [test_parse_items_basic, test_readonly_l0_invariants, test_paragraph_filter,
               test_extract_law_xml_from_json_envelope, test_feeds_requirement_floor_shape,
-              test_run_targets_offline]:
+              test_derive_alias, test_aliases_attached_on_parse, test_run_targets_offline]:
         print(f"• {t.__name__}")
         t()
     print(f"\n{_PASS} passed, {_FAIL} failed")
