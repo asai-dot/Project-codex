@@ -3,7 +3,8 @@ request_id: 20260623_lease_subsystem_v0.1
 topic: lease subsystem v0.1 — mutating レーン解禁の最小設計
 gate: design
 status: queued
-result_expected_filename: 20260623_lease_subsystem_v0.1_RESULT.md
+result_expected_filename: 20260623_lease_subsystem_v0.1_GPTPRO_AUDIT_RESULT.md
+submitted_to_box: 2026-06-23 to_gpt/ file_id=2303989218514
 review_scope: LEASE_SUBSYSTEM_DESIGN_v0.1_20260623.md の設計妥当性 (mutating 解禁の安全性)
 regression_anchors: HANDOFF_SCHEMA_APPENDIX_v0.5 §4.4 / HANDOFF_OPERATIONAL_IMPL_DESIGN_v0.1 / handoff_proto/validator.py
 decision_requested: この設計で mutating レーンを解禁してよいか / §3 の block 集合は fail-closed として十分か / §7 の 4 問への判断
