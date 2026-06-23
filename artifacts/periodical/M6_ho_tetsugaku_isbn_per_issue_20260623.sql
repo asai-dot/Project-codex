@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS staging_periodical.issue_isbn_map (
   PRIMARY KEY (journal_id, issue_no)
 );
 INSERT INTO staging_periodical.issue_isbn_map (journal_id, issue_no, isbn, src) VALUES
- ('ho_tetsugaku','2','9784797298628','pattern:9860+号(8点検証)'),
+ ('ho_tetsugaku','2','9784797298628','shinzansha(単行本2016-05-30, 確認済)'),
  ('ho_tetsugaku','3','9784797298635','bib_records'),
  ('ho_tetsugaku','4','9784797298642','bib_records'),
  ('ho_tetsugaku','5','9784797298659','bib_records'),
