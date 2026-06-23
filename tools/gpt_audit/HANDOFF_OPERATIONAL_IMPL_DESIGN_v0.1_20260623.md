@@ -1,7 +1,15 @@
 # HANDOFF_OPERATIONAL_IMPL_DESIGN v0.1 — alo_gpt_audit.py への組み込み計画
 
-- status: **draft (未ratify・未実装)** — 本実装 gate 監査用
+- status: **RATIFIED ＋ 初回実装済（non_mutating レーン・feature flag default off）**
+  — design GO (`HANDOFF_PASS_WITH_NOTES` / 2303558055606)、owner ratify 2026-06-23。
 - date: 2026-06-23
+- 実装: `alo_gpt_audit.py` に `handoff-validate` コマンド＋単一 import の validator。
+  feature flag `ALO_HANDOFF_LANE`（既定 off）。must_fix #1〜#4 反映:
+  - #1 blocked → route card を出さない（`test_handoff_lane.test_blocked_no_card_and_ledger_appended`）
+  - #2 blocked 理由を台帳へ append-only（event `handoff_blocked`）
+  - #3 validator は `handoff_proto/validator.py` を単一 import（本体で再定義しない）
+  - #4 flag 既定 off。`ALO_HANDOFF_LANE=1` ＋ owner ratify で on
+- テスト: body 20 / prototype 15 すべて green。
 - gate: `HANDOFF` (operational implementation 段階)
 - 前提: 設計 v0.5 は RATIFIED（`RATIFY_head_hand_handoff_v0.5_20260623.md`）。
   fixture-bound prototype（`handoff_proto/`）は緑。本書は **operational 実装**の

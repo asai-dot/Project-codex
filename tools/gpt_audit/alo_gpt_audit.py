@@ -121,6 +121,32 @@ PROCESSED_INPLACE_SUFFIX = "_REQUEST.processed.md"  # 旧式: その場リネー
 LABEL_RE = re.compile(r"^([A-Z][A-Z0-9]*)_(" + "|".join(VERDICTS) + r")\s*$")
 
 
+# --------------------------------------------------------------------------- #
+# handoff lane (operational; non_mutating only; feature-flagged, default off)
+# Design: HANDOFF_OPERATIONAL_IMPL_DESIGN v0.1 (RATIFIED 2026-06-23).
+# Audit: 20260623_handoff_operational_impl_v0.1 GPTPRO PASS_WITH_NOTES.
+# must_fix: blocked -> no route card (#1); blocked reason append-only (#2);
+#   single validator source (#3); feature flag default off (#4).
+# --------------------------------------------------------------------------- #
+
+# (#4) default off; owner ratify turns it on via env.
+HANDOFF_LANE_ENABLED = os.environ.get("ALO_HANDOFF_LANE", "0") == "1"
+HANDOFF_QUEUE = "handoff_queue"
+
+# (#3) single validator implementation: import the prototype validator as the
+# one source of truth instead of redefining the rules here.
+import sys as _sys  # noqa: E402
+_PROTO_DIR = Path(__file__).resolve().parent / "handoff_proto"
+if str(_PROTO_DIR) not in _sys.path:
+    _sys.path.insert(0, str(_PROTO_DIR))
+try:
+    from validator import Env as HandoffEnv  # noqa: E402
+    from validator import validate_dispatch as handoff_validate_dispatch  # noqa: E402
+    HANDOFF_VALIDATOR_AVAILABLE = True
+except Exception:  # pragma: no cover - import guard
+    HANDOFF_VALIDATOR_AVAILABLE = False
+
+
 def now_jst_iso() -> str:
     """JST の ISO8601 タイムスタンプ。"""
     jst = datetime.timezone(datetime.timedelta(hours=9))
@@ -1011,6 +1037,94 @@ def render_health_md(r: dict) -> str:
 
 
 # --------------------------------------------------------------------------- #
+# handoff lane commands (non_mutating only; fail-closed; flag-gated writes)
+# --------------------------------------------------------------------------- #
+
+
+def write_handoff_card(lane: Lane, packet: dict, verdict, apply: bool) -> str:
+    """Dispatchable non_mutating packet -> route card in handoff_queue. Idempotent.
+
+    Writes only when apply AND HANDOFF_LANE_ENABLED. Never called for blocked
+    packets (must_fix #1)."""
+    pid = packet.get("packet_id", "UNKNOWN")
+    qdir = lane.root / HANDOFF_QUEUE
+    card_path = qdir / f"{pid}_DISPATCH_CARD.md"
+    if card_path.exists():
+        return f"card exists (skip): {HANDOFF_QUEUE}/{card_path.name}"
+    if not (apply and HANDOFF_LANE_ENABLED):
+        return f"would create card: {HANDOFF_QUEUE}/{card_path.name} (flag off / dry-run)"
+    qdir.mkdir(parents=True, exist_ok=True)
+    body = (
+        f"# handoff dispatch card: {pid}\n\n"
+        f"- assignee: {packet.get('assignee')}\n"
+        f"- execution_role: {packet.get('execution_role')}\n"
+        f"- next_action_type: {packet.get('next_action_type')}\n"
+        f"- mutation_class: {verdict.mutation_class}\n"
+        f"- egress_decision: {verdict.egress_decision}\n"
+        f"- resource_effect_class: {verdict.resource_effect_class}\n"
+        f"- objective: {packet.get('objective', '')}\n"
+    )
+    card_path.write_text(body, encoding="utf-8")
+    return f"created card: {HANDOFF_QUEUE}/{card_path.name}"
+
+
+def handoff_validate_packet(lane: Lane, packet: dict, *, apply: bool, log) -> int:
+    """Validate one DISPATCH packet through the single-source validator.
+
+    fail-closed Env (lease/permit/audit subsystems unavailable). Blocked packets
+    get NO route card (#1) and an append-only ledger entry (#2). Only the
+    non_mutating lane is operational; everything else stays blocked/hold."""
+    if not HANDOFF_VALIDATOR_AVAILABLE:
+        log("  handoff validator unavailable (import failed)")
+        return 3
+    env = HandoffEnv()  # all subsystems unavailable -> fail-closed (design §3)
+    v = handoff_validate_dispatch(dict(packet), env)
+    pid = packet.get("packet_id", "UNKNOWN")
+    log(f"  packet={pid} dispatchable={v.dispatchable} "
+        f"block_reason={v.block_reason} mutation={v.mutation_class} "
+        f"egress={v.egress_decision} resource={v.resource_effect_class}")
+
+    if not v.dispatchable:
+        entry = {
+            "ts": now_jst_iso(),
+            "event": "handoff_blocked",
+            "packet_id": pid,
+            "source_queue_item_id": packet.get("source_queue_item_id"),
+            "block_reason": v.block_reason,
+            "mutation_class": v.mutation_class,
+            "egress_decision": v.egress_decision,
+            "resource_effect_class": v.resource_effect_class,
+        }
+        if apply and HANDOFF_LANE_ENABLED:
+            lane.append_ledger(entry)  # (#2) append-only blocked record
+            log(f"  BLOCKED -> no card; ledger appended ({v.block_reason})")
+        else:
+            log(f"  BLOCKED -> no card; would append ledger ({v.block_reason}) "
+                f"[flag off / dry-run]")
+        return 0
+
+    log(write_handoff_card(lane, packet, v, apply))
+    return 0
+
+
+def cmd_handoff_validate(lane: Lane, args) -> int:
+    log = print
+    if not HANDOFF_LANE_ENABLED:
+        log("handoff lane: DISABLED (default). set ALO_HANDOFF_LANE=1 to enable "
+            "writes after owner ratify. running read-only.")
+    try:
+        packet = json.loads(Path(args.packet).read_text(encoding="utf-8"))
+    except Exception as exc:  # pragma: no cover - arg error
+        log(f"cannot read packet json: {exc}")
+        return 2
+    packets = packet if isinstance(packet, list) else [packet]
+    rc = 0
+    for p in packets:
+        rc = handoff_validate_packet(lane, p, apply=args.apply, log=log) or rc
+    return rc
+
+
+# --------------------------------------------------------------------------- #
 # argparse
 # --------------------------------------------------------------------------- #
 
@@ -1057,6 +1171,14 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("health", help="監査レーン health report")
     s.add_argument("--json", action="store_true")
     s.set_defaults(func=cmd_health)
+
+    s = sub.add_parser(
+        "handoff-validate",
+        help="DISPATCH packet を検証 (non_mutating レーンのみ運用・flag 既定 off)")
+    s.add_argument("packet", help="dispatch packet JSON ファイル")
+    s.add_argument("--apply", action="store_true",
+                   help="ALO_HANDOFF_LANE=1 時のみ card/ledger を書く")
+    s.set_defaults(func=cmd_handoff_validate)
 
     return p
 
