@@ -90,15 +90,42 @@ def derive_egress(packet: dict[str, Any], env: Env) -> str:
     desc = packet.get("egress_descriptor")
     if desc is None:
         return "none"
-    dclass = desc.get("destination_class")
     payload = desc.get("outbound_payload_class")
     # confidential payload to external is blocked unless explicitly allowed.
     if payload == "confidential" and not desc.get("explicit_allow", False):
         return "blocked"
-    if dclass in env.egress_allowlist:
-        return "allowed"
-    # unknown destination → safe side (appendix §4: unknown egress blocked).
-    return "blocked"
+
+    def _eval(dclass: str | None) -> str:
+        if dclass in env.egress_allowlist:
+            return "allowed"
+        # unknown destination → safe side (appendix §4: unknown egress blocked).
+        return "blocked"
+
+    decision = _eval(desc.get("destination_class"))
+    # §7 should_fix: public GET redirect is re-evaluated against the allowlist.
+    redirect = desc.get("redirect_to")
+    if decision == "allowed" and redirect is not None:
+        return _eval(redirect.get("destination_class"))
+    return decision
+
+
+# old `patch` -> v0.5 next_action_type migration (WORKER_DELEGATION v0.2 §3).
+PATCH_MIGRATION = {
+    "patch": "design_patch",  # default; doc stays worker_cc
+    "design_patch": "design_patch",
+    "doc_patch": "doc_patch",
+    "code_patch": "code_patch",
+    "test_patch": "test_patch",
+    "refactor": "refactor",
+}
+
+
+def migrate_next_action_type(old: str, *, code_like: bool = False) -> str:
+    """Map a legacy `patch` to the v0.5 enum. code_like routes to code_patch."""
+    if old == "patch":
+        return "code_patch" if code_like else "design_patch"
+    return PATCH_MIGRATION.get(old, old)
+
 
 
 # --- JCS-style canonicalization + packet hash (appendix §6) ---
@@ -209,6 +236,32 @@ def _grouping_key(attempt: dict[str, Any]) -> tuple:
     )
 
 
+def _weak_equivalent(valid: list[dict[str, Any]]) -> bool:
+    """§5.4 weak equivalence: identical acceptance-pass set and outputs set
+    across all valid attempts, despite differing output_hash."""
+    acc_sets = {frozenset(a.get("acceptance_set", [])) for a in valid}
+    out_sets = {frozenset(a.get("outputs_set", [])) for a in valid}
+    if len(valid) < 2:
+        return False
+    return len(acc_sets) == 1 and len(out_sets) == 1 and acc_sets != {frozenset()}
+
+
+def select_active_generation(attempts: list[dict[str, Any]]) -> dict[str, Any]:
+    """§5.3 — within one source_queue_item_id, the highest packet_generation is
+    active; older generations are stale_generation (not stale_packet, which is a
+    dispatch-time digest failure). Returns {active: [...], stale_generation: [...]}.
+    """
+    if not attempts:
+        return {"active": [], "stale_generation": []}
+    sqis = {a["source_queue_item_id"] for a in attempts}
+    if len(sqis) != 1:
+        raise ValidationError("select_active_generation needs one source_queue_item_id")
+    newest = max(a["packet_generation"] for a in attempts)
+    active = [a for a in attempts if a["packet_generation"] == newest]
+    stale = [a for a in attempts if a["packet_generation"] != newest]
+    return {"active": active, "stale_generation": stale}
+
+
 def reconcile(attempts: list[dict[str, Any]]) -> dict[str, Any]:
     """Build a local-only reconciliation event for one grouping.
 
@@ -224,26 +277,31 @@ def reconcile(attempts: list[dict[str, Any]]) -> dict[str, Any]:
 
     relations: list[dict[str, Any]] = []
     valid = [a for a in attempts if a.get("schema_valid", True) and a.get("acceptance_pass")]
-    invalid = [a for a in attempts if a not in valid]
 
     representative_id: str | None = None
     needs_head = False
+    rep_basis: str | None = None
 
     if valid:
         hashes = {a.get("output_hash") for a in valid}
         if len(hashes) == 1:
-            # equivalent → earliest valid is representative
-            rep = min(valid, key=lambda a: a["recorded_at"])
-            representative_id = rep["attempt_id"]
+            # exact equivalence → earliest valid is representative
+            representative_id = min(valid, key=lambda a: a["recorded_at"])["attempt_id"]
+            rep_basis = "exact_equivalence"
+        elif _weak_equivalent(valid):
+            # §5.4 weak equivalence: same acceptance-pass set + same outputs set.
+            # should_fix: weak equivalence must be tagged in basis_codes.
+            representative_id = min(valid, key=lambda a: a["recorded_at"])["attempt_id"]
+            rep_basis = "weak_equivalence"
         else:
             complete = [a for a in valid if a.get("evidence_complete")]
             if len(complete) == 1:
                 representative_id = complete[0]["attempt_id"]
+                rep_basis = "evidence_complete"
             else:
                 # valid but semantically conflicting → head resolution
                 needs_head = True
-
-    if not valid:
+    else:
         needs_head = True  # all-invalid → head resolution (§5.2)
 
     for a in attempts:
@@ -261,12 +319,16 @@ def reconcile(attempts: list[dict[str, Any]]) -> dict[str, Any]:
         else:
             rel, related = "duplicate", representative_id
 
+        basis_codes = list(a.get("basis_codes", []))
+        if aid == representative_id and rep_basis and rep_basis not in basis_codes:
+            basis_codes.append(rep_basis)
+
         relations.append(
             {
                 "attempt_id": aid,
                 "relation": rel,
                 "related_to_attempt_id": related,
-                "basis_codes": a.get("basis_codes", []),
+                "basis_codes": basis_codes,
                 "acceptance_grade": "pass" if a.get("acceptance_pass") else "fail",
                 "output_hash_state": _output_hash_state(a, representative_id, valid),
             }

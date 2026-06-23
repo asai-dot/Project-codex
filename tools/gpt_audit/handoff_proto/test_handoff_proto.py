@@ -15,7 +15,9 @@ import unittest
 from validator import (
     Env,
     compute_packet_hash,
+    migrate_next_action_type,
     reconcile,
+    select_active_generation,
     validate_dispatch,
 )
 
@@ -142,6 +144,50 @@ class TestReconcile(unittest.TestCase):
         ])
         self.assertEqual(ev["representative_attempt_id"], "B")
         self.assertFalse(ev["needs_head_resolution"])
+
+    def test_weak_equivalence_tagged(self):
+        # divergent output_hash but same acceptance + outputs set → weak equiv,
+        # and the representative relation must carry basis_code weak_equivalence.
+        a = _att("A", 1, out="h1")
+        b = _att("B", 2, out="h2")
+        for x in (a, b):
+            x["acceptance_set"] = ["c1", "c2"]
+            x["outputs_set"] = ["out.md"]
+        ev = reconcile([a, b])
+        self.assertEqual(ev["representative_attempt_id"], "A")
+        rep = next(r for r in ev["attempt_relations"] if r["attempt_id"] == "A")
+        self.assertIn("weak_equivalence", rep["basis_codes"])
+
+    def test_stale_generation_distinct_from_stale_packet(self):
+        # stale_generation is a reconciliation (cross-generation) outcome, NOT
+        # the stale_packet dispatch block (digest failure, see F13).
+        gen1 = _att("A", 1)
+        gen1["packet_generation"] = 1
+        gen2 = _att("B", 2)
+        gen2["packet_generation"] = 2
+        split = select_active_generation([gen1, gen2])
+        self.assertEqual([a["attempt_id"] for a in split["active"]], ["B"])
+        self.assertEqual([a["attempt_id"] for a in split["stale_generation"]], ["A"])
+
+
+class TestEgressRedirect(unittest.TestCase):
+    def test_redirect_in_and_out(self):
+        fixtures = {f["name"]: f for f in _load_fixtures()["dispatch"]}
+        for name, expect_block in (
+            ("F16_redirect_into_allowlist_ok", None),
+            ("F17_redirect_out_of_allowlist_blocked", "egress_forbidden"),
+        ):
+            with self.subTest(name):
+                fx = fixtures[name]
+                v = validate_dispatch(dict(fx["packet"]), Env(**fx.get("env", {})))
+                self.assertEqual(v.block_reason, expect_block)
+
+
+class TestPatchMigration(unittest.TestCase):
+    def test_old_patch_maps(self):
+        self.assertEqual(migrate_next_action_type("patch"), "design_patch")
+        self.assertEqual(migrate_next_action_type("patch", code_like=True), "code_patch")
+        self.assertEqual(migrate_next_action_type("refactor"), "refactor")
 
 
 if __name__ == "__main__":

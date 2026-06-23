@@ -39,11 +39,26 @@ python3 -m unittest test_handoff_proto -v
 
 ## Files
 
-- `validator.py` — effect derivation, dispatch validation, JCS hash, reconcile.
-- `fixtures.json` — input + expected verdict (appendix §10): F1–F15.
-- `test_handoff_proto.py` — offline harness (dispatch table + hash + reconcile).
+- `validator.py` — effect derivation, dispatch validation, JCS hash, reconcile,
+  egress redirect re-evaluation, weak-equivalence tagging, active-generation
+  selection, and `migrate_next_action_type` (legacy `patch` → v0.5 enum).
+- `fixtures.json` — input + expected verdict (appendix §10): F1–F18 (incl.
+  redirect in/out F16/F17 and an `audit_sensitive` logging-profile example F18).
+- `test_handoff_proto.py` — offline harness (dispatch table + hash + reconcile +
+  redirect + patch migration).
 - `reconciliation_canonical_example.json` — canonical local-closer output example
   (audit §7 must_fix #4): mixed representative + duplicate + invalid.
+
+## should_fix (v0.5 audit §8) — addressed in this prototype
+
+1. `external_audit_logging=sensitive` logging-profile example → F18.
+2. redirect re-evaluation with allowlist in/out → F16 / F17.
+3. weak equivalence must be tagged → `basis_codes` carries `weak_equivalence`
+   (`test_weak_equivalence_tagged`).
+4. `stale_generation` (reconciliation, cross-generation) vs `stale_packet`
+   (dispatch digest failure, F13) named apart
+   (`test_stale_generation_distinct_from_stale_packet`).
+5. legacy `patch` migration → `migrate_next_action_type` + `TestPatchMigration`.
 
 ## Notes carried for operational implementation (still HOLD)
 

@@ -96,6 +96,24 @@
       "packet": {"next_action_type": "design_patch", "assignee": "worker_cc", "execution_role": "worker", "data_access_class": "internal", "_oversize": true},
       "env": {},
       "expect": {"dispatchable": false, "block_reason": "oversize_no_reason"}
+    },
+    {
+      "name": "F16_redirect_into_allowlist_ok",
+      "packet": {"next_action_type": "required_materials", "assignee": "local", "execution_role": "deterministic", "data_access_class": "public", "egress_descriptor": {"destination_class": "public_query", "outbound_payload_class": "public", "redirect_to": {"destination_class": "public_query"}}},
+      "env": {},
+      "expect": {"dispatchable": true, "block_reason": null, "egress_decision": "allowed"}
+    },
+    {
+      "name": "F17_redirect_out_of_allowlist_blocked",
+      "packet": {"next_action_type": "required_materials", "assignee": "local", "execution_role": "deterministic", "data_access_class": "public", "egress_descriptor": {"destination_class": "public_query", "outbound_payload_class": "public", "redirect_to": {"destination_class": "external_unlisted"}}},
+      "env": {},
+      "expect": {"dispatchable": false, "block_reason": "egress_forbidden", "egress_decision": "blocked"}
+    },
+    {
+      "name": "F18_audit_sensitive_with_profile_and_permit",
+      "packet": {"next_action_type": "required_materials", "assignee": "codex", "execution_role": "worker", "data_access_class": "public", "external_audit_logging": "sensitive", "egress_descriptor": {"destination_class": "public_query", "outbound_payload_class": "public"}, "resource_descriptor": {"resource_effect_class": "free_bounded", "bounds_known": true, "external_logging_profile": {"profile_id": "audit-sensitive/1", "sink": "alo_audit_log", "retention_days": 365, "redacts": ["query_value"]}}},
+      "env": {"audit_permit_available": true},
+      "expect": {"dispatchable": true, "block_reason": null}
     }
   ]
 }
