@@ -14,7 +14,10 @@ decision_owner_fixed: |
    - project は asai-dot's Project（ref nixfjmwxmgugiiuqfuym）。d1law_taikei と同居が正しい。
    - alo-connect（ref vlsunmqpjhzbhipiehzs）は空のまま空けておく（動的DB用に予約。法令層を置かない）。
   ⇒ 相談は「asai-dot's Project の どの schema に・どんな形で lawtime/lawsubtrans を置くか」に限定。
-status: queued
+status: answered   # RESULT=DDLAWTIME_PLACEMENT_PASS_WITH_NOTES (file_id 2305621550301, 2026-06-24)。
+                   # C-option 採用 + 8 blocking notes。実装は v0.2.4 で着地 → superseded_by:
+                   #   docs/dd/20260624_lawtime_v0.2.4_placement_DDLAWTIME_REQUEST.md
+                   #   (実装 commit 90f9d8f / migrations/lawtime/placement_v0.2.4/)
 ---
 
 # GPT Pro 相談: lawtime/lawsubtrans の Supabase 物理配置（schema 設計）
