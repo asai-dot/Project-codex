@@ -171,23 +171,30 @@
 > Owner 決定: **繋ぎこみが最重要。** KAKEN・論文・文献を取得して並べるだけでは価値ゼロ。
 > 三者を結んだ密結合構造が成果物。各レーンの「完了」は取得ではなく **リンク済み** を指す。
 
-結ぶべきエッジ（すべて証拠付き候補 → 裁定、`production_write_allowed=false`）。
-**論文が最多だが、人↔人・人↔文献・人↔判例も一級のエッジ**として扱う:
+**実DB照合(2026-06-23)で確定した実装に合わせる。** 繋ぎこみは新規テーブルでなく、既に稼働中の
+`authority` スキーマ（claim+evidence 型）の上に積む。詳細は `DD_author_model_resolution_v1` §8。
 
-| エッジ | 突合キー（受け口） | 主な原資 | 量 |
+実装済みの器（本番 `asai-dot's Project`）:
+- `authority.person`(128,081, 薄い identity) / `person_affiliation`(230k) / `person_history`(270k, 識別子も) / `person_alias`(30k)
+- `authority.publication`(**7,348**) / `publication_author_claim`(7,125, **人↔論文リンク** confidence+trust_tier) / `publication_author_evidence`(7,589)
+- `biblio.authors`(2,200, ndl_auth_id/viaf 保持) / `book_publication_link` / `dynamic.cases`(**0**)
+
+結ぶべきエッジ → 実テーブルの対応（論文が最多だが人↔人・人↔文献・人↔判例も一級）:
+
+| エッジ | 実装先テーブル | 突合キー | 状態 |
 |---|---|---|---|
-| 人(著者) ↔ 論文 | eradCode / CRID / researchmap permalink / ORCID / 氏名+yomi+所属+活動年 | KAKEN著者 × CiNii 法律系 176 誌 | 最多(63.8万) |
-| 人 ↔ 人 | 共同研究者(eradCode) / 共著(CRID) / 同一所属・活動年 | KAKEN 研究分担者グラフ(§2.4 Y-2) / CiNii 共著 | 中 |
-| 人 ↔ 文献(書籍) | 氏名+yomi / ISBN著者 / NDL著者ID | KAKEN著者 × books.json / NDL | 中 |
-| 人 ↔ 判例 | 判例ID(`alo:case:jp:…`) / 評釈・解説の著者突合 | 判例評釈・判例解説の著者 × alo-kg case | 小〜中 |
-| 論文 ↔ 文献 | 収録誌 ISSN / DOI / 引用 | CiNii × 弁コム・OPAC | 中 |
-| 論文/文献 ↔ 判例 | 判例ID / 引用・参照 | 評釈本文の参照先 × case | 中 |
+| 人 ↔ 論文 | `publication_author_claim`(+`_evidence`) | NRID / 氏名+収録誌 → evidence→claim(trust_tier) | ✅器あり。但し論文母数が薄い(下記) |
+| 人 ↔ 人 | (claim 経由の共著/ KAKEN分担者) | NRID / 共同研究者 | △ 設計のみ |
+| 人 ↔ 文献(書籍) | `biblio.bib_authors` ↔ `authority.person` 統合 | ndl_auth_id / 氏名+yomi | ❌ biblio.authorsとperson別系統(要統合) |
+| 人 ↔ 判例 | (評釈著者→判例) | dynamic.cases | ❌ cases=0(投入待ち) |
 
-- 関係種別（人↔人）は `relation_type`（co_investigator / co_author / same_lab / advisor 等）で型付けし潰さない。
-- マッチは **hard ID 一致（強）→ 氏名+所属+活動年（候補）** の順。候補は `person_bridge_candidate_overlay` に出し、曖昧は衝突キューへ（§4 人物キー）。
-- 発見の和集合・正答の突合（§0.5）はこのリンク層で実現する。**同名異人/異名同人の解決がコストの中心**（設計投資をここに寄せる）。
+- 識別子の正しい置き場所は **新設 `authority.person_identifier`**（現状 person_history に散在）。fp_type相当 = `nrid/kaken_id(eradCode)/researchmap_id/orcid/ndl_auth_id`。**KAKEN を繋ぐ実装上の一手はこれ**（DD §8.3/§8.5）。
+- マッチは **hard ID(NRID等) → 氏名+収録誌(ISSN)候補** の順。曖昧は claim_status と trust_tier で段階管理（既存実装と同型）。
+- **同名異人/異名同人の解決がコストの中心**。設計投資をここに寄せる（§0.5）。
 
-成果物: `link_candidates_v0_1.jsonl`（エッジ種別 / 突合キー / 証拠 / confidence / status）。
+> ★**繋ぎこみの最大ボトルネック（実測）**: 人は厚い(128k, 研究者73k に NRID)が、繋ぐ相手の
+> `authority.publication` が **7,348件のみ**（弁コム+NDL判事突合中心、**CiNii法律論文63.8万は未投入**）。
+> dynamic.cases=0。→ **KAKEN を更に集めるより、CiNii論文を publication に載せて claim で人と繋ぐのが最優先**（§B / 別紙 CiNii取込設計）。
 
 ---
 
