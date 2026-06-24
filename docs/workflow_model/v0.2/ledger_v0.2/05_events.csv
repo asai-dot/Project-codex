@@ -2,14 +2,14 @@ event_type,detection_source,dedup_method,confirmation_method,approval_required,c
 inquiry_received,Gmail/Chatwork(受信),source.native_id(message_id)ハッシュ; thread_id束ね,observed(受信事実),否,確認済,EVD-112-trace1-0101; EVD-112-trace2-0201,112で2件観測
 proposal_sent,Gmail(送信)+Box(契約案docx/pdf),message_id+document_refs(file_id+version),observed,否(送付は提案。最終送付承認はWF-17),修正,EVD-112-trace1-0102,Box委任契約書送付と接続
 proposal_accepted,Gmail(返信)/declared,thread連鎖+invalidates_event_ids,declared(人間宣言),否,確認済,EVD-112-trace1-0103,basis=declared
-engagement_signed,Gmail/Box(契約書返送),engagement単位; room_case_map継承,human_decision(受任成立),要(人間必須ゲート G-06),確認済,EVD-112-trace1-0104,受任成立=人間必須ゲート
-invoice_sent,Gmail+Box(請求書pdf)/MF(将来),invoice id+宛先(payer); version,observed,要(請求確定 G-06),修正,EVD-112-trace1-0105; Box-(7),client≠payer(損保宛)を観測
+engagement_signed,Gmail/Box(委任状・契約書受領=最強)+SF相談→受任切替+受任通知発送,engagement単位; 複数シグナル合成; room_case_map継承,observed(複数シグナル合成)→declared(SFステータス)と突合(G-04),optional(受任成立は『置けるが必須でない』owner G-06),確定(owner裁定 G-11/G-04/G-06 W-180),EVD-112-trace1-0104; G-11; D-028,受任=単一の正なし→複数シグナル合成しdeclaredと突合(G-04)。Box契約書受領が最強シグナル(G-02)
+invoice_sent,Gmail+Box(請求書pdf)/MF(将来),invoice id+宛先(payer); version,observed,要(金銭の確定=報酬確定 マスト3点の1 owner G-06),確定(owner裁定 G-06/G-10 W-180),EVD-112-trace1-0105; Box-(7); G-06,client≠payer(損保宛)を観測。報酬確定は人間必須ゲートHG-05
 payment_acknowledged_external,Gmail(外部支払者返信),payer_party基準,declared(外部表明),否(入金消込は別),例外,EVD-112-trace1-0106; EVD-112-trace3-0302,第三者支払者の受付表明。入金確定とは別
 advice_recorded,Gmail/相談記録,consultation_ref束ね,observed,否,確認済,EVD-112-trace2-0202,スポット相談の助言記録
 post_consult_decision_recorded,Gmail/事務局認識,consultation単位,declared(受任非到達),要(相談クローズ G-12),例外,EVD-112-trace2-0203,受任非到達=失注/相談完了の判定はowner裁定
 work_item_created,Gmail/内部ToDo,work_item.title; owner_ref,observed,否,未確認,EVD-112-trace3-0301,due_at/completion_evidence全件null(G-08)
 outcome_reached,Gmail/解決見込み報告,matter単位,declared,要(解決確定),修正,EVD-112-trace3-0303,WF-19と接続
-payment_received,Gmail+銀行/MF(将来),入金額+payer; 立替金差引,observed,要(精算確定 G-06),修正,EVD-112-trace3-0304,入金消込はSF/MF未接続で未確認
-deliverable_sent,Gmail+Box(通信送),document_refs+追跡番号,observed,要(対外最終送付 G-06),修正,EVD-112-trace3-0305; Box-(9),Delivery独立化はG-05未決
+payment_received,銀行通帳(入金の正)+MF(突合)/Gmail,入金額+payer; 立替金差引; 通帳=正・MF突合,observed(通帳が真実の源),要(金銭の確定=預り金精算・振替 マスト3点の1 owner G-06),確定(owner裁定 G-11/G-06 W-180)/未接続=未測定,EVD-112-trace3-0304; G-11; D-029,入金確定の正本=銀行通帳(G-11)。MF/通帳未接続のため機械消込は未測定
+deliverable_sent,Gmail+Box(通信送),document_refs+追跡番号,observed,要(対外文書の最終送付=最終品質チェック マスト3点の1 owner G-06),確定(owner裁定 G-06/G-05 W-180),EVD-112-trace3-0305; Box-(9); G-05,Delivery独立機械化を確定(G-05 7本化 D-022)。対外最終送付=人間必須ゲートHG-04
 (call_completed),Dialpad(未接続),-,-,-,未確認(未接続),112残課題,通話完了イベント未取得
 (meeting_held),Notta(未接続),-,-,-,未確認(未接続),112残課題,会議文字起こしイベント未取得

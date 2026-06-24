@@ -1,22 +1,34 @@
 decision_id,content,category,status,origin,evidence_id
-D-001,SF Consultation/Matter ID を業務レコードの脊椎とする,仮説,未決→G-01で裁定提起,v0.1継承,G-01; EV-110-cases
-D-002,Box file_id/version_id を文書同一性の正本とする,仮説,未決→G-02,v0.1継承,G-02; Box-(2)(3)
-D-003,Gmail/Dialpad/Notta/Calendar/郵便等を append-only 観測イベントで保持,仮説,未決→G-03,v0.1継承,G-03; EVD-112-*
-D-004,declared_state と observed_state を分離,仮説,未決→G-04,v0.1継承,G-04; EVD-112-* basis
-D-005,案件/作業/文書/財務/期限の状態機械を分離,仮説,未決→G-05(5本vs7本),v0.1継承,G-05; CURRENT_STATE §6
-D-006,新規手入力は取得不能な判断・承認に限定,既存原則,未決→G-19,v0.1継承,G-19
-D-007,コンフリ/受任成立/最終送付/終結/請求精算は人間必須承認,仮説,未決→G-06,v0.1継承,G-06; EVD-112-trace1-0104
-D-008,第1 PoC は相談→受任ファネル,提案,未決→G-07,v0.1継承,G-07; EVD-112-trace1/2
-D-009,第2 PoC は解決→最終請求→返却→終了報告→既済化,提案,未決→G-09,v0.1継承,G-09; EVD-112-trace3
-D-010,訂正は raw 削除でなく無効化イベント＋新確定リンク,仮説,未決→G-03,v0.1継承,G-03; invalidates_event_ids
-D-011,WorkItem に owner/due/status/waiting_on/completion_evidence 必須化,提案,未決→G-08,v0.1継承,G-08; EVD-112-trace3-0301
-D-012,成果物送付は Document状態と Delivery event を分離,提案,未決→G-05連動,v0.1継承,G-05; Box-(9)
-D-013,finance で client_party と payer_party を分離,提案,未決→G-10,v0.1継承,G-10; EVD-112-trace1-0105
-D-014,close gate は未完Task/期限/最終請求/預り金実費/原本返却/終了報告を確認,提案,未決→G-09,v0.1継承,G-09; EVD-112-trace3-0305
+D-001,SF Consultation/Matter ID を業務レコードの脊椎とする,仮説,確定(owner裁定 G-01 W-180),v0.1継承,G-01; EV-110-cases
+D-002,Box file_id/version_id を文書同一性の正本とする,仮説,確定(owner裁定 G-02 W-180),v0.1継承,G-02; Box-(2)(3)
+D-003,Gmail/Dialpad/Notta/Calendar/郵便等を append-only 観測イベントで保持,仮説,確定(owner裁定 G-03 修正履歴も保持 W-180),v0.1継承,G-03; EVD-112-*
+D-004,declared_state と observed_state を分離,仮説,確定(owner裁定 G-04 突合 W-180),v0.1継承,G-04; EVD-112-* basis
+D-005,案件/作業/文書/財務/期限の状態機械を分離,仮説,確定→修正:7本化(owner裁定 G-05 納品・期限独立 W-180。詳細はD-022),v0.1継承,G-05; CURRENT_STATE §6
+D-006,新規手入力は取得不能な判断・承認に限定,既存原則,確定(owner裁定 G-19 W-180),v0.1継承,G-19
+D-007,コンフリ/受任成立/最終送付/終結/請求精算は人間必須承認,仮説,確定→修正:マスト3点(owner裁定 G-06 W-180。受任成立・終結はoptional化。詳細D-023),v0.1継承,G-06; EVD-112-trace1-0104
+D-008,第1 PoC は相談→受任ファネル,提案,確定(owner裁定 G-07 相談止まり/受任まで W-180),v0.1継承,G-07; EVD-112-trace1/2
+D-009,第2 PoC は解決→最終請求→返却→終了報告→既済化,提案,確定→修正:2段クローズ(owner裁定 G-09 W-180。終了報告=成果物or報酬通知が兼ねる。詳細D-027/D-029),v0.1継承,G-09; EVD-112-trace3
+D-010,訂正は raw 削除でなく無効化イベント＋新確定リンク,仮説,確定(owner裁定 G-03 W-180),v0.1継承,G-03; invalidates_event_ids
+D-011,WorkItem に owner/due/status/waiting_on/completion_evidence 必須化,提案,確定→修正:担当/期限/案件/次アクション4点必須+Chatworkタスク対応(owner裁定 G-08 W-180。詳細D-028),v0.1継承,G-08; EVD-112-trace3-0301
+D-012,成果物送付は Document状態と Delivery event を分離,提案,確定→Delivery独立機械化(owner裁定 G-05 W-180。D-022に統合),v0.1継承,G-05; Box-(9)
+D-013,finance で client_party と payer_party を分離,提案,確定(owner裁定 G-10 W-180),v0.1継承,G-10; EVD-112-trace1-0105
+D-014,close gate は未完Task/期限/最終請求/預り金実費/原本返却/終了報告を確認,提案,確定→修正:終了報告判定=成果物送付or報酬請求通知(owner裁定 G-09/G-15 W-180。詳細D-027),v0.1継承,G-09; EVD-112-trace3-0305
 D-015,"SF/LEALA ETL が dynamic.cases/documents へ未実行=制御塔データ不在。PoC1のKPI(初回応答/相談確定/見積/契約時間, 次行動未設定率, 流入経路不明率, 失注理由未入力率, イベント未紐付け率)は現時点で算出不能=未確認",新規論点(Phase2実査),未決(要起動:外部SE/ETL運用 Q1),W-110 Phase2 SF実査,EV-110-cases0; EV-110-documents0; EV-110-pipeline0
 D-016,dynamic/formobj/control の全BASE TABLEで RLS無効(Supabase advisor critical)=本番運用前にRLS+policy付与必須の運用ブロッカー(W-170),新規論点(Phase2実査),未決(要対応 Q5),W-110 Phase2 SF実査,EV-110-rls-disabled
 D-017,dynamic.cases が11列に縮約され担当/流入経路/失注理由/各日付(個別)/次行動・期限・待ち先を保持しない。SFミラーは『通信を案件に束ねる最小キー』止まり→スキーマ拡張可否は設計判断,新規論点(Phase2実査),未決(設計判断 Q2),W-110 Phase2 SF実査,EV-110-cases-11col
 D-018,状態と実態の乖離が定量化: comms case_link_status=room_inherited100%/confidence全件1.0/direction全件internal default。room_case_map 8中3room(mixed2/未レビュー1)が案件未確定。状態フラグが実態を表していない,新規論点(Phase2実査),未決(是正 Q6/例外運用 Q8),W-110 Phase2 SF実査,EV-110-comms; EV-110-roomcasemap; EV-110-links
 D-019,Derived(llm_category/llm_summary)・redaction・llm_disclosure_log は列のみで稼働ゼロ。HITL/LLM開示統制パイプライン未起動,新規論点(Phase2実査),未決(起動 Q7)→G-19連動,W-110 Phase2 SF実査,EV-110-llm0; EV-110-disclosure0
 D-020,Dialpad(通話/録音)・Notta(会議文字起こし)・MF(請求/会計)がコネクタ未接続。相談→面談区間と入金消込確定が未取得=未確認。別実査票要,新規論点(Phase2実査),未決(コネクタ整備),W-112 Phase2 Gmail実査残課題,112残課題; CURRENT_STATE §3
-D-021,Box状態は配置/動作語/docx-pdf/version の弱シグナルで自然発生的に表現(Boxネイティブ状態機能非依存)。U1相談票単票/U2業務終了報告書ひな形/U3到達受理入金正本/U4 ~BROMIUM/U5版運用ポリシー が未確認,新規論点(Phase2実査),未決(浅井聴取 G-14/G-15/G-11/G-18/G-17),W-111 Phase2 Box実査,Box-(4)(10); U1..U5
+D-021,Box状態は配置/動作語/docx-pdf/version の弱シグナルで自然発生的に表現(Boxネイティブ状態機能非依存)。U1相談票単票/U2業務終了報告書ひな形/U3到達受理入金正本/U4 ~BROMIUM/U5版運用ポリシー が未確認,新規論点(Phase2実査),確定(owner裁定: U1=G-14/U2=G-15/U3=G-11/U4=G-18/U5=G-17 W-180で全解消),W-111 Phase2 Box実査,Box-(4)(10); U1..U5; G-11/G-14/G-15/G-17/G-18
+D-022,状態機械=7本で確定(Consultation/Matter/WorkItem/Document/Finance + Delivery独立 + Deadline独立)。期限≠納品のため両者を独立機械へ昇格。pending(owner_grill)解消,owner裁定反映(W-180),確定(G-05),ALO_OWNER_GRILL_ANSWERS_v0.1 G-05,G-05; D-005; D-012; 06_state_transitions(Delivery/Deadline行)
+D-023,人間必須ゲート=マスト3点で確定(①利益相反 ②対外文書の最終送付=最終品質チェック ③金銭の確定=報酬確定・預り金精算・振替)。受任成立(HG-02)・終結(HG-07)はoptional(置けるが必須でない),owner裁定反映(W-180),確定(G-06),ALO_OWNER_GRILL_ANSWERS_v0.1 G-06,G-06; D-007; human_gates
+D-024,2段クローズを終端として採用(①法的終了=案件実体終了 / ②事務クローズ完了=原本返却済・預り金ゼロ・報酬確定)。順序=案件終了→原本返却→預り金ゼロ→クローズ,owner裁定反映(W-180),確定(G-09),ALO_OWNER_GRILL_ANSWERS_v0.1 G-09,G-09; D-014; Matter/Finance/Document終端
+D-025,新データ源を確定(接続状態付): Notta(議事録/未接続) GoogleDocs(手打ちメモ/接続あり) GoogleCalendar(相談予定/接続あり) MoneyForward(会計/未接続) 銀行通帳(入金の正) Chatworkタスク(担当・期限→WorkItem対応),owner裁定反映(W-180),確定(G-11/G-14/G-08),ALO_OWNER_GRILL_ANSWERS_v0.1 派生事項,G-08; G-11; G-14; G-20; 03_data_sources(DS-013/014/015/016/019/023/024)
+D-026,相談票は専用様式なし→相談記録=Notta議事録+GoogleDoc手打ちメモ+Calendar紐付けの合成で束ねる。Box-U1解消,owner裁定反映(W-180),確定(G-14),ALO_OWNER_GRILL_ANSWERS_v0.1 G-14,G-14; U1; 04_documents(4)
+D-027,業務終了報告書は専用様式なし→成果物そのもの or 報酬請求通知が兼ねる。クローズの『終了報告済』判定=『成果物送付 or 報酬請求通知が出ている』。Box-U2解消,owner裁定反映(W-180),確定(G-15),ALO_OWNER_GRILL_ANSWERS_v0.1 G-15,G-15; U2; 04_documents(10); D-014
+D-028,受任確定=複数シグナル合成(委任状/契約書受領[Box最強]・SF相談→受任切替・受任通知発送)をobservedとして確定しdeclared(SFステータス)と突合。単一の正なし,owner裁定反映(W-180),確定(G-11/G-04),ALO_OWNER_GRILL_ANSWERS_v0.1 G-11,G-04; G-11; 05_events(engagement_signed); 07_sf_mapping
+D-029,入金確定=銀行通帳を真実の源(正本)にMoneyForward会計と突合。MF/通帳未接続のため現時点は未測定,owner裁定反映(W-180),確定(G-11)/未接続=未測定,ALO_OWNER_GRILL_ANSWERS_v0.1 G-11,G-11; 03_data_sources(DS-016/024); 05_events(payment_received)
+D-030,失注理由=enum選択式に確定(①当方お断り ②先方失注/離脱 ③受任に至らず ④その他)。『お断り』と『失注』を必ず区別。流入経路=必須〜準必須。自由記述必須化はしない,owner裁定反映(W-180),確定(G-12),ALO_OWNER_GRILL_ANSWERS_v0.1 G-12,G-12; EXC-loss_reason_missing; metrics(失注理由未入力率/流入経路不明率)
+D-031,AI出力は常に『推定』、人間承認でのみ確定(承認しても推定のまま昇格しない)。Derived層規約として明記。observed/ai_estimated/human_decision を混同しない,owner裁定反映(W-180),確定(G-19),ALO_OWNER_GRILL_ANSWERS_v0.1 G-19,G-19; D-006; provenance_model
+D-032,~BROMIUMはセキュリティ製品Bromium(HP Sure Click)由来の推定でスコープ外。正本・案件文書として扱わず、削除せず存在は許容。Box-U4解消(確証不要のowner判断),owner裁定反映(W-180),確定(G-18 推定で可),ALO_OWNER_GRILL_ANSWERS_v0.1 G-18,G-18; U4
+D-033,期限の正本=Salesforce。徒過防止は人・Salesforce・AIの多重チェック。Deadlineを独立機械化(D-022)し正本SF・SFミラーに格納先新設要,owner裁定反映(W-180),確定(G-20),ALO_OWNER_GRILL_ANSWERS_v0.1 G-20,G-20; D-022; 06_state_transitions(Deadline行); 07_sf_mapping

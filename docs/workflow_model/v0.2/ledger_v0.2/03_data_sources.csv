@@ -11,13 +11,15 @@ DS-009,Box,★LEALA配下 相談/受任/既済フォルダ,Box folder_id/file_id
 DS-010,Box,マニュアル/書式/ひな形/終了報告,Box file_id+version_id,ひな形→DOC種別,到達,書式69件/ひな形v5-v9版,確認済,Box-(2)(3); U2,業務終了報告書ひな形はU2未確認
 DS-011,Gmail,全所員メール(外部/内部),Gmail message_id/thread_id,(将来)→comms.source_record_key/matter_ref,到達(read-only),3トレース14イベント抽出,確認済,EVD-112-*,comms には未投入(comms=chatwork100%)。SF連携ラベル多数を確認
 DS-012,Dialpad,通話/SMS/録音/transcript,(コネクタ無し),(未接続),未接続,-,未確認(未接続),112残課題,通話/録音由来イベント未取得。別実査票要
-DS-013,Notta,会議/通話 文字起こし,(コネクタ無し),(未接続),未接続,-,未確認(未接続),112残課題,会議文字起こし未取得
-DS-014,Google Calendar/Meet,全所員カレンダー,event_id,(将来)→期限/日程突合,未使用(本フェーズ),-,未確認,112(Calendar未使用),日程/期限の突合監視ソース候補(G-20)
-DS-015,Money Forward,MF請求書,MF invoice id,(将来)→finance/cases,未接続,-,未確認(未接続),CURRENT_STATE §3,入金消込の突合先候補。未接続
-DS-016,Money Forward,MF会計/銀行明細,MF transaction id,(将来)→payment_received,未接続,-,未確認(未接続),CURRENT_STATE §3; EVD-112-trace3-0304,入金確定の正本候補(G-11)。未接続
+DS-013,Notta,会議/通話 文字起こし(相談記録ソース),(コネクタ無し),(将来)→consultation_ref; 相談記録合成(G-14),未接続,-,未確認(未接続=未測定),112残課題; G-14,会議文字起こし未取得。相談記録3ソースの1(G-14)。未接続コネクタ(C1)
+DS-014,Google Calendar/Meet,全所員カレンダー(相談予定紐付け=相談記録ソース),event_id,event_id→consultation_ref/期限突合; 相談記録合成(G-14),接続あり(read),実査可(本回答で接続確認),確認済(接続あり G-14),G-14; G-20,日程/期限突合(G-20)+相談記録の1(G-14)。「事件ウェブ」≈Calendar予定紐付けと解釈(要最終確認)
+DS-015,Money Forward,MF請求書,MF invoice id,(将来)→finance/cases,未接続,-,未確認(未接続=未測定),CURRENT_STATE §3,入金消込の突合先候補。未接続コネクタ(C1)
+DS-016,Money Forward,MF会計/銀行明細(会計の突合先),MF transaction id,(将来)→payment_received; 銀行通帳(DS-024)と突合,未接続,-,未確認(未接続=未測定),CURRENT_STATE §3; EVD-112-trace3-0304; G-11,入金確定はDS-024(通帳)が正・MFは突合先(G-11)。未接続コネクタ(C1)
 DS-017,MINTS/Teams/FAX/郵便,裁判所・対外提出証跡,(なし/外部),(将来)→Delivery/Deadline,未接続,-,未確認,CURRENT_STATE §3; G-20,提出証跡。Box通信(送)で間接的に痕跡
 DS-018,NAS/複合機/ScanSnap,スキャン投入ログ,(なし),(将来)→documents Raw,未接続,-,未確認,CURRENT_STATE §3,Raw取込点。未接続
 DS-019,Chatwork/Slack,所内/例外的外部連絡,comm_id (comms PK),comm_party_links.comm_id; room_case_map.room_id,到達(ミラー),comms343/links488/room5,確認済,EV-110-comms; EV-110-roomcasemap,唯一実データが流れているチャネル。room→case人手確定がhuman gate実体
-DS-020,Google Docs/Sheets,困りごとログ/AI日報/週次おろし,doc id,-,未確認,-,未確認,CURRENT_STATE §3; G-19,AI推定の位置づけはG-19
+DS-020,Google Docs/Sheets,困りごとログ/AI日報/週次おろし+弁護士手打ち相談メモ(相談記録ソース),doc id,doc id→consultation_ref; 相談記録合成(G-14),接続あり(Drive),実査可(Drive接続あり),確認済(接続あり G-14),CURRENT_STATE §3; G-14; G-19,相談記録3ソースの1=弁護士手打ちGoogleドキュメント(G-14)。AI日報系のAI推定はG-19(推定のまま)
 DS-021,HP/フォーム/アクセス解析,問合せ前後の流入,-,→流入経路(WF-00),未接続,-,未確認,G-12,流入経路KPIの源。未接続
 DS-022,Box Events/Admin logs,ファイル操作監査,Box event id,→documents版/操作,未接続(本フェーズ),-,未確認,Box-U5,版運用ポリシー(U5)と関連
+DS-023,Chatwork(タスク),Chatworkタスク(担当・期限),chatwork task_id,task_id→WorkItem(担当/期限/案件/次アクション); room_id→room_case_map,到達(Chatworkミラー延長),-,未確認(タスク粒度の取込は要確認),G-08; DS-019,Chatworkで振るタスクをWorkItem4必須項目に対応づけ(G-08)。チャット(DS-019)とは別にタスク粒度を扱う
+DS-024,銀行通帳,入金明細(入金の真実の源),口座+取引日+金額,(将来)→payment_received; MF(DS-016)と突合,入金の正(源泉)/取込未接続,-,未確認(取込未接続=未測定),G-11; EVD-112-trace3-0304,入金確定の正本=銀行通帳(G-11)。MoneyForward会計と突合。機械取込は未接続コネクタ(C1相当)
