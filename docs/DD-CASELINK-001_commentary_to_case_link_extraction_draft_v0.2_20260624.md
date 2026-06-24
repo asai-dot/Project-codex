@@ -22,14 +22,14 @@
 
 `35_link_layer §2.2` が commentary→case 語彙を既に定義済み。本文の各 mention を**正典 edge_type に割り当てる**：
 
-| 記事中の役割 | 正典 edge_type（既存） | src→dst | 典型シグナル | 既定 assertion_mode |
+| 記事中の役割 | 正典 edge_type（既存） | stance（新 qualifier・§7決定） | 典型シグナル | 既定 assertion_mode |
 |---|---|---|---|---|
-| **評釈対象（主）** | `evaluates`（評価）／正式評釈は `review_chain` | commentary→case | masthead 表示判例 / 「本判決」「本件」共参照 | **vendor_explicit**（構造由来＝自動可） |
-| 対比・反対（従） | `compares`（比較） | commentary→case | 「これに対し」「反対、…」 | vendor_implicit（strength=implicit）→ review |
-| 同旨・参照（従） | `compares`（暫定）※注 | commentary→case | 「同旨、…」「参照、…」 | vendor_implicit（strength=implicit）→ review |
-| 背景・傍論言及（従） | `compares`（暫定）または非エッジ化 | commentary→case | 制度説明で一度きり | vendor_implicit → review（弱 weight） |
+| **評釈対象（主）** | `evaluates`（評価）／正式評釈は `review_chain` | —（評価そのもの） | masthead 表示判例 / 「本判決」「本件」共参照 | **vendor_explicit**（構造由来＝自動可） |
+| 同旨・参照（従） | `compares`（比較） | `supporting` | 「同旨、…」「参照、…」 | vendor_implicit（strength=implicit）→ review |
+| 対比・反対（従） | `compares`（比較） | `contrasting` | 「これに対し」「反対、…」 | vendor_implicit（strength=implicit）→ review |
+| 背景・傍論言及（従） | `compares`／非エッジ化 | `neutral` | 制度説明で一度きり | vendor_implicit → review（弱 weight） |
 
-- ※注 **設計資料の修正候補（§7）**: 正典は commentary→case に「同旨」と「反対」を区別する edge_type を持たない（`compares` のみ）。`35_link_layer §11` の未解決事項「OPPOSES（通説 vs 反対説）」と同根。同旨/反対の保存が必要なら **edge_type 追加か qualifier 列**が要る＝正典側の改修論点（後述）。
+- **stance 決定（owner 確定 2026-06-24）**: 同旨/反対は **新 edge_type を増やさず `alo_edges` に `stance` qualifier 列（`supporting`/`contrasting`/`neutral`）を足して保存**。edge_type は `compares` 据え置き、CHECK 制約は最小変更。`35_link_layer §11`「OPPOSES（通説 vs 反対説）」開項目とも整合（commentary→case では edge_type 増設でなく stance で表現）。**正典への列追加は §7 の順序＝DDCASE 監査通過後**。
 - `evaluates` の主は原則 **1**。masthead が複数判例を表示する併合・同種まとめ評釈のみ N を許容。
 - **未知シグナルは非エッジ化**（fail-closed、review へ）。新 edge_type は CHECK 制約変更を伴うため**勝手に増やさない**。
 
@@ -90,12 +90,14 @@ v0.1 の「Tier A/C」は正典の `assertion_mode` に写す：
 - 根拠は §3 `alo_edge_evidence`（Gate-5）。time は §2.4（valid_from/valid_to、commentary→case は時点必須でない edge_type なら NULL 可）。
 - 1記事:N は §6「OPAC判評→evaluates+applies」と同型（前例あり）。逆向き 1判例:N評釈は歓迎＝多源 annotation corroboration（CORROB L2）。
 
-## 7. **設計資料(正典)の修正候補** ← owner 指摘「設計資料の修正がいるんちゃうか」への回答
-v0.2 で語彙を正典に合わせた結果、正典側の改修は **最小限**で済む。必要なのは次の3点（いずれも owner 承認案件・Box 編集は要確認）:
+## 7. 正典(Box設計資料)への反映 ← owner 指摘「設計資料の修正がいるんちゃうか」への回答
+v0.2 で語彙を正典に合わせた結果、正典側の改修は **最小限**で済む。**反映順序（owner 確定 2026-06-24）＝本 DD が DDCASE 監査を通過してから、下記をまとめて正典へ適用**（監査前は Box 正典を編集しない＝設計正典の単一書き手を保つ）。queue:
 
-1. **`35_link_layer §6 エッジ生成パターン**に1行追加**: 「雑誌/文献**本文**採掘 → `evaluates`/`compares`（strength=implicit, DD-CASELINK-001）」。現状は「文献**標題**推定マッチ」しか無く、**本文採掘**の生成元が未記載。
-2. **`35_link_layer §11 未解決事項**を更新**: 「commentary→case の **同旨/反対** 区別（`compares` だけでは失われる）」を `OPPOSES` 開項目に合流。保存するなら edge_type 追加 or `stance` qualifier 列の設計判断が要る（**本 DD の唯一の正典改修依頼**）。
-3. **`33_magazine_layer §4`（OPAC判評）と本 DD の境界注記**: OPAC由来(書誌レベル)と本文採掘(記事内 span)の二経路がともに evaluates を生むことを明示。
+1. **`35_link_layer §2.1/§2.2` に `stance` qualifier 列を追加**: `alo_edges.stance text NULL CHECK (stance IN ('supporting','contrasting','neutral'))`。`compares`（commentary→case）の同旨/反対を保存。edge_type は増やさない。§11「OPPOSES」開項目もこの stance で解決方針に更新。
+2. **`35_link_layer §6 エッジ生成パターン`に1行追加**: 「雑誌/文献**本文**採掘 → `evaluates`／`compares`(+stance)（strength=implicit, DD-CASELINK-001）」。現状は「文献**標題**推定マッチ」のみで、**本文採掘**の生成元が未記載。
+3. **`33_magazine_layer §4`（OPAC判評）と本 DD の境界注記**: OPAC由来(書誌レベル)と本文採掘(記事内 span)の二経路がともに `evaluates` を生むことを明示。
+
+> 順序: **(a) 本 DD を正典語彙に整合（済・v0.2）→ (b) DDCASE 監査通過 → (c) 上記1〜3を正典へまとめて反映**。ドリフトを足さず、設計正典の単一書き手（owner）を保つ。
 
 > つまり「設計資料の大改修」ではなく、**(a) 本 DD を正典語彙に合わせる（済・v0.2）→ (b) 正典に本文採掘経路の1行と同旨/反対の開項目を足す**、の順。ドリフトを足さずに意味層を厚くできる。
 
