@@ -425,5 +425,55 @@ class TestHomographClassify(unittest.TestCase):
         self.assertEqual(k, "merge_candidate")
 
 
+class TestDefrag(unittest.TestCase):
+    """staging 断片再結合 (continuation連結/stub除去/genuine_split保持)."""
+    def setUp(self):
+        import defrag_terms as df
+        self.df = df
+
+    def _y(self, tid, pref, reading, definition):
+        return {"term_id": tid, "scheme_id": "yuhikaku", "authority_rank": 101,
+                "normalized_pref": pref, "reading": reading, "definition": definition, "term_tier": 1}
+
+    def test_continuation_rejoined_no_space(self):
+        terms = [
+            self._y("k1", "会計", "かいけい", "会計とは財産の収支を計算整理するが旧会計法は予算決算収入支出等を規"),
+            self._y("k2", "会計", "かいけい", "定し，この場合の会計は金銭管理作用の意味をもっていた。"),
+        ]
+        cleaned, st = self.df.defrag(terms)
+        self.assertEqual(len(cleaned), 1)
+        self.assertIn("規定し", cleaned[0]["definition"])  # 区切りなしで連結
+        self.assertEqual(st["rejoined"], 1)
+
+    def test_stub_dropped(self):
+        terms = [
+            self._y("h1", "博士", "はくし", "学位の一種で大学院を置く大学等が授与するもの。"),
+            self._y("h2", "博士", "はくし", "はくし"),
+        ]
+        cleaned, st = self.df.defrag(terms)
+        self.assertEqual(len(cleaned), 1)
+        self.assertEqual(st["dropped"], 1)
+
+    def test_genuine_split_kept_separate(self):
+        terms = [
+            self._y("s1", "参議", "さんぎ", "職員令によって設けられた官職で太政大臣の補佐を任務とした。明治一八年廃止。"),
+            self._y("s2", "参議", "さんぎ", "家庭裁判所が人事訴訟又は家事審判を行う際その手続に立ち会う非常勤の国家公務員。"),
+        ]
+        cleaned, st = self.df.defrag(terms)
+        self.assertEqual(len([t for t in cleaned if t["normalized_pref"] == "参議"]), 2)
+        self.assertEqual(st["genuine_kept"], 1)
+
+    def test_passthrough_specialty_and_nontier1(self):
+        # specialty(103) と 非tier1 はそのまま通す
+        terms = [
+            {"term_id": "sp", "scheme_id": "it", "authority_rank": 103,
+             "normalized_pref": "サーバ", "reading": "さーば", "definition": "計算機。", "term_tier": 1},
+            {"term_id": "nt", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "占有", "reading": "せんゆう", "definition": "", "term_tier": 2},
+        ]
+        cleaned, st = self.df.defrag(terms)
+        self.assertEqual(len(cleaned), 2)  # 両方そのまま
+
+
 if __name__ == "__main__":
     unittest.main()
