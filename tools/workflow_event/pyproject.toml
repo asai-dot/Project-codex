@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alo-workflow-event"
+version = "0.2.0"
+description = "ALO workflow event envelope (docs/workflow_model) の v0.2 schema を stdlib のみで検証する CLI/ライブラリ — jsonschema パッケージ非依存"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{ name = "ALO / 浅井法律事務所" }]
+license = { text = "Proprietary" }
+dependencies = []
+
+[project.scripts]
+alo-workflow-event = "alo_workflow_event.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
