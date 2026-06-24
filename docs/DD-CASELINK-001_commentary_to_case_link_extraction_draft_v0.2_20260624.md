@@ -6,7 +6,7 @@
 - domain: CASE（判例精度・意味層厚み付け／リンクレイヤへの供給）
 - parent: `35_link_layer`(alo_edges 正典・edge_type 10値/assertion_mode 4値) / `DD-CASE-001`(関係は edge・merge禁止) / `DD-CASEID-001`(fingerprints/external_ids)
 - related: `33_magazine_layer`(OPAC判評→evaluates+applies の前例) / `32_literature_layer`(文献標題推定マッチ→evaluates strength=implicit) / `DD-CASECORROB-001`(L2 annotation 補強) / `DD-CASEBIND-001`(②ガード) / `DD-CASECITE-001`(引用検証ゲート) / `DD-CASEID-002`(符号正規化)
-- 実装(予定): `scripts/case_link_extract.py` / `scripts/test_case_link_extract.py`
+- 実装: `scripts/case_link_map.py`(mention→alo_edges 写像・決定的) / `scripts/test_case_link_map.py`(fixture) / `case_vocab.py`(link層語彙の正本ミラー) ／ 抽出器 `case_link_extract.py` は別途(citation-span 抽出は分離)
 
 > **目的**: 雑誌・文献の**本文**から該当判例を取り出し、評釈と判例を丁寧に繋いで**意味層を厚くする**。難所は「1記事:N判例（評釈と判例が 1:1 でない）」。これを**フラットなN本の同格エッジにせず、正典 `alo_edges` の型付きエッジ（evaluates/review_chain/compares …）として載せる**。**新語彙を作らない・merge しない・自動エッジは構造由来(vendor_explicit)のみ・本文推定は strength=implicit で review-first・llm_inferred 直書き禁止（PoC DB制約）。設計のみ・read-only。**
 
@@ -101,10 +101,22 @@ v0.2 で語彙を正典に合わせた結果、正典側の改修は **最小限
 
 > つまり「設計資料の大改修」ではなく、**(a) 本 DD を正典語彙に合わせる（済・v0.2）→ (b) 正典に本文採掘経路の1行と同旨/反対の開項目を足す**、の順。ドリフトを足さずに意味層を厚くできる。
 
-## 8. verification（予定）
-- deterministic_self_verification: `test_case_link_extract.py` で fixture（評釈1主＋従2 / 論文N / 併合）を流し、(i) edge_type が正典10値のみ、(ii) masthead=vendor_explicit・本文=vendor_implicit(implicit)・review 行き、(iii) 全エッジに evidence、(iv) llm_inferred 不発生、(v) merge 不発生 を確認。**consistency テストに「edge_type ⊆ 35_link_layer」を追加**して恒久ゲート化。
-- corpus-level = **Mac CC**: D1-LIC 5,475 を本文採掘し、masthead 対象以外の本文 mention を vendor_implicit review として抽出。`evaluates` 精度を実 gold で測る。
+## 8. verification
+- deterministic_self_verification = **fixture-level done**: `test_case_link_map.py` green（評釈1主＋同旨＋反対 / 正式評釈→review_chain / 論文→主なし＋central_case_hint / 未解決→edge無しreview / 未知→fail-closed）。確認項目: (i) **1記事:N が同格に潰れない**(edge_type/stance で分化)、(ii) masthead=vendor_explicit→auto・本文=vendor_implicit(strength=implicit)→review、(iii) emit 値域 ⊆ 正典(`COMMENTARY_TO_CASE_EDGE_TYPES ⊆ LINK_EDGE_TYPES`)、(iv) **llm_inferred 不発生**、(v) **merge 不発生**(route は auto/review/drop のみ)。
+- consistency_gate = **恒久化済**: `test_case_consistency.py` に「`case_link_map` の edge_type/assertion_mode/stance ⊆ `case_vocab`(=35_link_layer ミラー)」を追加。**PASS**。本文採掘語彙のドリフトを CI で停止。
+- corpus-level = **Mac CC**: D1-LIC 5,475 を本文採掘し、masthead 対象以外の本文 mention を vendor_implicit review として抽出。`evaluates` 精度を実 gold で測る。citation-span 抽出器(`case_link_extract.py`)実装はここで合流。
 - independent_meaning_audit = 未了（DDCASE ゲート）。owner_approval = 未了。
+
+### 8.1 写像決定表（`case_link_map.map_mention` の実装則）
+| article_type | source | role | resolved | → edge_type | stance | assertion_mode | route |
+|---|---|---|---|---|---|---|---|
+| commentary/note | masthead | primary | deterministic | `evaluates`(正式評釈は`review_chain`) | — | vendor_explicit | **auto** |
+| commentary/note | body | supporting | det/fuzzy | `compares` | supporting | vendor_implicit(implicit) | review |
+| commentary/note | body | contrasting | det/fuzzy | `compares` | contrasting | vendor_implicit(implicit) | review |
+| commentary/note | body | incidental | det/fuzzy | `compares`(弱weight) | neutral | vendor_implicit(implicit) | review |
+| **article(論文)** | * | primary | * | `compares`(降格) + `central_case_hint` | neutral | (由来通り) | review |
+| * | * | * | **None(未解決)** | — | — | — | review |
+| **未知** article_type/source/role | — | — | — | — | — | — | **drop**(fail-closed) |
 
 ## 9. follow-up / open questions
 - §7-2 の同旨/反対 を保存するか（edge_type 追加 vs `stance` qualifier vs 非保存）＝**owner 設計判断**。

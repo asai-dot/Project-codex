@@ -88,6 +88,20 @@ def run() -> int:
     chk("source: gold ⊆ vocab.REGISTERED_SOURCES", gold_src <= set(V.REGISTERED_SOURCES),
         f"{gold_src - set(V.REGISTERED_SOURCES)}")
 
+    # 7. リンク層(DD-CASELINK): map が emit する語彙 ⊆ vocab、llm_inferred 不発生
+    import case_link_map as lm
+    chk("link: case_link_map edge_type ⊆ vocab.COMMENTARY_TO_CASE_EDGE_TYPES",
+        set(lm.EMITTABLE_EDGE_TYPES) <= set(V.COMMENTARY_TO_CASE_EDGE_TYPES),
+        f"{set(lm.EMITTABLE_EDGE_TYPES) - set(V.COMMENTARY_TO_CASE_EDGE_TYPES)}")
+    chk("link: vocab.COMMENTARY_TO_CASE_EDGE_TYPES ⊆ vocab.LINK_EDGE_TYPES",
+        set(V.COMMENTARY_TO_CASE_EDGE_TYPES) <= set(V.LINK_EDGE_TYPES))
+    chk("link: case_link_map assertion_mode ⊆ POC許可(llm_inferred 禁止)",
+        set(lm.EMITTABLE_ASSERTION_MODES) <= set(V.ASSERTION_MODES_POC_ALLOWED)
+        and "llm_inferred" not in lm.EMITTABLE_ASSERTION_MODES)
+    chk("link: case_link_map stance == vocab.LINK_STANCES",
+        set(lm.EMITTABLE_STANCES) == set(V.LINK_STANCES),
+        f"{set(lm.EMITTABLE_STANCES) ^ set(V.LINK_STANCES)}")
+
     print()
     if issues:
         print(f"RESULT: DRIFT DETECTED ({len(issues)}): {issues}")
