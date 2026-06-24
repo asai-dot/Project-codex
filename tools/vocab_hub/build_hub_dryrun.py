@@ -179,14 +179,17 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP, reading_mi
 
     for (pref, reading), grp in groups.items():
         # exact_match: 群内で anchor と定義重なり>=閾値の term を 1 hub に統合
+        # 異スキーマ(cross-scheme)は bigram Jaccard が構造的に低いため定義ゲートを外す.
+        # 同スキーマ内の低重なりのみ homograph_split (有斐閣内のゆいごん/いごん等).
         anchor_tid = _anchor_rule(grp)
         anchor = by_tid[anchor_tid]
         merged, conflicts = [anchor], []
         for t in grp:
             if _tid(t) == anchor_tid:
                 continue
+            cross = str(t.get("scheme_id")) != str(anchor.get("scheme_id"))
             ov = overlap(anchor.get("definition", ""), t.get("definition", ""))
-            if len(grp) == 1 or ov >= threshold or str(t.get("scheme_id")) == str(anchor.get("scheme_id")):
+            if len(grp) == 1 or cross or ov >= threshold:
                 merged.append(t)
             else:
                 conflicts.append((t, ov))
