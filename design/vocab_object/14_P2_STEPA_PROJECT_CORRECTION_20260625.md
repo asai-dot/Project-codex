@@ -46,3 +46,21 @@ owner 判断（内部専用なら保留可 / 有効化＋policy）。
 ## 5. ゲート
 
 alo-connect 撤去・asai-dot's Project 展開とも owner GO で実施。RLS・データ load・canonical 昇格は別ゲート。
+
+## 6. STEP C データ load 完了（2026-06-25）
+
+canary→batch を asai-dot's Project に実施・完了。MCP 独立照会で検証:
+
+| | 件数 |
+|---|---|
+| alo_concept_schemes | 2 |
+| alo_terms | 15,942 |
+| alo_hubs | 13,188（provisional 13,188 / **canonical 0**）|
+| alo_hub_memberships | 15,230 |
+| alo_term_relations(alias) | 361 |
+| needs_preprocessing hub | 488 |
+| homograph_genuine hub | 3 |
+
+- 全ゲート violation=0（canary時・batch時とも）。不変条件「全hub provisional・canonical 0」保持。
+- **ボトルネック「綺麗な辞書ゴールドを語彙ハブDBに積む工程が未着手」は解消**。dict gold → hub DB 着地完了。
+- 残: RLS 方針（owner）/ P3 canonical 昇格＋legal WSD（DD-EL-001, alias 361 が入力資産）。
