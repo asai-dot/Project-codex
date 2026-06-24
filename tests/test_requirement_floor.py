@@ -84,8 +84,32 @@ def test_omissions():
     check(check_omissions(full, CANON, f)["ok"], "床を満たせば ok")
 
 
+def test_check_against_statute():
+    from requirement_floor import check_against_statute
+    canon = [
+        {"id": "1", "号": "一", "名称": "募集株式の数", "aliases": ["募集株式の数"]},
+        {"id": "2", "号": "二", "名称": "払込金額", "aliases": ["払込金額", "1株につき金"]},
+        {"id": "3", "号": "三", "名称": "現物出資に関する事項", "条件付": True,
+         "条件": ["現物出資", "金銭以外の財産"], "aliases": ["現物出資の内容及び価額", "現物出資財産"]},
+        {"id": "4", "号": "四", "名称": "払込期日", "aliases": ["払込期日", "払込期間"]},
+    ]
+    # 現物出資なしの完全ドラフト → 三号は条件付で不要、欠落なし。
+    ok = "募集株式の数 100株 払込金額 1株につき金5万円 払込期日 令和8年7月31日"
+    r = check_against_statute(ok, canon)
+    check(r["ok"], "現物出資なしの完全ドラフトは床を満たす")
+    three = next(x for x in r["rows"] if x["号"] == "三")
+    check(not three["required"] and not three["missing"], "三号は条件付・非該当でスルー(誤検出しない)")
+    # 払込期日を落とす → 四号を致命傷で検出。
+    miss = check_against_statute("募集株式の数 100株 払込金額 金5万円", canon)
+    check({m["号"] for m in miss["missing"]} == {"四"}, "払込期日の欠落を検出")
+    check(not miss["ok"], "欠落あり→ok=False")
+    # 現物出資の語が出たら三号が必須化(条件付トリガ)。
+    trig = check_against_statute("募集株式の数 100株 払込金額 金5万円 払込期日 7月 現物出資あり", canon)
+    check(any(m["号"] == "三" for m in trig["missing"]), "現物出資の語→三号の内容欠落を必須化して検出")
+
+
 def main() -> int:
-    for t in [test_floor, test_independence_warning, test_omissions]:
+    for t in [test_floor, test_independence_warning, test_omissions, test_check_against_statute]:
         print(f"• {t.__name__}")
         t()
     print(f"\n{_PASS} passed, {_FAIL} failed")
