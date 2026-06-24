@@ -44,8 +44,15 @@ def main(argv=None) -> int:
     if yl:
         bh.attach_definitions(terms, bh.read_jsonl(yl))
     if he:
+        # run_2dict と同じく reading補完③(有斐閣pref引き継ぎ)を効かせて整合させる
+        y_rmap = {}
+        for t in terms:
+            np = bh.norm_pref(t.get("normalized_pref") or t.get("pref_label") or "")
+            r = bh.norm_reading(t.get("reading", ""))
+            if np and r and np not in y_rmap:
+                y_rmap[np] = t.get("reading", "")
         entries = [json.loads(x) for x in Path(he).read_text(encoding="utf-8").splitlines() if x.strip()]
-        terms.extend(ah.adapt(entries, "hourei_yougo_jiten_11", 102))
+        terms.extend(ah.adapt(entries, "hourei_yougo_jiten_11", 102, yuhikaku_reading_map=y_rmap))
 
     # 空定義 term の id 集合
     empty_terms = [t for t in terms if not (t.get("definition") or "").strip()]
