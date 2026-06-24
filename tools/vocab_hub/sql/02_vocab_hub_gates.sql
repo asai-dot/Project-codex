@@ -27,18 +27,21 @@ from alo_hubs h
 where h.hub_status = 'canonical'
   and array_length(h.needs_preprocessing, 1) is not null;
 
--- gate3: specialty(rank>=103) 同士の exact_match を bedrock anchor なしに作らせない
---   specialty term が exact_match なのに、その hub の anchor が bedrock でないなら violation.
+-- gate3: specialty(rank>=103) を bedrock anchor なしに統合させない
+--   specialty member が exact/close match なのに、その hub の anchor も specialty なら violation.
+--   (監査 Finding 4: builder は specialty を skos_close_match で attach するため exact だけでは dead.
+--    exact/close 両方を見て、anchor も specialty の「bedrock 無し統合」を捕捉する.)
 create or replace view gate_specialty_exact_match as
-select m.hub_id, m.term_id, s.authority_rank
+select m.hub_id, m.term_id, s.authority_rank as member_rank, asch.authority_rank as anchor_rank, m.map_type
 from alo_hub_memberships m
 join alo_terms t            on t.term_id = m.term_id
 join alo_concept_schemes s  on s.scheme_id = t.scheme_id
 join alo_hubs h             on h.hub_id = m.hub_id
 join alo_terms at           on at.term_id = h.anchor_term_id
 join alo_concept_schemes asch on asch.scheme_id = at.scheme_id
-where m.map_type = 'skos_exact_match'
-  and s.authority_rank not in ('100','100a','100b','100c','100d','101','102')
+where m.map_type in ('skos_exact_match','skos_close_match')
+  and not m.is_anchor
+  and s.authority_rank    not in ('100','100a','100b','100c','100d','101','102')
   and asch.authority_rank not in ('100','100a','100b','100c','100d','101','102');
 
 -- 全ゲート集計: 各 violation_count を返す. 全て 0 が合格.

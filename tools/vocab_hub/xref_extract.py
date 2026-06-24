@@ -52,15 +52,21 @@ def parse_xref_target(definition: str):
 
 
 def build_alias_edges(terms, threshold=0.6):
-    """cross_reference term を hub に解決し alias エッジ candidate を返す."""
+    """cross_reference term を hub に解決し alias エッジ candidate を返す.
+
+    解決は **同 scheme 内**に限定する(辞書内参照前提). hub の scheme は anchor term から取る.
+    target_hub の anchor_term_id も返し、loader が dst_term_id を埋められるようにする.
+    """
     hubs, _, _ = bh.build_hubs(terms, threshold, quality_filter=True)
     by_tid = {bh._tid(t): t for t in terms}
 
-    # hub_label(norm_pref) -> [(hub_id, scheme群)] 解決用インデックス
+    # (anchor scheme, hub_label の norm_pref) -> [(hub_id, anchor_term_id)] 解決用インデックス
+    # scheme を混ぜると別辞書の同綴 hub に誤解決するため scheme でキーを切る(監査 Finding 3).
     label_index = defaultdict(list)
-    hub_schemes = {}
     for h in hubs:
-        label_index[bh.norm_pref(h["hub_label"])].append(h["hub_id"])
+        anchor = by_tid.get(h["anchor_term_id"], {})
+        sch = str(anchor.get("scheme_id"))
+        label_index[(sch, bh.norm_pref(h["hub_label"]))].append((h["hub_id"], h["anchor_term_id"]))
     # hub の scheme は membership が要るが、ここでは hub_label 一致のみで解決(同辞書内参照前提)
 
     edges, unresolved = [], []
@@ -82,16 +88,19 @@ def build_alias_edges(terms, threshold=0.6):
         if not target:
             unresolved.append({**rec, "reason": "target抽出不可(矢印のみ等)"})
             continue
-        hub_ids = label_index.get(bh.norm_pref(target), [])
-        # 自分自身の hub を除外
-        hub_ids = [h for h in hub_ids if h]
-        if hub_ids:
-            edges.append({**rec, "target_hub_id": hub_ids[0],
-                          "target_hub_candidates": hub_ids,
+        # 同 scheme 内で target 見出しの hub を引く. 自分が anchor の hub は除外(自己参照防止).
+        src_tid = bh._tid(t)
+        cands = [(hid, atid) for hid, atid in
+                 label_index.get((str(t.get("scheme_id")), bh.norm_pref(target)), [])
+                 if atid != src_tid]
+        if cands:
+            hid, atid = cands[0]
+            edges.append({**rec, "target_hub_id": hid, "target_anchor_term_id": atid,
+                          "target_hub_candidates": [c[0] for c in cands],
                           "relation": "alias_of" if len(target) >= len(src_pref) else "see_also",
                           "resolved": True})
         else:
-            unresolved.append({**rec, "reason": "target見出しのhubが無い(別辞書/未収録)"})
+            unresolved.append({**rec, "reason": "同scheme内にtarget見出しのhubが無い(別辞書/未収録)"})
     return edges, unresolved
 
 

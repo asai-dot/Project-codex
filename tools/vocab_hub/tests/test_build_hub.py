@@ -579,6 +579,52 @@ class TestLoadArtifacts(unittest.TestCase):
         self.assertEqual(dq["占有"], "ok")
         self.assertEqual(dq["共有持分"], "cross_reference")
 
+    def test_fk_integrity_all_refs_in_terms(self):
+        # 監査 Finding 1-3: membership/anchor/relation の term_id が全て alo_terms に存在
+        tables, _ = self.bla.build_artifacts(self._terms())
+        tids = {r["term_id"] for r in tables["alo_terms"]}
+        self.assertTrue(all(m["term_id"] in tids for m in tables["alo_hub_memberships"]))
+        self.assertTrue(all(h["anchor_term_id"] in tids for h in tables["alo_hubs"]))
+        for r in tables["alo_term_relations"]:
+            self.assertIn(r["src_term_id"], tids)
+            self.assertTrue(r["dst_term_id"] is None or r["dst_term_id"] in tids)
+
+    def test_empty_and_dup_term_id_dropped(self):
+        # 監査 Finding 1: 空/重複 term_id は除外し件数記録(PK衝突防止)
+        terms = [
+            {"term_id": "", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "空", "reading": "から", "definition": "空idテスト。", "term_tier": 1},
+            {"term_id": "d", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "重A", "reading": "あ", "definition": "重複1。", "term_tier": 1},
+            {"term_id": "d", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "重B", "reading": "い", "definition": "重複2。", "term_tier": 1},
+        ]
+        tables, stats = self.bla.build_artifacts(terms)
+        self.assertEqual(stats["load_drops"]["empty_term_id"], 1)
+        self.assertEqual(stats["load_drops"]["dup_term_id"], 1)
+        self.assertEqual(len({r["term_id"] for r in tables["alo_terms"]}), len(tables["alo_terms"]))
+
+    def test_membership_relation_only_ddl_columns(self):
+        # 監査 Finding 2-3: DDL に無い列(scheme_id/target_hub_id 等)を出さない
+        tables, _ = self.bla.build_artifacts(self._terms())
+        for m in tables["alo_hub_memberships"]:
+            self.assertEqual(set(m.keys()),
+                             {"hub_id", "term_id", "map_type", "is_anchor", "definition_overlap"})
+        for r in tables["alo_term_relations"]:
+            self.assertNotIn("target_hub_id", r)
+
+    def test_alias_dst_resolved_in_builder(self):
+        # 監査 Finding 3: dst_term_id は builder で解決済(loader 依存にしない)
+        tables, _ = self.bla.build_artifacts(self._terms())
+        rel = [r for r in tables["alo_term_relations"] if r["dst_label"] == "持分"]
+        self.assertTrue(rel and rel[0]["dst_term_id"] == "m1")
+
+    def test_authority_rank_normalized(self):
+        terms = [{"term_id": "y", "scheme_id": "yuhikaku_legal_dict", "authority_rank": "101 ",
+                  "normalized_pref": "占有", "reading": "せんゆう", "definition": "支配する状態をいう。", "term_tier": 1}]
+        tables, _ = self.bla.build_artifacts(terms)
+        self.assertEqual(tables["alo_concept_schemes"][0]["authority_rank"], "101")
+
 
 if __name__ == "__main__":
     unittest.main()

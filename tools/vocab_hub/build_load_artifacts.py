@@ -39,27 +39,44 @@ def _def_quality(t):
     return "ok"
 
 
+_MEMBERSHIP_COLS = ("hub_id", "term_id", "map_type", "is_anchor", "definition_overlap")
+
+
+def _norm_rank(v):
+    """authority_rank を正規化(trim + str). 監査 Finding 5."""
+    return str(v).strip() if v is not None else None
+
+
 def build_artifacts(terms, threshold=0.6):
     hubs, memberships, stats = bh.build_hubs(terms, threshold, quality_filter=True)
     by_tid = {bh._tid(t): t for t in terms}
     edges, _unresolved = xr.build_alias_edges(terms, threshold)
+    drops = {"empty_term_id": 0, "dup_term_id": 0}
 
-    # schemes (実在 scheme のみ)
+    # schemes (実在 scheme のみ, rank 正規化)
     seen_schemes = {}
     for t in terms:
         sid = str(t.get("scheme_id"))
         if sid not in seen_schemes:
             name, rank, role, pol = SCHEME_META.get(
-                sid, (sid, str(t.get("authority_rank")), "specialty", "attach"))
-            seen_schemes[sid] = {"scheme_id": sid, "name": name, "authority_rank": rank,
+                sid, (sid, _norm_rank(t.get("authority_rank")), "specialty", "attach"))
+            seen_schemes[sid] = {"scheme_id": sid, "name": name, "authority_rank": _norm_rank(rank),
                                  "role": role, "ingest_policy": pol}
     schemes = list(seen_schemes.values())
 
-    # terms
-    term_rows = []
+    # terms (term_id 非空+一意を保証. 監査 Finding 1: 空/重複は load しない・件数記録)
+    term_rows, seen_ids = [], set()
     for t in terms:
+        tid = bh._tid(t)
+        if not tid:
+            drops["empty_term_id"] += 1
+            continue
+        if tid in seen_ids:
+            drops["dup_term_id"] += 1
+            continue
+        seen_ids.add(tid)
         term_rows.append({
-            "term_id": bh._tid(t), "scheme_id": t.get("scheme_id"),
+            "term_id": tid, "scheme_id": t.get("scheme_id"),
             "normalized_pref": t.get("normalized_pref") or t.get("pref_label") or t.get("headword"),
             "reading": t.get("reading"), "definition": t.get("definition"),
             "term_tier": int(str(t.get("term_tier", 1)) or 1),
@@ -68,37 +85,49 @@ def build_artifacts(terms, threshold=0.6):
             "def_quality": _def_quality(t),
         })
 
-    # hubs (needs_preprocessing / homograph_genuine 反映)
-    hub_rows = []
+    # hubs: anchor が emit 済 term の場合のみ(FK保証). homograph_genuine は defrag フラグのみ(監査 Finding 7)
+    hub_rows, kept_hubs = [], set()
     for h in hubs:
+        if h["anchor_term_id"] not in seen_ids:
+            continue  # anchor が落ちた hub は出さない(FK違反防止)
         anchor = by_tid.get(h["anchor_term_id"], {})
+        kept_hubs.add(h["hub_id"])
         hub_rows.append({
             "hub_id": h["hub_id"], "anchor_term_id": h["anchor_term_id"],
             "hub_label": h["hub_label"], "reading": h.get("reading"),
             "hub_status": "provisional",
             "identity_scope": "vocab_hub_provisional_noncanonical",
             "needs_preprocessing": h.get("needs_preprocessing", []),
-            "homograph_genuine": bool(anchor.get("homograph_genuine", False)
-                                      or h.get("homograph_conflict", False)),
+            "homograph_genuine": bool(anchor.get("homograph_genuine", False)),
         })
 
-    # relations (alias エッジ: 解決分のみ load. 未解決は dst_label 保持で別レーン)
+    # memberships: DDL 列のみに射影 + FK保証(hub/term 共に emit 済). 監査 Finding 2
+    mem_rows = []
+    for m in memberships:
+        if m["hub_id"] not in kept_hubs or m["term_id"] not in seen_ids:
+            continue
+        mem_rows.append({k: m.get(k) for k in _MEMBERSHIP_COLS})
+
+    # relations: dst_term_id を builder で解決済にする(監査 Finding 3). DDL 列のみ.
     rel_rows = []
     for e in edges:
+        if e["source_term_id"] not in seen_ids:
+            continue
+        dst = e.get("target_anchor_term_id")
         rel_rows.append({
             "src_term_id": e["source_term_id"],
-            "dst_term_id": None,            # term_id 解決は hub->anchor 経由で loader が埋める
+            "dst_term_id": dst if dst in seen_ids else None,
             "dst_label": e["target_pref"],
             "relation_type": e["relation"],
             "source": "xref_extract",
-            "target_hub_id": e["target_hub_id"],
         })
 
+    stats["load_drops"] = drops
     return {
         "alo_concept_schemes": schemes,
         "alo_terms": term_rows,
         "alo_hubs": hub_rows,
-        "alo_hub_memberships": memberships,
+        "alo_hub_memberships": mem_rows,
         "alo_term_relations": rel_rows,
     }, stats
 
@@ -134,11 +163,16 @@ def main(argv=None) -> int:
             for r in rows:
                 fh.write(json.dumps(r, ensure_ascii=False) + "\n")
         manifest[name] = len(rows)
+    manifest["_load_drops"] = stats.get("load_drops", {})
     (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print("[load-artifacts] 生成物 (DB非接続 / canary前提):")
     for name, n in manifest.items():
-        print(f"  {name}: {n}")
+        if name != "_load_drops":
+            print(f"  {name}: {n}")
+    drops = stats.get("load_drops", {})
+    if drops.get("empty_term_id") or drops.get("dup_term_id"):
+        print(f"  [drop] term_id 空={drops['empty_term_id']} 重複={drops['dup_term_id']} (FK保証のため除外)")
     print(f"[load-artifacts] -> {out}/  (manifest.json 同梱). 実load は owner GO+監査後の loader.")
     return 0
 

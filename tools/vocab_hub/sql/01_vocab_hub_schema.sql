@@ -27,7 +27,8 @@ create table if not exists alo_terms (
     source_item_key  text,
     -- 品質メタ (P0 ツール群由来: 06-11 findings)
     reading_source   text,                           -- original/kana_infer/yuhikaku_pref_match/pykakasi
-    def_quality      text,                           -- ok/short/empty/cross_reference/truncation
+    def_quality      text,                           -- ok/empty/cross_reference/valid_short/truncation/other
+                                                      -- (短定義は short_def_triage の4分類値, 長定義は ok)
     valid_from       timestamptz not null default now(),
     valid_to         timestamptz,                    -- 論理失効 (append-only)
     created_at       timestamptz not null default now()

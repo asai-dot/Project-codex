@@ -10,14 +10,17 @@
 DICT-008 を candidate → accepted v1.0 にするための**記録の枠**。owner が A1/A2/A3 に OK を入れれば確定。
 残ブロッカーは owner レビューのみ（Wave B は 11 で解消済）。
 
-## 1. accept 判定（owner 記入欄）
+## 1. accept 判定（owner 記入欄）→ **owner GO 取得済（2026-06-25）**
 
 | # | 判定項目 | owner 判定 | 備考 |
 |---|---|---|---|
-| A1 | DICT-008 v0.2 本体（Q1–Q4反映版）を accept してよいか | ☐ OK / ☐ NO / ☐ 戻す | Canonical Bedrock 戦略本体 |
-| A2 | 34層 §4.1(bedrock-first) / §9(gate 2本) 改訂計画 | ☐ OK / ☐ 修正 | 下記 §3 にドラフト |
-| A3 | DDL gate 改訂(gate群＋§2.3.1 昇格可rank集合)の影響範囲 | ☐ OK / ☐ 修正 | SQL は `tools/vocab_hub/sql/02_*` に生成済 |
-| - | accept 確定日 / version | __________ / v1.0 | A1–A3 全 OK で記入 |
+| A1 | DICT-008 v0.2 本体（Q1–Q4反映版）を accept してよいか | ✅ **OK**（owner GO 2026-06-25） | Canonical Bedrock 戦略本体 |
+| A2 | 34層 §4.1(bedrock-first) / §9(gate 2本) 改訂計画 | ✅ **OK** | 下記 §3 ドラフトで実装 |
+| A3 | DDL gate 改訂(gate群＋§2.3.1 昇格可rank集合)の影響範囲 | ✅ **OK** | SQL は `tools/vocab_hub/sql/02_*` に生成済 |
+| - | accept 確定日 / version | **2026-06-25 / accepted v1.0** | owner GO により確定 |
+
+> 記録注: DICT-008 v0.2 本体は owner 側設計空間にあり Claude は未読。A1–A3 は **owner 自身の判断**で GO。
+> 本記録は owner 決定の確定であって Claude の内容是認ではない。doc_registry 実更新は §2 のとおり別作業。
 
 ## 2. accept が解禁する作業（DICT-008 §6.2）— 全て accept 後
 
