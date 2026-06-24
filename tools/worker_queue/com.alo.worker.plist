@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ALO worker 自走ランナー（launchd, zero-touch / owner明示承認 2026-06-25）。
+  15 分ごとに run_worker.sh が回り、inbox にタスクが在れば
+  自動で claim→実行→complete まで前進させる（flock で多重起動防止）。
+  人手は「一度 load する」だけ。以降の発注は inbox に積むだけで無人実行。
+
+  インストール（Mac, 1回だけ）:
+    cp tools/worker_queue/com.alo.worker.plist ~/Library/LaunchAgents/
+    /usr/bin/sed -i '' "s#__HOME__#$HOME#g" ~/Library/LaunchAgents/com.alo.worker.plist
+    launchctl load ~/Library/LaunchAgents/com.alo.worker.plist
+  停止:
+    launchctl unload ~/Library/LaunchAgents/com.alo.worker.plist
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.alo.worker</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>__HOME__/Project-codex/tools/worker_queue/run_worker.sh</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>ALO_REPO</key><string>__HOME__/Project-codex</string>
+    <key>PATH</key><string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+  </dict>
+  <key>StartInterval</key><integer>900</integer>
+  <key>RunAtLoad</key><true/>
+  <key>StandardOutPath</key><string>__HOME__/alo_worker_launchd.out</string>
+  <key>StandardErrorPath</key><string>__HOME__/alo_worker_launchd.err</string>
+</dict>
+</plist>
