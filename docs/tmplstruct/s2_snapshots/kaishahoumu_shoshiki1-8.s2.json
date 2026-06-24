@@ -1,0 +1,142 @@
+{
+  "schema": "form_snapshot.v1",
+  "form_uid": null,
+  "provisional_key": "LBL_会社法務書式集_書式1-8:image",
+  "anchor": {
+    "canonical_book_id": null,
+    "book_ref": {
+      "bencom_bib_id": null,
+      "isbn": "9784502992605",
+      "title": "会社法務書式集（旧版・自炊）",
+      "source_book_isbn": "9784502465314",
+      "source_book_title": "会社法務書式集〈第3版〉"
+    },
+    "toc_node_id": null,
+    "toc_ref": {
+      "source": "image_label",
+      "text": "書式1-8（発起人決定書）",
+      "part": "第1部 株式会社編",
+      "note": "bib_tocは第3版のみ在で頁不一致。本snapshotは旧版スキャンの紙面ラベルでアンカー"
+    },
+    "page_span_print": [
+      36,
+      37
+    ],
+    "page_span_pdf": [
+      60,
+      61
+    ],
+    "page_offset_pdf_minus_print": 24,
+    "span_kind": "single_node",
+    "edition_mismatch": true,
+    "anchor_status": "pending_edition_mismatch (scan=旧版9784502992605 / toc_nodes=第3版のみ)"
+  },
+  "source": {
+    "source_system": "jisui_vision_ocr",
+    "provenance_group": "asai_jisui",
+    "scan": {
+      "box_file_id": "2042325717323",
+      "dpi": 600
+    },
+    "ocr": {
+      "engine": "claude_vision",
+      "captured_at": "2026-06-11"
+    }
+  },
+  "form_title": "発起人決定書（発起人1人の場合）",
+  "form_no": "書式1-8",
+  "form_kind": "decision",
+  "language": "ja",
+  "placeholder_style": "【…】=記入例（差込値）。blanksは記入例値のラベル。",
+  "content": {
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "発起人決定書"
+      },
+      {
+        "type": "date",
+        "text": "【令和○年9月25日】",
+        "blanks": [
+          "決定年月日"
+        ]
+      },
+      {
+        "type": "recital",
+        "text": "【東京都千代田区神田3丁目3番3号】当会社創立事務所において，発起人は下記の事項を決定した。 記",
+        "blanks": [
+          "決定場所"
+        ]
+      },
+      {
+        "type": "item",
+        "no": "1",
+        "text": "発起人が割当てを受ける設立時発行株式の数及び引き換えに払い込むべき金銭の額を次のとおりとする。 発起人【太田健一】 【300】株 金【300万】円",
+        "blanks": [
+          "発起人氏名",
+          "株式数",
+          "払込金額"
+        ]
+      },
+      {
+        "type": "item",
+        "no": "1",
+        "text": "設立に際して出資される財産の全額を資本金とし，その額を金【300万】円とする。",
+        "blanks": [
+          "資本金額"
+        ]
+      },
+      {
+        "type": "item",
+        "no": "1",
+        "text": "設立時取締役を次のとおりとする。 設立時取締役【太田健一】",
+        "blanks": [
+          "設立時取締役氏名"
+        ]
+      },
+      {
+        "type": "item",
+        "no": "1",
+        "text": "本店の所在場所を次のとおりとする。 本店【東京都千代田区神田3丁目3番3号】",
+        "blanks": [
+          "本店所在場所"
+        ]
+      },
+      {
+        "type": "recital",
+        "text": "以上の決定事項を明確にするため，本決定書を作成し，発起人が次に記名押印する。 【令和○年9月25日】[注1]",
+        "blanks": [
+          "作成年月日"
+        ]
+      },
+      {
+        "type": "signature",
+        "text": "【太田設備株式会社】 発起人【太田健一】（印）[注2]",
+        "blanks": [
+          "会社名",
+          "発起人氏名"
+        ]
+      },
+      {
+        "type": "note",
+        "no": "注1",
+        "text": "出資履行後に設立時取締役等を選任する必要があるため（会38条），出資と同日に…（脚注続く）"
+      }
+    ],
+    "blanks_total": 11,
+    "clause_count": 0,
+    "item_count": 4,
+    "block_count": 10
+  },
+  "quality": {
+    "notes": "全頁が書式の書式集タイプ。記入例【】と脚注[注N]の体裁。記入例値をプレースホルダ化すれば差込テンプレに直結。",
+    "ocr_error_classes": []
+  },
+  "confidence": {
+    "source_authority": 0.95,
+    "merge": null,
+    "quality_adjustment": 1.0
+  },
+  "form_group_uid": null,
+  "resolution_log_ref": null
+}

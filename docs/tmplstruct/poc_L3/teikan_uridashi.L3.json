@@ -1,0 +1,48 @@
+{
+  "form_uid": "alo:form:prov:teikan_uridashi",
+  "form_title": "定款(抜粋) 相続人等に対する売渡し請求(書式2-28)",
+  "archetype": "A_clause_contract",
+  "form_kind": "bylaw_provision",
+  "source": {
+    "book": "会社法務書式集(旧版・自炊)",
+    "pdf_page": 120,
+    "src": "jisui_vision_ocr"
+  },
+  "parties": [
+    {
+      "role": "当会社"
+    }
+  ],
+  "clauses": [
+    {
+      "no": "第【○】条",
+      "title": "相続人等に対する株式の売渡し請求",
+      "function": "bylaw_share_sellback",
+      "function_label": "相続人等への売渡し請求(定款)",
+      "obligations": [],
+      "rights": [
+        {
+          "holder": "当会社",
+          "right": "一般承継で株式取得した者へ当該株式の売渡しを請求できる"
+        }
+      ],
+      "slots": [
+        {
+          "id": "条番号",
+          "type": "clause_no"
+        }
+      ],
+      "attributes": {
+        "根拠": "会174条",
+        "対象株式": "一般承継で取得した譲渡制限株式",
+        "行使要件": "株主総会特別決議(会175条1項・309条2項3号)"
+      },
+      "comparable_key": "bylaw_share_sellback"
+    }
+  ],
+  "extraction": {
+    "by": "claude_vision_auto",
+    "confidence": 0.9,
+    "ambiguity": "単独条・当事者は会社のみ。義務でなく権利として表現"
+  }
+}

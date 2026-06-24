@@ -1,0 +1,59 @@
+{
+  "schema": "clause_inventory.v0",
+  "template_label_ja": "製造委託基本契約書",
+  "note": "各本の『製造委託基本契約』節の条項/論点見出しを biblio.toc_nodes から抽出し、registry term_id に正規化。granularity=fine は条項レベル比較可、coarse は見出しのみ(本文OCR要)。",
+  "books": [
+    {
+      "key": "kondo",
+      "author": "近藤圭介", "publisher": "中央経済社", "year": 2022,
+      "granularity": "fine",
+      "source": "解説 第3章 製造委託基本契約の解説(p48-) の論点1-30",
+      "terms": [
+        "purpose", "individual_contract_framework", "payment", "bailment_return", "supplied_material",
+        "reporting_supervision", "legal_compliance", "subcontracting", "delivery", "inspection_acceptance",
+        "quality_control", "warranty_defect", "product_liability", "ownership_risk", "ip_assignment",
+        "manufacturing_restriction", "ip_noninfringement", "parts_supply", "individual_termination",
+        "term_duration", "termination", "survival", "damages", "confidentiality", "assignment_prohibition",
+        "antisocial_forces", "force_majeure", "consultation", "governing_law", "jurisdiction"
+      ]
+    },
+    {
+      "key": "takigawa",
+      "author": "滝川宜信", "publisher": "民事法研究会", "year": 2022,
+      "granularity": "fine",
+      "source": "第3章第1節 製造委託基本契約書(p170-) 審査POINT①-⑪ ＋ 第4節 PB商品 POINT①-⑥",
+      "emphasis": "下請法コンプライアンス＋人権配慮(審査の留意点レンズ)",
+      "terms": [
+        "product_spec", "subcontract_law_compliance", "inspection_acceptance", "payment",
+        "warranty_defect", "subcontracting", "confidentiality", "human_rights",
+        "product_liability", "quality_control"
+      ]
+    },
+    {
+      "key": "hasegawa",
+      "author": "長谷川俊明", "publisher": "中央経済社", "year": 2022,
+      "granularity": "coarse",
+      "source": "1 製造委託基本契約(p73) — 見出しのみ(条項内訳はTOC未収録)",
+      "terms": []
+    },
+    {
+      "key": "hako_yokota",
+      "author": "波光巖・横田直和", "publisher": "日本加除出版", "year": 2019,
+      "granularity": "coarse",
+      "source": "例2 製造委託基本契約書(p307) — 見出しのみ",
+      "terms": []
+    }
+  ],
+  "term_labels": {
+    "purpose": "目的", "individual_contract_framework": "個別契約", "payment": "代金", "bailment_return": "貸与品",
+    "supplied_material": "支給品", "reporting_supervision": "指図・報告", "legal_compliance": "法令上の責任",
+    "subcontracting": "再委託", "delivery": "納入", "inspection_acceptance": "検収/検品",
+    "quality_control": "品質管理", "warranty_defect": "担保/契約不適合", "product_liability": "製造物責任",
+    "ownership_risk": "所有権・危険負担", "ip_assignment": "知財帰属", "manufacturing_restriction": "製造・譲渡制限",
+    "ip_noninfringement": "第三者知財非侵害", "parts_supply": "部品供給", "individual_termination": "個別契約の解約",
+    "term_duration": "有効期間", "termination": "解除", "survival": "残存条項", "damages": "損害賠償",
+    "confidentiality": "秘密保持", "assignment_prohibition": "譲渡禁止", "antisocial_forces": "反社",
+    "force_majeure": "不可抗力", "consultation": "協議", "governing_law": "準拠法", "jurisdiction": "管轄",
+    "product_spec": "製品規格", "subcontract_law_compliance": "下請法対応", "human_rights": "人権配慮"
+  }
+}

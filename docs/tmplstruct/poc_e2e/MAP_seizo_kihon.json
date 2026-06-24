@@ -1,0 +1,50 @@
+{
+  "schema": "template_map.v0",
+  "template_term": "manufacturing_consignment_basic_contract",
+  "template_label_ja": "製造委託基本契約書",
+  "registry_term_candidate": "individual_contract_framework + payment + bailment_return + supplied_material + subcontracting ...",
+  "note": "L1=地図。『製造委託基本契約書』という書式が、所蔵のどの本のどこに載っているか。biblio.toc_nodes(弁コムTOC)横断で抽出。掲載本=4冊、うち自炊済み(本文OCR可)=2冊。",
+  "instances": [
+    {
+      "book_id": "NOBN_20220203_業務委託契約書作成のポイント〈第2版〉_01",
+      "author": "近藤 圭介",
+      "publisher": "中央経済社",
+      "form_print_page": 216,
+      "commentary_print_page": 48,
+      "self_scanned": true,
+      "box_scan_folder": "業務委託契約書作成のポイント第２版_9784502406010 (360629620511)",
+      "read_status": "OCR済(第1〜5条)=s2_snapshots/gyomu_seizo_kihon_keiyaku.s2.json",
+      "role": "PoC一次ソース(読取・構造・解説接地の母体)"
+    },
+    {
+      "book_id": "NOBN_20221113_業務委託契約書の作成と審査の実務〔全訂版〕_01",
+      "author": "滝川宜信・弁護士法人しょうぶ法律事務所",
+      "publisher": "民事法研究会",
+      "form_print_page": 170,
+      "commentary_print_page": 187,
+      "commentary_toc_node": "…全訂版〕_01:toc:246 (POINT⑨ 再委託の禁止)",
+      "self_scanned": true,
+      "box_scan_folder": "業務委託契約書の作成と審査の実務 (388082310236)",
+      "read_status": "未OCR(全体PDF 512MB・点OCR保留=表現生成が重い)",
+      "role": "独立二次ソース(著者・出版社とも別→解説接地のsource_diversity用)"
+    },
+    {
+      "book_id": "NOBN_20220531_業務委託契約の基本と書式〈第2版〉_01",
+      "author": "長谷川俊明",
+      "publisher": "中央経済社",
+      "form_print_page": 73,
+      "self_scanned": false,
+      "read_status": "弁コムTOCのみ(本文OCR源なし)",
+      "role": "地図上は存在。読取は調達待ち"
+    },
+    {
+      "book_id": "NOBN_20190501_QA_業務委託・企業間取引における法律と実務_01",
+      "author": "波光 巖、横田 直和",
+      "publisher": "日本加除出版",
+      "form_print_page": 307,
+      "self_scanned": false,
+      "read_status": "弁コムTOCのみ(本文OCR源なし)",
+      "role": "地図上は存在。読取は調達待ち"
+    }
+  ]
+}

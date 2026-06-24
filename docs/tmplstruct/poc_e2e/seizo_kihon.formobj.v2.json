@@ -1,0 +1,107 @@
+{
+  "schema": "form_object.v0.2-poc",
+  "note": "既存 e2e(製造委託基本契約書)を DD-FORMOBJ-002 v0.2 の4層・記載事項細分に載せ替え。私契約なので statute_required は無く、essentialia=validity_required / その他=optional_design・advisable。witnessed_in に版検証ステータスを持たせ、本日の滝川誤接続(別版)を gate_witness_edition_verified で flag。設計のみ。",
+  "form_object": {
+    "form_uid": "alo:form:PROVISIONAL:seizo_kihon_keiyaku",
+    "identity_status": "provisional",
+    "recorded_act": "製造の継続的委託について基本条件を合意する",
+    "legal_function": "基本契約として個別契約に共通する権利義務・リスク配分を定める",
+    "document_role": "契約書",
+    "practice_domain": "業務委託(製造委託)",
+    "party_posture": "中立(委託者/受託者の二当事者)",
+    "forum": "私人間(提出先なし)",
+    "temporal_applicability": "民法(令和現行・債権法改正後)"
+  },
+  "form_variants": [
+    {"variant": "製造委託型(標準)", "variant_split_reason": "risk_allocation_shift", "note": "巻末資料1型。近藤本の母体。基準形"},
+    {"variant": "PB商品製造委託型", "variant_split_reason": "regulatory_context_shift", "note": "滝川本 第4節。下請法・返品・PL保険・表示責任が変わる"},
+    {"variant": "OEM取引型", "variant_split_reason": "party_posture_shift", "note": "近藤本COLUMN・滝川本第3節。商標・製造主体・知財帰属が変わる"}
+  ],
+  "requisites": [
+    {
+      "term": "purpose", "label_ja": "目的・委託対象(本製品の特定)",
+      "requisite_class": "validity_required",
+      "grounded_in": {"law": "民法632/656(給付・事務の特定が契約成立の前提)", "forum_rule": null},
+      "source_basis": "契約類型論(請負/準委任の本質的要素)", "confidence": 0.9,
+      "defect_kind_if_missing": "invalidity",
+      "defect_note": "委託対象(本製品)が特定されないと給付内容が確定せず契約不成立。私契約の essentialia。",
+      "slots": [{"id": "本製品", "type": "ref_attachment", "required": true}]
+    },
+    {
+      "term": "payment", "label_ja": "対価(製造代金)",
+      "requisite_class": "validity_required",
+      "grounded_in": {"law": "民法632(請負報酬)/648(委任報酬)"},
+      "source_basis": "契約類型論(有償契約の本質的要素)", "confidence": 0.9,
+      "defect_kind_if_missing": "invalidity",
+      "defect_note": "対価は有償契約の essentialia。基本契約では『個別契約に定める』方式でも可だが、対価の決定方法は必須。",
+      "slots": [{"id": "製造代金", "type": "amount_jpy", "source": "個別契約", "required": true}]
+    },
+    {
+      "term": "inspection_acceptance", "label_ja": "検収",
+      "requisite_class": "enforceability_required",
+      "grounded_in": {"law": "民法562-564(契約不適合責任)の起点・期間の明確化"},
+      "source_basis": "契約不適合責任の主張立証構造", "confidence": 0.75,
+      "defect_kind_if_missing": "evidentiary_weakness",
+      "defect_note": "検収条項が無いと契約不適合の通知期間・合格の効果が曖昧になり、品質クレームの主張立証が弱くなる。",
+      "slots": [{"id": "検収期間", "type": "period", "source": "個別契約"}]
+    }
+  ],
+  "advisable_examples": [
+    {"term": "subcontracting", "label_ja": "再委託", "requisite_class": "optional_design",
+     "grounded_in_source": {"source_type": "commentary", "citation": "業務委託契約書作成のポイント第2版 解説 再委託", "authority_weight": "treatise"},
+     "defect_kind_if_missing": "risk_warning", "favors_role": "原則禁止+事前承諾=委託者有利",
+     "design_options": [
+       {"axis_type": "liability_scope", "choice": "再委託先の行為への責任を『選定・監督のみ』に限定", "effect": "受託者の責任限定", "favors_role": "受託者", "source_type": "commentary", "authority_weight": "treatise", "legal_basis": "旧民法105条1項削除で限定説の根拠弱化"}
+     ]},
+    {"term": "damages", "label_ja": "損害賠償", "requisite_class": "optional_design",
+     "grounded_in_source": {"source_type": "statute_option", "law": "民法415/416", "authority_weight": "design"},
+     "defect_kind_if_missing": "risk_warning", "favors_role": "上限設定=受託者有利 / 無制限=委託者有利"},
+    {"term": "ip_assignment", "label_ja": "知的財産権の帰属", "requisite_class": "optional_design",
+     "grounded_in_source": {"source_type": "statute_option", "law": "著作権法27/28・特許法", "authority_weight": "design"},
+     "defect_kind_if_missing": "risk_warning", "favors_role": "委託者帰属=委託者有利"},
+    {"term": "confidentiality", "label_ja": "秘密保持", "requisite_class": "advisable",
+     "grounded_in_source": {"source_type": "practice", "authority_weight": "customary"}, "defect_kind_if_missing": "risk_warning"},
+    {"term": "antisocial_forces", "label_ja": "反社会的勢力の排除", "requisite_class": "advisable",
+     "grounded_in_source": {"source_type": "practice", "authority_weight": "customary"}, "defect_kind_if_missing": "risk_warning"},
+    {"term": "jurisdiction", "label_ja": "合意管轄", "requisite_class": "optional_design",
+     "grounded_in_source": {"source_type": "statute_option", "law": "民訴法11", "authority_weight": "design"},
+     "defect_kind_if_missing": "risk_warning", "favors_role": "自陣の裁判所指定が各当事者有利"}
+  ],
+  "witnessed_in": [
+    {
+      "source_type": "biblio_item", "source_identifier": "NOBN_20220203_業務委託契約書作成のポイント〈第2版〉_01",
+      "edition_or_version": "第2版(2022)", "page_span": "書式p216 / 解説p48-180",
+      "toc_node": "…ポイント〈第2版〉_01:toc:134",
+      "asset": {"box_scan": "業務委託契約書作成のポイント第２版_9784502406010", "scanned": true},
+      "verified_status": "edition_verified",
+      "provenance_family": "近藤/中央経済社",
+      "note": "一次witness。自炊scanとbencom TOCが同版で一致。読取済(s2_snapshots)。"
+    },
+    {
+      "source_type": "biblio_item", "source_identifier": "NOBN_20221113_業務委託契約書の作成と審査の実務〔全訂版〕_01",
+      "edition_or_version": "全訂版(2022)", "page_span": "製造委託基本契約 p170 / 審査POINT①-⑪",
+      "asset": null,
+      "verified_status": "toc_only",
+      "provenance_family": "滝川/民事法研究会",
+      "note": "TOC-only witness(本文OCR源なし=全訂版の自炊が無い)。"
+    },
+    {
+      "source_type": "biblio_item", "source_identifier": "Box自炊『業務委託契約書の作成と審査の実務』(folder 388082310236)",
+      "edition_or_version": "条項別記載例集エディション(全訂版と別構成)", "page_span": "512MB全体",
+      "asset": {"box_file": "2271067335844", "scanned": true},
+      "verified_status": "EDITION_MISMATCH_FLAGGED",
+      "provenance_family": "滝川/民事法研究会(別版)",
+      "note": "★本日の事故。この自炊は〔全訂版〕でなく条項別記載例集の別版。タイトル一致で全訂版TOCに当てようとして崩壊。gate_witness_edition_verified によりこの witness は『製造委託基本契約書 form_object』の witness としては不採用(別 form_object群の witness)。"
+    },
+    {
+      "source_type": "biblio_item", "source_identifier": "NOBN_20220531_業務委託契約の基本と書式〈第2版〉_01",
+      "edition_or_version": "第2版", "page_span": "p73", "asset": null, "verified_status": "toc_only_coarse",
+      "provenance_family": "長谷川/中央経済社", "note": "TOC粗。本文OCR源なし。"
+    },
+    {
+      "source_type": "biblio_item", "source_identifier": "NOBN_20190501_QA_業務委託・企業間取引_01",
+      "edition_or_version": "—", "page_span": "例2 p307", "asset": null, "verified_status": "toc_only_coarse",
+      "provenance_family": "波光・横田/日本加除", "note": "TOC粗。本文OCR源なし。"
+    }
+  ]
+}
