@@ -52,11 +52,11 @@ class TestHubBuild(unittest.TestCase):
         self.assertEqual(stats["hubs"], 2)  # 表層一致でも reading 違いは別
 
     def test_homograph_same_key_low_overlap_split(self):
-        # 同 pref+reading だが定義が全く違う -> homograph_split で別 hub
+        # 同スキーマ内で pref+reading 同じ、定義が乖離 -> homograph_split で別 hub
         terms = [
             {"term_id": "a", "scheme_id": "yuhikaku", "authority_rank": 101,
              "normalized_pref": "社員", "reading": "しゃいん", "definition": "会社法上の構成員たる地位", "term_tier": 1},
-            {"term_id": "b", "scheme_id": "hourei", "authority_rank": 102,
+            {"term_id": "b", "scheme_id": "yuhikaku", "authority_rank": 101,
              "normalized_pref": "社員", "reading": "しゃいん", "definition": "労働者一般を指す日常語", "term_tier": 1},
         ]
         hubs, _, stats = bh.build_hubs(terms, threshold=0.6)
@@ -155,11 +155,26 @@ class TestCrossDictAndNorm(unittest.TestCase):
         self.assertEqual(hubs[0]["member_count"], 2)
         self.assertEqual(set(hubs[0]["authority_ranks"]), {"101", "102"})
 
-    def test_cross_dict_low_overlap_homograph_split(self):
+    def test_cross_dict_always_merges_regardless_of_overlap(self):
+        # 法令辞書間では同 pref+reading = 同概念. 定義の散文が違っても merge する.
+        # (bigram Jaccard は辞書スタイルの差で構造的に低い)
         terms = [
             {"stg_term_key": "y1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
              "normalized_pref": "社員", "reading": "しゃいん", "definition": "会社法上の構成員たる地位", "term_tier": 1},
             {"stg_term_key": "h1", "scheme_id": "hourei_yougo_jiten_11", "authority_rank": 102,
+             "normalized_pref": "社員", "reading": "しゃいん", "definition": "労働者一般を指す日常語", "term_tier": 1},
+        ]
+        hubs, _, stats = bh.build_hubs(terms, threshold=0.6)
+        self.assertEqual(stats["homograph_conflicts"], 0)  # cross-scheme は threshold 無関係
+        self.assertEqual(stats["hubs"], 1)
+        self.assertEqual(hubs[0]["member_count"], 2)
+
+    def test_same_scheme_low_overlap_is_homograph(self):
+        # 同スキーマ内で pref+reading 同じでも定義が乖離 = homograph_split
+        terms = [
+            {"stg_term_key": "a1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "社員", "reading": "しゃいん", "definition": "会社法上の構成員たる地位", "term_tier": 1},
+            {"stg_term_key": "a2", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
              "normalized_pref": "社員", "reading": "しゃいん", "definition": "労働者一般を指す日常語", "term_tier": 1},
         ]
         _, _, stats = bh.build_hubs(terms, threshold=0.6)

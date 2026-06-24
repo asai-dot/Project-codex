@@ -38,6 +38,17 @@ def cross_dict_hubs(memberships) -> int:
     return sum(1 for s in by_hub.values() if len(s) >= 2)
 
 
+def _yuhikaku_reading_map(y_terms):
+    """有斐閣の normalized_pref -> reading マップ (reading 補完③用)."""
+    m = {}
+    for t in y_terms:
+        np = bh.norm_pref(t.get("normalized_pref") or t.get("pref_label") or "")
+        r = bh.norm_reading(t.get("reading", ""))
+        if np and r and np not in m:
+            m[np] = t.get("reading", "")  # 正規化前の表記を保持
+    return m
+
+
 def load_terms(yt, yl, he):
     terms = list(bh.read_jsonl(yt))
     n_y = len(terms)
@@ -45,8 +56,9 @@ def load_terms(yt, yl, he):
         bh.attach_definitions(terms, bh.read_jsonl(yl))
     n_h = 0
     if he:
+        y_rmap = _yuhikaku_reading_map(terms)
         entries = [json.loads(x) for x in Path(he).read_text(encoding="utf-8").splitlines() if x.strip()]
-        hterms = ah.adapt(entries, "hourei_yougo_jiten_11", 102)
+        hterms = ah.adapt(entries, "hourei_yougo_jiten_11", 102, yuhikaku_reading_map=y_rmap)
         terms.extend(hterms)
         n_h = len(hterms)
     return terms, n_y, n_h
