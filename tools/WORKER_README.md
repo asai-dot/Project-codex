@@ -12,14 +12,19 @@
 発注書は `artifacts/periodical/ORCH-*.md`（入出力・受入基準・dry-run/read-only を明記）。
 
 ## Cloud Web からの間接起動（常駐watcher）
-Mac で一度だけ常駐させる:
+**推奨: launchd で常駐**（再起動・ログアウトでも復活、落ちても自動再起動）。Mac で一度だけ:
+```
+./tools/install_worker_watch.sh
+```
+稼働確認 `launchctl list | grep worker-watch` / ログ `tail -f ~/worker_watch.log` / 解除 `./tools/install_worker_watch.sh --uninstall`。
+
+簡易版（その場限り・再起動で消える）:
 ```
 nohup ./tools/worker_watch.sh > ~/worker_watch.log 2>&1 &
 ```
-以後、Cloud Web(私)が `artifacts/periodical/.worker_trigger` に発注書パスを1行書いて push すると、
-watcher が拾って `wake_worker.sh` で自動起動し、トリガを消費する。→ Cloud Web からも「いつでも起こす」。
 
-停止: `kill %1`（または `pkill -f worker_watch.sh`）。
+以後、Cloud Web(私)が `artifacts/periodical/.worker_trigger` に発注書パス(ORCH-*.md)を1行書いて push すると、
+watcher が拾って `wake_worker.sh` で自動起動し、トリガを消費する。→ Cloud Web からも「いつでも起こす」。
 
 ## CONFIG を焼き込む（一度きり）
 `~/.zshrc` 等に:
