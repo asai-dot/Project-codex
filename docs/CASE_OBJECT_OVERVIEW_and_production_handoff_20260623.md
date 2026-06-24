@@ -83,6 +83,14 @@ production DDL / DB write / backfill / canonical mint / seed serving / global em
 - `20260623_caseprecision_v0.2_notes_closure`（DDCASE）
 - `20260623_caseid_v0.1_DDCASEID005`（DDCASEID）
 
+## 6.5 統一性・安定性 監査（実データ前ゲート・**closed**）
+- `DD-CASE_consistency_stability_audit_20260623.md`（追補 06-24）= owner「DDが時系列で別々→語彙ドリフトの疑い」を実コードで精査。
+- **ドリフト4件すべて解消**: D1 eval crash(prov 欠落)・D2 corroborate 定数化・D3 forum_type doc表記(follow-up)・D4 NII 未登録。
+- 恒久ゲート新設: 正本語彙 `scripts/case_vocab.py` ＋ `test_case_consistency.py`(13項)＋ `test_case_pipeline_e2e.py`。**全 green・回帰なし**。
+- Tier 正本= **A**(自動bind)/**B**(外部ID衝突review)/**C**(fuzzy弱類似review・非merge)/**prov**(自然キー不能)。
+- source seed: **NII 追加で 32行**（Box 2295292633374 反映）。
+- **結論**: 統一性・安定性（無矛盾性・連結性）は固定済。残は**正確性のみ**（実 corpus・実 gold・公式 hash＝Mac CC/web）。
+
 ## 7. 参照
 - reality_check: `DD-CASE_current_reality_check_D1_LIC_OPAC_CaseBundle`（Box 2286208816472）
 - RUNBOOK: `RUNBOOK_forum_registry_seed_generation_maccc`
