@@ -2,3 +2,6 @@ build/
 __pycache__/
 *.pyc
 .DS_Store
+# 大容量 e-Gov 生 XML・anchors（再取得可能）
+pipeline/egov_raw/*.xml
+pipeline/egov_raw/*.anchors.json
