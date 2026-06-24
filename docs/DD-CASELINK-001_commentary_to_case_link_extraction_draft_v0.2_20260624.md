@@ -6,7 +6,7 @@
 - domain: CASE（判例精度・意味層厚み付け／リンクレイヤへの供給）
 - parent: `35_link_layer`(alo_edges 正典・edge_type 10値/assertion_mode 4値) / `DD-CASE-001`(関係は edge・merge禁止) / `DD-CASEID-001`(fingerprints/external_ids)
 - related: `33_magazine_layer`(OPAC判評→evaluates+applies の前例) / `32_literature_layer`(文献標題推定マッチ→evaluates strength=implicit) / `DD-CASECORROB-001`(L2 annotation 補強) / `DD-CASEBIND-001`(②ガード) / `DD-CASECITE-001`(引用検証ゲート) / `DD-CASEID-002`(符号正規化)
-- 実装: `scripts/case_link_map.py`(mention→alo_edges 写像・決定的) / `scripts/test_case_link_map.py`(fixture) / `case_vocab.py`(link層語彙の正本ミラー) ／ 抽出器 `case_link_extract.py` は別途(citation-span 抽出は分離)
+- 実装: `case_vocab.py`(link層語彙＋精度目標の正本ミラー) / `case_link_extract.py`(記事→mention 決定部) / `case_link_map.py`(mention→alo_edges 写像) / `case_link_eval.py`(リンク精度計測) ＋ 各 `test_*` / gold `app/data/case_identity/case_link_gold_template.jsonl`。citation-span 検出器の実体のみ corpus 段階に分離
 
 > **目的**: 雑誌・文献の**本文**から該当判例を取り出し、評釈と判例を丁寧に繋いで**意味層を厚くする**。難所は「1記事:N判例（評釈と判例が 1:1 でない）」。これを**フラットなN本の同格エッジにせず、正典 `alo_edges` の型付きエッジ（evaluates/review_chain/compares …）として載せる**。**新語彙を作らない・merge しない・自動エッジは構造由来(vendor_explicit)のみ・本文推定は strength=implicit で review-first・llm_inferred 直書き禁止（PoC DB制約）。設計のみ・read-only。**
 
@@ -103,8 +103,10 @@ v0.2 で語彙を正典に合わせた結果、正典側の改修は **最小限
 
 ## 8. verification
 - deterministic_self_verification = **fixture-level done**: `test_case_link_map.py` green（評釈1主＋同旨＋反対 / 正式評釈→review_chain / 論文→主なし＋central_case_hint / 未解決→edge無しreview / 未知→fail-closed）。確認項目: (i) **1記事:N が同格に潰れない**(edge_type/stance で分化)、(ii) masthead=vendor_explicit→auto・本文=vendor_implicit(strength=implicit)→review、(iii) emit 値域 ⊆ 正典(`COMMENTARY_TO_CASE_EDGE_TYPES ⊆ LINK_EDGE_TYPES`)、(iv) **llm_inferred 不発生**、(v) **merge 不発生**(route は auto/review/drop のみ)。
-- consistency_gate = **恒久化済**: `test_case_consistency.py` に「`case_link_map` の edge_type/assertion_mode/stance ⊆ `case_vocab`(=35_link_layer ミラー)」を追加。**PASS**。本文採掘語彙のドリフトを CI で停止。
-- corpus-level = **Mac CC**: D1-LIC 5,475 を本文採掘し、masthead 対象以外の本文 mention を vendor_implicit review として抽出。`evaluates` 精度を実 gold で測る。citation-span 抽出器(`case_link_extract.py`)実装はここで合流。
+- extract→map 連結 = **fixture-level done**: `test_case_link_extract.py` green。役割分類(masthead=主/同旨=supporting/これに対し=contrasting/無手掛かり=incidental)、引用解決度(完全番号=deterministic/日付のみ=fuzzy/裁判所名=None)、記事→mention→正典 alo_edges candidate の連結を確認。
+- 精度 gold = **スキーマ＋scorer done**: `case_link_eval.py` + `case_link_gold_template.jsonl`(評釈/正式評釈/論文)。edge_type 別 precision・stance 正解率・route 分布を出す。目標 `evaluates/review_chain=0.97`(誤リンク最有害)・`compares=0.90`・stance=0.85(`case_vocab`)。合成 gold 上は自己無矛盾(precision 1.0)＝**実数は実 corpus=Mac CC**。
+- consistency_gate = **恒久化済**: `test_case_consistency.py` に「`case_link_map` emit・link gold・precision target keys ⊆ `case_vocab`(=35_link_layer ミラー)」を追加。**PASS**。本文採掘語彙のドリフトを CI で停止。
+- corpus-level = **Mac CC**: D1-LIC 5,475 を本文採掘し、masthead 対象以外の本文 mention を vendor_implicit review として抽出。`evaluates` 精度を実 gold で測る。残るは citation-span 検出器(正規表現＋符号正規化の実体)のみ。
 - independent_meaning_audit = 未了（DDCASE ゲート）。owner_approval = 未了。
 
 ### 8.1 写像決定表（`case_link_map.map_mention` の実装則）

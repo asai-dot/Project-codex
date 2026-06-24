@@ -101,6 +101,14 @@ def run() -> int:
     chk("link: case_link_map stance == vocab.LINK_STANCES",
         set(lm.EMITTABLE_STANCES) == set(V.LINK_STANCES),
         f"{set(lm.EMITTABLE_STANCES) ^ set(V.LINK_STANCES)}")
+    link_gold = {e["edge_type"]
+                 for l in (DATA / "case_link_gold_template.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()
+                 for e in json.loads(l)["expected_edges"] if e.get("edge_type")}
+    chk("link: link gold edge_type ⊆ vocab.COMMENTARY_TO_CASE_EDGE_TYPES",
+        link_gold <= set(V.COMMENTARY_TO_CASE_EDGE_TYPES),
+        f"{link_gold - set(V.COMMENTARY_TO_CASE_EDGE_TYPES)}")
+    chk("link: precision target keys ⊆ vocab.COMMENTARY_TO_CASE_EDGE_TYPES",
+        set(V.LINK_PRECISION_TARGET) <= set(V.COMMENTARY_TO_CASE_EDGE_TYPES))
 
     print()
     if issues:

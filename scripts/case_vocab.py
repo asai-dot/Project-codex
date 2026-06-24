@@ -80,6 +80,9 @@ ASSERTION_MODES_POC_ALLOWED = frozenset({"vendor_explicit", "vendor_implicit", "
 LINK_STANCES = frozenset({"supporting", "contrasting", "neutral"})
 # alo_edge_evidence.role(§3。根拠なし edge 禁止=Gate-5)
 EDGE_EVIDENCE_ROLES = frozenset({"support", "quote", "source_field"})
+# link 精度目標(DD-CASEEVAL 拡張)。evaluates(評釈対象)は誤リンクが最も有害=最高精度
+LINK_PRECISION_TARGET = {"evaluates": 0.97, "review_chain": 0.97, "compares": 0.90}
+LINK_STANCE_ACCURACY_TARGET = 0.85  # 同旨/反対 の付け間違い許容度
 
 
 # --- redistribution=public のみ global index 可(AC-3)。商用/有償は false ---
