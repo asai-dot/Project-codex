@@ -40,30 +40,36 @@ def median(xs):
     return 0 if n == 0 else (s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) / 2)
 
 
-def audit(name, rows, get_pref, get_reading, get_def):
+def audit(name, rows, get_pref, get_reading, get_def, export_dir=None, tag=""):
     n = len(rows)
     if n == 0:
         print(f"\n## {name}: 0 件"); return
     miss_read = empty_def = short_def = ocr_bad = latin = bad_reading = long_hw = empty_hw = 0
     deflens, prefs, prefread = [], {}, {}
+    buckets = {"empty_def": [], "short_def": [], "long_headword": [], "no_reading": []}
     for r in rows:
         pref = (get_pref(r) or "").strip()
         rd = get_reading(r)
         df = (get_def(r) or "").strip()
+        rec = {"headword": pref, "reading": rd, "definition": df[:80]}
         if not pref:
             empty_hw += 1
         elif len(pref) > 25:
             long_hw += 1
+            buckets["long_headword"].append(rec)
         if not rd or not str(rd).strip():
             miss_read += 1
+            buckets["no_reading"].append(rec)
         elif not _KANA.match(unicodedata.normalize("NFKC", str(rd))):
             bad_reading += 1
         if not df:
             empty_def += 1
+            buckets["empty_def"].append(rec)
         else:
             deflens.append(len(df))
             if len(df) < 8:
                 short_def += 1
+                buckets["short_def"].append(rec)
             if _OCR_BAD.search(df):
                 ocr_bad += 1
             if _LATIN_RUN.search(df):
@@ -89,6 +95,16 @@ def audit(name, rows, get_pref, get_reading, get_def):
     print(f"  重複 (見出し+読み): {dup_prefread}")
     if deflens:
         print(f"  定義長 min/中央/max: {min(deflens)} / {int(median(deflens))} / {max(deflens)}")
+    if export_dir:
+        ed = Path(export_dir)
+        ed.mkdir(parents=True, exist_ok=True)
+        for bname, recs in buckets.items():
+            if recs:
+                fp = ed / f"{tag}_{bname}.jsonl"
+                with fp.open("w", encoding="utf-8") as fh:
+                    for x in recs:
+                        fh.write(json.dumps(x, ensure_ascii=False) + "\n")
+        print(f"  [export] 問題 records -> {ed}/{tag}_*.jsonl")
 
 
 def main(argv=None) -> int:
@@ -96,6 +112,7 @@ def main(argv=None) -> int:
     ap.add_argument("--yt", default=None)
     ap.add_argument("--yl", default=None)
     ap.add_argument("--he", default=None)
+    ap.add_argument("--export", default=None, help="問題 records の出力先 dir (例: ~/dict_quality)")
     a = ap.parse_args(argv)
     yt = find_one("yuhikaku_legal_dict_terms_stg_v3.jsonl", a.yt)
     yl = find_one("yuhikaku_legal_dict_labels_stg_v3.jsonl", a.yl)
@@ -110,11 +127,13 @@ def main(argv=None) -> int:
             bh.attach_definitions(y, bh.read_jsonl(yl))
         audit("有斐閣『法律用語辞典』(rank101)", y,
               lambda r: r.get("normalized_pref") or r.get("pref_label"),
-              lambda r: r.get("reading"), lambda r: r.get("definition"))
+              lambda r: r.get("reading"), lambda r: r.get("definition"),
+              export_dir=a.export, tag="yuhikaku")
     if he:
         h = [json.loads(x) for x in Path(he).read_text(encoding="utf-8").splitlines() if x.strip()]
         audit("学陽『法令用語辞典』(rank102)", h,
-              lambda r: r.get("headword"), lambda r: r.get("reading"), lambda r: r.get("definition"))
+              lambda r: r.get("headword"), lambda r: r.get("reading"), lambda r: r.get("definition"),
+              export_dir=a.export, tag="hourei")
 
     print("\n=== 結論 ===")
     print("「きれい」かどうかは上の実数で判断する. 読み欠落/短定義/OCRゴミが多ければ、")
