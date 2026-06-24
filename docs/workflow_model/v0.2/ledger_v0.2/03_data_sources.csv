@@ -12,7 +12,7 @@ DS-010,Box,マニュアル/書式/ひな形/終了報告,Box file_id+version_id,
 DS-011,Gmail,全所員メール(外部/内部),Gmail message_id/thread_id,(将来)→comms.source_record_key/matter_ref,到達(read-only),3トレース14イベント抽出,確認済,EVD-112-*,comms には未投入(comms=chatwork100%)。SF連携ラベル多数を確認
 DS-012,Dialpad,通話/SMS/録音/transcript,(コネクタ無し),(未接続),未接続,-,未確認(未接続),112残課題,通話/録音由来イベント未取得。別実査票要
 DS-013,Notta,会議/通話 文字起こし(相談記録ソース),(コネクタ無し),(将来)→consultation_ref; 相談記録合成(G-14),未接続,-,未確認(未接続=未測定),112残課題; G-14,会議文字起こし未取得。相談記録3ソースの1(G-14)。未接続コネクタ(C1)
-DS-014,Google Calendar/Meet,全所員カレンダー(相談予定紐付け=相談記録ソース),event_id,event_id→consultation_ref/期限突合; 相談記録合成(G-14),接続あり(read),実査可(本回答で接続確認),確認済(接続あり G-14),G-14; G-20,日程/期限突合(G-20)+相談記録の1(G-14)。「事件ウェブ」≈Calendar予定紐付けと解釈(要最終確認)
+DS-014,Google Calendar/Meet,全所員カレンダー(相談予定紐付け=相談記録ソース),event_id,event_id→consultation_ref/期限突合; 相談記録合成(G-14),接続あり(read),実査可(本回答で接続確認),確認済(接続あり G-14),G-14; G-20,日程/期限突合(G-20)+相談記録の1(G-14)。「事件メモ」(カレンダー予定に紐づくGoogleドキュメント)=Calendar予定紐付けの相談記録。owner確認済(2026-06-24)
 DS-015,Money Forward,MF請求書,MF invoice id,(将来)→finance/cases,未接続,-,未確認(未接続=未測定),CURRENT_STATE §3,入金消込の突合先候補。未接続コネクタ(C1)
 DS-016,Money Forward,MF会計/銀行明細(会計の突合先),MF transaction id,(将来)→payment_received; 銀行通帳(DS-024)と突合,未接続,-,未確認(未接続=未測定),CURRENT_STATE §3; EVD-112-trace3-0304; G-11,入金確定はDS-024(通帳)が正・MFは突合先(G-11)。未接続コネクタ(C1)
 DS-017,MINTS/Teams/FAX/郵便,裁判所・対外提出証跡,(なし/外部),(将来)→Delivery/Deadline,未接続,-,未確認,CURRENT_STATE §3; G-20,提出証跡。Box通信(送)で間接的に痕跡

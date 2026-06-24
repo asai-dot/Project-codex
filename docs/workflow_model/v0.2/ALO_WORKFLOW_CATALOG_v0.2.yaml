@@ -45,8 +45,9 @@ meta:
       affects: 入力率・自由記述過積載・状態と実態の乖離・SF↔Box ID貫通・現行フィールド有無
     - id: W-20260624-140
       what: 浅井グリル G-01..G-20 の回答
-      reason: 裁定待ち（回答未取得）
-      affects: 状態機械本数(G-05)・human_gates確定(G-06)・PoCスコープ(G-07)・各正本確定
+      reason: 解消（owner 20問全回答済→W-180で決定ログ反映・W-181で catalog/ledger の field-level pending:owner_grill を伝播確定化）
+      resolved_by: [W-20260624-180, W-20260624-181]
+      affects: 状態機械本数(G-05)・human_gates確定(G-06)・PoCスコープ(G-07)・各正本確定 = 全て confirmed 化済
   source_artifacts:
     - ALO_WORKFLOW_CURRENT_STATE_v0.2.md          # Phase0 現状インベントリ
     - PHASE1_question_triage_v0.2.csv             # Phase1 245問トリアージ
@@ -581,8 +582,8 @@ processes:
     evidence: [EV-051_deadline_created, EV-052_deadline_changed, EV-053_deadline_completed]
     automation_candidate: observed_state候補生成
     confirm_status: provisional
-    pending: [sf_survey, owner_grill]   # G-20 Deadline正本
-    source: Phase0 §1 WF-18
+    pending: [sf_survey]   # owner_grill除去: G-20(期限正本=Salesforce・徒過防止は人/SF/AI多重チェック)はowner裁定済(D-033)。Deadline格納先の現行SF有無はSF実査依存で残置
+    source: Phase0 §1 WF-18; G-20; D-033
     decomposition:
       Trigger: [TR-response-or-deadline]
       Actor: [ACT-all]
@@ -607,9 +608,8 @@ processes:
     next_state: WF-20
     evidence: [EV-064_outcome_reached, Ledger:trace3:outcome_reached]
     automation_candidate: 成果類型・残タスク抽出
-    confirm_status: provisional
-    pending: [owner_grill]
-    source: Phase0 §1 WF-19; Ledger trace3
+    confirm_status: confirmed   # owner裁定 G-09/D-024（W-181）2段クローズ①法的終了(案件実体終了)=closing開始可否の起点で確定
+    source: Phase0 §1 WF-19; Ledger trace3; G-09; D-024
     decomposition:
       Trigger: [TR-outcome]
       Actor: [ACT-lawyer]
@@ -635,9 +635,9 @@ processes:
     evidence: [EV-055_invoice_created, EV-056_invoice_sent, EV-058_trust_deposit_received, EV-059_expense_recorded, EV-060_trust_refund_sent, EV-065_financial_reconciliation_completed, Ledger:trace3:invoice/payment]
     automation_candidate: 計算候補・照合・未収監視
     confirm_status: provisional
-    pending: [owner_grill, sf_survey]   # G-06 請求確定/預り金精算=人間必須 / G-10 client/payer
-    human_gate: [HG-05, HG-06]
-    source: Phase0 §1 WF-20; Ledger trace3(精算途中)
+    pending: [sf_survey]   # owner_grill除去: G-06(金銭の確定=報酬確定/預り金精算/振替=人間必須HG-05/06)・G-10(client/payer分離)はowner裁定済(D-023/D-013)。会計系の現行SF格納先はSF実査依存で残置
+    human_gate: [HG-05, HG-06]   # マスト③金銭の確定(G-06/D-023 confirmed)
+    source: Phase0 §1 WF-20; Ledger trace3(精算途中); G-06; G-10; D-023; D-013
     decomposition:
       Trigger: [TR-closing-go]
       Actor: [ACT-lawyer, ACT-office_manager]
@@ -663,8 +663,8 @@ processes:
     evidence: [EV-066_originals_returned, EV-067_closing_report_sent, EV-068_closing_ack_received]
     automation_candidate: 返却物一覧・送付パック生成
     confirm_status: provisional
-    pending: [owner_grill, box_followup]   # G-15 業務終了報告書ひな形 / Box-U2
-    source: Phase0 §1 WF-21; Box実査(8)(10)
+    pending: [box_followup]   # owner_grill除去: G-15(業務終了報告書=専用様式なし→成果物送付or報酬請求通知が兼ねる)はowner裁定済(D-027/Box-U2解消)。返却物/送付パックの追加Box実査は残置
+    source: Phase0 §1 WF-21; Box実査(8)(10); G-15; D-027
     decomposition:
       Trigger: [TR-finance-confirmed]
       Actor: [ACT-lawyer, ACT-clerk]
@@ -689,10 +689,9 @@ processes:
     next_state: null
     evidence: [EV-069_matter_closed, EV-070_knowledge_summary_promoted]
     automation_candidate: close gate/再利用候補
-    confirm_status: provisional
-    pending: [owner_grill]   # G-09 close gate 10条件
-    human_gate: HG-07
-    source: Phase0 §1 WF-22; Box実査(11)既済=フォルダ移動
+    confirm_status: confirmed   # owner裁定 G-09/D-024（W-181）終結=2段クローズ②事務クローズ完了(原本返却済・預り金ゼロ・報酬確定)。終結ゲートHG-07はoptional(置けるが必須でない G-06)
+    human_gate: HG-07   # optional gate（マスト3点外。human_gates.gates HG-07 参照）
+    source: Phase0 §1 WF-22; Box実査(11)既済=フォルダ移動; G-09; D-024
     decomposition:
       Trigger: [TR-all-gates-passed]
       Actor: [ACT-lawyer, ACT-clerk]
@@ -744,9 +743,8 @@ actors:
   - id: ACT-payer
     actor_type: client
     label: 支払者（依頼者と別エンティティ）
-    source: G-10; Ledger trace1/trace3
-    confirm_status: provisional
-    pending: [owner_grill]   # G-10 client/payer分離の確定
+    source: G-10; Ledger trace1/trace3; D-013
+    confirm_status: confirmed   # owner裁定 G-10/D-013（W-181）依頼者/支払者を分けて持つで確定（保険会社払い等に対応）
   - id: ACT-prospect
     actor_type: prospect
     label: 相談者/依頼候補
@@ -886,7 +884,7 @@ systems:
     measured: 実査可
     source: Phase0 §3; G-14; G-20; 03_data_sources DS-014
     confirm_status: confirmed
-    note: "「事件ウェブ」≈Calendar予定に紐づく相談情報 と解釈（要・最終確認）。"
+    note: "「事件メモ」=カレンダー予定に紐づくGoogleドキュメント（owner確認済 2026-06-24。当初『事件ウェブ』と聞き取った点を訂正）。"
   - id: DS-015
     system: Money Forward
     object: MF請求書
@@ -988,7 +986,7 @@ data_source_owner_decisions:
 # 4. triggers — 各 process の開始トリガー（processes.decomposition.Trigger が参照）
 # =====================================================================
 triggers:
-  - {id: TR-inflow,             label: 接点発生（紹介/HP/セミナー/既存顧客）, fires: WF-00, source: Phase0 WF-00, confirm_status: provisional, pending: [owner_grill]}
+  - {id: TR-inflow,             label: 接点発生（紹介/HP/セミナー/既存顧客）, fires: WF-00, source: Phase0 WF-00; G-12; D-030, confirm_status: confirmed}   # owner裁定 G-12/D-030 流入経路=必須〜準必須で確定
   - {id: TR-new-inquiry,        label: 新規連絡受信,             fires: WF-01, source: Phase0 WF-01, confirm_status: provisional, pending: [sf_survey]}
   - {id: TR-candidate-created,  label: 相談候補作成,             fires: WF-02, source: Phase0 WF-02, confirm_status: provisional}
   - {id: TR-parties-known,      label: 当事者・関係者名取得,     fires: WF-03, source: Phase0 WF-03, confirm_status: provisional}
@@ -1327,11 +1325,11 @@ transitions:
     - {from: proposal_sent,         to: proposal_accepted,   machine: consultation, basis: declared,  source: Ledger trace1:0103, confirm_status: observed}
     - {from: proposal_accepted,     to: converted,           machine: consultation, basis: human_decision, source: Ledger trace1:0104(engagement_signed), confirm_status: observed}
   design_representative:   # processes.next_state から導出した代表遷移（仮説）
-    - {process: WF-03, gate: "pass/fail/escalate", machine: consultation, confirm_status: provisional, pending: [owner_grill]}
-    - {process: WF-11, gate: "成立/失注/保留",      machine: consultation, confirm_status: provisional, pending: [owner_grill]}
-    - {process: WF-16, gate: "approve/rework/hold", machine: document,     confirm_status: provisional, pending: [owner_grill]}
-    - {process: WF-20, gate: "financially_reconciled", machine: finance,   confirm_status: provisional, pending: [owner_grill, sf_survey]}
-    - {process: WF-22, gate: "close/archive/promote",  machine: matter,    confirm_status: provisional, pending: [owner_grill]}
+    - {process: WF-03, gate: "pass/fail/escalate", machine: consultation, confirm_status: provisional, pending: [staff_interview], source: G-13}   # owner_grill除去(G-13裁定済)。運用粒度は中森聴取依存
+    - {process: WF-11, gate: "成立/失注/保留",      machine: consultation, confirm_status: confirmed, source: G-06; D-023}   # owner裁定 受任成立=optional gate
+    - {process: WF-16, gate: "approve/rework/hold", machine: document,     confirm_status: confirmed, source: G-06; D-023}   # owner裁定 内部レビューはマスト3点外
+    - {process: WF-20, gate: "financially_reconciled", machine: finance,   confirm_status: provisional, pending: [sf_survey], source: G-06; D-023}   # owner_grill除去(G-06金銭確定マスト裁定済)。会計SF格納先はSF実査依存
+    - {process: WF-22, gate: "close/archive/promote",  machine: matter,    confirm_status: confirmed, source: G-09; D-024}   # owner裁定 2段クローズ確定
   note: 全遷移チェーン(72イベント×53状態)の網羅マトリクスは SF実査と owner裁定後に確定。
 
 # =====================================================================
@@ -1363,7 +1361,7 @@ finance_events:
     - {id: FE-trust_deposit,  type: trust_deposit,  process: WF-20, source: Box実査(8)預り資料/見積(預り金), confirm_status: confirmed}
     - {id: FE-expense,        type: expense,        process: WF-20, source: Phase0 DS-007, confirm_status: provisional}
     - {id: FE-refund,         type: refund,         process: WF-20, source: schema; trace3立替金差引後送金, confirm_status: observed}
-    - {id: FE-reconciliation, type: reconciliation, process: WF-20, source: D-014 close gate, confirm_status: provisional, pending: [owner_grill]}
+    - {id: FE-reconciliation, type: reconciliation, process: WF-20, source: D-014 close gate; G-06; G-09; D-023; D-024, confirm_status: confirmed}   # owner裁定 金銭の確定=マスト③(G-06)・2段クローズ②(G-09)で確定
     - {id: FE-writeoff,       type: writeoff,       process: WF-20, source: schema(未収扱い), confirm_status: provisional}
 
 # =====================================================================
@@ -1418,7 +1416,7 @@ exceptions:
   - {id: EXC-identity_unverifiable, label: 本人確認不能,           relates: [WF-02], source: Phase0 WF-02, confirm_status: provisional}
   - {id: EXC-conflict_fail,        label: コンフリ不適合,          relates: [WF-03], source: Phase0 WF-03, confirm_status: provisional}
   - {id: EXC-conflict_escalate,    label: コンフリ要エスカレーション, relates: [WF-03], source: G-13, confirm_status: provisional, pending: [staff_interview]}
-  - {id: EXC-urgent_bypass,        label: 緊急受任(コンフリ事後),   relates: [WF-04], source: G-06例外, confirm_status: provisional, pending: [owner_grill]}
+  - {id: EXC-urgent_bypass,        label: 緊急受任(コンフリ事後),   relates: [WF-04], source: G-06例外; D-023, confirm_status: confirmed}   # owner裁定 G-06: コンフリ確認はマスト①。緊急受任は事後コンフリ例外として確定
   - {id: EXC-reschedule,           label: 日程変更,                relates: [WF-05], event: consultation_rescheduled, confirm_status: confirmed}
   - {id: EXC-cancel,               label: 相談キャンセル,          relates: [WF-05], event: consultation_cancelled, confirm_status: confirmed}
   - {id: EXC-missing_docs,         label: 事前資料不足,            relates: [WF-06], source: Phase0 WF-06, confirm_status: provisional}
@@ -1433,13 +1431,13 @@ exceptions:
   - {id: EXC-rework,               label: レビュー差戻し,          relates: [WF-16], source: Phase0 WF-16, confirm_status: provisional}
   - {id: EXC-hold_review,          label: レビュー保留,            relates: [WF-16], source: Phase0 WF-16, confirm_status: provisional}
   - {id: EXC-delivery_failed,      label: 送付/提出失敗,           relates: [WF-17], source: Phase0 WF-17, confirm_status: provisional}
-  - {id: EXC-deadline_missed,      label: 期限懈怠,                relates: [WF-18], source: G-20(懈怠防止), confirm_status: provisional, pending: [owner_grill]}
+  - {id: EXC-deadline_missed,      label: 期限懈怠,                relates: [WF-18], source: G-20(懈怠防止); D-033, confirm_status: confirmed}   # owner裁定 G-20: 期限正本=SF・徒過防止は人/SF/AI多重チェックで確定
   - {id: EXC-unpaid,               label: 未収,                    relates: [WF-20], event: invoice_overdue, confirm_status: confirmed}
-  - {id: EXC-client_unreachable,   label: 依頼者連絡不能,          relates: [WF-21], source: G-09例外, confirm_status: provisional, pending: [owner_grill]}
-  - {id: EXC-close_gate_unmet,     label: close gate未通過,        relates: [WF-22], source: G-09, confirm_status: provisional, pending: [owner_grill]}
+  - {id: EXC-client_unreachable,   label: 依頼者連絡不能,          relates: [WF-21], source: G-09例外; D-024, confirm_status: confirmed}   # owner裁定 G-09: 2段クローズ確定。連絡不能は事務クローズ完了の例外
+  - {id: EXC-close_gate_unmet,     label: close gate未通過,        relates: [WF-22], source: G-09; D-024, confirm_status: confirmed}   # owner裁定 G-09: 2段クローズ条件で確定
   - {id: EXC-incident,             label: インシデント/品質事故,    event: incident_reported, source: schema; モジュール12, confirm_status: confirmed}
   - {id: EXC-automation_failure,   label: 自動化失敗,              event: automation_failure_detected, source: schema, confirm_status: confirmed}
-  - {id: EXC-pii_deletion_request, label: 個人情報削除請求(Raw削除例外), relates: [append_only], source: G-03例外, confirm_status: provisional, pending: [owner_grill]}
+  - {id: EXC-pii_deletion_request, label: 個人情報削除請求(Raw削除例外), relates: [append_only], source: G-03例外; D-003; D-010, confirm_status: confirmed}   # owner裁定 G-03: append-only+修正履歴保持。訂正は無効化イベント+新確定リンク(D-010)で確定
 
 # =====================================================================
 # 15. evidence_types — 証跡ソース種別（SourceRef.source_kind enum）+ provenance層
@@ -1489,7 +1487,8 @@ metrics:
   source: REQUEST §6 KPI; G-07; G-08; G-12; D-030; W-180
   poc1:
     scope: 相談→受任ファネル（問合せ→本人確認→コンフリ→トリアージ→日程→資料→相談→見積→契約案→受任）
-    pending: [owner_grill]   # G-07 PoC1スコープ確定
+    scope_status: confirmed   # owner裁定 G-07/D-008（W-181）新規流入→相談起票→Boxフォルダ→相談実施→〈相談止まりなら完了/受任に至れば受任まで〉で確定
+    source: G-07; D-008
     kpis:
       - {id: KPI-P1-01, name: 初回応答までの時間,   type: duration, computable_from: [DS-011, DS-001], confirm_status: provisional}
       - {id: KPI-P1-02, name: 相談確定までの時間,   type: duration, computable_from: [DS-001, DS-014], confirm_status: provisional}
@@ -1501,12 +1500,13 @@ metrics:
       - {id: KPI-P1-08, name: イベント未紐付け率,   type: ratio, relates_exception: EXC-unlinked_event, confirm_status: provisional}
   poc2:
     scope: 解決→最終請求→預り金/実費精算→原本返却→終了報告→既済化
-    pending: [owner_grill]   # G-07 / D-009
+    scope_status: confirmed   # owner裁定 G-07/G-09/D-009（W-181）第2PoC=解決→精算→返却→終了報告→既済化（2段クローズ）で確定
+    source: G-07; G-09; D-009; D-024
     kpis:
       - {id: KPI-P2-01, name: 最終請求確定までの時間, type: duration, computable_from: [DS-007, DS-015], confirm_status: provisional}
       - {id: KPI-P2-02, name: 預り金/実費精算完了率,  type: ratio, relates: [HG-06], confirm_status: provisional}
       - {id: KPI-P2-03, name: 原本返却完了率,         type: ratio, relates: [WI-return-originals], confirm_status: provisional}
-      - {id: KPI-P2-04, name: 終了報告送付率,         type: ratio, relates_exception: 業務終了報告書未確定(G-15), confirm_status: provisional, pending: [owner_grill, box_followup]}
-      - {id: KPI-P2-05, name: close gate未通過滞留率, type: ratio, relates: close_gate_conditions, confirm_status: provisional, pending: [owner_grill]}
+      - {id: KPI-P2-04, name: 終了報告送付率,         type: ratio, relates_exception: 業務終了報告判定=成果物送付or報酬請求通知(G-15/D-027), confirm_status: provisional, pending: [box_followup], source: G-15; D-027}   # owner_grill除去(G-15裁定済:専用様式なし)。送付パックのBox実査は残置
+      - {id: KPI-P2-05, name: close gate未通過滞留率, type: ratio, relates: close_gate_conditions, confirm_status: confirmed_definition, source: G-09; D-024}   # owner裁定 G-09 2段クローズ条件で定義確定（現状値はSF/コネクタ接続後）
       - {id: KPI-P2-06, name: 未収率,                 type: ratio, event: invoice_overdue, confirm_status: provisional, pending: [sf_survey]}
-      - {id: KPI-P2-07, name: declared/observed乖離率, type: ratio, relates: declared_observed_split, source: G-04, confirm_status: provisional, pending: [owner_grill]}
+      - {id: KPI-P2-07, name: declared/observed乖離率, type: ratio, relates: declared_observed_split, source: G-04; D-004, confirm_status: confirmed_definition}   # owner裁定 G-04 declared/observed分離・突合で定義確定（現状値はSF/コネクタ接続後）
