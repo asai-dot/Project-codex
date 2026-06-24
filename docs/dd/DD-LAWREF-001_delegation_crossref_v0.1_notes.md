@@ -1,8 +1,9 @@
 # DD-LAWREF-001 設計ノート v0.1 — 法令間「接続軸」（委任チェーン・条文間参照・行政解釈レイヤ）
 
-> **status**: draft notes（問題提起＋方向づけのみ。accepted DD ではない。production/accept は
-> GPT お目付け役 gate ＋ owner ratify を経る）/ **owner**: 浅井 / **author**: Project-codex (claude-code remote)
-> **recorded_at**: 2026-06-23 / **gate(予定)**: `DDLAWREF`
+> **status**: design-accepted (PASS_WITH_NOTES)（DDLAWREF gate 通過 2026-06-24。反映 notes を §9 に取り込み済。
+> production/accept は別ゲート＋ owner ratify を経る）/ **owner**: 浅井 / **author**: Project-codex (claude-code remote)
+> **recorded_at**: 2026-06-23 / **gate**: `DDLAWREF` → **DDLAWREF_PASS_WITH_NOTES (2026-06-24)**
+> **audit**: REQUEST `docs/audit/DDLAWREF_v0.1_20260623_REQUEST.md` / RESULT `docs/audit/DDLAWREF_v0.1_20260623_RESULT.md`
 > **depends_on**: DD-LAWTIME-001（形式軸）/ DD-LAWSUBTRANS-001（実質軸・assertion overlay）/
 > `35_link_layer`(`alo_edges`)
 > **要旨**: 実務家の問題提起「e-Gov は法律までで、その下の政令・省令との"接続"が無い」を一次情報で
@@ -73,9 +74,13 @@ Akoma Ntoso（OASIS LegalDocML v1.0）は**委任専用要素を持たず**、(1
 `alo_edges` の関係種に以下を足す（lawtime/subtrans の `article_path` 規約を共有）:
 - `delegates_to`（授権：法律条文 → 政令/省令。AKN activeRef 相当）/ 逆 `delegated_by`
 - `references` / `referenced_by`（条文間引用。解決済みリンク）
-- `reads_as`（読替規定：委任先で語 X を Y と読み替える＝委任構造の実質。下記 OSS 部品と接続）
+- `reads_as`（**読替規定専用**：委任先で語 X を Y と読み替える＝委任構造の実質。下記 OSS 部品と接続。
+  一般的な解釈・評価には**広げない**——広げると形式 edge が泥団子化する。DDLAWREF 監査 note §3.1/§9-(2)）
 - `implements`（下位法令が上位委任を具体化）/ `authority_basis`（根拠条文）
+- `cites_statute`（法令本文中の法令引用）/ `cites_administrative_guidance`（告示・通達等への引用。dst の権威差分は §9-(3) で分離）
 > いずれも **形式事実 edge**（XML/官報から確定）。委任の**限界評価**等は DD-SUBTRANS の assertion へ。
+> **edge_type の正式な定義・src/dst 型・source 適格性・claim_support 既定は §9.1 の registry 最小表で統制**
+> （lawtime の citation edge と共有語彙とする。DDLAWREF 監査 note §3.3/§9-(1)(4)）。
 
 ---
 
@@ -161,9 +166,10 @@ JSON 受け渡しで採るか。
 5. `alo_edges` への接続軸 edge 型の DDL 案（DD-LAWTIME/SUBTRANS と同じ append-only・gate 様式）。
 6. 自前部分の最小化設計: 参照抽出層の出力に **委任 typing（`delegates_to`）＋委任限界の評価 assertion**
    だけを乗せる境界を明確化（形式 edge は機械、評価は DD-SUBTRANS の出典付き assertion）。
-7. ~~本ノートを GPT お目付け役 gate `DDLAWREF` に投函~~ **✅ REQUEST 作成済（2026-06-23）**:
-   `docs/audit/DDLAWREF_v0.1_20260623_REQUEST.md`（`alo_gpt_audit lint` 通過・source_hash で版固定）。
-   **残: owner が Box `gpt_ometsuke/to_gpt/` に投函 → GPT Pro 監査 → RESULT → owner ratify で DD 昇格**。
+7. ~~本ノートを GPT お目付け役 gate `DDLAWREF` に投函~~ **✅ 完了（2026-06-24）**:
+   投函 → GPT Pro 監査 → **DDLAWREF_PASS_WITH_NOTES**。REQUEST `docs/audit/DDLAWREF_v0.1_20260623_REQUEST.md` /
+   RESULT `docs/audit/DDLAWREF_v0.1_20260623_RESULT.md`。反映 notes 7項目は §9 に取り込み済。
+   **残: owner ratify（PASS_WITH_NOTES→approval_queue）→ production は別ゲート（§9.7 の宿題 8–11）**。
 
 ## §7. 不確実な点（推測で埋めない）
 - **lawvis** はデータ/コードの GitHub 公開を確認できず（可視化結果サイトのみ）。粒度は法令単位。
@@ -185,3 +191,71 @@ JSON 受け渡しで採るか。
   jplaw_text は条・項・号粒度の本文抽出器（軽量・L5 直結）だが Rust。japanese-law-analysis は
   `japanese_law_xml_schema` を土台にした一貫 Rust スタックと判明。**パース層は Python ja-law-parser
   暫定推奨・読替の一画のみ Rust 部品採用**という言語分割の決定点を明文化（最終は owner 判断）。
+- v0.1 監査反映 (2026-06-24, DDLAWREF gate): GPT お目付け役 gate `DDLAWREF` を通過＝
+  **DDLAWREF_PASS_WITH_NOTES**（design accept 可）。RESULT `docs/audit/DDLAWREF_v0.1_20260623_RESULT.md`。
+  blocking ではない反映 notes 7項目を §9 に取り込み（§3 edge 型に reads_as 限定・cites_* 追加・registry
+  ポインタを反映）。status を design-accepted に更新。production DDL/DB write・claim_support serving は **HOLD**、
+  実改め文 gold なしの本番化は **NO**（別ゲート）。
+
+---
+
+## §9. DDLAWREF 監査反映（PASS_WITH_NOTES, 2026-06-24）
+
+DDLAWREF gate の RESULT（`docs/audit/DDLAWREF_v0.1_20260623_RESULT.md`）は §2 の4判断すべてに GO
+（OSS 戦略のみ GO WITH NOTES）。design accept の条件として示された **blocking ではない必須 notes 7項目**を
+以下に取り込む。本節を満たすことで design-accepted とする。production（DDL/DB write・claim_support serving）
+は別ゲート、実改め文 gold なしの本番化は不可。
+
+### 9.1 edge_type registry の最小表【note (1)(4) — lawtime と統合管理】
+DDLAWREF と DD-LAWTIME の citation edge は**共有語彙**とし、単一 registry で統制する（`delegates_to` /
+`references` / `implements` / `cites_statute` は lawtime 側と同一定義を指す）。各 edge_type は次を必須定義する。
+
+| edge_type | definition（形式事実） | allowed src_type | allowed dst_type | source 適格 | temporal 評価要否 | claim_support 既定 | 評価レイヤ handoff |
+|---|---|---|---|---|---|---|---|
+| `delegates_to` | 上位法令条文が下位法令へ授権 | law/article | ordinance/ministerial_order | e-Gov XML / 官報 | 要（施行時点で有効な委任か） | false | 委任の限界・趣旨 → DD-SUBTRANS assertion |
+| `references` | 条文間の引用（解決済みリンク） | article | article | e-Gov XML | 要（参照先の時点版） | false | 参照の射程評価 → assertion |
+| `implements` | 下位法令が上位委任を具体化 | ordinance/ministerial_order | law/article | e-Gov XML / 官報 | 要 | false | 具体化の妥当性 → assertion |
+| `reads_as` | **読替規定専用**（語 X→Y） | article | article/term | e-Gov XML（読替条項） | 要 | false | （形式のみ。解釈拡張不可） |
+| `authority_basis` | 行政文書/処分の根拠条文 | admin_doc/disposition | article | 官報 / 所管告示 | 要 | false | 授権逸脱評価 → assertion |
+| `cites_statute` | 本文中の法令引用 | any node | law/article | e-Gov XML | 任意 | false | — |
+| `cites_administrative_guidance` | 告示・通達等への引用 | any node | admin_doc | 所管公表 | 任意 | false | binding 評価 → assertion |
+
+> registry の運用：append-only、新 edge_type 追加は DDLAWREF/lawtime 合同で語彙衝突をチェックしてから。
+
+### 9.2 `reads_as` は読替え専用に限定【note (2)】
+`reads_as` は**準用・みなし・読替え規定の形式表現に限る**。「一般的な解釈」「評価上 X と読める」へ拡張しない
+（§3 edge 型に注記済）。解釈・評価は DD-SUBTRANS の assertion layer に送る。
+
+### 9.3 行政解釈レイヤの authority / binding 分離【note (3)】
+告示・通達・ガイドライン・Q&A・逐条解説は法令と **authority が異なる**。同じ `alo_edges`/node に載せてよいが、
+node 側に次を分離保持する（「ラベルの服を着た狼」防止）。
+- `node_type`（law / ordinance / ministerial_order / notice(告示) / circular(通達) / guideline / qa / commentary）
+- `source_authority`（制定主体）
+- `binding_status`（法規範 / 行政内部基準 / 事実上の指針 / 解説）
+- `publication_status`（官報 / 所管公表 / 非公表）
+
+### 9.4 source provenance 必須項目【note (6)】
+各 edge は最低限以下を持つ。**unknown を根拠にしない・推測で埋めない**（家風＝DB が嘘つきにならない酸素）。
+`source_system` / `source_version` / `source_document_uri` / `source_text_span(or pointer)` /
+`parser_version` / `extraction_method` / `confidence` / `review_status` / `fetched_at(or snapshot_id)`。
+
+### 9.5 unknown を claim_support に使わない gate【note (7)】
+serving（claim_support）に出してよいのは `review_status` が確定し `confidence` が閾値以上の edge のみ。
+`review_status=unknown` / provenance 欠落 / `confidence` 未充足の edge は **claim_support から除外**する gate を置く。
+（registry の `claim_support 既定=false` と整合。昇格は明示 review を要する。）
+
+### 9.6 production 前 gold set の内訳【note (5)】
+production gate 前に、実改正の改め文を含む minimum gold set を作る（合成改め文だけでは表記揺れ・準用・読替え・
+枝番・削除後繰上げを踏めない）。
+- 委任チェーン：法律→政令→省令の明示例
+- 条文間参照：同一法内・別法間の双方
+- 読替え：準用・みなし・読替えの典型例
+- 改め文 delta_kind：実改正の追加・削除・置換・繰上げ・枝番
+- 行政解釈：根拠条文が明示される通達 / ガイドライン
+- negative examples：参照らしく見えるが edge 化しないもの
+
+### 9.7 反映先の宿題（§6 への追加）
+8. **edge_type registry を lawtime と合同で実体化**（§9.1 を DDL/統制語彙ファイルに落とす）。
+9. **provenance スキーマ＋claim_support gate を `alo_edges` 接続軸 DDL 案に織り込む**（§6-5 と統合、HOLD 対象）。
+10. **行政解釈 node の type/authority/binding/publication 分離を node スキーマに反映**（DD-SUBTRANS の source_type 体系と接続）。
+11. **production 前 gold set（§9.6）を実改め文で作成**——production ゲート提出の前提条件。
