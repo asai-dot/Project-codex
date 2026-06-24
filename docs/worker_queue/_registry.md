@@ -23,3 +23,4 @@ append-only。SoT はフォルダ位置と RESULT ラベル。本表は派生控
 | 2026-06-25T00:57:07+09:00 | W-20260624-210 | P0 | done | WORKER_PASS | GPT 再監査 → ratify |
 | 2026-06-25T01:26:42+09:00 | W-20260624-230 | P1 | done | WORKER_PASS | GPT 再監査 → ratify |
 | 2026-06-25T01:27:06+09:00 | W-20260624-220 | P1 | done | WORKER_PASS | GPT 再監査 → ratify |
+| 2026-06-25T01:39:49+09:00 | W-20260624-250 | P0 | done | WORKER_PASS | GPT 再監査 → ratify |
