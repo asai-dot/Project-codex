@@ -5,7 +5,7 @@ gate: DDPROCREG
 version: v0.3
 supersedes: 20260623_commercialreclass_v0.2_DDPROCREG
 source_hash: sha256:faa734d07c89a00ae1c9a5ed384bd5a8e4d5d5082870cc7350e9f7631908d67b   # procedure_registry.json(v0.3) + procedure_registry.py + test_procedure_registry.py + v0.2_RESULT
-packet_commit: PENDING_PUSH
+packet_commit: 17982c9b2f51a895fd3ad41a965bfbffe532190f
 implementation_commit: 558ff2e922f60f6f3808950c4a0b798142d6b15f
 git_branch: claude/pipeline-collect-validation-EnNJM
 git_pr: https://github.com/asai-dot/Project-codex/pull/15
