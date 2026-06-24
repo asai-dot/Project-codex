@@ -1,0 +1,21 @@
+{
+  "path": "artifacts/periodical/article_join_dryrun_v0.1.csv",
+  "total": 302130,
+  "joined": 299957,
+  "orphan": 2173,
+  "coverage": 0.9928,
+  "article_collision": 0,
+  "issue_id_mixed": 2,
+  "hyakusen_collision": 0,
+  "orphan_reason": {
+    "authority_unresolved": 1050,
+    "tsuukan_unavailable": 1123
+  },
+  "checks": {
+    "article_collision=0": true,
+    "coverage>=95%": true,
+    "bessatsu_jurist_collision=0": true,
+    "orphan_all_classified": true
+  },
+  "pass": true
+}

@@ -1,0 +1,96 @@
+{
+  "total": 302130,
+  "joined": 299957,
+  "orphan": 2173,
+  "coverage": 0.9928,
+  "orphan_by_reason": {
+    "authority_unresolved": 1050,
+    "tsuukan_unavailable": 1123
+  },
+  "orphan_by_journal_top20": [
+    {
+      "journal_canonical": "月刊債権管理",
+      "orphan": 682
+    },
+    {
+      "journal_canonical": "判例研究",
+      "orphan": 513
+    },
+    {
+      "journal_canonical": "民事法研究",
+      "orphan": 367
+    },
+    {
+      "journal_canonical": "法学セミナー別冊付録,p",
+      "orphan": 116
+    },
+    {
+      "journal_canonical": "TKC税研時報",
+      "orphan": 103
+    },
+    {
+      "journal_canonical": "商法研究",
+      "orphan": 77
+    },
+    {
+      "journal_canonical": "商事法務",
+      "orphan": 50
+    },
+    {
+      "journal_canonical": "建築関係法令の研究",
+      "orphan": 44
+    },
+    {
+      "journal_canonical": "現代刑事法",
+      "orphan": 43
+    },
+    {
+      "journal_canonical": "立命館大学法学部ニューズレター",
+      "orphan": 37
+    },
+    {
+      "journal_canonical": "保安と外勤",
+      "orphan": 30
+    },
+    {
+      "journal_canonical": "法学論集(駒沢大学)",
+      "orphan": 28
+    },
+    {
+      "journal_canonical": "タイム",
+      "orphan": 25
+    },
+    {
+      "journal_canonical": "明治大学法科大学院ジェンダー法センター年報",
+      "orphan": 21
+    },
+    {
+      "journal_canonical": "訟務月報",
+      "orphan": 14
+    },
+    {
+      "journal_canonical": "法学セミナー増刊,p",
+      "orphan": 7
+    },
+    {
+      "journal_canonical": "法学研究",
+      "orphan": 7
+    },
+    {
+      "journal_canonical": "永世中立",
+      "orphan": 4
+    },
+    {
+      "journal_canonical": "軍事民論",
+      "orphan": 3
+    },
+    {
+      "journal_canonical": "東洋法学会会報",
+      "orphan": 2
+    }
+  ],
+  "collision_count": 11413,
+  "authority_path": "artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v14.csv",
+  "labeled_path": "/Users/yuta/ALOBookDX/事務所内本棚DX化計画/build/d1_bunken_article_meta_20260611/labeled_v0.2.1/article_meta_labeled.jsonl",
+  "schema_version": "v0.1"
+}
