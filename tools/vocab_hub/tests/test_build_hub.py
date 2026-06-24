@@ -351,5 +351,48 @@ class TestHomographReview(unittest.TestCase):
         self.assertEqual(len(pairs), 0)
 
 
+class TestHomographClassify(unittest.TestCase):
+    """実データ44件の素性に基づく自動分類(staging artifact vs genuine 多義)."""
+    def setUp(self):
+        import homograph_review as hr
+        self.hr = hr
+
+    def test_continuation_a_cut_midsentence(self):
+        # A が文末記号で終わらず途中で切れている -> continuation
+        k, _ = self.hr.classify_pair("会計", "…予算決算，収支等を規", "定し，この場合の会計は…である。")
+        self.assertEqual(k, "artifact_continuation")
+
+    def test_empty_b(self):
+        k, _ = self.hr.classify_pair("施行法", "ある法律の施行に必要な規定をいう。", "(定義なし)")
+        self.assertEqual(k, "artifact_empty")
+
+    def test_stub_b_reading(self):
+        # B が読み/相互参照の短いスタブ
+        k, _ = self.hr.classify_pair("博士", "学位の一種で，…ものとがある。", "はくし")
+        self.assertEqual(k, "artifact_stub")
+
+    def test_header_only_b(self):
+        k, _ = self.hr.classify_pair("資本取引", "【1)】", "【2) 国際経済上は】")
+        self.assertEqual(k, "artifact_header")
+
+    def test_subitem_b(self):
+        k, _ = self.hr.classify_pair("休業補償", "1）労働者が…（労働基準法84I）.",
+                                     "2）船員法では，…(船員法 95).")
+        self.assertEqual(k, "artifact_subitem")
+
+    def test_list_marker_headword(self):
+        k, _ = self.hr.classify_pair("その1", "職務を行う上などに要した費用を償う…",
+                                     "防衛出動時における物資の収用等の特権であり…。")
+        self.assertEqual(k, "artifact_list_marker")
+
+    def test_genuine_both_complete(self):
+        # 両方が完結した別定義(OCR矛盾含む) -> owner判断
+        k, _ = self.hr.classify_pair(
+            "重懲役",
+            "旧刑法に規定されていた刑名。刑期は九年以上一一年以下で、定役に服さない。現行刑法の有期禁錮の一部に相当する。",
+            "旧刑法に規定されていた刑名。重罪に対し科される主刑の一つで、刑期は九年以上一年以下。定役に服する。現行刑法の有期懲役の一部に該当する。")
+        self.assertEqual(k, "genuine_candidate")
+
+
 if __name__ == "__main__":
     unittest.main()
