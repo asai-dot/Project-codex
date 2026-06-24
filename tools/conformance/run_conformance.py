@@ -23,6 +23,7 @@ TESTS = os.path.join(HERE, "tests")
 # DD → module/test の対応（owner 5行サマリ用）
 DD_MAP = {
     "DD-LAYOUT-001": ["test_layout_projection", "test_layout_hashbundle"],
+    "DD-TRILOGY-RECONCILE-001": ["test_reconcile_indep_registry"],
     "DD-XMODAL-001": ["test_xmodal_agreement"],
     "DD-XDOC-001": [
         "test_xdoc_canonical", "test_xdoc_eligibility",
