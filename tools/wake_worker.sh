@@ -14,7 +14,10 @@ set -uo pipefail
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO" || { echo "repo not found: $REPO" >&2; exit 1; }
 BRANCH="claude/magazine-object-analysis-seg9cr"
-ORDER="${1:-artifacts/periodical/ORCH-ARTICLE-JOIN_order_20260624.md}"
+# 引数なしなら「今ワーカーに振る発注書」= ORCH-CURRENT.txt の先頭行
+ORDER="${1:-}"
+[ -z "$ORDER" ] && ORDER="$(grep -vE '^\s*#|^\s*$' artifacts/periodical/ORCH-CURRENT.txt 2>/dev/null | head -1)"
+[ -z "$ORDER" ] && { echo "発注書未指定 かつ ORCH-CURRENT.txt が無い/空" >&2; exit 4; }
 
 # 安全: 発注書は artifacts/periodical/ORCH-*.md のみ許可（暴発防止）
 case "$ORDER" in
