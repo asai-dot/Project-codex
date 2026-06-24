@@ -1,2 +1,7 @@
 __pycache__/
 *.pyc
+
+# dry-run/中間生成データファイル（大容量・リポジトリに含めない）
+artifacts/periodical/article_join_dryrun_*.csv
+artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v[0-9]*.csv
+artifacts/periodical/d1_journal_issn_authority_ALL_resolved.csv
