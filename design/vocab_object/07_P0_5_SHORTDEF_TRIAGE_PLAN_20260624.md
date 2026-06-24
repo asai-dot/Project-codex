@@ -7,15 +7,23 @@
 ## 0. このフェーズの位置づけ
 
 P0(hub dry-run)とP1(DICT-008 accept)の間に挟む**軽量前処理**。
-当初「大規模前処理が要る」と見たが、§06実測で**唯一の実残課題は短定義 anchor 489 hub**に縮小した。
-P0.5 はこの489件を triage するだけ。**clean subset は P0.5 を待たず P1 へ進められる**（option 2）。
+当初「大規模前処理が要る」と見たが、§06→§08→§09 の実測で**残作業はごく小さい**と判明:
+homograph44→defragで3(owner判断2件)、短定義489→triageで真の再OCRは17件・75%は相互参照(資産)。
+**clean subset は P0.5 を待たず P1 へ進められる**（option 2）。
+
+> **更新(09 triage実測後)**: 下表の「短定義489」は §09 で再分類済み。
+> 363(75%)が cross_reference(資産), 22 valid_short, **truncation 17が真の再OCR**, other 83要目視。
 
 ## 1. スコープ（確定した数字 / reading補完込み 最終 run_2dict --quality-filter）
 
 | 項目 | hubレベル実数 | 対応 |
 |---|---|---|
-| 空定義 anchor | **6 hub** | 人手で原典確認（少数）→ see_also or 再OCR |
-| 短定義(<8字) anchor | **489 hub** | 本フェーズの主対象。3分類して処理 |
+| 空定義 anchor | 6→**3 hub**(defrag後) | 人手で原典確認（少数）→ see_also or 再OCR |
+| 短定義(<8字) anchor | 489→**485**(defrag後) | §09で4分類 → 下記 |
+| └ cross_reference | **363** | **別名/see_aliasリンク資産**(再OCR不要、P3で構造化) |
+| └ valid_short | 22 | そのまま load 可 |
+| └ truncation | **17** | 真の再OCR(DD-DICT-006) |
+| └ other | 83 | 要目視(bare参照target + 末尾切れ) |
 | 読み欠落 | reading補完で解消（defmatch残3） | 対応不要（任意で pykakasi reading スポット検証） |
 | 非tier1 参照行 | 712（穴ではない） | 対応不要（seed除外が正） |
 | 辞書またぎ統合 | 2037（exact key） | — 参考: cross-dict 統合が高品質キーで成立 |
