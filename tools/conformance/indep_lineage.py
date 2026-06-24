@@ -37,19 +37,28 @@ class ContentLineageBinding:
             raise IndepValidationError(f"未知 binding_status: {self.binding_status}")
 
 
+GROUP_UNKNOWN = "__unknown_lineage__"   # note5: 不明系譜は independent に格上げしない
+
+
 def content_independence_group(b: ContentLineageBinding) -> str:
     """policy 算定: 独立群 = collapse_key 優先、無ければ upstream_lineage_id。
 
     object_id では数えない（B1/B4）。転載/同一上流は同一群へ collapse。
+    upstream も collapse も不明（falsy）なら GROUP_UNKNOWN（note5: 既定で独立にしない）。
     """
-    return b.same_origin_collapse_key or b.upstream_lineage_id
+    key = b.same_origin_collapse_key or b.upstream_lineage_id
+    return key if key else GROUP_UNKNOWN
 
 
 def content_independent(bindings: Iterable[ContentLineageBinding]) -> bool:
-    """active binding の content_independence_group の DISTINCT ≥ 2。"""
+    """active binding の **既知** content_independence_group の DISTINCT ≥ 2。
+
+    note5（保守化）: GROUP_UNKNOWN は数えない。不明系譜だけでは独立を立てない。
+    """
     groups: Set[str] = {
         content_independence_group(b) for b in bindings if b.binding_status == BINDING_ACTIVE
     }
+    groups.discard(GROUP_UNKNOWN)
     return len(groups) >= 2
 
 

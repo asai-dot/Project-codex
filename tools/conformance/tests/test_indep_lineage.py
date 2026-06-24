@@ -57,6 +57,17 @@ class TestContentLineage(unittest.TestCase):
         b = _b("b", "o2", "up:B", status=BINDING_STALE)  # stale は数えない
         self.assertFalse(content_independent([a, b]))
 
+    def test_note5_unknown_lineage_not_independent(self):
+        """note5: upstream/collapse 不明な binding だけでは independent にしない。"""
+        a = ContentLineageBinding("a", "art:a", "o1", upstream_lineage_id="",
+                                  same_origin_collapse_key=None, independence_policy_version="v1")
+        b = ContentLineageBinding("b", "art:b", "o2", upstream_lineage_id="",
+                                  same_origin_collapse_key=None, independence_policy_version="v1")
+        self.assertFalse(content_independent([a, b]))  # 2件とも unknown → 独立でない
+        # 既知1 + 不明1 でも独立2源にならない
+        known = _b("k", "o3", "up:known")
+        self.assertFalse(content_independent([a, known]))
+
 
 class TestObservationLineage(unittest.TestCase):
     def test_fix4_same_raw_hash_diff_run_one_lineage(self):

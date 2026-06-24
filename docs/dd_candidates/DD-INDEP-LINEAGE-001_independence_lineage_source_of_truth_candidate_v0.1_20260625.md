@@ -1,6 +1,8 @@
 # DD-INDEP-LINEAGE-001 v0.1 — 独立性 lineage 正本（反こたつ記事の核・leaf DD）candidate
 
 > **id**: DD-INDEP-LINEAGE-001 / **version**: candidate v0.1 / **supersedes**: なし（新規・leaf）
+> **lifecycle**: **accepted**（owner 浅井 ratify 2026-06-25、設計のみ）。GPT Pro 監査 `DDINDEP_PASS_WITH_NOTES`（RESULT Box 2306834650821・blocking なし）。実装/DDL/DB/mint/OCR/embedding/production/promotion/claim-support は**別ゲートで HOLD**（accepted≠deployed）。
+> **accepted notes（非blocking・実装時遵守）**: (1) content 独立は content_independence_group の DISTINCT（object/record id でない） (2) observation 独立は observation_lineage_root の DISTINCT（OCR/parser/normalizer run でない） (3) content_lineage_binding は versioned・変更で stale/re-eval (4) consumer は本 DD を id+version+content_hash+acceptance_ref で pin（循環解消の条件） (5) **unknown lineage を既定で independent に格上げしない**（保守化・harness 反映済 GROUP_UNKNOWN）。
 > **owner**: 浅井 / **author**: 番頭(リモートClaude) / **date**: 2026-06-25 JST
 > **gate**: 設計のみ candidate。DDL/DB/Box mutation/mint/OCR/embedding/production/promotion/claim-support は **HOLD**。
 > **目的**: 「独立2源でなければ confirmed/eligible にしない」の**唯一の正本**を定義。DDRECONCILE v0.1/v0.2・DDXMODAL v0.5 の両監査が一致して指摘した「object_id/scan_id は lineage root として不十分」「independence_group + collapse_key + versioned binding が要る」「相互依存を一方向に」を leaf DD として集約。
@@ -107,4 +109,4 @@ binding_id 等のハッシュは RECONCILE v0.3 §6 の **field-level canonicali
 ## 9. GO / HOLD / loop_state
 - **GO**：v0.1 design ratify／lineage schema fixture／independence_policy 草案／XMODAL v0.6・XDOC addendum・RECONCILE v0.3 が本 DD を一方向 consume する整合。
 - **HOLD**：DDL/DB/mint/Box mutation/OCR/embedding/production/promotion/claim-support／既存 ID 一括再生成。
-- loop_state = **candidate（新規 leaf）→ GPT 監査（gate=DDINDEP）候補**。PASS 後、XMODAL/XDOC/RECONCILE が版 pin して consume（循環解消・joint manifest で atomic acceptance）。
+- loop_state = **accepted（owner ratify 2026-06-25・DDINDEP PASS_WITH_NOTES）**。次：XMODAL v0.6 / RECONCILE v0.3 / XDOC addendum が本 DD を id+version+content_hash+acceptance_ref で pin して一方向 consume → joint release manifest で atomic acceptance（循環解消）。
