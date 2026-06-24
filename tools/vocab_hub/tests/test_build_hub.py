@@ -480,19 +480,29 @@ class TestShortDefTriage(unittest.TestCase):
         import short_def_triage as sdt
         self.sdt = sdt
 
-    def test_valid_short_crossref(self):
-        for d in ("相続に同じ。", "遺言の略。", "占有をいう。", "民法を見よ"):
+    def test_cross_reference_arrow(self):
+        # 矢印参照(→X/↓X/⇨X/↳X) は cross_reference (see also 資産)
+        for d in ("→持分", "⇨外債", "↓移審", "↳吏員", "↓"):
+            self.assertEqual(self.sdt.classify_short(d)[0], "cross_reference", d)
+
+    def test_cross_reference_quote(self):
+        for d in ("「経理」", "「承継」", "「販売」"):
+            self.assertEqual(self.sdt.classify_short(d)[0], "cross_reference", d)
+
+    def test_valid_short_complete(self):
+        # 末尾完結(。) or を見よ 等 は valid_short
+        for d in ("満期。", "村八分。", "占有をいう。", "民法を見よ"):
             self.assertEqual(self.sdt.classify_short(d)[0], "valid_short", d)
 
-    def test_truncation_particle_or_no_terminator(self):
-        for d in ("賃金の，", "当該行為を", "物を支配する"):
+    def test_truncation_empty_or_short(self):
+        # 空/句点のみ/1-2字未完結 は truncation (OCR脱落)
+        for d in ("", "。", "破", "救護"):
             self.assertEqual(self.sdt.classify_short(d)[0], "truncation", d)
 
-    def test_other_complete_short(self):
-        self.assertEqual(self.sdt.classify_short("社団法人。")[0], "other")
-
-    def test_empty(self):
-        self.assertEqual(self.sdt.classify_short("")[0], "empty")
+    def test_other_midcut_3plus(self):
+        # 3字以上で末尾未完結 は other (参照targetか末尾切れ: 要目視)
+        for d in ("共同海", "中小事", "犯罪の", "実際の"):
+            self.assertEqual(self.sdt.classify_short(d)[0], "other", d)
 
 
 if __name__ == "__main__":

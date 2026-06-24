@@ -27,21 +27,32 @@ import defrag_terms as dft
 import run_2dict as r2
 
 _TERMINATORS = "。．.！？!?」』）)"
-# 正規の短定義パターン: 相互参照・略語・同義
-_VALID_SHORT = re.compile(r"(?:の略|に同じ|をいう|を見よ|参照|に同|の意|の旧称|の俗称|に当たる)[。．]?$")
-# 助詞/接続で終わる = 途中切れ疑い
-_PARTICLE_END = re.compile(r"[ぁ-ん，、・]$")
+# 相互参照の矢印 (↓→⇨↳⇒➡⟶ 等). 「○○を見よ」を意味する辞書の参照記号
+_XREF_ARROW = re.compile(r"[↓→⇨↳⇒➡⟶⬆⬇←⟹➔➜]")
+# 括弧のみ参照: 「○○」 だけ (計理→「経理」 等)
+_XREF_QUOTE = re.compile(r"^「[^」]+」[。．]?$")
+# 明示的な参照/略語表現
+_VALID_SHORT = re.compile(r"(?:の略|に同じ|をいう|を見よ|参照|の意|の旧称|の俗称|に当たる)[。．]?$")
 
 
 def classify_short(definition: str) -> tuple:
+    """短定義を4分類: cross_reference / valid_short / truncation / other.
+
+    実データ上、短定義の大半は OCR 脱落ではなく辞書の相互参照(→X/「X」=see also).
+    これは語彙ハブの別名/see_alsoリンクとして資産であり再OCR対象ではない.
+    """
     d = (definition or "").strip()
-    if not d:
-        return "empty", "定義が空"
-    if _VALID_SHORT.search(d):
-        return "valid_short", "相互参照/略語/同義の正規短定義"
-    if d[-1] not in _TERMINATORS or _PARTICLE_END.search(d):
-        return "truncation", "文末記号で終わらない/助詞止め(末尾切れ疑い)"
-    return "other", "短いが末尾は完結(要目視)"
+    if not d or d in ("。", "．"):
+        return "truncation", "空/句点のみ(OCR脱落)"
+    if _XREF_ARROW.search(d):
+        return "cross_reference", "矢印参照(→X=他項目を見よ)"
+    if _XREF_QUOTE.match(d):
+        return "cross_reference", "括弧参照(「X」=言い換え/別表記)"
+    if d[-1] in "。．" or _VALID_SHORT.search(d):
+        return "valid_short", "末尾完結の正規短定義"
+    if len(d) <= 2:
+        return "truncation", "1-2字で末尾未完結(OCR脱落疑い)"
+    return "other", "末尾未完結(参照targetか末尾切れ: 要目視)"
 
 
 def collect_short_anchors(terms, threshold=0.6):
@@ -70,19 +81,19 @@ def to_markdown(rows):
     lines = [
         "# 短定義 anchor triage (read-only)",
         "",
-        f"> 短定義(<{bh.SHORT_DEF_LEN}字)が anchor の hub を3分類。homograph とは別問題(単一行で元々短い)。",
-        f"> 総数 **{len(rows)}**  /  truncation {counts['truncation']}  /  "
-        f"valid_short {counts['valid_short']}  /  other {counts['other']}  /  empty {counts['empty']}",
+        f"> 短定義(<{bh.SHORT_DEF_LEN}字)が anchor の hub を4分類。homograph とは別問題(単一行で元々短い)。",
+        f"> 総数 **{len(rows)}**  /  cross_reference {counts['cross_reference']}  /  "
+        f"valid_short {counts['valid_short']}  /  truncation {counts['truncation']}  /  other {counts['other']}",
         "",
         "| クラス | 件数 | 扱い |",
         "|---|---|---|",
-        f"| truncation | {counts['truncation']} | 末尾切れ → 再OCR(DD-DICT-006)候補 |",
-        f"| valid_short | {counts['valid_short']} | 正規短定義 → そのまま load 可 |",
-        f"| other | {counts['other']} | 短いが末尾完結 → 要目視 |",
-        f"| empty | {counts['empty']} | 空 → 除去/再OCR |",
+        f"| cross_reference | {counts['cross_reference']} | 相互参照(→X/「X」) → 別名/see_alsoリンクの資産。再OCR不要 |",
+        f"| valid_short | {counts['valid_short']} | 末尾完結の正規短定義 → そのまま load 可 |",
+        f"| truncation | {counts['truncation']} | 空/1-2字未完結 → 再OCR(DD-DICT-006)候補 |",
+        f"| other | {counts['other']} | 3字以上で末尾未完結 → 参照targetか末尾切れ(要目視) |",
         "",
     ]
-    for klass in ["truncation", "other", "valid_short", "empty"]:
+    for klass in ["cross_reference", "other", "truncation", "valid_short"]:
         sub = [r for r in rows if r["klass"] == klass]
         if not sub:
             continue
@@ -128,11 +139,12 @@ def main(argv=None) -> int:
     for r in rows:
         counts[r["klass"]] += 1
     print(f"[short_def] 短定義 anchor {len(rows)} 件:")
-    for k in ["truncation", "valid_short", "other", "empty"]:
+    for k in ["cross_reference", "valid_short", "truncation", "other"]:
         if counts[k]:
             print(f"             {k}: {counts[k]}")
     print(f"[short_def] -> {out}/short_def_triage.md")
-    print("[short_def] truncation=再OCR候補 / valid_short=そのままload可 / other=要目視")
+    print("[short_def] cross_reference=別名/see_alias資産(再OCR不要) / valid_short=そのままload可")
+    print("[short_def] truncation=再OCR候補 / other=要目視(参照targetか末尾切れ)")
     return 0
 
 
