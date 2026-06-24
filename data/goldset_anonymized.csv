@@ -1,0 +1,38 @@
+case_id,difficulty_tag,input_signal,expected_action,expected_object_type,confidence_band,auto_allowed,auto_if_condition,allowed_signals,forbidden_signals,must_not_link_to,risk_type,pitfall
+G-01,旧姓立件(離婚),婚氏(依頼者P)で来るがSFは旧姓(P')立件,link_to_matter,Consultation/Business,review,no,,相手方氏+分野(離婚)+同時期+名寄せ台帳(婚氏↔旧姓),婚氏の単純一致のみ,同姓の別人案件,confidentiality_risk,正規化では別姓で繋がらず未分類化
+G-02,同姓異人,姓のみ一致、複数の同姓案件,human_review,party,review,no,,事件名/相手方/住所/生年/メール一致,姓のみ一致,別人のparty/案件,confidentiality_risk,姓一致で別人案件にマージ
+G-03,表記ゆれ(中黒),「法人B」と「法人・B」,link_to_matter,Business,review,conditional,法人番号/住所/代表者/ドメイン/SF既存関係のいずれか一致時のみauto,中黒/全半角/スペース吸収キー(候補生成),正規化キー単独,同名の別法人/屋号/グループ会社,billing_risk,中黒潰しすぎで別法人を誤併合
+G-04,旧社名,旧α社→現β社,link_to_matter,Business,review,no,,別名辞書(旧社名→現社名)+ドメイン/住所,旧社名の文字一致のみ,旧社名で新規当事者作成,billing_risk,旧社名で新規当事者を作る
+G-05,グループ別名,グループG=法人H+代表者個人で別レコード,link_to_matter,Business,review,no,,グループ↔構成法人の別名+1相談N受任(Pattern B),グループ名一致のみ,グループを1案件に丸める,workflow_risk,グループ名で1案件に丸める
+G-06,複数案件(法人+個人),法人D+代表者個人2名で受任3件,split,Business,review,no,,法人/個人の別、Pattern B分岐,法人名一致のみ,法人と個人を同一matter,workflow_risk,法人と個人を1案件に混在
+G-07,同一依頼者別事件,法人Eで売掛金回収と別相手方損賠の2件,human_review,Business,review,no,,事件名+相手方で分離,依頼者一致のみ,別事件への誤寄せ,workflow_risk,最新案件に寄せ取り違え
+G-08,相手方代理人からのメール,差出=相手方弁護士ドメイン,link_to_matter,Business,review,conditional,事件番号or相手方名+thread継続+直近案件が一意の時のみauto,代理人ドメイン/氏名単独,同一代理人の別案件,confidentiality_risk,別組織だから非案件と誤判定 / 単独auto,
+G-09,自所が手続主体(管財),「破産管財人 浅井」宛、裁判所/債権者から,link_to_matter,Business(管財),review,no,,管財事件の事件番号/裁判所/自所=管財人ロール,自所名→内部メール判定,内部メールとして除外,workflow_risk,自所名で内部メール誤判定し除外
+G-10,自所が手続主体(後見/遺言執行),後見監督/遺言執行連絡,link_to_matter,Business,review,no,,後見/執行の手続key+自所=後見人/執行者ロール,依頼者不在で未分類化,他人の後見案件,confidentiality_risk,依頼者不在に見え未分類
+G-11,協業先,協業会計士A(M&A協業FA),link_as_role,party(collaborator),review,no,,協業ロールで当該matterに紐付け,会計士=依頼者/無関係扱い,別案件/誤って依頼者化,confidentiality_risk,依頼者と誤認 or 無関係と除外
+G-12,利益相反の消去法担当,所内「@弁護士A @弁護士B 利益相反確認」,human_review,assignee_prior,review,no,,確認宛先=非担当→消去法+Box所在/SF Owner裏取り,@された人=担当,@された弁護士を担当に,workflow_risk,@された人を担当と誤認
+G-13,紹介元,法テラス(LAC)/弁護士会経由,link_as_role,party(referrer),review,no,,紹介元ロール+分野推定,紹介元=当事者登録,依頼者/相手方として登録,workflow_risk,紹介元を当事者登録
+G-14,研修・対外活動=非案件,セミナー/研修/講師依頼,flag_non_matter,non_matter(activity),auto,conditional,event_type=seminar/training かつ non-client source の時auto,,講師依頼が顧問/個別相談に紐づく例外を除く,workflow_risk,件数多→重要案件と誤認 / 顧問紐づき例外,
+G-15,顧問先の定例=顧問レイヤー,顧問先の一般連絡,link_to_matter,AdvisorContract,review,no,,顧問契約レイヤー+個別依頼が立てば別matter,顧問連絡を直近個別案件へ,個別受任案件,billing_risk,顧問連絡を直近個別案件に寄せる
+G-16,相談→受任で名称変化,「法律相談」→「○○請求事件」,link_to_matter,Consultation/Business,review,no,,相談⇄受任N:M+ペア表,名称不一致で別案件分離,別依頼者の案件,workflow_risk,名称違いで別案件分離
+G-17,相談止まり(受任なし),単独相談、受任に至らず,flag_non_matter,Consultation(closed),review,no,,受任ペア無し+終結フラグ,無理に受任へ紐付け,受任案件,workflow_risk,無理に受任へ紐付け
+G-18,SF未起票(約30%/Pattern E),Box実体ありSF無し,create_matter_candidate,Business(candidate),review,no,,Box実体+no_sf_match_reason分類,SF無し全件を一律起票候補に,誤った既存案件,workflow_risk,SF JOINで欠落し捨てる / 一律起票でノイズ
+G-19,関連交渉の格納先,親受任内の個別交渉,link_as_role,AdvisorConsultation(a03),review,no,,親受任にサブとしてリンク,a03を独立案件扱い,独立受任案件,workflow_risk,a03を独立案件/専用objと誤解
+G-20,事件番号での同定,「令和○年(ワ)第○号」,link_to_matter,court_proceeding,review,conditional,court+元号年+事件種別+番号+matter側文脈が揃う時のみauto,事件番号の数字のみ,別裁判所の同番号/派生事件(控訴保全執行),workflow_risk,同名別事件を取り違え / 番号単独auto衝突,
+G-21,重複起票,同名で受任+関連交渉がSFに両方,human_review,Business,review,no,,二重起票疑い→統合検討,両方に別々紐付け,二重計上,billing_risk,両方に別々紐付け二重計上
+G-22,漢字統一未,同一人物が弘/博史/宏,merge_party,party,review,no,,同訓異字+他属性一致で統一,読みのみで自動併合,同訓異字の別人,confidentiality_risk,別人としてparty量産 or 誤併合
+G-23,システム通知/採用/ベンダー,box@/recruite@/info@/配信ヘッダ,flag_non_matter,non_matter(system/hiring/vendor),auto,conditional,運営アドレス/配信ヘッダはauto除外。ただし業務system通知で案件リンク含む時はreview,,業務通知(Box/Notta/Dialpad)で案件リンク含む例外,workflow_risk,通知を案件候補として延々探索 / 案件リンク見落とし,
+G-24,ラベル破損,ラベルが「0015h...」等IDのみ,human_review,party/Business,review,no,,名称復元(TASK-A)後に判定,ID断片の部分一致,壊れラベルを正規データ扱い,workflow_risk,壊れラベルを正規扱い
+G-25,主事件/付随事件,「★★★(主事件)」マーカー,link_to_matter,Business,review,no,,主事件マーカー優先+付随/個人事件の振り分け,付随を主事件扱い,付随事件を主事件に,workflow_risk,付随を主事件と取り違え
+G-26,添付↔Gmail identity bridge,msg_key と gmail id が交差しない,hold,(none),unmatched,no,,bridge構築までhold(DD-EMAILATTACH既知),弱判定で自動保存,誤案件/重複保存,confidentiality_risk,添付を誤案件/重複保存
+G-27,共同受任・復代理,他事務所弁護士が味方側か相手方側か,human_review,Business,review,no,,委任関係+共同/復代理の役割,事務所名だけで敵味方判定,相手方側に味方を登録,confidentiality_risk,共同代理人を相手方と取り違え
+G-28,保険会社・共済・保証会社,保険/共済/保証会社からの連絡,link_as_role,party(insurer),review,no,,支払者/利害関係者/紹介元の役割を分離,保険会社=依頼者扱い,依頼者として登録/請求先誤り,billing_risk,支払者と依頼者を混同
+G-29,破産再生の債権者多数,大量の債権者名が出る,link_as_role,party(creditor),review,no,,債権者ロールで関係付け,債権者全員を案件候補に,各債権者を別案件化,workflow_risk,債権者を案件候補として量産
+G-30,家事民事刑事の混在,同一人物/同一家庭で複数領域並走,human_review,Business,review,no,,領域+事件番号+相手方で分離,同一人物で1案件に統合,別領域の別案件へ,confidentiality_risk,別領域案件を混在
+G-31,派生事件(控訴抗告保全執行),主事件と事件番号が異なる派生,human_review,court_proceeding,review,no,,主事件との関連key+同一matter判定,事件番号違いで即別matter,誤って別matter化/同一化,workflow_risk,主事件と派生の同一/別判定ミス
+G-32,外国当事者・翻訳名,英文社名/日本語/略称/代理人表記揺れ,human_review,party,review,no,,別名辞書(英/和/略称)+法人番号/ドメイン,表記の表層一致のみ,別の外国当事者,billing_risk,表記揺れで別当事者化/誤併合
+G-33,顧問先グループ会社,親会社/子会社/役員個人/従業員相談,split,AdvisorContract/Business,review,no,,法人階層+役員個人/従業員の別,顧問先名で全部1つに,別法人/個人案件へ誤寄せ,confidentiality_risk,グループ内を1つに丸める
+G-34,旧担当者・退職者メール,過去の相手先担当者名が出る,human_review,party,review,no,,現当事者性の確認(時点),過去担当者=現案件主体,退職者を現当事者に,workflow_risk,旧担当者を現主体と誤認
+G-35,裁判所/管財人/監督委員の通知,手続主体か裁判所事務連絡かの別,human_review,court_proceeding/Business,review,no,,差出種別(court/管財人/監督委員)の分離,全て同一手続に丸める,別手続/別matterへ,workflow_risk,事務連絡と手続主体通知を混同
+G-36,一括メール・CCだけ関与,CCに当事者がいるが主案件でない,human_review,(none),review,no,,To/主たる宛先+本文主題,CC在席=案件確定,CC一致だけで誤紐付け,workflow_risk,CC関与だけで主案件に紐付け
+G-37,内部作業/アーカイブフォルダ,_alo_dir.jsonでai:deprioritize/exclude・profile:sys(武市作業/old/BROMIUM等),flag_non_matter,non_matter(internal),auto,conditional,_alo_dir.jsonのai/profile/statusフラグで判定時auto,作業者名フォルダ/old/アーカイブは当事者メール対象外,案件の確定文書,workflow_risk,内部作業フォルダのメモを当事者通信と誤認
