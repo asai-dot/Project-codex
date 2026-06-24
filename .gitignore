@@ -25,3 +25,12 @@ __pycache__/
 !/build/search_bench/sources/source_books.tsv
 !/build/search_bench/multisource_shelf_endorsements.csv
 !/build/search_bench/multisource_core_works.csv
+
+# 大容量中間生成データ（再生成可能・リポジトリに含めない）
+data/egov/*.jsonl
+data/egov/*.json
+data/triangulation/*.txt
+data/triangulation/*.jsonl
+data/citations/*_links.jsonl
+data/jlt/*.txt
+data/jlt/*.jsonl
