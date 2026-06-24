@@ -19,6 +19,8 @@ with open(sys.argv[2],"w",encoding="utf-8") as w:
         aid=(r.get("article_id") or "").strip(); t=(r.get("title") or "").replace("\t"," ").strip()
         if aid and t: w.write(f"{aid}\t{t}\n")
 PY
+# LIMIT を指定するとパイロット（先頭 N 行のみ）。例: LIMIT=2000 ./tools/run_local_classify.sh
+if [ -n "${LIMIT:-}" ]; then head -n "$LIMIT" "$WORK/ids.tsv" > "$WORK/ids.head" && mv "$WORK/ids.head" "$WORK/ids.tsv"; OUT="artifacts/periodical/article_type_local_pilot_v0.1.csv"; echo "[classify] パイロット: 先頭 $LIMIT 行"; fi
 total=$(wc -l < "$WORK/ids.tsv"); echo "[classify] 対象 $total 行, $CHUNK 行/チャンク, model=${OLLAMA_MODEL:-qwen2.5}"
 split -l "$CHUNK" "$WORK/ids.tsv" "$WORK/c_"
 : > "$OUT.tmp"; n=0
