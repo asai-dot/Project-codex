@@ -1,0 +1,60 @@
+{
+  "$comment": "4つのデータ保存（図書館）を1つのビューワーから横断するための正規設定。url_template の {viewer_page} は print_page + offset で解決される（offsetは本ごとにbook_links.jsonで1点合わせ）。有償DLの url_template は暫定値。calibrate（/api/calibrate または scripts/calibrate.js）で実URLから確定する。",
+  "version": 1,
+  "sources": [
+    {
+      "id": "office_pdf",
+      "label": "事務所PDF（自炊）",
+      "short_label": "自炊PDF",
+      "kind": "self_scan_pdf",
+      "tier": "owned",
+      "cost": "free",
+      "page_strategy": "offset_url",
+      "needs_auth": false,
+      "url_template": "/pdf_orig/{folder}/{file}#page={viewer_page}",
+      "book_url_template": "/pdf_orig/{folder}/{file}",
+      "note": "Box『し＿自炊書籍データ』の原本を server.js が /pdf_orig/{folder}/{file} で配信。viewer_page は PDF.js のページ番号（ファイル先頭からの位置）。offset = pdf_page - print_page。"
+    },
+    {
+      "id": "bencom",
+      "label": "ベンコム（弁護士ドットコム・ライブラリー）",
+      "short_label": "ベンコム",
+      "kind": "digital_library",
+      "tier": "paid",
+      "cost": "subscription",
+      "page_strategy": "offset_url",
+      "needs_auth": true,
+      "url_template": "https://library.bengo4.com/reader/?cid={book_key}&adr={viewer_page}",
+      "book_url_template": "https://library.bengo4.com/reader/?cid={book_key}",
+      "link_parse": { "host": "library.bengo4.com", "key_regex": "(?:cid=|/books/)([0-9a-fA-F]{16,})", "page_param": "adr" },
+      "note": "ページ着地可（確定）。reader 右上の共有/リンクボタンが ?cid=...&adr={viewer_page} を発行する（adr=ビューワーページ=紙面+offset）。アドレスバーはSPAで更新されないが共有URLにページが乗る。offsetは『引用判例リンク』画面の『○ページ 紙面△ページ』や1点合わせで確定（例: 83ページ=紙面43ページ→offset 40）。cid が book_key。"
+    },
+    {
+      "id": "legal_library",
+      "label": "リーガルライブラリー（LEGAL LIBRARY）",
+      "short_label": "リーガル",
+      "kind": "digital_library",
+      "tier": "paid",
+      "cost": "subscription",
+      "page_strategy": "offset_url",
+      "needs_auth": true,
+      "url_template": "https://legal-library.jp/r/{book_key}?page={viewer_page}&ctg=view",
+      "book_url_template": "https://legal-library.jp/r/{book_key}?ctg=view",
+      "link_parse": { "host": "legal-library.jp", "key_regex": "/r/(\\d+)", "page_param": "page" },
+      "note": "実URL確認済（例 https://legal-library.jp/r/326510?page=39&ctg=view）。book_key は /r/ の数値ID（ISBNではない）。ビューワーで『現在ページのURL発行』した実URLを calibrate(--url) に渡せば book_key と offset を自動抽出できる。"
+    },
+    {
+      "id": "physical_shelf",
+      "label": "物理本棚（所内）",
+      "short_label": "物理本",
+      "kind": "physical",
+      "tier": "owned",
+      "cost": "free",
+      "page_strategy": "locate",
+      "needs_auth": false,
+      "url_template": null,
+      "book_url_template": null,
+      "note": "URLなし。棚位置（location）と印刷ページ（print_page）を表示し、人が現物をめくる導線。"
+    }
+  ]
+}

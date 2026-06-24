@@ -1,0 +1,11 @@
+[
+  { "t": "第1章 債権の意義と目的", "p": 1, "page_start": 1, "depth": 1, "l": 1, "toc_node_id": "alo:book:isbn:9784641138001:toc:001", "parent_toc_node_id": "", "toc_path_id": "c01", "toc_source": "publisher", "toc_status": "structured" },
+  { "t": "第2章 債権の効力", "p": 60, "page_start": 60, "depth": 1, "l": 1, "toc_node_id": "alo:book:isbn:9784641138001:toc:002", "parent_toc_node_id": "", "toc_path_id": "c02", "toc_source": "publisher", "toc_status": "structured" },
+  { "t": "第3章 消滅時効", "p": 120, "page_start": 120, "depth": 1, "l": 1, "toc_node_id": "alo:book:isbn:9784641138001:toc:003", "parent_toc_node_id": "", "toc_path_id": "c03", "toc_source": "publisher", "toc_status": "structured" },
+  { "t": "第1節 時効制度総説", "p": 121, "page_start": 121, "depth": 2, "l": 2, "toc_node_id": "alo:book:isbn:9784641138001:toc:004", "parent_toc_node_id": "alo:book:isbn:9784641138001:toc:003", "toc_path_id": "c03.s01", "toc_source": "publisher", "toc_status": "structured" },
+  { "t": "第2節 時効の起算点", "p": 135, "page_start": 135, "depth": 2, "l": 2, "toc_node_id": "alo:book:isbn:9784641138001:toc:005", "parent_toc_node_id": "alo:book:isbn:9784641138001:toc:003", "toc_path_id": "c03.s02", "toc_source": "publisher", "toc_status": "structured" },
+  { "t": "1 客観的起算点（権利を行使することができる時）", "p": 135, "page_start": 135, "depth": 3, "l": 3, "toc_node_id": "alo:book:isbn:9784641138001:toc:006", "parent_toc_node_id": "alo:book:isbn:9784641138001:toc:005", "toc_path_id": "c03.s02.001", "toc_source": "publisher", "toc_status": "structured" },
+  { "t": "2 主観的起算点（権利を行使することができることを知った時）", "p": 142, "page_start": 142, "depth": 3, "l": 3, "toc_node_id": "alo:book:isbn:9784641138001:toc:007", "parent_toc_node_id": "alo:book:isbn:9784641138001:toc:005", "toc_path_id": "c03.s02.002", "toc_source": "publisher", "toc_status": "structured" },
+  { "t": "第3節 時効の完成猶予と更新", "p": 150, "page_start": 150, "depth": 2, "l": 2, "toc_node_id": "alo:book:isbn:9784641138001:toc:008", "parent_toc_node_id": "alo:book:isbn:9784641138001:toc:003", "toc_path_id": "c03.s03", "toc_source": "publisher", "toc_status": "structured" },
+  { "t": "第4章 多数当事者の債権関係", "p": 180, "page_start": 180, "depth": 1, "l": 1, "toc_node_id": "alo:book:isbn:9784641138001:toc:009", "parent_toc_node_id": "", "toc_path_id": "c04", "toc_source": "publisher", "toc_status": "structured" }
+]

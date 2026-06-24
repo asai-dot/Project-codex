@@ -1,0 +1,29 @@
+{
+  "$comment": "蔵書マスタ（最小サンプル）。本番は app/data/books.json（33MB, 6,384冊）と同型。",
+  "books": [
+    {
+      "book_id": "isbn_9784641138001",
+      "isbn": "9784641138001",
+      "title": "債権総論",
+      "author": "中田 裕康",
+      "publisher": "有斐閣",
+      "has_toc": true
+    },
+    {
+      "book_id": "isbn_9784788287654",
+      "isbn": "9784788287654",
+      "title": "消滅時効の理論と実務",
+      "author": "松久 三四彦",
+      "publisher": "民事法研究会",
+      "has_toc": true
+    },
+    {
+      "book_id": "isbn_9784335357526",
+      "isbn": "9784335357526",
+      "title": "民法総則",
+      "author": "佐久間 毅",
+      "publisher": "弘文堂",
+      "has_toc": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://asai-lo.com/schema/toc_node.schema.json",
+  "title": "TOC Node",
+  "description": "事務所ライブラリの目次ノード。data/toc/{book_id}.json は本ノードの配列。124k+ ノードの1単位＝検索/RAGのチャンク単位。",
+  "type": "object",
+  "required": ["t"],
+  "properties": {
+    "t": { "type": "string", "description": "章節の見出しテキスト（検索・表示の本体）" },
+    "p": { "type": ["integer", "null"], "description": "印刷ページ（本文ノンブル）。page_start と同義の短縮キー" },
+    "page_start": { "type": ["integer", "null"], "description": "印刷ページ（開始）" },
+    "depth": { "type": "integer", "description": "階層の深さ（1=章）" },
+    "l": { "type": ["integer", "null"], "description": "レベル（depthと同義の旧キー）" },
+    "toc_node_id": { "type": "string", "description": "正規ノードID 例: alo:book:isbn:9784641138001:toc:012" },
+    "parent_toc_node_id": { "type": "string", "description": "親ノードID（空文字=ルート）" },
+    "toc_path_id": { "type": "string", "description": "本内のパスID 例: c03.s02.001" },
+    "toc_source": { "type": "string", "description": "出典 例: publisher, openbd, toc_pdf, bencom, books_or_jp, codex_ocr, manual" },
+    "toc_status": { "type": "string", "description": "simple / structured など" }
+  },
+  "additionalProperties": true
+}
