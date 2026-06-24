@@ -18,9 +18,14 @@ BRANCH="${ALO_WORKER_BRANCH:-claude/worker-task-queue-ft5aef}"
 TASK="${1:-next}"
 LOG="${ALO_WORKER_LOG:-$HOME/alo_worker_runner.log}"
 
-# 多重起動防止（前サイクルが走行中ならスキップ＝長時間ジョブと共存）
-exec 9>"/tmp/alo_worker.lock"
-if ! flock -n 9; then echo "$(date '+%F %T') busy, skip cycle" >>"$LOG"; exit 0; fi
+# 多重起動防止（前サイクルが走行中ならスキップ＝長時間ジョブと共存）。
+# macOS には flock が無いので mkdir の原子性でロック（Linux/macOS 両対応）。
+# 異常終了で残った場合は rmdir /tmp/alo_worker.lock.d で解除。
+LOCKDIR="/tmp/alo_worker.lock.d"
+if ! mkdir "$LOCKDIR" 2>/dev/null; then
+  echo "$(date '+%F %T') busy (lock held), skip cycle" >>"$LOG"; exit 0
+fi
+trap 'rmdir "$LOCKDIR" 2>/dev/null' EXIT
 
 cd "$REPO" || { echo "$(date '+%F %T') no repo $REPO" >>"$LOG"; exit 1; }
 git checkout "$BRANCH" >>"$LOG" 2>&1
