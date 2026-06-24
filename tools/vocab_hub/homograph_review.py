@@ -31,34 +31,50 @@ import run_2dict as r2
 _TERMINATORS = "。．.！？!?」』）)"
 _LIST_HEADWORD = re.compile(r"^(?:その\d+|[イロハニホヘトチリヌ][\)）]|[（(]?\d+[）)]|[①-⑳㋐-㋾])$")
 _HEADER_ONLY = re.compile(r"^[【\[][^】\]]*[】\]]\s*$")
-_SUBITEM_START = re.compile(r"^[2-9２-９]\s*[）)]|^[（(]?[2-9２-９][）)]|^(?:次に|また[，、]|なお[，、])")
+# 番号サブ項目の続き: 2)〜9) / 先頭 1.〜9. / 次に・また・なお
+_SUBITEM_START = re.compile(
+    r"^[2-9２-９]\s*[）)]|^[（(]?[2-9２-９][）)]|^[1-9１-９]\s*[.．]|^(?:次に|また[，、]|なお[，、])")
+_CONT_START = re.compile(r"^(?:も[^のっ]|により|たり[，、]|又は|及び)")  # B が前行の続きで始まる断片
+
+
+def _is_stub(s: str) -> bool:
+    """読み/相互参照の短い断片 (文末記号で終わらない短文)."""
+    return bool(s) and len(s) <= 16 and not s.endswith(("。", "．"))
 
 
 def classify_pair(pref, a_def, b_def):
-    """homograph候補を staging artifact か genuine 多義かに自動分類する.
+    """homograph候補を 3クラスに自動分類する.
 
-    断片化(定義が文途中で切れ次行へ続く)/スタブ/空/番号サブ項目/リストマーカー見出し は
-    parse artifact = owner判断不要(staging再結合/除去で解決). それ以外を genuine_candidate.
-    保守的: 曖昧なものは genuine 側に残して owner が見る(誤って自動mergeしない).
+    artifact_* : staging の定義断片化/スタブ/空/番号サブ項目/リストマーカー見出し
+                 = owner判断不要(staging再結合/除去で解決).
+    merge_candidate : A/B 双方が見出し語を含む同概念の重複定義
+                 = provisional では1 hubに統合(owner はスポット確認のみ).
+    genuine_split : 別概念 or OCR矛盾 (片方が見出し語を含まない等)
+                 = **唯一の真の owner 判断**.
+    保守的: artifact 判定を厚くし、残りを merge/split に分ける.
     """
     a = (a_def or "").strip()
     b = (b_def or "").strip()
     if _LIST_HEADWORD.match(pref or ""):
         return "artifact_list_marker", "見出しがリストマーカー(語ではない)"
-    if not b or b == "(定義なし)":
-        return "artifact_empty", "B側定義が空"
-    if _HEADER_ONLY.match(b):
-        return "artifact_header", "B側が見出し記号のみ(【n)】等)"
-    # スタブ: 短く文末記号で終わらない (読み/相互参照/語片)
-    if len(b) <= 16 and not b.endswith(("。", "．")):
-        return "artifact_stub", "B側が短いスタブ(読み/相互参照断片)"
+    if (not b or b == "(定義なし)") or (not a or a == "(定義なし)"):
+        return "artifact_empty", "片側定義が空"
+    if _HEADER_ONLY.match(b) or _HEADER_ONLY.match(a):
+        return "artifact_header", "片側が見出し記号のみ(【n)】等)"
+    # スタブ: A/B どちらかが読み/相互参照の短い断片
+    if _is_stub(a) or _is_stub(b):
+        return "artifact_stub", "片側が短いスタブ(読み/相互参照断片)"
     # 断片化: A が文末記号で終わらず途中で切れている = 次行(B)への continuation
     if a and a[-1] not in _TERMINATORS:
         return "artifact_continuation", "A側が文途中で切れB側へ continuation"
-    # 番号付きサブ項目の続き (1)→2)5) 等)
-    if _SUBITEM_START.match(b):
-        return "artifact_subitem", "B側が番号サブ項目の続き(2)3)5)/次に/また)"
-    return "genuine_candidate", "A/B双方が完結した別定義(要owner判断)"
+    # 番号サブ項目の続き / B が前行の続きで始まる
+    if _SUBITEM_START.match(b) or _CONT_START.match(b):
+        return "artifact_subitem", "B側が番号サブ項目/前行の続き(2)3)/1./次に/も/により)"
+    # 残り: A/B 双方が見出し語(先頭2字)を含むか で merge/split を分ける
+    core = pref[:2] if len(pref) >= 2 else pref
+    if core and core in a and core in b:
+        return "merge_candidate", "A/B双方が見出し語を含む同概念の重複定義(統合可)"
+    return "genuine_split", "別概念 or OCR矛盾(片方が見出し語を含まない等) — 要owner判断"
 
 
 def collect_pairs(terms, threshold=0.6):
@@ -128,7 +144,8 @@ def _detail_block(i, p):
 
 
 def to_markdown(pairs, stats, threshold):
-    genuine = [p for p in pairs if p["klass"] == "genuine_candidate"]
+    splits = [p for p in pairs if p["klass"] == "genuine_split"]
+    merges = [p for p in pairs if p["klass"] == "merge_candidate"]
     artifacts = [p for p in pairs if p["klass"] in _ARTIFACT_CLASSES]
     klass_counts = {}
     for p in pairs:
@@ -138,16 +155,19 @@ def to_markdown(pairs, stats, threshold):
         "# homograph レビューパケット (owner判断用 / read-only)",
         "",
         f"> 同 (正規化見出し + 読み) だが定義の char-bigram Jaccard < {threshold} で**別hubに分離**した候補を",
-        "> **自動分類**した。`genuine_candidate` のみ owner 判断が要る。`artifact_*` は staging の",
-        "> 定義断片化/スタブ/空行で、再結合・除去で解決する(owner判断不要)。",
-        f"> homograph 総数: **{len(pairs)}**  /  genuine(要判断): **{len(genuine)}**  /  artifact: **{len(artifacts)}**",
+        "> **3クラスに自動分類**した。`genuine_split` のみ owner の真の判断が要る。",
+        "> `merge_candidate` は同概念の重複定義(provisionalでは統合、スポット確認のみ)。",
+        "> `artifact_*` は staging の定義断片化/スタブ/空行(再結合・除去で解決、owner判断不要)。",
+        f"> 総数 **{len(pairs)}**  /  **genuine_split {len(splits)}**(要判断)  /  "
+        f"merge {len(merges)}(統合)  /  artifact {len(artifacts)}(前処理)",
         "",
         "## 自動分類サマリ",
         "| クラス | 件数 | 扱い |",
         "|---|---|---|",
     ]
     _handling = {
-        "genuine_candidate": "**owner判断**(split維持/merge)",
+        "genuine_split": "**owner判断**(別概念/OCR矛盾 — split維持かmergeか)",
+        "merge_candidate": "1 hubに統合(同概念の重複定義. スポット確認のみ)",
         "artifact_continuation": "staging再結合(定義が途中で切れ次行へ)",
         "artifact_subitem": "staging再結合(番号サブ項目の続き)",
         "artifact_stub": "除去(読み/相互参照スタブ)",
@@ -155,31 +175,43 @@ def to_markdown(pairs, stats, threshold):
         "artifact_header": "除去(見出し記号のみ)",
         "artifact_list_marker": "除去(見出しがリストマーカー)",
     }
-    for k in ["genuine_candidate", "artifact_continuation", "artifact_subitem",
+    for k in ["genuine_split", "merge_candidate", "artifact_continuation", "artifact_subitem",
               "artifact_stub", "artifact_empty", "artifact_header", "artifact_list_marker"]:
         if klass_counts.get(k):
             lines.append(f"| {k} | {klass_counts[k]} | {_handling[k]} |")
 
     lines += [
         "",
-        "## A. genuine_candidate — owner判断が要る",
+        "## A. genuine_split — owner の真の判断が要る",
         "",
-        "定義が**別概念**(例: 社員=会社法上の地位 vs 労働者一般)なら split 維持、",
-        "同概念の**言い換え/OCR揺れ**なら merge。下の各件で判断してください。",
+        "別概念(例: 参議=官職 vs 家事審判役)なら split 維持、OCR矛盾(例: 重懲役=禁錮 vs 懲役)なら",
+        "正しい方を採用。下の各件で判断してください。",
         "",
     ]
-    if genuine:
-        for i, p in enumerate(genuine, 1):
+    if splits:
+        for i, p in enumerate(splits, 1):
             lines += _detail_block(i, p)
     else:
-        lines += ["_(genuine 候補なし — 全件 staging artifact)_", ""]
+        lines += ["_(genuine_split なし)_", ""]
 
     lines += [
         "---",
         "",
-        "## B. artifact_* — staging前処理で解決 (owner判断不要・参考)",
+        "## B. merge_candidate — 同概念の重複定義 (統合・スポット確認のみ)",
         "",
-        "これらは genuine な多義ではなく、staging の定義断片化・スタブ・空行。",
+        "A/B双方が見出し語を含む同概念の重複(辞書内の言い換え/詳しさ違い)。",
+        "provisional では1 hubに統合してよい。念のため数件スポット確認を。",
+        "",
+    ]
+    for i, p in enumerate(merges, 1):
+        lines += _detail_block(i, p)
+
+    lines += [
+        "---",
+        "",
+        "## C. artifact_* — staging前処理で解決 (owner判断不要・参考)",
+        "",
+        "genuine な多義ではなく staging の定義断片化・スタブ・空行。",
         "再結合(continuation/subitem)または除去(stub/empty/header/list_marker)で homograph から消える。",
         "**短定義489 の一部も同じ断片化が原因の可能性が高い**(断片=短い)。",
         "",
@@ -217,15 +249,17 @@ def main(argv=None) -> int:
             fh.write(json.dumps(p, ensure_ascii=False) + "\n")
 
     same = sum(1 for p in pairs if p["same_scheme"])
-    genuine = sum(1 for p in pairs if p["klass"] == "genuine_candidate")
+    splits = sum(1 for p in pairs if p["klass"] == "genuine_split")
+    merges = sum(1 for p in pairs if p["klass"] == "merge_candidate")
     klass_counts = {}
     for p in pairs:
         klass_counts[p["klass"]] = klass_counts.get(p["klass"], 0) + 1
     print(f"[homograph] 候補 {len(pairs)} 件 (同scheme {same} / cross {len(pairs)-same})")
-    print(f"[homograph] 自動分類: genuine(要owner判断) {genuine} 件 / artifact {len(pairs)-genuine} 件")
+    print(f"[homograph] 自動分類: genuine_split(要owner判断) {splits} / "
+          f"merge_candidate(統合) {merges} / artifact(前処理) {len(pairs)-splits-merges}")
     for k, v in sorted(klass_counts.items()):
         print(f"             {k}: {v}")
-    print(f"[homograph] -> {out}/homograph_review.md (A.genuine が owner判断, B.artifact は staging前処理)")
+    print(f"[homograph] -> {out}/homograph_review.md (A.genuine_split が owner判断)")
     return 0
 
 

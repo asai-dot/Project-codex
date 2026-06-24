@@ -358,8 +358,10 @@ class TestHomographClassify(unittest.TestCase):
         self.hr = hr
 
     def test_continuation_a_cut_midsentence(self):
-        # A が文末記号で終わらず途中で切れている -> continuation
-        k, _ = self.hr.classify_pair("会計", "…予算決算，収支等を規", "定し，この場合の会計は…である。")
+        # A が(長文だが)文末記号で終わらず途中で切れている -> continuation
+        a = ("「会計」とは，一般的には国，地方公共団体その他の団体又は個人の財産の異動増減及び収支を"
+             "計算整理することをいうが。旧会計法は，予算決算，収入支出等を規")
+        k, _ = self.hr.classify_pair("会計", a, "定し，この場合の会計は，金銭に関る管理作用の意味をもっていた。")
         self.assertEqual(k, "artifact_continuation")
 
     def test_empty_b(self):
@@ -385,13 +387,42 @@ class TestHomographClassify(unittest.TestCase):
                                      "防衛出動時における物資の収用等の特権であり…。")
         self.assertEqual(k, "artifact_list_marker")
 
-    def test_genuine_both_complete(self):
-        # 両方が完結した別定義(OCR矛盾含む) -> owner判断
+    def test_stub_on_anchor_side(self):
+        # A 側が「「世帯」(せい)」のスタブ, B が本定義 -> artifact_stub
+        k, _ = self.hr.classify_pair(
+            "世帯", "「世帯」(せい)",
+            "普通，社会生活上の単位として住居及び生計を共にする者の集まりを意味する用語として用いられる。")
+        self.assertEqual(k, "artifact_stub")
+
+    def test_subitem_leading_digit_period(self):
+        # B が「1. …」の番号サブ項目 -> artifact_subitem
+        k, _ = self.hr.classify_pair(
+            "評定", "一般に，ある事物又は事象を評価し，判定することをいう。",
+            "1. 独立行政法人通則法には，各年度に係る業務実績等に関する評価について定めている(同法32Ⅲ).")
+        self.assertEqual(k, "artifact_subitem")
+
+    def test_genuine_split_different_concept(self):
+        # 参議: A=官職 / B=家事審判役で見出し語を含まない -> genuine_split (別概念)
+        k, _ = self.hr.classify_pair(
+            "参議", "①職員令(明二)によって設けられた官職で、太政大臣の補佐を任務とした。明治一八年廃止。",
+            "家庭裁判所が人事訴訟又は家事審判を行う際、その手続に立ち会うことを職務とする非常勤の国家公務員（人訴九）。")
+        self.assertEqual(k, "genuine_split")
+
+    def test_genuine_split_ocr_contradiction(self):
+        # 重懲役: A=禁錮/服さない vs B=懲役/服する (見出し語を双方含まない) -> genuine_split
         k, _ = self.hr.classify_pair(
             "重懲役",
             "旧刑法に規定されていた刑名。刑期は九年以上一一年以下で、定役に服さない。現行刑法の有期禁錮の一部に相当する。",
             "旧刑法に規定されていた刑名。重罪に対し科される主刑の一つで、刑期は九年以上一年以下。定役に服する。現行刑法の有期懲役の一部に該当する。")
-        self.assertEqual(k, "genuine_candidate")
+        self.assertEqual(k, "genuine_split")
+
+    def test_merge_candidate_same_concept(self):
+        # 会社: A/B双方が「会社」を含む同概念の重複定義 -> merge_candidate
+        k, _ = self.hr.classify_pair(
+            "会社",
+            "営利を目的とする社団法人。資本、労力を結合し、危険を軽減する機能をもつ。会社法上、株式会社等がある。",
+            "営利を目的とする社団法人。株式会社、合名会社、合資会社、合同会社の四種がある（会社二）。")
+        self.assertEqual(k, "merge_candidate")
 
 
 if __name__ == "__main__":
