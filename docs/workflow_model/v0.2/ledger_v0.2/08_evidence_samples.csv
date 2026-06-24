@@ -1,0 +1,15 @@
+sample_id,trace,event_seq,event_type,state_machine(from→to),basis,approval_required,pii_status,evidence_id,note
+EVD-112-01,trace1,0101,inquiry_received,consultation(none→inquiry_received),observed,否,匿名(roleのみ/金額null),alo:event:w112:trace1:0101,受任到達例の起点
+EVD-112-02,trace1,0102,proposal_sent,consultation(consulted→proposal_sent),observed,否,匿名,alo:event:w112:trace1:0102,契約書案送付
+EVD-112-03,trace1,0103,proposal_accepted,consultation(proposal_sent→decision),declared,否,匿名,alo:event:w112:trace1:0103,候補合意(人間宣言)
+EVD-112-04,trace1,0104,engagement_signed,consultation(→converted)/matter(onboarding),observed→human_decision,要(受任成立ゲート),匿名,alo:event:w112:trace1:0104,受任成立
+EVD-112-05,trace1,0105,invoice_sent,finance(quote→invoice_sent),observed,要(請求確定),匿名(金額null),alo:event:w112:trace1:0105,第三者支払者(損保)宛=client≠payer
+EVD-112-06,trace1,0106,payment_acknowledged_external,finance(invoice_sent→acknowledged),declared,否,匿名,alo:event:w112:trace1:0106,外部受付表明≠入金消込
+EVD-112-07,trace2,0201,inquiry_received,consultation(none→inquiry_received),observed,否,匿名,alo:event:w112:trace2:0201,受任非到達例の起点
+EVD-112-08,trace2,0202,advice_recorded,consultation(consulted),observed,否,匿名,alo:event:w112:trace2:0202,スポット相談助言
+EVD-112-09,trace2,0203,post_consult_decision_recorded,consultation(→closed_lost),declared,要(相談クローズ),匿名,alo:event:w112:trace2:0203,受任非到達(no_engagement)例外
+EVD-112-10,trace3,0301,work_item_created,workitem(none→open),observed,否,匿名,alo:event:w112:trace3:0301,内部ToDo(due/evidence null)
+EVD-112-11,trace3,0302,payment_acknowledged_external,finance(acknowledged),declared,否,匿名,alo:event:w112:trace3:0302,任意保険の振込準備連絡
+EVD-112-12,trace3,0303,outcome_reached,matter(active→resolution_pending),declared,要(解決確定),匿名,alo:event:w112:trace3:0303,精算見込み報告
+EVD-112-13,trace3,0304,payment_received,finance(acknowledged→paid),observed,要(精算確定),匿名(金額null),alo:event:w112:trace3:0304,自賠責入金→立替金差引後の残金送金判断起点(人間判断)
+EVD-112-14,trace3,0305,deliverable_sent,document/delivery(sent),observed,要(対外送付),匿名,alo:event:w112:trace3:0305,精算前提の確認連絡(終了報告手前)

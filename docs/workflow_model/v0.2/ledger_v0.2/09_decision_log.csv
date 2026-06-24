@@ -1,0 +1,22 @@
+decision_id,content,category,status,origin,evidence_id
+D-001,SF Consultation/Matter ID を業務レコードの脊椎とする,仮説,未決→G-01で裁定提起,v0.1継承,G-01; EV-110-cases
+D-002,Box file_id/version_id を文書同一性の正本とする,仮説,未決→G-02,v0.1継承,G-02; Box-(2)(3)
+D-003,Gmail/Dialpad/Notta/Calendar/郵便等を append-only 観測イベントで保持,仮説,未決→G-03,v0.1継承,G-03; EVD-112-*
+D-004,declared_state と observed_state を分離,仮説,未決→G-04,v0.1継承,G-04; EVD-112-* basis
+D-005,案件/作業/文書/財務/期限の状態機械を分離,仮説,未決→G-05(5本vs7本),v0.1継承,G-05; CURRENT_STATE §6
+D-006,新規手入力は取得不能な判断・承認に限定,既存原則,未決→G-19,v0.1継承,G-19
+D-007,コンフリ/受任成立/最終送付/終結/請求精算は人間必須承認,仮説,未決→G-06,v0.1継承,G-06; EVD-112-trace1-0104
+D-008,第1 PoC は相談→受任ファネル,提案,未決→G-07,v0.1継承,G-07; EVD-112-trace1/2
+D-009,第2 PoC は解決→最終請求→返却→終了報告→既済化,提案,未決→G-09,v0.1継承,G-09; EVD-112-trace3
+D-010,訂正は raw 削除でなく無効化イベント＋新確定リンク,仮説,未決→G-03,v0.1継承,G-03; invalidates_event_ids
+D-011,WorkItem に owner/due/status/waiting_on/completion_evidence 必須化,提案,未決→G-08,v0.1継承,G-08; EVD-112-trace3-0301
+D-012,成果物送付は Document状態と Delivery event を分離,提案,未決→G-05連動,v0.1継承,G-05; Box-(9)
+D-013,finance で client_party と payer_party を分離,提案,未決→G-10,v0.1継承,G-10; EVD-112-trace1-0105
+D-014,close gate は未完Task/期限/最終請求/預り金実費/原本返却/終了報告を確認,提案,未決→G-09,v0.1継承,G-09; EVD-112-trace3-0305
+D-015,"SF/LEALA ETL が dynamic.cases/documents へ未実行=制御塔データ不在。PoC1のKPI(初回応答/相談確定/見積/契約時間, 次行動未設定率, 流入経路不明率, 失注理由未入力率, イベント未紐付け率)は現時点で算出不能=未確認",新規論点(Phase2実査),未決(要起動:外部SE/ETL運用 Q1),W-110 Phase2 SF実査,EV-110-cases0; EV-110-documents0; EV-110-pipeline0
+D-016,dynamic/formobj/control の全BASE TABLEで RLS無効(Supabase advisor critical)=本番運用前にRLS+policy付与必須の運用ブロッカー(W-170),新規論点(Phase2実査),未決(要対応 Q5),W-110 Phase2 SF実査,EV-110-rls-disabled
+D-017,dynamic.cases が11列に縮約され担当/流入経路/失注理由/各日付(個別)/次行動・期限・待ち先を保持しない。SFミラーは『通信を案件に束ねる最小キー』止まり→スキーマ拡張可否は設計判断,新規論点(Phase2実査),未決(設計判断 Q2),W-110 Phase2 SF実査,EV-110-cases-11col
+D-018,状態と実態の乖離が定量化: comms case_link_status=room_inherited100%/confidence全件1.0/direction全件internal default。room_case_map 8中3room(mixed2/未レビュー1)が案件未確定。状態フラグが実態を表していない,新規論点(Phase2実査),未決(是正 Q6/例外運用 Q8),W-110 Phase2 SF実査,EV-110-comms; EV-110-roomcasemap; EV-110-links
+D-019,Derived(llm_category/llm_summary)・redaction・llm_disclosure_log は列のみで稼働ゼロ。HITL/LLM開示統制パイプライン未起動,新規論点(Phase2実査),未決(起動 Q7)→G-19連動,W-110 Phase2 SF実査,EV-110-llm0; EV-110-disclosure0
+D-020,Dialpad(通話/録音)・Notta(会議文字起こし)・MF(請求/会計)がコネクタ未接続。相談→面談区間と入金消込確定が未取得=未確認。別実査票要,新規論点(Phase2実査),未決(コネクタ整備),W-112 Phase2 Gmail実査残課題,112残課題; CURRENT_STATE §3
+D-021,Box状態は配置/動作語/docx-pdf/version の弱シグナルで自然発生的に表現(Boxネイティブ状態機能非依存)。U1相談票単票/U2業務終了報告書ひな形/U3到達受理入金正本/U4 ~BROMIUM/U5版運用ポリシー が未確認,新規論点(Phase2実査),未決(浅井聴取 G-14/G-15/G-11/G-18/G-17),W-111 Phase2 Box実査,Box-(4)(10); U1..U5

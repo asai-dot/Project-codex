@@ -1,0 +1,23 @@
+source_id,system,object,primary_key,join_key,reachable,measured_actual,confirm_status,evidence_id,note
+DS-001,Salesforce,leala__Consultation__c(相談),Consultation.Id (=cases.sf_record_id where type=leala__Consultation__c),cases.sf_record_id ↔ comms.sf_record_id,到達(列定義あり),cases 0行/comms参照25,未確認(SF同期待ち),EV-110-cases0; EV-110-comms,ETL未実行。comms側に型参照25のみ存在
+DS-002,Salesforce,leala__Matter__c/leala__Business__c(受任),Matter.Id (=cases.sf_record_id where type=leala__Business__c),cases.sf_record_id ↔ comms/room_case_map,到達,cases 0行/comms参照318,未確認(SF同期待ち),EV-110-cases0; EV-110-comms,同上。Business参照318
+DS-003,Salesforce,Task/Event/Chatter/Office Meeting,(専用テーブル無し),(未到達),未到達,-,未確認,EV-110-no-task-table,ミラーに専用テーブル無し。Q3設計判断
+DS-004,Salesforce,ALO_DerivedEvent__c,event_id(設計),matter_ref→cases,未到達(Derived未稼働),comms.llm_* 0件,未確認,EV-110-llm0,Derived列はスキーマのみ稼働ゼロ
+DS-005,Salesforce,RelatedContact/OpponentParty/Account/Contact,party_id(parties近似),comm_party_links.party_id ↔ parties.party_id,部分到達(parties),parties 9(unknown5/staff4),修正,EV-110-parties,SFのAccount/Contact水準でなく通信主体party。法的当事者属性なし
+DS-006,Salesforce,Deadline/JurisdictionCourt/Procedure,(専用テーブル無し),(未到達),未到達,-,未確認,EV-110-no-deadline-table; G-20,期限/手続/管轄の格納先なし
+DS-007,Salesforce,Accounting/Billing/Invoice/Expense/TimeCharge/Deposit,(専用テーブル無し),(未到達),未到達,-,未確認,EV-110-no-billing-table; G-10/G-11,会計各種の格納先なし。Box会計台帳が現状の縦串
+DS-008,Salesforce,PostalMatter/RequiredDocument/KeepingItem/CaseDocument,CaseDocument→documents.doc_id,documents.case ↔ cases.sf_record_id,CaseDocumentのみ到達,documents 0行,未確認(同期待ち),EV-110-documents0,Postal/RequiredDoc/KeepingItemは未到達
+DS-009,Box,★LEALA配下 相談/受任/既済フォルダ,Box folder_id/file_id+version_id,(将来)box_file_id ↔ documents.storage_pointer,到達(read-only),相談55/受任68/既済148フォルダ,確認済,Box-(11)(12); Box-folders,フォルダ実数を実査。正本ID=file_id+version_id(G-02)
+DS-010,Box,マニュアル/書式/ひな形/終了報告,Box file_id+version_id,ひな形→DOC種別,到達,書式69件/ひな形v5-v9版,確認済,Box-(2)(3); U2,業務終了報告書ひな形はU2未確認
+DS-011,Gmail,全所員メール(外部/内部),Gmail message_id/thread_id,(将来)→comms.source_record_key/matter_ref,到達(read-only),3トレース14イベント抽出,確認済,EVD-112-*,comms には未投入(comms=chatwork100%)。SF連携ラベル多数を確認
+DS-012,Dialpad,通話/SMS/録音/transcript,(コネクタ無し),(未接続),未接続,-,未確認(未接続),112残課題,通話/録音由来イベント未取得。別実査票要
+DS-013,Notta,会議/通話 文字起こし,(コネクタ無し),(未接続),未接続,-,未確認(未接続),112残課題,会議文字起こし未取得
+DS-014,Google Calendar/Meet,全所員カレンダー,event_id,(将来)→期限/日程突合,未使用(本フェーズ),-,未確認,112(Calendar未使用),日程/期限の突合監視ソース候補(G-20)
+DS-015,Money Forward,MF請求書,MF invoice id,(将来)→finance/cases,未接続,-,未確認(未接続),CURRENT_STATE §3,入金消込の突合先候補。未接続
+DS-016,Money Forward,MF会計/銀行明細,MF transaction id,(将来)→payment_received,未接続,-,未確認(未接続),CURRENT_STATE §3; EVD-112-trace3-0304,入金確定の正本候補(G-11)。未接続
+DS-017,MINTS/Teams/FAX/郵便,裁判所・対外提出証跡,(なし/外部),(将来)→Delivery/Deadline,未接続,-,未確認,CURRENT_STATE §3; G-20,提出証跡。Box通信(送)で間接的に痕跡
+DS-018,NAS/複合機/ScanSnap,スキャン投入ログ,(なし),(将来)→documents Raw,未接続,-,未確認,CURRENT_STATE §3,Raw取込点。未接続
+DS-019,Chatwork/Slack,所内/例外的外部連絡,comm_id (comms PK),comm_party_links.comm_id; room_case_map.room_id,到達(ミラー),comms343/links488/room5,確認済,EV-110-comms; EV-110-roomcasemap,唯一実データが流れているチャネル。room→case人手確定がhuman gate実体
+DS-020,Google Docs/Sheets,困りごとログ/AI日報/週次おろし,doc id,-,未確認,-,未確認,CURRENT_STATE §3; G-19,AI推定の位置づけはG-19
+DS-021,HP/フォーム/アクセス解析,問合せ前後の流入,-,→流入経路(WF-00),未接続,-,未確認,G-12,流入経路KPIの源。未接続
+DS-022,Box Events/Admin logs,ファイル操作監査,Box event id,→documents版/操作,未接続(本フェーズ),-,未確認,Box-U5,版運用ポリシー(U5)と関連
