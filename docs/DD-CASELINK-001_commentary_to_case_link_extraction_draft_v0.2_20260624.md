@@ -99,8 +99,6 @@ v0.2 で語彙を正典に合わせた結果、正典側の改修は **最小限
 
 > 順序: **(a) 本 DD を正典語彙に整合（済・v0.2）→ (b) DDCASE 監査通過 → (c) 上記1〜3を正典へまとめて反映**。ドリフトを足さず、設計正典の単一書き手（owner）を保つ。
 
-> つまり「設計資料の大改修」ではなく、**(a) 本 DD を正典語彙に合わせる（済・v0.2）→ (b) 正典に本文採掘経路の1行と同旨/反対の開項目を足す**、の順。ドリフトを足さずに意味層を厚くできる。
-
 ## 8. verification
 - deterministic_self_verification = **fixture-level done**: `test_case_link_map.py` green（評釈1主＋同旨＋反対 / 正式評釈→review_chain / 論文→主なし＋central_case_hint / 未解決→edge無しreview / 未知→fail-closed）。確認項目: (i) **1記事:N が同格に潰れない**(edge_type/stance で分化)、(ii) masthead=vendor_explicit→auto・本文=vendor_implicit(strength=implicit)→review、(iii) emit 値域 ⊆ 正典(`COMMENTARY_TO_CASE_EDGE_TYPES ⊆ LINK_EDGE_TYPES`)、(iv) **llm_inferred 不発生**、(v) **merge 不発生**(route は auto/review/drop のみ)。
 - extract→map 連結 = **fixture-level done**: `test_case_link_extract.py` green。役割分類(masthead=主/同旨=supporting/これに対し=contrasting/無手掛かり=incidental)、引用解決度(完全番号=deterministic/日付のみ=fuzzy/裁判所名=None)、記事→mention→正典 alo_edges candidate の連結を確認。
@@ -121,7 +119,7 @@ v0.2 で語彙を正典に合わせた結果、正典側の改修は **最小限
 | **未知** article_type/source/role | — | — | — | — | — | — | **drop**(fail-closed) |
 
 ## 9. follow-up / open questions
-- §7-2 の同旨/反対 を保存するか（edge_type 追加 vs `stance` qualifier vs 非保存）＝**owner 設計判断**。
+- ~~§7-2 同旨/反対 の保存方式~~ → **owner 確定(2026-06-24): `stance` qualifier 列**（正典反映は監査通過後）。
 - 記事タイプ分布（評釈/解説/論文）を LIC4誌で実測 → 条件分け閾値（owner 提案: 設計前に分布を見る選択肢）。
 - citation-span 抽出器の実体（規則ベース＋符号正規化 vs 統計）。本 DD は edge へのマッピングを確定し、抽出器実装は分離。
 - `central_case`（論文の中心判例）を正式 edge_type に昇格するか、ヒント止めか（§11 と連動）。
