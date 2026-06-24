@@ -113,6 +113,8 @@ def main(argv=None) -> int:
     ap.add_argument("--dir", default=str(Path.home() / "vocab_load"))
     ap.add_argument("--batch", action="store_true", help="全件 load (既定は canary)")
     ap.add_argument("--canary-hubs", type=int, default=300)
+    ap.add_argument("--host", default="db.vlsunmqpjhzbhipiehzs.supabase.co",
+                    help="Supabase direct host (既定=alo-connect). SUPABASE_DB_URL 未設定時に使用")
     ap.add_argument("--dry-run", action="store_true", help="接続せず件数のみ")
     a = ap.parse_args(argv)
 
@@ -129,8 +131,16 @@ def main(argv=None) -> int:
 
     url = os.environ.get("SUPABASE_DB_URL")
     if not url:
-        print("ERROR: 環境変数 SUPABASE_DB_URL を設定してください(direct connection string)。", file=sys.stderr)
-        return 2
+        # プレースホルダ事故防止: パスワードを安全に対話入力し URL を組み立てる
+        import getpass
+        from urllib.parse import quote
+        host = a.host
+        print(f"[load] SUPABASE_DB_URL 未設定。host={host} へ接続します。")
+        pw = getpass.getpass("alo-connect DB password (入力は非表示): ").strip()
+        if not pw:
+            print("ERROR: パスワードが空です。", file=sys.stderr)
+            return 2
+        url = f"postgresql://postgres:{quote(pw, safe='')}@{host}:5432/postgres"
 
     conn = _connect(url)
     conn.autocommit = False
