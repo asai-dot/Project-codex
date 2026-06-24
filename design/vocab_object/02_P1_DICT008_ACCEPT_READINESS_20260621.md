@@ -7,26 +7,30 @@
 
 ## 0. 一行
 
-DICT-008 を accepted v1.0 にするための**残ブロッカーは2系統だけ**：①owner レビュー4点、②Wave計画の未確認URL4件。これを潰せば accept 可。
+DICT-008 を accepted v1.0 にするための**残ブロッカーは owner レビュー(A1/A2/A3)だけ**。
+②Wave URL確認は 2026-06-25 に解消（4件とも新規bedrockを足さず accept非ブロッカー / 11_P1_WAVE_URL_VERIFICATION）。
+owner が A1/A2/A3 を判断すれば accept 可。
 
 ## 1. 残ブロッカー（DICT-008 §6.1 より）
 
-### A. owner レビュー（owner のみが判断）
+### A. owner レビュー（owner のみが判断）→ **これだけが残ブロッカー**
 - [ ] **A1** DICT-008 v0.2 本体の内容 OK/NO/戻す（Q1–Q4 確定反映版が対象）
 - [ ] **A2** `34_vocabulary_layer` §4.1（接続順=bedrock-first）/ §9（gate 2本追加）の改訂計画 review
 - [ ] **A3** DDL 改訂（gate 2本＋§2.3.1 の gate 条件改訂）の影響範囲 review
 - [x] A4 PLAN-01 v1.1 §3.4.5 整合（取込済）
 - [x] Q1–Q4 確定済（2026-06-01）
 
-### B. Wave 計画 URL 実在性確認（read-only web・owner GO で hand agent か手動）
-未確認の4件（DICT-008 §13）。**存在/現行版/配布形式**を確かめる：
+### B. Wave 計画 URL 実在性確認 → **✅ 解消（2026-06-25 / 11_P1_WAVE_URL_VERIFICATION）**
+read-only web で4件確認済。**いずれも新規 bedrock を追加しない**ため accept をブロックしない：
 
-| Wave | 対象 | 確認先 | 確認項目 |
+| Wave | 対象 | 結果 | 含意 |
 |---|---|---|---|
-| W1b | 参議院法制局「法令用語の例」 | 参議院 web | 公開有無・配布形式（PDF/web）・最新版 |
-| W1c | 内閣法制局「法令用例集」 | 内閣法制局 web | web配布版の有無・形式 |
-| W3a | 法務省 民事局/刑事局 用語集 | 法務省 web | 用語集の所在・形式 |
-| W3b | 金融庁・経産省・消費者庁 ガイドライン用語集 | 各省庁 web | 散在の所在・形式 |
+| W1b | 参議院法制局「法令用語の例」 | ✅ web コラム連載(HTML) | 構造化辞書でない。enrichment 候補(非bedrock) |
+| W1c | 内閣法制局「法令用例集」 | △ 単独web版なし | **既存 rank101(有斐閣)と同一編者で重複** → Wave除外 |
+| W3a | 法務省 用語集 | ✅ web 軽量用語集 | 低権威=rank≥103 領域(非bedrock) |
+| W3b | 金融庁/経産省/消費者庁 | ✅ 散在(web) | rank≥103 専門 attach(DICT-008方針どおり) |
+
+→ **bedrock は現有3辞書(e-Gov rank100 + 有斐閣 rank101 + 学陽 rank102)で完結**。Wave 取得は accept 後の enrichment に降格。
 
 > W2系列（JLT）は v0.2.1 amendment で確認済（rank106 辞書 v19.0・rank100d Law XML）。W1a（e-Gov）/W2c（最高裁OPAC）/W5（CiNii）は既存資産。
 
