@@ -230,5 +230,75 @@ class TestHoureiAdapter(unittest.TestCase):
         self.assertEqual(ah.adapt([{"headword": "", "definition": "x"}], "s", 102), [])
 
 
+class TestQualityFilter(unittest.TestCase):
+    def _base_terms(self):
+        return [
+            {"term_id": "a", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "占有", "reading": "せんゆう",
+             "definition": "物を事実上支配すること", "term_tier": 1},
+            {"term_id": "b", "scheme_id": "hourei", "authority_rank": 102,
+             "normalized_pref": "占有", "reading": "せんゆう",
+             "definition": "物を事実上支配すること", "term_tier": 1},
+        ]
+
+    def test_empty_def_anchor_flagged(self):
+        # 空定義 term が anchor になるとき hub に needs_preprocessing が付く
+        terms = [
+            {"term_id": "e", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "質権", "reading": "しちけん", "definition": "", "term_tier": 1},
+        ]
+        hubs, _, stats = bh.build_hubs(terms, quality_filter=True)
+        self.assertEqual(stats["anchors_empty_def"], 1)
+        self.assertIn("empty_def", hubs[0].get("needs_preprocessing", []))
+        self.assertEqual(hubs[0]["anchor_quality"], "empty_def")
+
+    def test_short_def_anchor_flagged(self):
+        # 短定義(<8字) term が anchor になるとき hub に needs_preprocessing が付く
+        terms = [
+            {"term_id": "s", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "質権", "reading": "しちけん", "definition": "短い", "term_tier": 1},
+        ]
+        hubs, _, stats = bh.build_hubs(terms, quality_filter=True)
+        self.assertEqual(stats["anchors_short_def"], 1)
+        self.assertIn("short_def", hubs[0].get("needs_preprocessing", []))
+
+    def test_quality_filter_off_by_default(self):
+        # quality_filter=False (既定) では needs_preprocessing が付かない
+        terms = [
+            {"term_id": "e", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "質権", "reading": "しちけん", "definition": "", "term_tier": 1},
+        ]
+        hubs, _, stats = bh.build_hubs(terms)
+        self.assertEqual(stats["anchors_empty_def"], 0)
+        self.assertNotIn("needs_preprocessing", hubs[0])
+
+    def test_anchor_rule_prefers_def_over_empty(self):
+        # 同一グループで定義ありの term が anchor になること(空定義は後回し)
+        terms = [
+            {"term_id": "empty", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "質権", "reading": "しちけん", "definition": "", "term_tier": 1},
+            {"term_id": "full", "scheme_id": "hourei", "authority_rank": 102,
+             "normalized_pref": "質権", "reading": "しちけん",
+             "definition": "目的物を占有して優先弁済を受ける担保物権", "term_tier": 1},
+        ]
+        hubs, _, _ = bh.build_hubs(terms)
+        self.assertEqual(hubs[0]["anchor_term_id"], "full")
+
+    def test_stats_count_quality_terms(self):
+        # terms_empty_def / terms_short_def が正しく集計される
+        terms = [
+            {"term_id": "a", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "質権", "reading": "しちけん", "definition": "", "term_tier": 1},
+            {"term_id": "b", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "抵当", "reading": "ていとう", "definition": "短い", "term_tier": 1},
+            {"term_id": "c", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "占有", "reading": "せんゆう",
+             "definition": "物を事実上支配すること", "term_tier": 1},
+        ]
+        _, _, stats = bh.build_hubs(terms, quality_filter=True)
+        self.assertEqual(stats["terms_empty_def"], 1)
+        self.assertEqual(stats["terms_short_def"], 1)
+
+
 if __name__ == "__main__":
     unittest.main()
