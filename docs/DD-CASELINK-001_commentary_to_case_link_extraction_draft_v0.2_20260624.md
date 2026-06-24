@@ -2,7 +2,7 @@
 
 - 起票: 2026-06-24 JST ／ 番頭: Claude Code (remote)
 - 改訂: 2026-06-24 v0.2 — **v0.1 の独自役割語彙（annotates/cites_* 造語）を撤回し、正典 `35_link_layer` の `edge_type`/`assertion_mode` に全面 crosswalk**（自己ドリフトの是正）
-- lifecycle: **draft / candidate**（独立監査 未了 → DDCASE ゲート）
+- lifecycle: **accepted v1.0**（DDCASELINK_PASS_WITH_NOTES + 浅井先生 ratify 2026-06-25。production変更/自動promotion は HOLD 継続）
 - domain: CASE（判例精度・意味層厚み付け／リンクレイヤへの供給）
 - parent: `35_link_layer`(alo_edges 正典・edge_type 10値/assertion_mode 4値) / `DD-CASE-001`(関係は edge・merge禁止) / `DD-CASEID-001`(fingerprints/external_ids)
 - related: `33_magazine_layer`(OPAC判評→evaluates+applies の前例) / `32_literature_layer`(文献標題推定マッチ→evaluates strength=implicit) / `DD-CASECORROB-001`(L2 annotation 補強) / `DD-CASEBIND-001`(②ガード) / `DD-CASECITE-001`(引用検証ゲート) / `DD-CASEID-002`(符号正規化)
@@ -108,7 +108,7 @@ v0.2 で語彙を正典に合わせた結果、正典側の改修は **最小限
 - independent_meaning_audit = **DDCASELINK_PASS_WITH_NOTES**（2026-06-25 / GPT Pro / result Box `2306671864233`, req `2306670304557`）。
   - **GO**: v0.2 設計 ratify / fixture tests / read-only corpus dry run。**HOLD**: production 変更・自動 promotion。
   - **Notes（3件・いずれも v0.2 で充足済＝追認）**: ①既存の正典リンク語彙を使う(→§1 crosswalk 済) ②本文由来候補は review に留める(→§2 vendor_implicit→review 済) ③同旨/反対は新 link type でなく qualifier(→§7-1 stance 列・新 edge_type 不要 済)。**v0.3 改修は不要**。
-- owner_approval = **未了**（PASS_WITH_NOTES につき 3行ダイジェストで浅井先生 ratify 待ち）。
+- owner_approval = **ratified 2026-06-25（浅井先生）**。→ DD-CASELINK-001 v0.2 = **accepted v1.0**。GO 解禁: read-only corpus dry run / 実装(span検出器)。HOLD 継続: production変更(stance列DDL含む)・自動promotion。
 
 ### 8.1 写像決定表（`case_link_map.map_mention` の実装則）
 | article_type | source | role | resolved | → edge_type | stance | assertion_mode | route |
