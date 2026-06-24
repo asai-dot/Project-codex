@@ -24,6 +24,7 @@ TESTS = os.path.join(HERE, "tests")
 DD_MAP = {
     "DD-LAYOUT-001": ["test_layout_projection", "test_layout_hashbundle"],
     "DD-TRILOGY-RECONCILE-001": ["test_reconcile_indep_registry"],
+    "DD-INDEP-LINEAGE-001": ["test_indep_lineage"],
     "DD-XMODAL-001": ["test_xmodal_agreement"],
     "DD-XDOC-001": [
         "test_xdoc_canonical", "test_xdoc_eligibility",
