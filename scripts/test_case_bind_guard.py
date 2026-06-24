@@ -8,7 +8,7 @@
 import sys
 import json
 from pathlib import Path
-from case_bind_guard import decide_bindings, auto_bound_assignment
+from case_bind_guard import decide_bindings, auto_bound_assignment, fuzzy_review_candidates
 from case_eval import score
 
 GOLD = Path(__file__).resolve().parent.parent / "app" / "data" / "case_identity" / "case_eval_gold_template.jsonl"
@@ -72,6 +72,11 @@ def run() -> int:
     check("G3 外部ID衝突→TierB review・自動bind回避(split)",
           t3["c1"] == "B" and any(r["reason"] == "external_id_conflict_same_source" for r in rv3)
           and p3["c1"] != p3["c2"])
+
+    # G5 Tier C: fuzzy候補は review専用・非merge
+    fz = fuzzy_review_candidates([("x", "y", 0.82)])
+    check("G5 fuzzy→TierC review・非merge",
+          len(fz) == 1 and fz[0]["tier"] == "C" and fz[0]["action"] == "human_review")
 
     # G2 元号未解決 → provisional
     a, t, _ = decide_bindings([

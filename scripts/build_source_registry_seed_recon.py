@@ -50,6 +50,7 @@ QUASI = [
 # 公式/商用/在野の判例ソース (31_case_layer §4 + reality_check)
 CASE_SOURCES = [
     # source_system, category, confidentiality_default, redistribution, note
+    ("NII",           "academic_caselaw", "open", "public",             "NII 判例(hanrei.ttl)。判例同一性の主源(65,855件・forum/符号正規化の基盤)"),
     ("saikousai-hp",  "official_court",   "open", "public",             "最高裁HP 公表判例"),
     ("saikousai-db",  "official_court",   "open", "restricted",         "民事判決情報DB(仮名処理・有償, 2026運用目標)"),
     ("D1-Law",        "commercial_caselaw","open","commercial_licensed", "PoC正規ソース。本文公開だが再配布はライセンス制約"),

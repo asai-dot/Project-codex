@@ -71,6 +71,18 @@ def decide_bindings(observations: list[dict]):
     return assignment, tiers, review
 
 
+def fuzzy_review_candidates(fuzzy_pairs: list) -> list[dict]:
+    """G5 Tier C: fuzzy(弱類似)候補を *review 専用* に出す。**自動 merge しない**(split寄り)。
+
+    fuzzy_pairs: [(oid_a, oid_b, score)]。外部 fuzzy matcher の出力を受ける hook
+    (本ガードは決定的のみ自動 bind。C は人手確認待ちの非merge tier)。
+    DD-CASEID-001 の「fuzzy → Tier C → review」を実装則化。
+    """
+    return [{"pair": (a, b), "score": s, "tier": "C",
+             "reason": "fuzzy_weak_match", "action": "human_review"}
+            for a, b, s in fuzzy_pairs]
+
+
 def detect_cross_source_conflicts(assignment: dict, obs_by_id: dict) -> list[dict]:
     """G6 (v0.2 note): 同一外部参照 'source:id' が複数 case_key に跨る矛盾を検出。
 
