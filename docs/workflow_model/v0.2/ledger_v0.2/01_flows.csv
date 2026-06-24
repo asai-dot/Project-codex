@@ -1,0 +1,24 @@
+process_id,phase,name,hypothesis,confirm_status,basis_deliverable,evidence_id,note
+WF-00,A/認知・紹介,流入経路の発生,紹介/HP/セミナー/既存顧客から接点が発生し流入経路として分類できる,未確認,110:cases0行(流入経路列なし)/CURRENT_STATE §1,EV-110-cases0; G-12,SF cases に流入経路列が無く実測不能。G-12 owner裁定待ち
+WF-01,A/問合せ受付,新規連絡の受付・相談レコード化,新規連絡を受信し相談候補を起票する,修正,112:trace1/2 inquiry_received 観測,EVD-112-trace1-0101; EVD-112-trace2-0201,Gmailで問合せ受付は観測可。ただしSF Consultation起票は未投入(cases0行)のため受付→起票の接続は未確認部分あり
+WF-02,A/安全連絡・本人関係確認,連絡可否・本人確認,本人確認水準を満たし既存Account照合する,未確認,112:parties unknown5/9,EV-110-parties; G-13,parties の過半がparty_type=unknownで名寄せ未完。本人確認運用は中森聴取要
+WF-03,A/コンフリクト確認,コンフリ pass/fail/escalate,当事者/関係者/相手方名で人手確定する人間必須ゲート,未確認,GRILL G-13/G-06,G-13; G-06; Q-037,データに残らない運用。浅井/中森聴取必須(運用実態Q-038/046/047)
+WF-04,A/受入可否・トリアージ,consult/refer/decline,受任可否と緊急度を弁護士が判定,例外,112:trace2 受任非到達(no_engagement),EVD-112-trace2-0203,受任非到達(スポット相談で案件化せず)の例外パスを実証。判定基準はowner裁定(G-12)
+WF-05,B/相談日程調整,日時/方式/費用合意,相談日程と費用を合意する,未確認,Phase1 Q-062(設計判断),Q-062; G-07,日程確定検知は自然発生データ候補だが運用ルール未確定(浅井聴取)
+WF-06,B/事前資料依頼・受領,相談前必須資料の収集,相談前に必須資料が揃う,未確認,111:預り資料フォルダ観測,Box-(8); U1,資料受領はBoxフォルダで観測可。相談票単票の有無はU1未確認
+WF-07,B/相談実施,相談完了/継続/打切り,予約時刻に相談を実施する,未確認,112:Dialpad/Notta未接続,EVD-112-trace2-0202; 112残課題,通話/対面相談ログがDialpad/Notta未接続で未取得。相談→面談区間は補完要
+WF-08,B/相談後評価,受任提案/追加相談/非受任,相談後に次行動を判定する,修正,112:trace2 post_consult_decision_recorded,EVD-112-trace2-0203,相談後評価=受任非到達の判定をdeclaredで観測。基準の構造化はG-12
+WF-09,C/見積・提案作成,見積作成・内部承認,見積を作成し内部承認する,修正,111:見積書PDF観測,Box-(6); EVD-112-trace1-0102,Boxに確定見積PDF(着手金/預り金/報酬)あり。ドラフト/承認過程はBox単独では×
+WF-10,C/提案・契約案送付,送付・フォロー期限生成,契約案を送付しフォロー期限を立てる,修正,112:trace1 proposal_sent,EVD-112-trace1-0102; Box-(5),契約書案送付を観測(proposal_sent)。委任契約書送付/返送がBoxの動作語で確認
+WF-11,C/条件調整・契約締結,成立/失注/保留,条件調整し契約を締結する,確認済,112:trace1 proposal_accepted→engagement_signed,EVD-112-trace1-0103; EVD-112-trace1-0104,提案合意(declared)→受任成立(observed)の連続をトレースで確認。受任成立は人間必須ゲート(G-06)
+WF-12,C/案件開設・初期請求,案件開設・初期請求生成,受任成立で案件を開設し初期請求する,修正,112:trace1 invoice_sent; 111:請求書PDF,EVD-112-trace1-0105; Box-(7),初期請求(着手金)送付を観測。SF案件開設(cases)は0行で未投入のため開設側は未確認
+WF-13,D/初期計画・役割分担,計画承認,案件開設後に初期計画を承認する,未確認,Phase1 Q-103系(設計判断),Q-103; G-08,計画/役割の自然発生データなし。WorkItem必須項目はG-08裁定待ち
+WF-14,D/継続情報取込,紐付け/除外/要確認(HITL),発生通信を案件に紐付ける(ALO Connect/HITL),修正,110:comms343 room_inherited100%/room_case_map8,EV-110-comms; EV-110-roomcasemap,紐付けは実装済だが room_inherited依存で参照先cases0行。human gate実体はroom_case_map8件のみ(mixed2/未レビュー1)
+WF-15,D/調査・起案・作業,作業完了/レビューへ,作業セッションを束ねる,未確認,112:trace3 work_item_created,EVD-112-trace3-0301; G-08,内部ToDo起票を1件観測。due_at/completion_evidence全件null=自然発生では埋まらない
+WF-16,D/内部レビュー・承認,approve/rework/hold,別弁護士がドラフトをレビューする,未確認,-,G-06,内部レビューの自然発生データなし。証拠不足。承認ゲート定義はG-06
+WF-17,D/納品・送付・提出,送付/提出成功,対外成果物を送付/提出する,修正,112:trace3 deliverable_sent; 111:通信(送),EVD-112-trace3-0305; Box-(9),成果物送付を観測。到達/受理はBox単独では△(追跡番号記録表で間接)。Delivery独立化はG-05未決
+WF-18,D/応答・進捗・反復,次反復/解決へ,外部応答/期限到来で次反復する,未確認,112:Dialpad/Notta未接続,112残課題; G-20,応答/期限の網羅にはDialpad/Notta/Calendar補完要。期限正本はG-20
+WF-19,E/解決・成果確定,closing開始可否,解決/成果を確定する,修正,112:trace3 outcome_reached,EVD-112-trace3-0303,"解決見込み報告(outcome_reached, declared)を観測。確定はowner判断"
+WF-20,E/最終請求・精算,financially_reconciled,最終請求と預り金/実費を精算する,修正,112:trace3 payment_received; 111:会計台帳,EVD-112-trace3-0304; Box-(7); G-10,入金受領→立替金差引後の残金送金判断を観測。client/payer分離が実在(G-10)。入金消込は別系統で未確認
+WF-21,E/原本返却・終了報告,client_acknowledged,原本返却と終了報告を行う,未確認,111:U2 終了報告書ひな形未確認,Box-(10); U2; G-15,依頼者向け業務終了報告書の標準ひな形有無が未確認。返却受領書ひな形は実在
+WF-22,E/終結・保存・知識化,close/archive/promote,close gate通過で既済化する,未確認,111:既済フォルダ移動で表現,Box-(11); G-09,終結は既済フォルダ移動で表現だが終了日/理由メタが弱い。close gate10条件はG-09裁定待ち

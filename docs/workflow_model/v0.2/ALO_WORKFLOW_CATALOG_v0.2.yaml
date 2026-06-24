@@ -1,0 +1,1512 @@
+# ALO_WORKFLOW_CATALOG_v0.2.yaml
+# 浅井法律事務所 業務フロー 機械可読カタログ（統合スナップショット）
+#
+# worker_task_id: W-20260624-150
+# generated_at: 2026-06-24
+# source_request: docs/workflow_model/REQUEST_v0.2.md
+# premise: Box=文書正本 / Salesforce=業務制御塔 / 自然発生データ優先 / Raw・Canonical・Derived分離
+#
+# === 重要な読み方（スナップショット注記） ===
+# 本カタログは v0.2 の done 済み成果物（Phase0 現状インベントリ / Phase1 質問トリアージ /
+# Phase2 Box実査 / Gmail 3トレース証跡台帳 / Owner Grill Pack / event schema v0.2）を統合した
+# 「現時点スナップショット」である。以下は未了:
+#   - SF/LEALA 実査(W-20260624-110) は コネクタ不在で BLOCKED（未観測）。
+#   - 浅井先生グリル(W-20260624-140 / G-01..G-20) の回答は未取得（裁定待ち）。
+# したがって確定していない値には status: provisional と pending: (sf_survey|owner_grill) を付し、
+# 確定事実（v0.1原本に記載/Box実査で観測）と混同しない。捏造禁止: 根拠の無い値は pending。
+#
+# 各要素の凡例:
+#   source:        どの先行成果物に由来するか
+#   confirm_status / status:
+#                  confirmed       = v0.1原本に確定記載 or Box実査で観測した事実
+#                  observed         = Gmail等の自然発生データから観測（confidence付・人間未承認）
+#                  provisional      = 仮説/提案。未確定（裏取り or 裁定が要る）
+#   pending:       provisional を確定させる手段（sf_survey=SF実査 / owner_grill=浅井裁定 /
+#                  staff_interview=中森聴取 / ext_se=外部SE確認 / box_followup=追加Box実査）
+#
+# v0.1原本の構造は「原本にこう書かれている」という事実であって、業務の現場実態として
+# 確定した意味ではない（Phase0 の区分に従う）。23フロー中22本は原本で `要確認`、
+# 245問は全件 `未回答`、決定14件は全件 `未決`。
+
+meta:
+  catalog_version: "0.2"
+  worker_task_id: W-20260624-150
+  generated_at: "2026-06-24"
+  snapshot: true
+  premise:
+    document_master: Box
+    control_tower: Salesforce
+    data_first: 自然発生データ優先（手入力は取得不能な判断・承認に限定）
+    layering: Raw / Canonical / Derived 分離
+  blocked_inputs:
+    - id: W-20260624-110
+      what: SF/LEALA 実査
+      reason: コネクタ不在で BLOCKED
+      affects: 入力率・自由記述過積載・状態と実態の乖離・SF↔Box ID貫通・現行フィールド有無
+    - id: W-20260624-140
+      what: 浅井グリル G-01..G-20 の回答
+      reason: 解消（owner 20問全回答済→W-180で決定ログ反映・W-181で catalog/ledger の field-level pending:owner_grill を伝播確定化）
+      resolved_by: [W-20260624-180, W-20260624-181]
+      affects: 状態機械本数(G-05)・human_gates確定(G-06)・PoCスコープ(G-07)・各正本確定 = 全て confirmed 化済
+  source_artifacts:
+    - ALO_WORKFLOW_CURRENT_STATE_v0.2.md          # Phase0 現状インベントリ
+    - PHASE1_question_triage_v0.2.csv             # Phase1 245問トリアージ
+    - PHASE1_triage_summary_v0.2.md
+    - PHASE2_box_document_lifecycle_v0.2.md       # Phase2 Box実査(U1-U5)
+    - ALO_WORKFLOW_EVIDENCE_LEDGER_v0.2.jsonl     # Gmail 3トレース 14イベント
+    - ALO_OWNER_GRILL_PACK_v0.1.md                # G-01..G-20 + 後続キュー
+    - alo_workflow_event_schema_v0.2.json         # event語彙の正
+    - v0.1/浅井法律事務所_業務フロー実査台帳_v0.1.xlsx
+  counts_from_phase0:
+    processes: 23
+    events: 72
+    states: 53
+    state_machines_defined: 5     # 06シート実定義（Delivery/Deadline独立化は未決 G-05）
+    documents: 35
+    data_sources: 22
+    sf_field_rows: 44
+    decisions: 14
+    hearing_questions: 245
+  twelve_decomposition_units:     # 各 process が参照する12分解単位（REQUEST §1）
+    - Trigger
+    - Actor
+    - Input
+    - Action
+    - Decision
+    - Output
+    - State
+    - WorkItem
+    - Evidence
+    - Exception
+    - Finance
+    - Provenance
+
+# =====================================================================
+# 1. processes — 23フロー(WF-00..22)
+# =====================================================================
+# 各 process は 12分解単位への参照(decomposition)を持つ。
+# confirm_status は v0.1原本の各行の確認状態（22本=要確認 / WF-14=設計済・要検証 / 確定0本）。
+processes:
+  - id: WF-00
+    seq: 0
+    phase: "A/認知・紹介"
+    trigger: 紹介・HP・セミナー・既存顧客から接点発生
+    owner_role: 弁護士/事務局
+    inputs: [接点シグナル, 流入経路情報]
+    decision_gates: [営業/相談/既存案件連絡の判定]
+    outputs: [流入経路候補]
+    next_state: WF-01
+    evidence: [DS-021_HP_form_access, EV-inflow]
+    automation_candidate: 自然発生データから流入経路候補
+    confirm_status: confirmed   # owner裁定 G-12/D-030（W-181）流入経路=必須〜準必須で確定
+    source: Phase0 §1 WF-00; G-12; D-030
+    decomposition:
+      Trigger: [TR-inflow]
+      Actor: [ACT-lawyer, ACT-clerk]
+      Input: [DS-021]
+      Action: 接点の記録と分類
+      Decision: [DEC-inflow-type]
+      Output: 流入経路候補
+      State: {machine: consultation, to: new}
+      WorkItem: null
+      Evidence: [EVT-system_log, EVT-email]
+      Exception: [EXC-source_unknown]
+      Finance: null
+      Provenance: provenance(observed)
+  - id: WF-01
+    seq: 1
+    phase: "A/問合せ受付"
+    trigger: 新規連絡を受信
+    owner_role: 事務局
+    inputs: [問合せ(メール/電話/フォーム)]
+    decision_gates: [相談レコードを作るか]
+    outputs: [相談候補レコード]
+    next_state: WF-02
+    evidence: [EV-001_inquiry_received, Ledger:trace1:0101]
+    automation_candidate: 問い合わせ分類・重複検知
+    confirm_status: provisional
+    pending: [sf_survey]
+    source: Phase0 §1 WF-01; Ledger trace1
+    decomposition:
+      Trigger: [TR-new-inquiry]
+      Actor: [ACT-clerk]
+      Input: [DS-011_gmail, DS-012_dialpad, DS-021_form]
+      Action: 問合せ受信・相談候補作成
+      Decision: [DEC-create-consultation]
+      Output: 相談候補
+      State: {machine: consultation, to: inquiry}
+      WorkItem: null
+      Evidence: [EVT-email, EVT-call]
+      Exception: [EXC-duplicate_contact]
+      Finance: null
+      Provenance: provenance(observed)
+  - id: WF-02
+    seq: 2
+    phase: "A/安全連絡・本人関係確認"
+    trigger: 相談候補作成
+    owner_role: 事務局
+    inputs: [連絡先, 本人識別情報]
+    decision_gates: [連絡可否・本人確認水準]
+    outputs: [本人確認結果]
+    next_state: WF-03
+    evidence: [EV-003_safe_contact_confirmed, EV-004_party_identified]
+    automation_candidate: 署名・電話番号・既存Account照合
+    confirm_status: provisional
+    pending: [sf_survey]
+    source: Phase0 §1 WF-02
+    decomposition:
+      Trigger: [TR-candidate-created]
+      Actor: [ACT-clerk]
+      Input: [DS-005_related_contact, DS-011_gmail]
+      Action: 安全連絡・本人関係確認
+      Decision: [DEC-identity-level]
+      Output: 本人確認済
+      State: {machine: consultation, to: identity_checked}
+      WorkItem: null
+      Evidence: [EVT-email, EVT-salesforce_record]
+      Exception: [EXC-identity_unverifiable]
+      Finance: null
+      Provenance: provenance(observed)
+  - id: WF-03
+    seq: 3
+    phase: "A/コンフリクト確認"
+    trigger: 当事者・関係者名取得
+    owner_role: 弁護士＋事務局
+    inputs: [当事者名, 関係者名, 相手方名]
+    decision_gates: [pass/fail/escalate]
+    outputs: [コンフリ判定結果]
+    next_state: WF-04
+    evidence: [EV-005_conflict_check_requested, EV-006_conflict_check_completed]
+    automation_candidate: 名称候補生成・既存関係グラフ検索
+    confirm_status: provisional
+    pending: [staff_interview]   # G-13(最小データ=相手方・関係者氏名を構造化)はowner裁定済→owner_grill除去。運用粒度Q-038/046/047は中森聴取依存で残置
+    human_gate: HG-01
+    source: Phase0 §1 WF-03; G-13
+    decomposition:
+      Trigger: [TR-parties-known]
+      Actor: [ACT-lawyer, ACT-clerk]
+      Input: [DS-005_related_contact]
+      Action: コンフリクトチェック（AIは候補列挙のみ）
+      Decision: [DEC-conflict]
+      Output: pass/fail/escalate
+      State: {machine: consultation, to: conflict_pass}
+      WorkItem: null
+      Evidence: [EVT-salesforce_record]
+      Exception: [EXC-conflict_fail, EXC-conflict_escalate]
+      Finance: null
+      Provenance: provenance(human_decision)
+  - id: WF-04
+    seq: 4
+    phase: "A/受入可否・緊急度トリアージ"
+    trigger: コンフリクトpass又は緊急例外
+    owner_role: 弁護士
+    inputs: [事案概要, 期限, 分野]
+    decision_gates: [consult/refer/decline]
+    outputs: [トリアージ結果]
+    next_state: WF-05
+    evidence: [EV-007_triage_completed]
+    automation_candidate: 期限・分野・不適合候補抽出
+    confirm_status: confirmed   # owner裁定 G-07/D-008（W-181）PoC1=相談〜受任に受入トリアージを含むで確定
+    source: Phase0 §1 WF-04; G-07; D-008
+    decomposition:
+      Trigger: [TR-conflict-pass]
+      Actor: [ACT-lawyer]
+      Input: [DS-001_consultation]
+      Action: 受入可否・緊急度判定
+      Decision: [DEC-triage]
+      Output: consult/refer/decline
+      State: {machine: consultation, to: triaged}
+      WorkItem: null
+      Evidence: [EVT-salesforce_record]
+      Exception: [EXC-urgent_bypass]
+      Finance: null
+      Provenance: provenance(human_decision)
+  - id: WF-05
+    seq: 5
+    phase: "B/相談日程調整"
+    trigger: 相談実施GO
+    owner_role: 弁護士/事務局
+    inputs: [候補日時, 相談方式, 費用条件]
+    decision_gates: [日時/方式/費用合意]
+    outputs: [確定相談予約]
+    next_state: WF-06
+    evidence: [EV-008_consultation_date_options_sent, EV-009_consultation_scheduled]
+    automation_candidate: 日程候補生成・確定検知
+    confirm_status: provisional
+    pending: [sf_survey]   # owner_grill除去: 2-A Q-062は20問グリル外の後続キュー論点でowner裁定なし。日程フィールドのSF実査依存は残置
+    source: Phase0 §1 WF-05
+    decomposition:
+      Trigger: [TR-consult-go]
+      Actor: [ACT-lawyer, ACT-clerk]
+      Input: [DS-014_calendar, DS-011_gmail]
+      Action: 日程調整・費用提示
+      Decision: [DEC-schedule]
+      Output: 相談予約確定
+      State: {machine: consultation, to: scheduled}
+      WorkItem: null
+      Evidence: [EVT-calendar, EVT-email]
+      Exception: [EXC-reschedule, EXC-cancel]
+      Finance: null
+      Provenance: provenance(observed)
+  - id: WF-06
+    seq: 6
+    phase: "B/事前資料依頼・受領"
+    trigger: 相談日時確定
+    owner_role: 事務局＋担当弁護士
+    inputs: [必須資料リスト, 受領資料]
+    decision_gates: [相談前必須資料が揃ったか]
+    outputs: [受領資料一式]
+    next_state: WF-07
+    evidence: [EV-012_document_requested, EV-013_document_received, EV-014_document_classified]
+    automation_candidate: 添付保存・文書種別・不足リマインド
+    confirm_status: provisional
+    pending: [sf_survey]
+    source: Phase0 §1 WF-06
+    decomposition:
+      Trigger: [TR-scheduled]
+      Actor: [ACT-clerk, ACT-lawyer]
+      Input: [DS-009_box, DS-011_gmail]
+      Action: 資料依頼・受領・分類
+      Decision: [DEC-docs-complete]
+      Output: 受領資料
+      State: {machine: document, to: received}
+      WorkItem: [WI-doc-collect]
+      Evidence: [EVT-email, EVT-box_file]
+      Exception: [EXC-missing_docs]
+      Finance: null
+      Provenance: provenance(observed)
+  - id: WF-07
+    seq: 7
+    phase: "B/相談実施"
+    trigger: 予約時刻到来
+    owner_role: 担当弁護士
+    inputs: [相談予約, 事前資料]
+    decision_gates: [相談完了/継続/打切り]
+    outputs: [相談記録]
+    next_state: WF-08
+    evidence: [EV-015_consultation_started, EV-016_consultation_completed, EV-017_advice_recorded]
+    automation_candidate: 参加者・要点・アクション抽出
+    confirm_status: confirmed   # owner裁定 G-14/D-026（W-181）相談票=専用様式なし→Notta+GoogleDoc+Calendar合成で束ねる(Box-U1解消)
+    source: Phase0 §1 WF-07; G-14; D-026
+    decomposition:
+      Trigger: [TR-appointment-due]
+      Actor: [ACT-lawyer]
+      Input: [DS-013_notta, DS-001_consultation]
+      Action: 相談実施・要点記録
+      Decision: [DEC-consult-result]
+      Output: 相談記録
+      State: {machine: consultation, to: consulted}
+      WorkItem: null
+      Evidence: [EVT-meeting, EVT-call]
+      Exception: [EXC-no_show]
+      Finance: null
+      Provenance: provenance(observed)
+  - id: WF-08
+    seq: 8
+    phase: "B/相談後評価"
+    trigger: 相談完了
+    owner_role: 担当弁護士
+    inputs: [相談記録, 論点]
+    decision_gates: [受任提案/追加相談/非受任]
+    outputs: [次行動方針]
+    next_state: WF-09
+    evidence: [EV-018_followup_question_received, EV-019_post_consult_decision_recorded, Ledger:trace2]
+    automation_candidate: 論点・不足・次行動候補
+    confirm_status: confirmed   # owner裁定 G-12/D-030（W-181）失注理由=enum選択式(①当方お断り②先方失注/離脱③受任に至らず④その他)で確定。「お断り」と「失注」を区別
+    source: Phase0 §1 WF-08; Ledger trace2(失注); G-12; D-030
+    decomposition:
+      Trigger: [TR-consult-complete]
+      Actor: [ACT-lawyer]
+      Input: [DS-001_consultation]
+      Action: 相談後評価・次行動決定
+      Decision: [DEC-post-consult]
+      Output: 受任提案/非受任
+      State: {machine: consultation, to: followup}
+      WorkItem: null
+      Evidence: [EVT-salesforce_record]
+      Exception: [EXC-loss_reason_missing]
+      Finance: null
+      Provenance: provenance(human_decision)
+  - id: WF-09
+    seq: 9
+    phase: "C/見積・提案作成"
+    trigger: 受任提案GO又は顧客から見積依頼
+    owner_role: 担当弁護士＋事務局
+    inputs: [費用条件, 提案テンプレート]
+    decision_gates: [内部承認]
+    outputs: [見積書, 提案書(案)]
+    next_state: WF-10
+    evidence: [EV-020_quote_requested, EV-021_proposal_created, EV-022_proposal_approved_internal]
+    automation_candidate: テンプレート差込・版管理
+    confirm_status: provisional
+    pending: [box_followup]   # Box実査(6)見積書: ドラフト/送付/到達は単独で△
+    source: Phase0 §1 WF-09; Box実査(6)
+    decomposition:
+      Trigger: [TR-propose-go]
+      Actor: [ACT-lawyer, ACT-clerk]
+      Input: [DS-010_box_templates]
+      Action: 見積・提案作成・内部承認
+      Decision: [DEC-internal-approval]
+      Output: 見積書/提案書
+      State: {machine: finance, to: quote_draft}
+      WorkItem: [WI-proposal-draft]
+      Evidence: [EVT-box_file]
+      Exception: [EXC-approval_hold]
+      Finance: [FE-quote]
+      Provenance: provenance(declared)
+  - id: WF-10
+    seq: 10
+    phase: "C/提案・契約案送付"
+    trigger: 内部承認完了
+    owner_role: 事務局
+    inputs: [承認済提案, 送付先]
+    decision_gates: [送付先・送付版・期限]
+    outputs: [送付済提案/契約案]
+    next_state: WF-11
+    evidence: [EV-023_proposal_sent, EV-024_proposal_followup_due, Ledger:trace1:0102]
+    automation_candidate: 送付検知・フォロー期限生成
+    confirm_status: provisional
+    pending: [sf_survey]
+    source: Phase0 §1 WF-10; Ledger trace1:0102(契約書案送付)
+    decomposition:
+      Trigger: [TR-approved]
+      Actor: [ACT-clerk]
+      Input: [DS-011_gmail, DS-009_box]
+      Action: 提案・契約案送付・フォロー期限設定
+      Decision: [DEC-send-version]
+      Output: 送付済提案
+      State: {machine: finance, to: quote_sent}
+      WorkItem: [WI-proposal-followup]   # Ledger wi:trace1:proposal_followup (due_at=null)
+      Evidence: [EVT-email]
+      Exception: [EXC-no_response]
+      Finance: null
+      Provenance: provenance(observed)
+  - id: WF-11
+    seq: 11
+    phase: "C/条件調整・契約締結"
+    trigger: 顧客回答
+    owner_role: 担当弁護士＋事務局
+    inputs: [顧客回答, 修正要望]
+    decision_gates: [成立/失注/保留]
+    outputs: [締結済委任契約 or 失注]
+    next_state: WF-12
+    evidence: [EV-025_proposal_revision_requested, EV-026_proposal_accepted, EV-028_engagement_signed, Ledger:trace1:0103-0104]
+    automation_candidate: 受諾/署名検知・差分比較
+    confirm_status: confirmed   # owner裁定 G-06/D-023（W-181）受任成立(HG-02)は人間必須ゲートでなくoptional(置けるが必須でない)。受任=複数シグナル合成しdeclaredと突合(G-11/D-028)
+    human_gate: HG-02   # optional gate（マスト3点外。human_gates.gates HG-02 参照）
+    source: Phase0 §1 WF-11; Ledger trace1:0103(accept)/0104(signed); G-06; D-023
+    decomposition:
+      Trigger: [TR-client-response]
+      Actor: [ACT-lawyer, ACT-clerk]
+      Input: [DS-011_gmail, DS-009_box]
+      Action: 条件調整・契約締結
+      Decision: [DEC-engagement]
+      Output: 締結 or 失注
+      State: {machine: consultation, to: converted}
+      WorkItem: null
+      Evidence: [EVT-email, EVT-box_file]
+      Exception: [EXC-loss, EXC-hold]
+      Finance: null
+      Provenance: provenance(human_decision)
+  - id: WF-12
+    seq: 12
+    phase: "C/案件開設・初期請求"
+    trigger: 受任成立条件充足
+    owner_role: 事務局
+    inputs: [締結済契約, 案件メタデータ]
+    decision_gates: [業務開始可否]
+    outputs: [Matter, 案件フォルダ, 着手金請求]
+    next_state: WF-13
+    evidence: [EV-031_consultation_converted_to_matter, EV-032_matter_workspace_created, EV-029_retainer_invoice_sent, Ledger:trace1:0105]
+    automation_candidate: フォルダ/メタデータ/請求自動生成
+    confirm_status: provisional
+    pending: [sf_survey]
+    source: Phase0 §1 WF-12; Ledger trace1:0105(損保=第三者支払者請求)
+    decomposition:
+      Trigger: [TR-engagement-met]
+      Actor: [ACT-clerk]
+      Input: [DS-002_matter, DS-007_accounting]
+      Action: 案件開設・初期請求
+      Decision: [DEC-matter-open]
+      Output: Matter/フォルダ/請求
+      State: {machine: matter, to: onboarding}
+      WorkItem: null
+      Evidence: [EVT-salesforce_record, EVT-invoice]
+      Exception: [EXC-client_payer_split]   # G-10 client≠payer
+      Finance: [FE-retainer_invoice]
+      Provenance: provenance(declared)
+  - id: WF-13
+    seq: 13
+    phase: "D/初期計画・役割分担"
+    trigger: 案件開設
+    owner_role: 担当弁護士＋事務局
+    inputs: [案件情報, 方針]
+    decision_gates: [計画承認]
+    outputs: [案件計画, 役割分担]
+    next_state: WF-14
+    evidence: [EV-033_matter_plan_approved]
+    automation_candidate: 議事録から計画候補
+    confirm_status: provisional
+    pending: [sf_survey]
+    source: Phase0 §1 WF-13
+    decomposition:
+      Trigger: [TR-matter-open]
+      Actor: [ACT-lawyer, ACT-clerk]
+      Input: [DS-002_matter, DS-003_task_event]
+      Action: 初期計画・役割分担
+      Decision: [DEC-plan-approval]
+      Output: 案件計画
+      State: {machine: matter, to: active}
+      WorkItem: [WI-plan]
+      Evidence: [EVT-meeting, EVT-salesforce_record]
+      Exception: null
+      Finance: null
+      Provenance: provenance(human_decision)
+  - id: WF-14
+    seq: 14
+    phase: "D/継続情報取込"
+    trigger: メール/電話/郵便/会議/資料発生
+    owner_role: 全員
+    inputs: [メール, 通話, 郵便, 会議, 資料]
+    decision_gates: [紐付け/除外/要確認]
+    outputs: [紐付け済イベント]
+    next_state: WF-15
+    evidence: [EV-034_inbound_message_received, EV-035_call_completed, EV-036_meeting_held, EV-037_postal_item_received]
+    automation_candidate: ALO Connect/HITL
+    confirm_status: provisional   # 原本では「設計済・要検証」（唯一）
+    confirm_note: v0.1原本で唯一 `設計済・要検証`（他22本は要確認）
+    pending: [ext_se]
+    source: Phase0 §1 WF-14
+    decomposition:
+      Trigger: [TR-inbound-signal]
+      Actor: [ACT-all]
+      Input: [DS-011_gmail, DS-012_dialpad, DS-013_notta, DS-014_calendar, DS-017_court, DS-018_scan]
+      Action: 継続情報取込・案件紐付け(HITL)
+      Decision: [DEC-link-or-exclude]
+      Output: 紐付け済イベント
+      State: {machine: matter, to: active}
+      WorkItem: null
+      Evidence: [EVT-email, EVT-call, EVT-meeting, EVT-postal]
+      Exception: [EXC-unlinked_event]
+      Finance: null
+      Provenance: provenance(observed)
+  - id: WF-15
+    seq: 15
+    phase: "D/調査・起案・作業"
+    trigger: 計画又はイベントから作業発生
+    owner_role: 弁護士/事務局
+    inputs: [作業指示, 資料]
+    decision_gates: [作業完了/レビューへ]
+    outputs: [ドラフト成果物]
+    next_state: WF-16
+    evidence: [EV-038_work_item_created, EV-039_work_item_started, EV-041_work_item_completed, EV-042_work_session_recorded, EV-043_draft_created]
+    automation_candidate: 作業セッション自動束ね
+    confirm_status: confirmed   # owner裁定 G-08/D-011/D-025（W-181）WorkItem必須=担当/期限/案件/次アクションの4点+Chatworkタスク対応(DS-023)で確定
+    source: Phase0 §1 WF-15; G-08; D-011
+    decomposition:
+      Trigger: [TR-work-spawned]
+      Actor: [ACT-lawyer, ACT-clerk]
+      Input: [DS-009_box, DS-020_gdocs]
+      Action: 調査・起案・作業
+      Decision: [DEC-work-complete]
+      Output: ドラフト
+      State: {machine: work_item, to: in_progress}
+      WorkItem: [WI-task]
+      Evidence: [EVT-box_file]
+      Exception: [EXC-blocked_waiting]
+      Finance: null
+      Provenance: provenance(observed)
+  - id: WF-16
+    seq: 16
+    phase: "D/内部レビュー・承認"
+    trigger: ドラフト完成
+    owner_role: 別弁護士/責任者
+    inputs: [ドラフト]
+    decision_gates: [approve/rework/hold]
+    outputs: [承認済ドラフト]
+    next_state: WF-17
+    evidence: [EV-044_internal_review_requested, EV-045_internal_review_completed]
+    automation_candidate: 差分・チェック候補
+    confirm_status: confirmed   # owner裁定 G-06/D-023（W-181）人間必須ゲートはマスト3点のみ。内部レビュー承認はマスト外(対外文書最終送付HG-04が品質マスト)
+    source: Phase0 §1 WF-16; G-06; D-023
+    decomposition:
+      Trigger: [TR-draft-done]
+      Actor: [ACT-reviewer]
+      Input: [DS-009_box]
+      Action: 内部レビュー・承認
+      Decision: [DEC-review]
+      Output: 承認済/差戻し
+      State: {machine: document, to: internal_review}
+      WorkItem: [WI-review]
+      Evidence: [EVT-box_file]
+      Exception: [EXC-rework, EXC-hold]
+      Finance: null
+      Provenance: provenance(human_decision)
+  - id: WF-17
+    seq: 17
+    phase: "D/納品・送付・提出"
+    trigger: 外部送付承認
+    owner_role: 弁護士/事務局
+    inputs: [承認済成果物, 送付先]
+    decision_gates: [送付/提出成功]
+    outputs: [納品物, 送付/提出証跡]
+    next_state: WF-18
+    evidence: [EV-046_client_review_requested, EV-047_client_approval_received, EV-048_deliverable_sent, EV-049_court_filing_submitted, EV-050_delivery_acknowledged, Ledger:trace3:deliverable_sent]
+    automation_candidate: 送付証跡の自動取得
+    confirm_status: provisional
+    pending: [sf_survey]   # owner_grill除去: G-06(対外成果物最終送付=人間必須HG-04)・G-11(到達正本所在=SF正/Box最強)はowner裁定済(D-023/D-028)。到達正本の現行SFフィールド有無はSF実査依存で残置
+    human_gate: HG-04   # マスト②対外文書の最終送付(G-06/D-023 confirmed)
+    source: Phase0 §1 WF-17; Box実査(5)(9); Ledger trace3; G-06; G-11; D-023
+    decomposition:
+      Trigger: [TR-send-approved]
+      Actor: [ACT-lawyer, ACT-clerk]
+      Input: [DS-009_box, DS-017_court, DS-011_gmail]
+      Action: 納品・送付・提出
+      Decision: [DEC-delivery]
+      Output: 納品物/提出証跡
+      State: {machine: document, to: sent}
+      WorkItem: [WI-delivery]
+      Evidence: [EVT-email, EVT-postal, EVT-court_portal, EVT-fax]
+      Exception: [EXC-delivery_failed]
+      Finance: null
+      Provenance: provenance(human_decision)
+  - id: WF-18
+    seq: 18
+    phase: "D/応答・進捗・反復"
+    trigger: 外部応答又は期限到来
+    owner_role: 担当者
+    inputs: [外部応答, 期限]
+    decision_gates: [次反復/解決へ]
+    outputs: [次反復タスク or 解決移行]
+    next_state: [WF-14, WF-19]
+    evidence: [EV-051_deadline_created, EV-052_deadline_changed, EV-053_deadline_completed]
+    automation_candidate: observed_state候補生成
+    confirm_status: provisional
+    pending: [sf_survey]   # owner_grill除去: G-20(期限正本=Salesforce・徒過防止は人/SF/AI多重チェック)はowner裁定済(D-033)。Deadline格納先の現行SF有無はSF実査依存で残置
+    source: Phase0 §1 WF-18; G-20; D-033
+    decomposition:
+      Trigger: [TR-response-or-deadline]
+      Actor: [ACT-all]
+      Input: [DS-006_deadline, DS-011_gmail]
+      Action: 応答処理・進捗反復
+      Decision: [DEC-iterate-or-resolve]
+      Output: 次反復 or 解決移行
+      State: {machine: matter, to: waiting_court}
+      WorkItem: [WI-task]
+      Evidence: [EVT-deadline, EVT-email]
+      Exception: [EXC-deadline_missed]
+      Finance: null
+      Provenance: provenance(observed)
+  - id: WF-19
+    seq: 19
+    phase: "E/解決・成果確定"
+    trigger: 和解/判決/履行/助言完了等
+    owner_role: 担当弁護士
+    inputs: [解決事由, 成果]
+    decision_gates: [closing開始可否]
+    outputs: [成果確定, closing開始]
+    next_state: WF-20
+    evidence: [EV-064_outcome_reached, Ledger:trace3:outcome_reached]
+    automation_candidate: 成果類型・残タスク抽出
+    confirm_status: confirmed   # owner裁定 G-09/D-024（W-181）2段クローズ①法的終了(案件実体終了)=closing開始可否の起点で確定
+    source: Phase0 §1 WF-19; Ledger trace3; G-09; D-024
+    decomposition:
+      Trigger: [TR-outcome]
+      Actor: [ACT-lawyer]
+      Input: [DS-002_matter]
+      Action: 解決・成果確定
+      Decision: [DEC-closing-start]
+      Output: 成果確定
+      State: {machine: matter, to: resolution_pending}
+      WorkItem: null
+      Evidence: [EVT-salesforce_record]
+      Exception: null
+      Finance: null
+      Provenance: provenance(human_decision)
+  - id: WF-20
+    seq: 20
+    phase: "E/最終請求・預り金/実費精算"
+    trigger: closing GO
+    owner_role: 弁護士＋事務局長
+    inputs: [作業実績, 預り金残高, 実費]
+    decision_gates: [financially_reconciled]
+    outputs: [最終請求, 精算結果]
+    next_state: WF-21
+    evidence: [EV-055_invoice_created, EV-056_invoice_sent, EV-058_trust_deposit_received, EV-059_expense_recorded, EV-060_trust_refund_sent, EV-065_financial_reconciliation_completed, Ledger:trace3:invoice/payment]
+    automation_candidate: 計算候補・照合・未収監視
+    confirm_status: provisional
+    pending: [sf_survey]   # owner_grill除去: G-06(金銭の確定=報酬確定/預り金精算/振替=人間必須HG-05/06)・G-10(client/payer分離)はowner裁定済(D-023/D-013)。会計系の現行SF格納先はSF実査依存で残置
+    human_gate: [HG-05, HG-06]   # マスト③金銭の確定(G-06/D-023 confirmed)
+    source: Phase0 §1 WF-20; Ledger trace3(精算途中); G-06; G-10; D-023; D-013
+    decomposition:
+      Trigger: [TR-closing-go]
+      Actor: [ACT-lawyer, ACT-office_manager]
+      Input: [DS-007_accounting, DS-015_mf_invoice, DS-016_mf_accounting]
+      Action: 最終請求・預り金/実費精算
+      Decision: [DEC-finance-reconcile]
+      Output: 精算済
+      State: {machine: finance, to: reconciled}
+      WorkItem: [WI-reconcile]
+      Evidence: [EVT-invoice, EVT-bank_transaction]
+      Exception: [EXC-unpaid, EXC-client_payer_split]
+      Finance: [FE-final_invoice, FE-trust_deposit, FE-expense, FE-refund, FE-reconciliation]
+      Provenance: provenance(human_decision)
+  - id: WF-21
+    seq: 21
+    phase: "E/原本返却・終了報告"
+    trigger: 財務と残作業確認
+    owner_role: 弁護士＋事務局
+    inputs: [預り原本, 終了報告]
+    decision_gates: [client_acknowledged]
+    outputs: [返却済原本, 送付済終了報告]
+    next_state: WF-22
+    evidence: [EV-066_originals_returned, EV-067_closing_report_sent, EV-068_closing_ack_received]
+    automation_candidate: 返却物一覧・送付パック生成
+    confirm_status: provisional
+    pending: [box_followup]   # owner_grill除去: G-15(業務終了報告書=専用様式なし→成果物送付or報酬請求通知が兼ねる)はowner裁定済(D-027/Box-U2解消)。返却物/送付パックの追加Box実査は残置
+    source: Phase0 §1 WF-21; Box実査(8)(10); G-15; D-027
+    decomposition:
+      Trigger: [TR-finance-confirmed]
+      Actor: [ACT-lawyer, ACT-clerk]
+      Input: [DS-008_keeping_item, DS-009_box]
+      Action: 原本返却・終了報告送付
+      Decision: [DEC-client-ack]
+      Output: 返却受領/終了報告
+      State: {machine: document, to: accepted}
+      WorkItem: [WI-return-originals]
+      Evidence: [EVT-postal, EVT-box_file]
+      Exception: [EXC-client_unreachable]
+      Finance: null
+      Provenance: provenance(human_decision)
+  - id: WF-22
+    seq: 22
+    phase: "E/終結・保存・知識化"
+    trigger: 全closing gate通過
+    owner_role: 担当弁護士＋事務局
+    inputs: [closing gate結果]
+    decision_gates: [close/archive/promote]
+    outputs: [既済化, 知識化サマリ]
+    next_state: null
+    evidence: [EV-069_matter_closed, EV-070_knowledge_summary_promoted]
+    automation_candidate: close gate/再利用候補
+    confirm_status: confirmed   # owner裁定 G-09/D-024（W-181）終結=2段クローズ②事務クローズ完了(原本返却済・預り金ゼロ・報酬確定)。終結ゲートHG-07はoptional(置けるが必須でない G-06)
+    human_gate: HG-07   # optional gate（マスト3点外。human_gates.gates HG-07 参照）
+    source: Phase0 §1 WF-22; Box実査(11)既済=フォルダ移動; G-09; D-024
+    decomposition:
+      Trigger: [TR-all-gates-passed]
+      Actor: [ACT-lawyer, ACT-clerk]
+      Input: [DS-002_matter, DS-009_box]
+      Action: 終結・保存・知識化
+      Decision: [DEC-close]
+      Output: 既済化/知識サマリ
+      State: {machine: matter, to: closed}
+      WorkItem: null
+      Evidence: [EVT-box_event, EVT-salesforce_record]
+      Exception: [EXC-close_gate_unmet]
+      Finance: null
+      Provenance: provenance(human_decision)
+
+# =====================================================================
+# 2. actors — 役割（event schema ActorRef enum 準拠）
+# =====================================================================
+actors:
+  - id: ACT-lawyer
+    actor_type: lawyer
+    label: 担当弁護士
+    source: Phase0; event_schema ActorRef
+    confirm_status: confirmed
+  - id: ACT-reviewer
+    actor_type: lawyer
+    label: レビュー担当弁護士/責任者
+    source: Phase0 WF-16
+    confirm_status: confirmed
+  - id: ACT-clerk
+    actor_type: staff
+    label: 事務局
+    source: Phase0; Ledger staff:trace1:clerk
+    confirm_status: confirmed
+  - id: ACT-office_manager
+    actor_type: staff
+    label: 事務局長（中森）
+    source: Phase1 中森聴取必須; Grill 回答者
+    confirm_status: confirmed
+  - id: ACT-all
+    actor_type: staff
+    label: 全所員（継続情報取込フェーズ）
+    source: Phase0 WF-14
+    confirm_status: confirmed
+  - id: ACT-client
+    actor_type: client
+    label: 依頼者
+    source: event_schema; G-10
+    confirm_status: confirmed
+  - id: ACT-payer
+    actor_type: client
+    label: 支払者（依頼者と別エンティティ）
+    source: G-10; Ledger trace1/trace3; D-013
+    confirm_status: confirmed   # owner裁定 G-10/D-013（W-181）依頼者/支払者を分けて持つで確定（保険会社払い等に対応）
+  - id: ACT-prospect
+    actor_type: prospect
+    label: 相談者/依頼候補
+    source: Ledger party:trace1:prospect
+    confirm_status: confirmed
+  - id: ACT-opponent
+    actor_type: opponent
+    label: 相手方
+    source: event_schema; WF-03
+    confirm_status: confirmed
+  - id: ACT-court
+    actor_type: court
+    label: 裁判所
+    source: event_schema; DS-006/DS-017
+    confirm_status: confirmed
+  - id: ACT-insurer
+    actor_type: insurer
+    label: 保険会社（弁護士費用特約/自賠責/任意）
+    source: Ledger trace1:0105 / trace3
+    confirm_status: observed
+  - id: ACT-vendor
+    actor_type: vendor
+    label: ベンダ
+    source: event_schema
+    confirm_status: confirmed
+  - id: ACT-public_body
+    actor_type: public_body
+    label: 行政機関（法テラス等）
+    source: event_schema; EVD-003(法テラス相談票)
+    confirm_status: confirmed
+  - id: ACT-system
+    actor_type: system
+    label: 自動化/AIシステム（提案のみ・確定不可）
+    source: G-19; event_schema
+    confirm_status: confirmed
+  - id: ACT-ext_se
+    actor_type: vendor
+    label: 外部SE（実装担当）
+    source: Phase1 外部SE確認必須; Grill 回答者
+    confirm_status: confirmed
+
+# =====================================================================
+# 3. systems — 22データソース(DS-001..022) / システム別
+# =====================================================================
+systems:
+  - id: DS-001
+    system: Salesforce
+    object: leala__Consultation__c（相談）
+    role: control_tower
+    source: Phase0 §3
+    confirm_status: confirmed
+    survey_status: pending_sf_survey
+  - id: DS-002
+    system: Salesforce
+    object: leala__Matter__c / leala__Business__c（受任案件）
+    role: control_tower
+    source: Phase0 §3
+    confirm_status: confirmed
+    survey_status: pending_sf_survey
+  - id: DS-003
+    system: Salesforce
+    object: Task / Event / Chatter / Office Meeting
+    source: Phase0 §3
+    confirm_status: confirmed
+    survey_status: pending_sf_survey
+  - id: DS-004
+    system: Salesforce
+    object: ALO_DerivedEvent__c
+    layer: derived
+    source: Phase0 §3
+    confirm_status: confirmed
+    survey_status: pending_sf_survey
+  - id: DS-005
+    system: Salesforce
+    object: RelatedContact / OpponentParty / Account / Contact
+    source: Phase0 §3
+    confirm_status: confirmed
+    survey_status: pending_sf_survey
+  - id: DS-006
+    system: Salesforce
+    object: Deadline / JurisdictionCourt / Procedure
+    source: Phase0 §3
+    confirm_status: confirmed
+    survey_status: pending_sf_survey
+  - id: DS-007
+    system: Salesforce
+    object: Accounting / Billing / Invoice / Expense / TimeCharge / Deposit
+    source: Phase0 §3
+    confirm_status: confirmed
+    survey_status: pending_sf_survey
+  - id: DS-008
+    system: Salesforce
+    object: PostalMatter / RequiredDocument / KeepingItem / CaseDocument
+    source: Phase0 §3
+    confirm_status: confirmed
+    survey_status: pending_sf_survey
+  - id: DS-009
+    system: Box
+    object: ★LEALA 配下の相談・受任・既済フォルダ
+    role: document_master
+    source: Phase0 §3; Phase2 Box実査(全体)
+    confirm_status: confirmed   # Box実査で観測済
+  - id: DS-010
+    system: Box
+    object: マニュアル・書式・ひな形・終了報告
+    role: document_master
+    source: Phase0 §3; Phase2 Box実査(1)(2)(3)
+    confirm_status: confirmed
+  - id: DS-011
+    system: Gmail
+    object: 全所員メール（外部/内部）
+    source: Phase0 §3; Ledger(3トレースの主ソース)
+    confirm_status: confirmed
+  - id: DS-012
+    system: Dialpad
+    object: 通話・SMS・録音・transcript
+    source: Phase0 §3
+    confirm_status: confirmed
+    survey_status: connector_absent   # Ledgerに通話イベント未記録
+  - id: DS-013
+    system: Notta
+    object: 会議/通話 文字起こし（相談記録ソースの1）
+    role: consultation_record_source   # 相談記録=Notta+GoogleDoc+Calendar 合成(G-14)
+    join_key: "(将来)→consultation_ref"
+    connection: 未接続   # owner裁定 G-14/派生事項（W-180）
+    measured: 未測定（未接続＝未測定）
+    needed_connector: C1   # Notta は次に要るコネクタ
+    source: Phase0 §3; G-14; 03_data_sources DS-013
+    confirm_status: confirmed
+    survey_status: connector_absent
+  - id: DS-014
+    system: Google Calendar / Meet
+    object: 全所員カレンダー（相談予定紐付け＝相談記録ソースの1）
+    role: consultation_record_source
+    join_key: "event_id → consultation_ref / 期限突合(G-20)"
+    connection: 接続あり   # owner裁定（W-180）read 接続あり=相談記録の実査が可能
+    measured: 実査可
+    source: Phase0 §3; G-14; G-20; 03_data_sources DS-014
+    confirm_status: confirmed
+    note: "「事件メモ」=カレンダー予定に紐づくGoogleドキュメント（owner確認済 2026-06-24。当初『事件ウェブ』と聞き取った点を訂正）。"
+  - id: DS-015
+    system: Money Forward
+    object: MF請求書
+    connection: 未接続   # owner裁定 派生事項（W-180）
+    measured: 未測定（未接続＝未測定）
+    needed_connector: C1   # MoneyForward は次に要るコネクタ
+    source: Phase0 §3; G-11
+    confirm_status: confirmed
+    survey_status: connector_absent
+  - id: DS-016
+    system: Money Forward
+    object: MF会計/銀行明細（会計の突合先。入金の正は銀行通帳DS-024）
+    connection: 未接続   # owner裁定 G-11（W-180）
+    measured: 未測定（未接続＝未測定）
+    needed_connector: C1
+    join_key: "(将来)→payment_received; 銀行通帳(DS-024)と突合"
+    source: Phase0 §3; G-11
+    confirm_status: confirmed
+    survey_status: connector_absent
+    note: "入金確定の正本=銀行通帳(DS-024/G-11)。MFは会計突合先。MF/通帳未接続のため機械消込は未測定。"
+  - id: DS-017
+    system: MINTS/Teams/FAX/郵便
+    object: 裁判所・対外提出証跡
+    source: Phase0 §3
+    confirm_status: confirmed
+  - id: DS-018
+    system: NAS/複合機/ScanSnap
+    object: スキャン投入ログ
+    source: Phase0 §3
+    confirm_status: confirmed
+  - id: DS-019
+    system: Chatwork/Slack
+    object: 例外的外部・所内連絡
+    source: Phase0 §3
+    confirm_status: confirmed
+  - id: DS-020
+    system: Google Docs/Sheets
+    object: 困りごとログ・AI日報・週次全件おろし＋弁護士手打ち相談メモ（相談記録ソースの1）
+    layer: derived
+    role: consultation_record_source   # 弁護士手打ちGoogleドキュメント=相談記録の1(G-14)
+    join_key: "doc id → consultation_ref"
+    connection: 接続あり   # owner裁定 G-14（W-180）Google Drive 接続あり
+    measured: 実査可
+    source: Phase0 §3; G-14; G-19
+    confirm_status: confirmed
+    note: "相談記録3ソースの1=弁護士手打ちGoogleドキュメント(G-14)。AI日報系のAI推定は G-19（推定のまま・人間承認でも確定昇格しない）。"
+  - id: DS-021
+    system: HP/フォーム/アクセス解析
+    object: 問い合わせ前後の流入
+    source: Phase0 §3
+    confirm_status: confirmed
+  - id: DS-022
+    system: Box Events/Admin logs
+    object: ファイル操作監査
+    source: Phase0 §3; Phase2 Box実査
+    confirm_status: confirmed
+  - id: DS-023   # owner裁定 G-08（W-180）新規データ源
+    system: Chatwork（タスク）
+    object: Chatworkタスク（担当・期限）
+    role: work_item_source   # Chatworkタスク → WorkItem 対応づけ(G-08)
+    primary_key: chatwork task_id
+    join_key: "task_id → WorkItem(担当/期限/案件/次アクション); room_id → room_case_map"
+    connection: 到達（Chatworkミラー延長。タスク粒度の取込は要確認）
+    source: G-08; 03_data_sources DS-023
+    confirm_status: confirmed
+    note: "Chatworkで振るタスクと WorkItem の項目を揃える(G-08)。チャット本体(DS-019)とは別にタスク粒度を扱う。"
+  - id: DS-024   # owner裁定 G-11（W-180）新規データ源（入金の正本）
+    system: 銀行通帳
+    object: 入金明細（入金の真実の源＝正本）
+    role: payment_master   # 入金確定の正本(G-11)
+    primary_key: 口座+取引日+金額
+    join_key: "(将来)→payment_received; MoneyForward(DS-016)と突合"
+    connection: 未接続（入金の正＝源泉。機械取込は未接続）
+    measured: 未測定（取込未接続＝未測定）
+    needed_connector: C1   # 通帳/MF 取込が入金確定の機械化に必要
+    source: G-11; 03_data_sources DS-024
+    confirm_status: confirmed
+    note: "入金確定の正本=銀行通帳(G-11)。MoneyForward会計と突合。機械取込は未接続のため現時点は未測定。"
+
+# =====================================================================
+# 3b. data_source_owner_decisions — owner裁定（W-180）相談記録合成 / 新データ源一覧
+# =====================================================================
+data_source_owner_decisions:
+  consultation_record_synthesis:   # owner裁定 G-14（W-180）相談票=専用様式なし→合成
+    decision: D-026
+    grill: G-14
+    statement: "相談票の専用様式は無い。相談記録 = Notta議事録(DS-013/未接続) + GoogleDoc手打ちメモ(DS-020/接続あり) + GoogleCalendar紐付け(DS-014/接続あり) の合成で束ねる。Box-U1 解消。"
+    sources: [DS-013, DS-020, DS-014]
+    note: "Notta未接続のため合成は現時点では Calendar+GoogleDoc のみ実査可。完全合成は Notta 接続後（未接続＝未測定）。"
+  new_data_sources_summary:   # owner裁定（W-180）追加/接続状態確定の一覧
+    decision: D-025
+    connected: ["DS-014 GoogleCalendar(接続あり)", "DS-020 GoogleDocs(接続あり)"]
+    not_connected: ["DS-013 Notta(未接続)", "DS-015 MoneyForward(未接続)", "DS-016 MoneyForward会計(未接続)", "DS-024 銀行通帳(取込未接続)"]
+    task_linked: ["DS-023 Chatworkタスク(到達)"]
+    needed_connectors_C1: [Notta, MoneyForward]   # 銀行通帳取込もMF系で必要
+    note: "未接続(Notta/MF/通帳取込)由来は『未接続＝未測定』。仮説で埋めない。"
+
+# =====================================================================
+# 4. triggers — 各 process の開始トリガー（processes.decomposition.Trigger が参照）
+# =====================================================================
+triggers:
+  - {id: TR-inflow,             label: 接点発生（紹介/HP/セミナー/既存顧客）, fires: WF-00, source: Phase0 WF-00; G-12; D-030, confirm_status: confirmed}   # owner裁定 G-12/D-030 流入経路=必須〜準必須で確定
+  - {id: TR-new-inquiry,        label: 新規連絡受信,             fires: WF-01, source: Phase0 WF-01, confirm_status: provisional, pending: [sf_survey]}
+  - {id: TR-candidate-created,  label: 相談候補作成,             fires: WF-02, source: Phase0 WF-02, confirm_status: provisional}
+  - {id: TR-parties-known,      label: 当事者・関係者名取得,     fires: WF-03, source: Phase0 WF-03, confirm_status: provisional}
+  - {id: TR-conflict-pass,      label: コンフリクトpass又は緊急例外, fires: WF-04, source: Phase0 WF-04, confirm_status: provisional}
+  - {id: TR-consult-go,         label: 相談実施GO,               fires: WF-05, source: Phase0 WF-05, confirm_status: provisional}
+  - {id: TR-scheduled,          label: 相談日時確定,             fires: WF-06, source: Phase0 WF-06, confirm_status: provisional}
+  - {id: TR-appointment-due,    label: 予約時刻到来,             fires: WF-07, source: Phase0 WF-07, confirm_status: provisional}
+  - {id: TR-consult-complete,   label: 相談完了,                 fires: WF-08, source: Phase0 WF-08, confirm_status: provisional}
+  - {id: TR-propose-go,         label: 受任提案GO/見積依頼,       fires: WF-09, source: Phase0 WF-09, confirm_status: provisional}
+  - {id: TR-approved,           label: 内部承認完了,             fires: WF-10, source: Phase0 WF-10, confirm_status: provisional}
+  - {id: TR-client-response,    label: 顧客回答,                 fires: WF-11, source: Phase0 WF-11; Ledger trace1:0103, confirm_status: observed}
+  - {id: TR-engagement-met,     label: 受任成立条件充足,         fires: WF-12, source: Phase0 WF-12, confirm_status: provisional}
+  - {id: TR-matter-open,        label: 案件開設,                 fires: WF-13, source: Phase0 WF-13, confirm_status: provisional}
+  - {id: TR-inbound-signal,     label: メール/電話/郵便/会議/資料発生, fires: WF-14, source: Phase0 WF-14, confirm_status: provisional}
+  - {id: TR-work-spawned,       label: 計画/イベントから作業発生, fires: WF-15, source: Phase0 WF-15, confirm_status: provisional}
+  - {id: TR-draft-done,         label: ドラフト完成,             fires: WF-16, source: Phase0 WF-16, confirm_status: provisional}
+  - {id: TR-send-approved,      label: 外部送付承認,             fires: WF-17, source: Phase0 WF-17, confirm_status: provisional}
+  - {id: TR-response-or-deadline, label: 外部応答又は期限到来,    fires: WF-18, source: Phase0 WF-18, confirm_status: provisional}
+  - {id: TR-outcome,            label: 和解/判決/履行/助言完了,   fires: WF-19, source: Phase0 WF-19; Ledger trace3, confirm_status: observed}
+  - {id: TR-closing-go,         label: closing GO,               fires: WF-20, source: Phase0 WF-20, confirm_status: provisional}
+  - {id: TR-finance-confirmed,  label: 財務と残作業確認,         fires: WF-21, source: Phase0 WF-21, confirm_status: provisional}
+  - {id: TR-all-gates-passed,   label: 全closing gate通過,       fires: WF-22, source: Phase0 WF-22, confirm_status: provisional}
+
+# =====================================================================
+# 5. events — 72コアイベント語彙（schema_v0.2 event_type enum と整合）
+# =====================================================================
+# 方針: コア72種(enum)を正とする。未知イベントは schema改訂を避けるため
+#       x- 接頭辞の緩衝帯（pattern ^x-[a-z0-9_]+$）で受ける（schema_v0.2 で緩和済）。
+# 下表の observed_in_ledger=true は Gmail 3トレースで実際に観測された型（confidence付・人間未承認）。
+events:
+  x_buffer_policy:
+    pattern: "^x-[a-z0-9_]+$"
+    note: コア72 enum に無いイベントは x- 接頭辞で暫定受理し、頻出すれば次版で enum 昇格を検討。
+    source: alo_workflow_event_schema_v0.2.json (event_type oneOf)
+  core_enum_count: 72
+  catalog:
+    - {id: EV-001, event_type: inquiry_received,                category: 流入,   source: schema_v0.2, observed_in_ledger: true,  confirm_status: confirmed}
+    - {id: EV-002, event_type: consultation_candidate_created,  category: 流入,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-003, event_type: safe_contact_confirmed,          category: 本人関係, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-004, event_type: party_identified,                category: 本人関係, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-005, event_type: conflict_check_requested,        category: コンフリ, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-006, event_type: conflict_check_completed,        category: コンフリ, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-007, event_type: triage_completed,                category: トリアージ, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-008, event_type: consultation_date_options_sent,  category: 日程,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-009, event_type: consultation_scheduled,          category: 日程,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-010, event_type: consultation_rescheduled,        category: 日程,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-011, event_type: consultation_cancelled,          category: 日程,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-012, event_type: document_requested,              category: 資料,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-013, event_type: document_received,               category: 資料,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-014, event_type: document_classified,             category: 資料,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-015, event_type: consultation_started,            category: 相談,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-016, event_type: consultation_completed,          category: 相談,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-017, event_type: advice_recorded,                 category: 相談,   source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-018, event_type: followup_question_received,      category: 相談後, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-019, event_type: post_consult_decision_recorded,  category: 相談後, source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-020, event_type: quote_requested,                 category: 提案,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-021, event_type: proposal_created,                category: 提案,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-022, event_type: proposal_approved_internal,      category: 提案,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-023, event_type: proposal_sent,                   category: 提案,   source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-024, event_type: proposal_followup_due,           category: 提案,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-025, event_type: proposal_revision_requested,     category: 提案,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-026, event_type: proposal_accepted,               category: 提案,   source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-027, event_type: proposal_rejected,               category: 提案,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-028, event_type: engagement_signed,              category: 受任,   source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-029, event_type: retainer_invoice_sent,           category: 受任,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-030, event_type: payment_acknowledged_external,   category: 財務,   source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-031, event_type: payment_received,                category: 財務,   source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-032, event_type: consultation_converted_to_matter, category: 受任,  source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-033, event_type: matter_workspace_created,        category: 計画,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-034, event_type: matter_plan_approved,            category: 計画,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-035, event_type: inbound_message_received,        category: 連絡,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-036, event_type: call_completed,                  category: 連絡,   source: schema_v0.2, confirm_status: confirmed, capture_gap: dialpad_connector_absent}
+    - {id: EV-037, event_type: meeting_held,                    category: 連絡,   source: schema_v0.2, confirm_status: confirmed, capture_gap: notta_connector_absent}
+    - {id: EV-038, event_type: postal_item_received,            category: 連絡,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-039, event_type: work_item_created,               category: 作業,   source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-040, event_type: work_item_started,               category: 作業,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-041, event_type: work_item_waiting,               category: 作業,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-042, event_type: work_item_completed,             category: 作業,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-043, event_type: work_session_recorded,           category: 作業,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-044, event_type: draft_created,                   category: 文書,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-045, event_type: internal_review_requested,       category: レビュー, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-046, event_type: internal_review_completed,       category: レビュー, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-047, event_type: client_review_requested,         category: レビュー, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-048, event_type: client_approval_received,        category: レビュー, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-049, event_type: deliverable_sent,                category: 納品,   source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-050, event_type: court_filing_submitted,          category: 提出,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-051, event_type: delivery_acknowledged,           category: 納品,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-052, event_type: deadline_created,                category: 期限,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-053, event_type: deadline_changed,                category: 期限,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-054, event_type: deadline_completed,              category: 期限,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-055, event_type: invoice_created,                 category: 財務,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-056, event_type: invoice_sent,                    category: 財務,   source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-057, event_type: invoice_overdue,                 category: 財務,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-058, event_type: trust_deposit_received,          category: 財務,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-059, event_type: expense_recorded,                category: 財務,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-060, event_type: trust_refund_sent,               category: 財務,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-061, event_type: scope_change_detected,           category: 契約変更, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-062, event_type: outcome_reached,                 category: 解決,   source: schema_v0.2, observed_in_ledger: true, confirm_status: confirmed}
+    - {id: EV-063, event_type: closing_authorized,              category: 終結,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-064, event_type: financial_reconciliation_completed, category: 終結, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-065, event_type: originals_returned,              category: 終結,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-066, event_type: closing_report_sent,             category: 終結,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-067, event_type: closing_ack_received,            category: 終結,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-068, event_type: matter_closed,                   category: 終結,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-069, event_type: knowledge_summary_promoted,      category: 知識化, source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-070, event_type: link_correction_recorded,        category: 運用,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-071, event_type: incident_reported,               category: 品質,   source: schema_v0.2, confirm_status: confirmed}
+    - {id: EV-072, event_type: automation_failure_detected,     category: 品質,   source: schema_v0.2, confirm_status: confirmed}
+
+# =====================================================================
+# 6. work_items — WorkItem 必須項目モデル（G-08）
+# =====================================================================
+work_items:
+  required_fields_owner:    # owner裁定 G-08（W-180）: 担当/期限/案件/次アクション の4点必須
+    - 担当(owner)
+    - 期限(due)
+    - 案件(matter/consultation_ref)
+    - 次アクション(next_action)
+  required_fields:    # 実装フィールド（4必須 + 運用補助。status/waiting_on/completion_evidence は close gate 用に保持）
+    - owner
+    - due
+    - matter_ref
+    - next_action
+    - status
+    - waiting_on
+    - completion_evidence
+  chatwork_mapping:   # owner裁定 G-08: Chatworkタスク → WorkItem 対応づけ
+    source_system: DS-023
+    map: "Chatwork task(担当・期限) → WorkItem(担当/期限/案件/次アクション)"
+    note: "Chatworkで振るタスクと項目を揃える(G-08/D-025/D-028→D-028は受任、本項はD-025)。"
+  status_enum: [open, in_progress, waiting, blocked, review, complete, cancelled]
+  confirm_status: confirmed   # owner裁定 G-08（W-180）
+  grill: G-08
+  decision: [D-011, D-025]
+  capture_gap: "Ledger 全WorkItem で due_at と completion_evidence_refs が null（自然発生データだけでは埋まらない実証）。Chatworkタスク取込で 担当/期限 を補完予定（タスク粒度の取込は要確認）。"
+  source: Phase0 D-011; G-08; event_schema WorkItem; Ledger trace1-3; W-180
+  catalog:
+    - {id: WI-doc-collect,       title: 事前資料収集,           process: WF-06, confirm_status: provisional}
+    - {id: WI-proposal-draft,    title: 提案/見積作成,          process: WF-09, confirm_status: provisional}
+    - {id: WI-proposal-followup, title: 契約書案への回答確認,   process: WF-10, status_observed: open, due_observed: null, source: Ledger wi:trace1:proposal_followup, confirm_status: observed}
+    - {id: WI-plan,              title: 初期計画策定,           process: WF-13, confirm_status: provisional}
+    - {id: WI-task,              title: 調査・起案・作業,        process: [WF-15, WF-18], confirm_status: provisional}
+    - {id: WI-review,            title: 内部レビュー,           process: WF-16, confirm_status: provisional}
+    - {id: WI-delivery,          title: 納品・送付・提出,        process: WF-17, confirm_status: provisional}
+    - {id: WI-reconcile,         title: 最終精算,               process: WF-20, confirm_status: provisional}
+    - {id: WI-return-originals,  title: 原本返却,               process: WF-21, confirm_status: provisional}
+
+# =====================================================================
+# 7. decisions — v0.1 決定ログ D-001..014（全件未決）
+# =====================================================================
+decisions:
+  note: "v0.1原本の D-001..014 は owner裁定（ALO_OWNER_GRILL_ANSWERS_v0.1 / W-180）で confirmed 化。新規確定事項は D-022..D-033 に追記（append-only、既存決定文は ledger_v0.2/09_decision_log.csv で保持）。"
+  owner_grill_applied: {worker_task: W-20260624-180, source: ALO_OWNER_GRILL_ANSWERS_v0.1.md, status: confirmed}
+  catalog:
+    - {id: D-001, summary: SF Consultation/Matter ID を業務レコードの脊椎とする, kind: 仮説,   grill: G-01, status: confirmed, source: Phase0 §8; G-01}
+    - {id: D-002, summary: Box file_id/version_id を文書同一性の正本とする,       kind: 仮説,   grill: G-02, status: confirmed, source: Phase0 §8; G-02}
+    - {id: D-003, summary: 観測イベントを append-only で保持（修正履歴も残す）,    kind: 仮説,   grill: G-03, status: confirmed, source: Phase0 §8; G-03}
+    - {id: D-004, summary: declared_state と observed_state を分離し突合,         kind: 仮説,   grill: G-04, status: confirmed, source: Phase0 §8; G-04}
+    - {id: D-005, summary: 状態機械を分離（owner裁定で7本化→D-022）,             kind: 仮説,   grill: G-05, status: confirmed, superseded_detail: D-022, source: Phase0 §8; G-05}
+    - {id: D-006, summary: 新規手入力は取得不能な判断・承認に限定,               kind: 既存原則, grill: G-19, status: confirmed, source: Phase0 §8; G-19}
+    - {id: D-007, summary: 人間必須承認（owner裁定でマスト3点に確定→D-023）,      kind: 仮説,   grill: G-06, status: confirmed, superseded_detail: D-023, source: Phase0 §8; G-06}
+    - {id: D-008, summary: 第1 PoC は相談→受任ファネル（相談止まり/受任まで）,    kind: 提案,   grill: G-07, status: confirmed, source: Phase0 §8; G-07}
+    - {id: D-009, summary: 第2 PoC は解決→精算→返却→終了報告→既済化（2段クローズ→D-024）, kind: 提案, grill: G-09, status: confirmed, superseded_detail: D-024, source: Phase0 §8; G-09}
+    - {id: D-010, summary: 訂正は raw削除でなく無効化イベント＋新確定リンク,       kind: 仮説,   grill: G-03, status: confirmed, source: Phase0 §8; G-03}
+    - {id: D-011, summary: WorkItem 必須項目（owner裁定で4点必須+Chatwork対応→D-028）, kind: 提案, grill: G-08, status: confirmed, superseded_detail: D-028, source: Phase0 §8; G-08}
+    - {id: D-012, summary: 成果物送付は Document状態と Delivery を分離（Delivery独立機械→D-022）, kind: 提案, grill: G-05, status: confirmed, superseded_detail: D-022, source: Phase0 §8; G-05}
+    - {id: D-013, summary: finance で client_party と payer_party を分離,         kind: 提案,   grill: G-10, status: confirmed, source: Phase0 §8; G-10}
+    - {id: D-014, summary: close gate 条件（終了報告判定=成果物送付or報酬請求通知→D-027）, kind: 提案, grill: G-09, status: confirmed, superseded_detail: [D-024, D-027], source: Phase0 §8; G-09}
+    # --- owner裁定 新規確定（W-180）append-only ---
+    - {id: D-022, summary: 状態機械=7本確定(Consultation/Matter/WorkItem/Document/Finance+Delivery独立+Deadline独立),       kind: owner裁定, grill: G-05, status: confirmed, source: W-180; ALO_OWNER_GRILL_ANSWERS_v0.1}
+    - {id: D-023, summary: 人間必須ゲート=マスト3点(利益相反/対外文書最終送付/金銭の確定)。受任成立・終結はoptional,            kind: owner裁定, grill: G-06, status: confirmed, source: W-180}
+    - {id: D-024, summary: 2段クローズ(①法的終了 / ②事務クローズ完了=原本返却・預り金ゼロ・報酬確定)を終端に,            kind: owner裁定, grill: G-09, status: confirmed, source: W-180}
+    - {id: D-025, summary: 新データ源確定(Notta未接続/GoogleDocs接続/Calendar接続/MF未接続/銀行通帳=入金の正/Chatworkタスク), kind: owner裁定, grill: [G-08, G-11, G-14], status: confirmed, source: W-180}
+    - {id: D-026, summary: 相談票=専用様式なし→Notta+GoogleDoc+Calendar合成で束ねる(Box-U1解消),                       kind: owner裁定, grill: G-14, status: confirmed, source: W-180}
+    - {id: D-027, summary: 業務終了報告書=専用様式なし→成果物or報酬請求通知が兼ねる。終了報告済判定=成果物送付or報酬請求通知(Box-U2解消), kind: owner裁定, grill: G-15, status: confirmed, source: W-180}
+    - {id: D-028, summary: "受任=複数シグナル合成(委任状/契約書受領[Box最強]・SF切替・受任通知)をobservedで確定しdeclaredと突合", kind: owner裁定, grill: [G-11, G-04], status: confirmed, source: W-180}
+    - {id: D-029, summary: 入金確定=銀行通帳を正にMoneyForward突合(MF/通帳未接続=未測定),                            kind: owner裁定, grill: G-11, status: confirmed, source: W-180}
+    - {id: D-030, summary: 失注理由=enum選択式(①当方お断り②先方失注/離脱③受任に至らず④その他)。流入経路=必須〜準必須,    kind: owner裁定, grill: G-12, status: confirmed, source: W-180}
+    - {id: D-031, summary: AI出力は常に推定、人間承認でのみ確定(承認しても推定のまま)。Derived層規約,                  kind: owner裁定, grill: G-19, status: confirmed, source: W-180}
+    - {id: D-032, summary: ~BROMIUMはBromium(HP Sure Click)由来推定でスコープ外。削除せず許容(Box-U4解消),         kind: owner裁定, grill: G-18, status: confirmed, source: W-180}
+    - {id: D-033, summary: 期限の正本=Salesforce。徒過防止=人・SF・AIの多重チェック。Deadline独立機械化,             kind: owner裁定, grill: G-20, status: confirmed, source: W-180}
+
+# =====================================================================
+# 8. documents — 35文書種別（DOC-001..035）+ Box実査12対象の観測
+# =====================================================================
+documents:
+  summary:
+    total: 35
+    by_direction: {internal: 10, outbound: 10, inbound: 6, outbound_internal: 4, inbound_final: 2, inbound_internal: 1, outbound_final: 1, final: 1}
+    role_layers_distinct: 28   # curated/derived境界は未確定（G-16）
+    source: Phase0 §4
+  lifecycle_states: [received, classified, working_draft, internal_review, client_review, approved, sent, filed, accepted, superseded, archived, quarantine]
+  layering:    # Raw/Canonical/Derived 3層（owner裁定 G-16 確定 W-180）
+    layers: [raw, canonical, derived]
+    status: confirmed
+    grill: G-16
+    note: "owner裁定: 3層に分ける（Supabase側の既存実装を踏襲）。Box実査で Raw(正本PDF/docx)＋Derived(_alo_case_summary.md / _alo_dir.json) の共存を観測。Derived(AI出力)は常に推定・人間承認でも確定昇格しない(G-19/D-031)。旧版は削除せず退避=現行でない明示(G-17/D-010)。"
+  box_observed:    # Phase2 Box実査12対象（実査=confirmed）
+    note: "状態は Box ネイティブ機能でなく、フォルダ配置・ファイル名動作語・docx⇔pdfペア・version番号の4手段で自然発生的に表現（read-onlyメタデータ実査）。"
+    source: PHASE2_box_document_lifecycle_v0.2.md
+    items:
+      - {id: DOC-box-01, name: 電話受付マニュアル,   distinguishable: [作成, 確定(部分)], confirm_status: confirmed}
+      - {id: DOC-box-02, name: 業務マニュアル,       distinguishable: [作成, 確定, PDF化], confirm_status: confirmed}
+      - {id: DOC-box-03, name: 書式ひな形,           distinguishable: [作成, 改訂(version), PDF化, 廃版(old移動)], confirm_status: confirmed}
+      - {id: DOC-box-04, name: 相談票,               distinguishable: [相談→受任段階差], owner_resolution: "専用様式なし→相談記録=Notta+GoogleDoc+Calendar合成で束ねる(G-14/D-026)。Box-U1解消", confirm_status: confirmed}  # U1/G-14 解消
+      - {id: DOC-box-05, name: 委任契約書,           distinguishable: [作成, 送付, 返送(受理), PDF化, 押印前後], confirm_status: confirmed}
+      - {id: DOC-box-06, name: 見積書,               distinguishable: [発行(確定PDF)], unconfirmed: [ドラフト, 送付, 到達], confirm_status: confirmed}
+      - {id: DOC-box-07, name: 請求書,               distinguishable: [発行, 台帳記帳(発行管理簿v5)], unconfirmed: [入金消込], confirm_status: confirmed}
+      - {id: DOC-box-08, name: 預り資料関係,         distinguishable: [受領(預り証), 保管, 返却(返却受領書v5)], confirm_status: confirmed}
+      - {id: DOC-box-09, name: 成果物送付関係,       distinguishable: [送付(通信送), 追跡(追跡番号記録表v8)], unconfirmed: [到達], confirm_status: confirmed}
+      - {id: DOC-box-10, name: 業務終了報告書,       owner_resolution: "専用ひな形なし→成果物そのものor報酬請求通知が兼ねる。判決案件等では書かないことも。終了報告済判定=成果物送付or報酬請求通知(G-15/D-027)。Box-U2解消", confirm_status: confirmed}  # U2/G-15 解消
+      - {id: DOC-box-11, name: 既済案件フォルダ構造, distinguishable: [完了(=既済配置)], note: "old=廃版弱表現(退避=現行でない明示 G-17)。~BROMIUM=Bromium(HP Sure Click)由来推定でスコープ外・削除せず許容(G-18/D-032 Box-U4解消)", confirm_status: confirmed}
+      - {id: DOC-box-12, name: 進行中案件フォルダ構造, distinguishable: [進行中, 工程別(通信受/送・会計・文書)], note: 番号体系0-/1-/2-/4-+_alo_*(Derived), confirm_status: confirmed}
+
+# =====================================================================
+# 9. deliveries — 納品/送付/到達/受理（Delivery独立化はG-05未決）
+# =====================================================================
+deliveries:
+  independence_decision:
+    question: "Delivery を独立状態機械にするか（旧: Document(sent/filed/accepted)+Finance に分散）"
+    status: confirmed   # owner裁定 G-05（W-180）独立機械化（7本の1）
+    grill: G-05
+    decision: [D-012, D-022]
+    answer: 独立機械 SM-delivery に昇格（prepared→dispatched→delivered/received）
+    source: D-012; D-022; Phase0 §6; G-05; W-180
+  master_of_delivery_status:
+    decision_text: "到達/受理の確定情報は SF(制御塔)+会計台帳を正本、Box は送受の文書証跡に留める。対外文書の最終送付=最終品質チェックは人間必須ゲートHG-04(マスト3点の1, G-06)。"
+    status: confirmed   # owner裁定 G-11/G-06（W-180）Box-U3 は G-11 で方針確定
+    grill: [G-11, G-06]
+    decision: [D-023, D-028]
+    source: Box-U3; G-11; G-06; W-180
+  channels: [email, postal, fax, court_portal(MINTS), hand_delivery]
+  stages: [作成, 確定, 送付, 到達, 受理]
+  observed:
+    - {trace: trace3, event: deliverable_sent, confirm_status: observed, source: Ledger trace3}
+  box_signals:
+    source: Box実査(9)
+    signals:
+      - "通信(送)フォルダ配置＋送付書＝送付"
+      - "追跡番号記録表(v8)＝到達の間接追跡"
+      - "通信(受)フォルダ＝受信分離"
+
+# =====================================================================
+# 10. states — 5状態機械（53状態）。Delivery/Deadline独立化はG-05未決。
+# =====================================================================
+states:
+  note: "owner裁定 G-05 で 7本に確定（W-180）: Consultation/Matter/WorkItem/Document/Finance + Delivery独立 + Deadline独立。期限≠納品（期限は納品とは限らない）ため Delivery/Deadline を独立機械へ昇格。pending(owner_grill) 解消。"
+  machine_count: 7
+  owner_confirmed:
+    decision: D-022
+    grill: G-05
+    worker_task: W-20260624-180
+    status: confirmed
+  declared_observed_split:
+    status: confirmed   # owner裁定 G-04（W-180）。declared/observed を2つに分けて持ち突合
+    grill: G-04
+    decision: D-004
+    note: "ゲート通過は declared 必須、observed は監視・先行検知（D-004/G-04）。Ledger は basis: observed|declared を付与済。owner裁定で『2つに分けて持ち突合』を確定。"
+  two_stage_close:    # owner裁定 G-09（W-180）2段クローズを終端に
+    status: confirmed
+    grill: G-09
+    decision: D-024
+    stages:
+      - {stage: 1, name: 法的終了, condition: 案件が実体的に終了}
+      - {stage: 2, name: 事務クローズ完了, condition: 原本返却済 AND 預り金ゼロ(精算済) AND 報酬確定}
+    order: 案件終了 → 原本返却 → 預り金ゼロ → クローズ
+    applies_to: [matter, finance, document]
+    note: "Matter: closing(①法的終了)→closed(②事務クローズ)。終了報告済判定=成果物送付 or 報酬請求通知が出ている(G-15/D-027)。"
+  machines:
+    - id: SM-consultation
+      machine: consultation
+      state_count: 17
+      states: [new, inquiry, identity_checked, conflict_pending, conflict_pass, conflict_fail, triaged, scheduling, scheduled, consulted, followup, proposal_pending, proposal_sent, decision_pending, engagement_pending, converted, closed_lost]
+      confirm_status: confirmed
+      source: Phase0 §6 (06シート)
+    - id: SM-matter
+      machine: matter
+      state_count: 11
+      states: [onboarding, active, waiting_client, waiting_opponent, waiting_court, drafting, review, filing, resolution_pending, closing, closed]
+      confirm_status: confirmed
+      source: Phase0 §6
+      note: "Deadline は SM-deadline へ独立化（owner裁定 G-05/G-20 W-180）。matter は waiting_* を待ち状態として保持しつつ期限の正本は SM-deadline/Salesforce。closing(①法的終了)→closed(②事務クローズ完了) の2段クローズ（G-09/D-024）。"
+    - id: SM-work_item
+      machine: work_item
+      state_count: 6
+      states: [open, in_progress, waiting, blocked, review, complete]
+      schema_extra: [cancelled]   # event_schema WorkItem.status に cancelled あり
+      confirm_status: confirmed
+      source: Phase0 §6
+    - id: SM-document
+      machine: document
+      state_count: 10
+      states: [received, classified, working_draft, internal_review, client_review, approved, sent, filed, accepted, superseded]
+      schema_extra: [archived, quarantine]
+      confirm_status: confirmed
+      source: Phase0 §6
+      note: "Delivery(sent/filed/accepted)は SM-delivery へ独立化（owner裁定 G-05 W-180）。document はライフサイクル状態、送付/到達/受理は SM-delivery が持つ。"
+    - id: SM-finance
+      machine: finance
+      state_count: 9
+      states: [quote_draft, quote_sent, invoice_draft, invoice_sent, acknowledged, part_paid, paid, overdue, reconciled]
+      confirm_status: confirmed
+      source: Phase0 §6
+      note: "reconciled=金銭の確定(報酬確定・預り金/実費精算・振替)=人間必須ゲートHG-05/HG-06(マスト3点の1, G-06)。入金の正=銀行通帳(DS-024/G-11)・MoneyForward(DS-016)と突合。MF/通帳未接続のため機械消込は未測定。"
+    - id: SM-delivery   # owner裁定 G-05（W-180）で独立機械に昇格（7本目の1）
+      machine: delivery
+      state_count: 4
+      states: [prepared, dispatched, delivered, received]
+      confirm_status: confirmed
+      grill: G-05
+      decision: [D-022, D-012]
+      source: G-05; D-012; 06_state_transitions(Delivery行); W-180
+      note: "対外文書の最終送付=最終品質チェック(マスト3点の1, HG-04/G-06)。到達正本は SF(制御塔)+会計台帳、Box は送受の文書証跡。"
+    - id: SM-deadline   # owner裁定 G-05/G-20（W-180）で独立機械に昇格（7本目の1）
+      machine: deadline
+      state_count: 4
+      states: [registered, met, extended, missed]
+      confirm_status: confirmed
+      grill: [G-05, G-20]
+      decision: [D-022, D-033]
+      source: G-05; G-20; 06_state_transitions(Deadline行); W-180
+      note: "期限の正本=Salesforce(G-20)。徒過防止=人・Salesforce・AI の多重チェック。SFミラーに Deadline 格納先が無いため新設要(07_sf_mapping c_newtable)。"
+  resolved_pending:
+    note: "旧 proposed_additional_machines(delivery/deadline) は owner裁定 G-05 で confirmed 化（W-180）。pending(owner_grill) 解消。"
+    delivery: {was: provisional, now: confirmed, grill: G-05, decision: D-022}
+    deadline: {was: provisional, now: confirmed, grill: [G-05, G-20], decision: [D-022, D-033]}
+
+# =====================================================================
+# 11. transitions — 状態遷移（Ledgerで観測した実遷移＋設計上の代表遷移）
+# =====================================================================
+transitions:
+  basis_enum: [observed, declared, rule_derived, human_decision]
+  observed_from_ledger:   # Gmail 3トレースで実際に記録された遷移（confidence付）
+    - {from: null,                  to: inquiry_received,    machine: consultation, basis: observed,  source: Ledger trace1:0101, confirm_status: observed}
+    - {from: consultation_completed, to: proposal_sent,      machine: consultation, basis: observed,  source: Ledger trace1:0102, confirm_status: observed}
+    - {from: proposal_sent,         to: proposal_accepted,   machine: consultation, basis: declared,  source: Ledger trace1:0103, confirm_status: observed}
+    - {from: proposal_accepted,     to: converted,           machine: consultation, basis: human_decision, source: Ledger trace1:0104(engagement_signed), confirm_status: observed}
+  design_representative:   # processes.next_state から導出した代表遷移（仮説）
+    - {process: WF-03, gate: "pass/fail/escalate", machine: consultation, confirm_status: provisional, pending: [staff_interview], source: G-13}   # owner_grill除去(G-13裁定済)。運用粒度は中森聴取依存
+    - {process: WF-11, gate: "成立/失注/保留",      machine: consultation, confirm_status: confirmed, source: G-06; D-023}   # owner裁定 受任成立=optional gate
+    - {process: WF-16, gate: "approve/rework/hold", machine: document,     confirm_status: confirmed, source: G-06; D-023}   # owner裁定 内部レビューはマスト3点外
+    - {process: WF-20, gate: "financially_reconciled", machine: finance,   confirm_status: provisional, pending: [sf_survey], source: G-06; D-023}   # owner_grill除去(G-06金銭確定マスト裁定済)。会計SF格納先はSF実査依存
+    - {process: WF-22, gate: "close/archive/promote",  machine: matter,    confirm_status: confirmed, source: G-09; D-024}   # owner裁定 2段クローズ確定
+  note: 全遷移チェーン(72イベント×53状態)の網羅マトリクスは SF実査と owner裁定後に確定。
+
+# =====================================================================
+# 12. finance_events — 財務イベント（FinanceRecord enum）+ client/payer分離
+# =====================================================================
+finance_events:
+  finance_event_type_enum: [quote, invoice, payment, trust_deposit, expense, refund, writeoff, reconciliation]
+  currency_default: JPY
+  client_payer_split:
+    status: confirmed   # owner裁定 G-10（W-180）依頼者/支払者を分けて持つ
+    grill: G-10
+    decision: D-013
+    fields: [client_party_id, payer_party_id]
+    evidence: "Ledgerで強く実証: trace1=弁護士費用特約で損保が第三者支払者、trace3=自賠責/任意保険が支払者・個人が依頼者"
+    source: D-013; G-10; Ledger; W-180
+  payment_master:   # owner裁定 G-11（W-180）入金の正本
+    statement: "入金=銀行通帳(DS-024)が真実の源(正本)。MoneyForward会計(DS-016)と突合。"
+    status: confirmed
+    grill: G-11
+    decision: D-029
+    capture_gap: "MF/銀行通帳ともに未接続のため機械的入金消込は未測定（未接続＝未測定）。"
+    source: G-11; D-029; W-180
+  catalog:
+    - {id: FE-quote,          type: quote,          process: WF-09, source: schema; Box実査(6), confirm_status: provisional}
+    - {id: FE-retainer_invoice, type: invoice,      process: WF-12, source: Ledger trace1:0105(損保宛着手金請求), confirm_status: observed}
+    - {id: FE-payment_ack,    type: payment,        process: WF-12, subtype: acknowledged_external, source: Ledger; G-04例(支払受付返信), confirm_status: observed}
+    - {id: FE-payment,        type: payment,        process: WF-20, source: Ledger trace3, confirm_status: observed, note: "実入金消込は別系統(MF/SF)で要確認"}
+    - {id: FE-final_invoice,  type: invoice,        process: WF-20, source: Box実査(7)請求書, confirm_status: provisional, pending: [sf_survey]}
+    - {id: FE-trust_deposit,  type: trust_deposit,  process: WF-20, source: Box実査(8)預り資料/見積(預り金), confirm_status: confirmed}
+    - {id: FE-expense,        type: expense,        process: WF-20, source: Phase0 DS-007, confirm_status: provisional}
+    - {id: FE-refund,         type: refund,         process: WF-20, source: schema; trace3立替金差引後送金, confirm_status: observed}
+    - {id: FE-reconciliation, type: reconciliation, process: WF-20, source: D-014 close gate; G-06; G-09; D-023; D-024, confirm_status: confirmed}   # owner裁定 金銭の確定=マスト③(G-06)・2段クローズ②(G-09)で確定
+    - {id: FE-writeoff,       type: writeoff,       process: WF-20, source: schema(未収扱い), confirm_status: provisional}
+
+# =====================================================================
+# 13. human_gates — 人間必須承認ゲート（G-06: 7点）。AI/自動化は提案までで確定不可。
+# =====================================================================
+human_gates:
+  policy: "AI推定は提案レーン（confidence付）に置き、確定は人間承認（G-19）。各ゲートで承認者ロールを指定。"
+  status: confirmed   # owner裁定 G-06（W-180）でマスト3点に確定
+  grill: G-06
+  decision: D-023
+  worker_task: W-20260624-180
+  mandatory_count: 3
+  mandatory:   # マスト3点（required=true）owner裁定 G-06
+    - 利益相反チェック
+    - 対外文書の最終送付（=対外アウトプットの最終品質チェック）
+    - 金銭の確定（報酬確定・預り金精算・振替）
+  optional_note: "受任成立(HG-02)・終結(HG-07) は『置けるが必須ではない』(owner G-06)→ optional gate として保持。HG-03(重要方針)も後続キュー2-Aで定義域確定までは optional。"
+  source: REQUEST §2; D-007; D-023; G-06; Ledger trace3:0304(送金タイミング=人間判断)
+  gates:
+    - {id: HG-01, name: コンフリクト確認(利益相反),  process: WF-03, approver_role: 弁護士＋事務局, basis: human_decision, required: true,  mandatory_rank: 1, source: G-06/G-13; D-023, confirm_status: confirmed, pending: [staff_interview], note: "マスト①利益相反。最小データ=相手方・関係者氏名を構造化(G-13)。"}
+    - {id: HG-02, name: 受任成立,               process: WF-11, approver_role: 担当弁護士,     basis: human_decision, required: false, optional: true, source: G-06; Ledger trace1:0104; D-023, confirm_status: confirmed, note: "owner裁定: optional(置けるが必須でない)。受任=複数シグナル合成しdeclaredと突合(G-11/D-028)。"}
+    - {id: HG-03, name: 重要方針決定,           process: [WF-13, WF-18], approver_role: 担当弁護士, basis: human_decision, required: false, optional: true, source: G-06, confirm_status: provisional, pending: [staff_interview], note: "owner裁定の3マスト外。「重要方針」の定義域は後続キュー2-Aで確定。"}
+    - {id: HG-04, name: 対外成果物の最終送付(最終品質チェック), process: WF-17, approver_role: 弁護士/事務局, basis: human_decision, required: true, mandatory_rank: 2, source: G-06; Box実査(9); D-023, confirm_status: confirmed, note: "マスト②対外文書の最終送付=最終品質チェック。SM-delivery(prepared→dispatched)に対応。"}
+    - {id: HG-05, name: 報酬確定(金銭の確定),    process: WF-20, approver_role: 弁護士＋事務局長, basis: human_decision, required: true, mandatory_rank: 3, source: G-06; D-023, confirm_status: confirmed, note: "マスト③金銭の確定の一部=報酬確定。"}
+    - {id: HG-06, name: 預り金・実費精算/振替,   process: WF-20, approver_role: 弁護士＋事務局長, basis: human_decision, required: true, mandatory_rank: 3, source: G-06; Ledger trace3:0304; D-023, confirm_status: confirmed, note: "マスト③金銭の確定の一部=預り金精算・振替。入金の正=銀行通帳(G-11)。"}
+    - {id: HG-07, name: 終結（close gate）,      process: WF-22, approver_role: 担当弁護士＋事務局, basis: human_decision, required: false, optional: true, source: G-06/G-09; D-023, confirm_status: confirmed, note: "owner裁定: optional。2段クローズ②事務クローズ完了の最終確認(G-09/D-024)。"}
+  close_gate_conditions:   # G-09 2段クローズ（owner裁定 W-180）
+    status: confirmed
+    grill: G-09
+    decision: [D-014, D-024, D-027]
+    two_stage: {stage1: 法的終了(案件実体終了), stage2: 事務クローズ完了(原本返却済・預り金ゼロ・報酬確定)}
+    closing_report_judgement: "『終了報告済』判定=専用書類でなく『成果物送付 or 報酬請求通知が出ている』(G-15/D-027)"
+    source: D-014; D-024; D-027; G-09; G-15; EVD-007
+    conditions:
+      - 未完WorkItem無
+      - 残期限無
+      - 最終請求確定
+      - 未収扱い確定
+      - 預り金・実費精算済
+      - 預り原本 返却済or保管理由
+      - 最終成果物送付済
+      - 終了報告送付済
+      - Box正本確定
+      - SF終了状態が人間承認済
+
+# =====================================================================
+# 14. exceptions — 例外（各 process の Exception 分解単位が参照）
+# =====================================================================
+exceptions:
+  - {id: EXC-source_unknown,       label: 流入経路不明,            relates: [WF-00], kpi: 流入経路不明率, source: G-12; D-030, confirm_status: confirmed, note: "owner裁定 G-12: 流入経路=必須〜準必須（紹介案件は既に記載できている）。"}
+  - {id: EXC-duplicate_contact,    label: 重複問合せ,              relates: [WF-01], source: Phase0 WF-01, confirm_status: provisional}
+  - {id: EXC-identity_unverifiable, label: 本人確認不能,           relates: [WF-02], source: Phase0 WF-02, confirm_status: provisional}
+  - {id: EXC-conflict_fail,        label: コンフリ不適合,          relates: [WF-03], source: Phase0 WF-03, confirm_status: provisional}
+  - {id: EXC-conflict_escalate,    label: コンフリ要エスカレーション, relates: [WF-03], source: G-13, confirm_status: provisional, pending: [staff_interview]}
+  - {id: EXC-urgent_bypass,        label: 緊急受任(コンフリ事後),   relates: [WF-04], source: G-06例外; D-023, confirm_status: confirmed}   # owner裁定 G-06: コンフリ確認はマスト①。緊急受任は事後コンフリ例外として確定
+  - {id: EXC-reschedule,           label: 日程変更,                relates: [WF-05], event: consultation_rescheduled, confirm_status: confirmed}
+  - {id: EXC-cancel,               label: 相談キャンセル,          relates: [WF-05], event: consultation_cancelled, confirm_status: confirmed}
+  - {id: EXC-missing_docs,         label: 事前資料不足,            relates: [WF-06], source: Phase0 WF-06, confirm_status: provisional}
+  - {id: EXC-no_show,              label: 相談無断不参加,          relates: [WF-07], source: Phase0 WF-07, confirm_status: provisional}
+  - {id: EXC-loss_reason_missing,  label: 失注理由未入力,          relates: [WF-08], kpi: 失注理由未入力率, source: G-12; D-030, confirm_status: confirmed, loss_reason_enum: ["①当方お断り", "②先方失注/離脱", "③受任に至らず", "④その他"], note: "owner裁定 G-12: enum選択式（自由記述必須化はしない）。『お断り』と『失注』を必ず区別。"}
+  - {id: EXC-no_response,          label: 提案後無応答,            relates: [WF-10], source: Ledger trace2(失注), confirm_status: observed}
+  - {id: EXC-loss,                 label: 失注,                    relates: [WF-11], event: proposal_rejected, source: Ledger trace2, confirm_status: observed}
+  - {id: EXC-hold,                 label: 保留,                    relates: [WF-11], source: Phase0 WF-11, confirm_status: provisional}
+  - {id: EXC-client_payer_split,   label: 依頼者≠支払者,           relates: [WF-12, WF-20], source: G-10; Ledger, confirm_status: observed}
+  - {id: EXC-unlinked_event,       label: イベント未紐付け,        relates: [WF-14], kpi: イベント未紐付け率, source: Phase0 WF-14, confirm_status: provisional}
+  - {id: EXC-blocked_waiting,      label: 作業ブロック/待ち,        relates: [WF-15], source: schema status:blocked/waiting, confirm_status: confirmed}
+  - {id: EXC-rework,               label: レビュー差戻し,          relates: [WF-16], source: Phase0 WF-16, confirm_status: provisional}
+  - {id: EXC-hold_review,          label: レビュー保留,            relates: [WF-16], source: Phase0 WF-16, confirm_status: provisional}
+  - {id: EXC-delivery_failed,      label: 送付/提出失敗,           relates: [WF-17], source: Phase0 WF-17, confirm_status: provisional}
+  - {id: EXC-deadline_missed,      label: 期限懈怠,                relates: [WF-18], source: G-20(懈怠防止); D-033, confirm_status: confirmed}   # owner裁定 G-20: 期限正本=SF・徒過防止は人/SF/AI多重チェックで確定
+  - {id: EXC-unpaid,               label: 未収,                    relates: [WF-20], event: invoice_overdue, confirm_status: confirmed}
+  - {id: EXC-client_unreachable,   label: 依頼者連絡不能,          relates: [WF-21], source: G-09例外; D-024, confirm_status: confirmed}   # owner裁定 G-09: 2段クローズ確定。連絡不能は事務クローズ完了の例外
+  - {id: EXC-close_gate_unmet,     label: close gate未通過,        relates: [WF-22], source: G-09; D-024, confirm_status: confirmed}   # owner裁定 G-09: 2段クローズ条件で確定
+  - {id: EXC-incident,             label: インシデント/品質事故,    event: incident_reported, source: schema; モジュール12, confirm_status: confirmed}
+  - {id: EXC-automation_failure,   label: 自動化失敗,              event: automation_failure_detected, source: schema, confirm_status: confirmed}
+  - {id: EXC-pii_deletion_request, label: 個人情報削除請求(Raw削除例外), relates: [append_only], source: G-03例外; D-003; D-010, confirm_status: confirmed}   # owner裁定 G-03: append-only+修正履歴保持。訂正は無効化イベント+新確定リンク(D-010)で確定
+
+# =====================================================================
+# 15. evidence_types — 証跡ソース種別（SourceRef.source_kind enum）+ provenance層
+# =====================================================================
+evidence_types:
+  source_kind_enum:   # event_schema SourceRef.source_kind
+    - {id: EVT-email,            kind: email,            system: Gmail,      confirm_status: confirmed, observed_in_ledger: true}
+    - {id: EVT-call,             kind: call,             system: Dialpad,    confirm_status: confirmed, capture_gap: connector_absent}
+    - {id: EVT-sms,              kind: sms,              system: Dialpad,    confirm_status: confirmed}
+    - {id: EVT-meeting,          kind: meeting,          system: Notta/Meet, confirm_status: confirmed, capture_gap: connector_absent}
+    - {id: EVT-calendar,         kind: calendar,         system: Google Calendar, confirm_status: confirmed}
+    - {id: EVT-box_file,         kind: box_file,         system: Box,        confirm_status: confirmed, observed_in_box_survey: true}
+    - {id: EVT-box_event,        kind: box_event,        system: Box,        confirm_status: confirmed}
+    - {id: EVT-salesforce_record, kind: salesforce_record, system: Salesforce, confirm_status: confirmed, survey_status: pending_sf_survey}
+    - {id: EVT-postal,           kind: postal,           system: 郵便,        confirm_status: confirmed}
+    - {id: EVT-fax,              kind: fax,              system: FAX,        confirm_status: confirmed}
+    - {id: EVT-court_portal,     kind: court_portal,     system: MINTS/Teams, confirm_status: confirmed}
+    - {id: EVT-invoice,          kind: invoice,          system: Money Forward, confirm_status: confirmed}
+    - {id: EVT-bank_transaction, kind: bank_transaction, system: MF会計/銀行明細, confirm_status: confirmed}
+    - {id: EVT-manual_statement, kind: manual_statement, system: 手入力,      confirm_status: confirmed}
+    - {id: EVT-system_log,       kind: system_log,       system: 各システムログ, confirm_status: confirmed}
+  provenance_model:   # event_schema Provenance（3分離 G-19）
+    required: [ingest_run_id, extractor_version, source_refs]
+    separation: [observed, ai_estimated, human_decision]   # 混同禁止（G-19/REQUEST §2）
+    append_only: true   # D-003/D-010: 訂正は invalidates_event_ids + 新確定リンク
+    ai_boundary_rule:   # owner裁定 G-19（W-180）Derived層規約
+      status: confirmed
+      grill: G-19
+      decision: D-031
+      rule: "AI出力は常に『推定(ai_estimated)』。人間承認は確定行為だが、AI出力自体を observed/human_decision へ昇格させない（ずっと推定のまま）。確定は人間の判断レコード(human_decision)として別に記録する。"
+      layer: derived
+      note: "Derived層(llm_category/llm_summary 等)は推定レーン。承認しても推定の出自は保持。混同禁止(forbidden: ai_estimate_as_human_decision)。"
+    source: event_schema Provenance; G-03; G-19; D-031; W-180
+  evidence_traces:   # Gmail 3トレース（実査証跡台帳）
+    - {trace: trace1, summary: 相談→提案→受任(損保=第三者支払者), events: "0101-0106", confirm_status: observed, source: Ledger}
+    - {trace: trace2, summary: 失注(受任非到達), confirm_status: observed, source: Ledger, note: 正式失注通知は未確認・浅井聴取要}
+    - {trace: trace3, summary: 解決→精算途中(自賠責/任意保険), confirm_status: observed, source: Ledger}
+
+# =====================================================================
+# 16. metrics — PoC1/PoC2 KPI（REQUEST §6 / G-07/G-08/G-12）
+# =====================================================================
+metrics:
+  status: confirmed_definition   # owner裁定で定義は確定。現状値は SF実査/コネクタ接続後（未接続=未測定）
+  pending: [sf_survey]   # 現状値の算出は SF/コネクタ接続後
+  measurement_gap: "Notta/MoneyForward/銀行通帳 未接続由来の KPI（相談実施時間・入金確定時間・入金消込率）は『未接続＝未測定』。仮説で埋めない。"
+  loss_reason_enum: ["①当方お断り", "②先方失注/離脱", "③受任に至らず", "④その他"]   # G-12/D-030
+  source: REQUEST §6 KPI; G-07; G-08; G-12; D-030; W-180
+  poc1:
+    scope: 相談→受任ファネル（問合せ→本人確認→コンフリ→トリアージ→日程→資料→相談→見積→契約案→受任）
+    scope_status: confirmed   # owner裁定 G-07/D-008（W-181）新規流入→相談起票→Boxフォルダ→相談実施→〈相談止まりなら完了/受任に至れば受任まで〉で確定
+    source: G-07; D-008
+    kpis:
+      - {id: KPI-P1-01, name: 初回応答までの時間,   type: duration, computable_from: [DS-011, DS-001], confirm_status: provisional}
+      - {id: KPI-P1-02, name: 相談確定までの時間,   type: duration, computable_from: [DS-001, DS-014], confirm_status: provisional}
+      - {id: KPI-P1-03, name: 見積送付までの時間,   type: duration, computable_from: [DS-001, DS-009], confirm_status: provisional}
+      - {id: KPI-P1-04, name: 契約成立までの時間,   type: duration, computable_from: [DS-001, DS-002], confirm_status: provisional}
+      - {id: KPI-P1-05, name: 次行動未設定率,       type: ratio, relates_exception: WI欠落(due/owner), confirm_status: provisional, pending: [sf_survey]}
+      - {id: KPI-P1-06, name: 流入経路不明率,       type: ratio, relates_exception: EXC-source_unknown, definition_basis: "流入経路=必須〜準必須(G-12)。未入力件数/全相談", confirm_status: confirmed_definition, pending: [sf_survey], source: G-12; D-030}
+      - {id: KPI-P1-07, name: 失注理由未入力率,     type: ratio, relates_exception: EXC-loss_reason_missing, definition_basis: "失注理由=enum選択式(G-12)。enum未選択件数/全失注。『お断り』と『失注』区別", confirm_status: confirmed_definition, pending: [sf_survey], source: G-12; D-030}
+      - {id: KPI-P1-08, name: イベント未紐付け率,   type: ratio, relates_exception: EXC-unlinked_event, confirm_status: provisional}
+  poc2:
+    scope: 解決→最終請求→預り金/実費精算→原本返却→終了報告→既済化
+    scope_status: confirmed   # owner裁定 G-07/G-09/D-009（W-181）第2PoC=解決→精算→返却→終了報告→既済化（2段クローズ）で確定
+    source: G-07; G-09; D-009; D-024
+    kpis:
+      - {id: KPI-P2-01, name: 最終請求確定までの時間, type: duration, computable_from: [DS-007, DS-015], confirm_status: provisional}
+      - {id: KPI-P2-02, name: 預り金/実費精算完了率,  type: ratio, relates: [HG-06], confirm_status: provisional}
+      - {id: KPI-P2-03, name: 原本返却完了率,         type: ratio, relates: [WI-return-originals], confirm_status: provisional}
+      - {id: KPI-P2-04, name: 終了報告送付率,         type: ratio, relates_exception: 業務終了報告判定=成果物送付or報酬請求通知(G-15/D-027), confirm_status: provisional, pending: [box_followup], source: G-15; D-027}   # owner_grill除去(G-15裁定済:専用様式なし)。送付パックのBox実査は残置
+      - {id: KPI-P2-05, name: close gate未通過滞留率, type: ratio, relates: close_gate_conditions, confirm_status: confirmed_definition, source: G-09; D-024}   # owner裁定 G-09 2段クローズ条件で定義確定（現状値はSF/コネクタ接続後）
+      - {id: KPI-P2-06, name: 未収率,                 type: ratio, event: invoice_overdue, confirm_status: provisional, pending: [sf_survey]}
+      - {id: KPI-P2-07, name: declared/observed乖離率, type: ratio, relates: declared_observed_split, source: G-04; D-004, confirm_status: confirmed_definition}   # owner裁定 G-04 declared/observed分離・突合で定義確定（現状値はSF/コネクタ接続後）

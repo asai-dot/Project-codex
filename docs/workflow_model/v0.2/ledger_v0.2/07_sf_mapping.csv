@@ -1,0 +1,18 @@
+sf_object_or_field,category(a_asis|b_addfield|c_newtable|d_unused),rationale,confirm_status,evidence_id,note
+Consultation.Id / Matter(Business).Id,a_asis,脊椎ID(D-001/G-01)。cases.sf_record_id主キーとして先行存在,修正,EV-110-cases; G-01,cases.sf_record_id(PK)はキー先行・実体0行
+cases.sf_record_type(Consultation/Business判別),a_asis,comms343に型参照済(Business318/Consultation25),確認済,EV-110-comms,型参照は通信側に既存
+cases.client_party_id (FK→parties),a_asis,依頼者party参照。client/payer分離はG-10,修正,EV-110-parties; G-10,payer_party_id追加が要(b)
+担当(owner),b_addfield,cases(11列)に担当列が無い→追加要,未確認,EV-110-cases-11col,スキーマ縮約。Q2設計判断
+流入経路,b_addfield,cases/Consultationに流入経路列が無い→追加(選択式)。必須〜準必須(owner G-12),確定(owner裁定 G-12 必須〜準必須 W-180),G-12; EV-110-cases-11col; D-030,KPI流入経路不明率の前提。紹介案件は既に記載できている
+失注理由,b_addfield,enum選択式で追加(owner G-12): ①当方お断り ②先方失注/離脱 ③受任に至らず ④その他。『お断り』と『失注』を区別。自由記述必須化はしない,確定(owner裁定 G-12 enum選択式 W-180),G-12; EV-110-roomcasemap; D-030,相談クローズ時にenum選択。room_case_map.excluded_reason近似は不足
+受付日/相談日/受任日/終了日(個別),b_addfield,cases は first_date/last_date 2点のみ→個別日付列追加要,未確認,EV-110-cases-11col,粒度不足。PoC1時間KPIに必須
+次行動・期限・待ち先,c_newtable,cases/専用テーブルに格納先なし→WorkItem別表新設,未確認,G-08; EV-110-no-workitem,PoC1のKPI算出不能の主因
+Deadline/JurisdictionCourt/Procedure,c_newtable,ミラー未到達→期限/手続/管轄の別表新設。期限正本=Salesforce(owner G-20)。徒過防止=人・SF・AIの多重チェック,確定(owner裁定 G-20 正本=SF W-180),EV-110-no-deadline-table; G-20; D-033,Deadline独立機械(G-05 7本化 D-022)。SFミラーにDeadline格納先新設要
+Accounting/Billing/Invoice/Expense/Deposit/TimeCharge,c_newtable,ミラー未到達→会計各種の別表新設。client/payer分離,未確認,EV-110-no-billing-table; G-10,現状Box会計台帳が縦串
+Task/Event/Chatter/Office Meeting,c_newtable,専用テーブルなし→イベント別表新設(or DerivedEvent),未確認,EV-110-no-task-table,Q3設計判断
+PostalMatter/RequiredDocument/KeepingItem,c_newtable,ミラー未到達→別表新設要否を設計判断,未確認,EV-110(未到達),Q3
+CaseDocument → documents,a_asis,documents(三層+統制列)が定義済。Box正本連携はstorage_pointer,未確認(0行),EV-110-documents0; G-02,正本=Box file_id+version_id(G-02)
+変換関係(Consultation→Matter),c_newtable,cases間リンク列なし/id_migration_map(0行)汎用→専用定義要。受任=複数シグナル合成(委任状・契約書受領[Box最強]・SF相談→受任切替・受任通知発送)をobservedで確定しdeclared(SFステータス)と突合,確定(owner裁定 G-11/G-04 突合 W-180),EV-110-id-migration0; Q4; G-11; D-028,受任=単一の正なし→複数シグナル合成しdeclaredと突合(G-04)。Box契約書受領が最強(G-02)
+comms Derived(llm_category/llm_summary),d_unused(現状)→将来b,スキーマあり稼働ゼロ。AI推定はG-19で位置づけ,未確認,EV-110-llm0; G-19,Derived/統制パイプ未起動(D-016関連)
+comm_party_links.confidence,d_unused(是正要),全件1.0で分散なし=確度モデル不機能,修正,EV-110-links; Q6,実値運用是正(Q6)
+comms.direction,b_addfield(是正要),全件internal default=送受信方向未分類,修正,EV-110-comms; Q6,対外/内部分解に必要(PoC1)

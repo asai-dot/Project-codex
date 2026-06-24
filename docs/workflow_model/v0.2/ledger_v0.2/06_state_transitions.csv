@@ -1,0 +1,34 @@
+state_machine,from_state,to_state,transition_condition,forbidden_transition,confirm_status,evidence_id,note
+Consultation,(none),inquiry_received,新規連絡を受信,-,確認済,EVD-112-trace1-0101,112観測
+Consultation,inquiry_received,identity_checked,本人確認水準充足,conflict未確認のままengagementへ直行禁止,未確認,G-13,parties unknown多
+Consultation,identity_checked,conflict_pass,コンフリ人手判定=pass,fail/escalate中の受任前進禁止,未確認,G-13; G-06,人間必須ゲート
+Consultation,conflict_pass,scheduled,日程確定,-,未確認,Q-062,日程確定検知
+Consultation,scheduled,consulted,相談実施完了,-,未確認,112(Dialpad/Notta未接続),相談本体未取得
+Consultation,consulted,proposal_sent,受任提案GO,-,修正,EVD-112-trace1-0102,提案送付観測
+Consultation,proposal_sent,converted,提案合意→受任成立(人間承認),承認なしでconverted禁止,確認済,EVD-112-trace1-0103/0104,WF-11確認
+Consultation,consulted,closed_lost,受任非到達(失注/相談完了),-,例外,EVD-112-trace2-0203,trace2
+Matter,(converted),onboarding,受任成立→案件開設,SF cases未起票でactive扱い禁止,修正,EVD-112-trace1-0104; EV-110-cases0,cases0行で開設側未確認
+Matter,onboarding,active,初期計画承認,-,未確認,Q-103; G-08,計画データなし
+Matter,active,waiting_client/opponent/court,応答/期限待ち,-,未確認,112(未接続); G-20,待ち先補完要
+Matter,active,resolution_pending,解決見込み到達,-,修正,EVD-112-trace3-0303,outcome_reached
+Matter,resolution_pending,closing,①法的終了(案件実体終了)=2段クローズの第1段,close gate未通過でclosed禁止,確定(owner裁定 G-09 2段クローズ W-180),G-09; D-024,2段クローズ①法的終了。順序=案件終了→原本返却→預り金ゼロ→クローズ
+Matter,closing,closed,②事務クローズ完了(原本返却済・預り金ゼロ・報酬確定)=2段クローズの第2段,gate未通過の既済化禁止/原本未返却・預り金残でclosed禁止,確定(owner裁定 G-09 2段クローズ W-180),Box-(11); G-09; D-024,②事務クローズ。終了報告済判定=成果物送付or報酬請求通知(G-15)。既済フォルダ移動はgate結果
+WorkItem,(none),open,作業発生,-,未確認,EVD-112-trace3-0301,work_item_created
+WorkItem,open,in_progress/waiting,着手/待ち,-,未確認,EVD-112-trace3-0301,waiting_on記録あり
+WorkItem,in_progress,complete,completion_evidence充足,evidence無しでcomplete禁止(close gate),未確認,G-08,completion_evidence全件null
+Document,(none),received,文書受領(通信受/Box),-,確認済,Box-(8)(12),通信(受)で分離
+Document,received/working_draft,approved,内部レビュー承認,承認前のsent禁止(対外成果物),未確認,G-06,レビュー過程データ不足
+Document,approved,sent,対外送付承認,-,修正,EVD-112-trace3-0305; Box-(9),通信(送)
+Document,sent,filed/accepted,提出/受理,-,修正,Box-(5)(9),返送/追跡で間接
+Document,(any),superseded,新版発行/old移動,Raw削除禁止(append-only),修正,Box-(3)(11); G-17,old=superseded(G-17)
+Finance,(none),quote_sent,見積確定送付,-,修正,EVD-112-trace1-0102; Box-(6),見積PDF
+Finance,quote_sent,invoice_sent,請求確定(人間承認),承認なし請求確定禁止,修正,EVD-112-trace1-0105; G-06,client/payer分離(G-10)
+Finance,invoice_sent,acknowledged,支払者の受付表明,-,例外,EVD-112-trace1-0106,external表明≠入金
+Finance,acknowledged,paid,入金消込確定,消込前のreconciled禁止,修正,EVD-112-trace3-0304,入金消込SF/MF未接続
+Finance,paid,reconciled,金銭の確定=報酬確定・預り金/実費精算・振替(人間必須ゲートHG-05/HG-06),精算前の終結禁止,確定(owner裁定 G-06 マスト3点の1 W-180),G-09/G-10; G-06; D-023,精算=金銭の確定(マスト3点)。入金の正=銀行通帳(G-11)
+Delivery,(none),prepared,送付物準備,-,確定(owner裁定 G-05 独立7本化 W-180),G-05; Box-(9); D-022,Delivery独立機械化を確定(7本の1)。pending(owner_grill)解消
+Delivery,prepared,dispatched,送付実行(通信送+送付書)=対外最終送付は人間必須ゲートHG-04,-,確定(owner裁定 G-05/G-06 W-180),EVD-112-trace3-0305; Box-(9); D-022,対外文書の最終送付=最終品質チェック(マスト3点の1)
+Delivery,dispatched,delivered/received,到達/受理(追跡番号/返送),-,確定(owner裁定 G-05 W-180),Box-(5)(9); G-11; D-022,到達正本はSF(制御塔)+会計台帳。Boxは送受文書証跡
+Deadline,(none),registered,期限登録(人間承認)。正本=Salesforce(G-20),-,確定(owner裁定 G-05/G-20 独立7本化 W-180),G-20; EV-110-no-deadline-table; D-022/D-033,Deadline独立機械化を確定(7本の1)。SFミラーにDeadline格納先新設要(07_sf_mapping)
+Deadline,registered,met/extended,履行/延長(人間承認),懈怠(無確認の経過)禁止,確定(owner裁定 G-20 W-180),G-20; D-033,正本=SF Deadline(G-20)。徒過防止=人・SF・AIの多重チェック
+Deadline,registered,missed,期限超過,-,確定(owner裁定 G-20 W-180),G-20; D-033,懈怠アラート対象。多重チェック(人・SF・AI)で徒過防止
