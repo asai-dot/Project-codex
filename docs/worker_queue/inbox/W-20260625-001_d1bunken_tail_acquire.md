@@ -4,6 +4,12 @@ status: queued
 priority: P1
 owner: claude-code-worker
 created_at: 2026-06-25
+owner_sanction:
+  - rule: external_api_bulk_call
+    status: APPROVED
+    date: 2026-06-25
+    by: owner（浅井）
+    note: D1文献編メタ取得は owner 承認済みの正規取得パイプライン（追加のみ・冪等・レート制御内蔵・単一書き手）。本タスクに限り既定 forbidden `external_api_bulk_call` を上書きし、downloader 実行を許可する。他の既定 forbidden（DB write/canonical/削除/schema 等）は引き続き有効。
 request: docs/status/20260619_D1bunken_acquisition_status.md
 goal: D1文献編の未取得誌（評釈価値の低い長尾＝大学紀要・実務誌を含む全誌）を冪等に完取得し、雑誌オブジェクトの誌名メタを取り切る。評釈言及数ではなく「雑誌オブジェクト網羅」が目的（将来のCiNii本文取り込みで誌名が結合キーになるため、3割の取りこぼしを許さない）。取得後 再パース＋誌名ラベル付与v0.2.1まで回し、カバレッジ差分を報告する。
 mode: acquisition
@@ -57,8 +63,9 @@ result_expected_filename: W-20260625-001_RESULT.md
 （将来CiNii本文取り込みで誌名が結合キー。価値順カバレッジは既に達成済み、ここは網羅性のための取得）。
 
 ## 方針（重要）
-- これは **owner承認済みの正規取得**。downloaderは**追加のみ・冪等・レート制御内蔵（30〜75秒+長休止）・単一書き手**。
-  既定forbidden `external_api_bulk_call` の趣旨（無断バルク）には当たらない正規パイプラインとして実行可。
+- ✅ **owner承認済み（2026-06-25, front-matter `owner_sanction` 参照）**: 既定forbidden `external_api_bulk_call` を
+  本タスクに限り上書き済み。downloader実行を**ブロックせず実行してよい**。
+- downloaderは**追加のみ・冪等・レート制御内蔵（30〜75秒+長休止）・単一書き手**。
 - **元データ改変ゼロ**（取得は新規頁の追加のみ）。DB投入/canonical化/外部共有はしない（別ゲート）。
 - 長時間ジョブ。`nohup`/別タブで走らせ、**冪等なので中断したら同スイープ再実行で続きから**。
   誌個別の0件・Playwright timeout は**ログに残して次へ**（タスク全体をBLOCKEDにしない）。
