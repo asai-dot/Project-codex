@@ -31,6 +31,7 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Optional
 
 DEFAULT_OVERLAP = 0.6  # DD-DICT-008 Q2: 暫定. Wave0 実測で再校正
+SHORT_DEF_LEN = 8     # <8字は末尾切れ/OCR脱落疑い (probe_quality.py と揃える)
 _FW_ALNUM = str.maketrans(
     "ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ０１２３４５６７８９",
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
@@ -119,20 +120,35 @@ def _tid(t: dict) -> str:
     return str(t.get("term_id") or t.get("stg_term_key") or "")
 
 
+def _def_quality(t: dict) -> str:
+    """定義の品質判定. anchor 選択の副次ソートキーに使う."""
+    df = (t.get("definition") or "").strip()
+    if not df:
+        return "empty"
+    if len(df) < SHORT_DEF_LEN:
+        return "short"
+    return "ok"
+
+
 def _anchor_rule(terms: List[dict]) -> str:
-    """中立 anchor: e-Gov(rank100台) 優先 -> scheme_id 昇順 -> term id 昇順."""
+    """中立 anchor: e-Gov(rank100台) 優先 -> 定義品質(ok>short>empty) -> scheme_id 昇順 -> term id 昇順."""
+    _dq_ord = {"ok": 0, "short": 1, "empty": 2}
     def key(t):
         return (0 if str(t.get("authority_rank")).startswith("100") else 1,
+                _dq_ord.get(_def_quality(t), 3),
                 str(t.get("scheme_id", "")), _tid(t))
     return _tid(sorted(terms, key=key)[0])
 
 
-def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP, reading_missing: str = "defmatch"):
+def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP, reading_missing: str = "defmatch",
+               quality_filter: bool = False):
     """bedrock seed -> exact_match -> close_match -> specialty attach (DBなし).
 
     reading_missing: 片側辞書で読み欠落(OCR)時の扱い.
       "defmatch" (既定): 読み無し term は同 pref の hub に定義重なり>=閾値で attach (漏れ救済).
       "strict": 読みも一致条件にする(従来動作).
+    quality_filter: True のとき空定義/短定義 term を anchor 非適格としてフラグ付けし
+      hub に needs_preprocessing を付与する (clean subset 前進戦略: DD-QUALITY-001).
     """
     by_tid = {_tid(t): t for t in terms}
     bedrock_all = [t for t in terms if is_bedrock(t.get("authority_rank")) and str(t.get("term_tier", "1")) == "1"]
@@ -278,6 +294,27 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP, reading_mi
                 "is_anchor": True, "definition_overlap": None, "specialty_attach": False,
             })
 
+    # quality_filter: anchor が空定義/短定義の hub に needs_preprocessing を付与
+    anchors_empty_def = anchors_short_def = 0
+    if quality_filter:
+        terms_empty = sum(1 for t in terms if _def_quality(t) == "empty")
+        terms_short = sum(1 for t in terms if _def_quality(t) == "short")
+        for h in hubs:
+            anchor = by_tid.get(h["anchor_term_id"])
+            if anchor is None:
+                continue
+            dq = _def_quality(anchor)
+            if dq == "empty":
+                anchors_empty_def += 1
+                h.setdefault("needs_preprocessing", []).append("empty_def")
+                h["anchor_quality"] = "empty_def"
+            elif dq == "short":
+                anchors_short_def += 1
+                h.setdefault("needs_preprocessing", []).append("short_def")
+                h["anchor_quality"] = "short_def"
+    else:
+        terms_empty = terms_short = 0
+
     stats = {
         "terms_total": len(terms), "bedrock_terms": len(bedrock_all), "specialty_terms": len(specialty),
         "bedrock_reading_missing": len(bedrock_noread),
@@ -286,6 +323,10 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP, reading_mi
         "reading_missing_matched": reading_missing_matched,
         "reading_missing_seed": reading_missing_seed,
         "exact_merged_hubs": sum(1 for h in hubs if h["member_count"] > 1),
+        "terms_empty_def": terms_empty,
+        "terms_short_def": terms_short,
+        "anchors_empty_def": anchors_empty_def,
+        "anchors_short_def": anchors_short_def,
     }
     return hubs, memberships, stats
 
@@ -317,13 +358,22 @@ def build_report(hubs, memberships, stats, threshold) -> str:
     for k in ["1", "2", "3+"]:
         if sizes.get(k):
             lines.append(f"| {k} | {sizes[k]} |")
+    if stats.get("terms_empty_def", 0) or stats.get("terms_short_def", 0):
+        lines += [
+            "",
+            "## データ品質フラグ (--quality-filter)",
+            f"- 空定義 term: **{stats['terms_empty_def']}** / 短定義(<{SHORT_DEF_LEN}字) term: **{stats['terms_short_def']}**",
+            f"- anchor が空定義の hub: **{stats['anchors_empty_def']}** (needs_preprocessing=empty_def)",
+            f"- anchor が短定義の hub: **{stats['anchors_short_def']}** (needs_preprocessing=short_def)",
+            "- これらは canonical anchor 非適格. P0.5 前処理(再OCR/yomi補完)対象.",
+        ]
     lines += [
         "",
         "## 監査整合の確認",
         "- exact_match は normalized_pref+reading 一致かつ定義重なり≥閾値のみ(表層一致merge なし).",
         "- 同綴異義は統合せず homograph_split(別hub). 重なり率を保存.",
         "- specialty(rank≥103)は attach のみ. canonical 昇格しない.",
-        "- anchor は中立規則(e-Gov優先→scheme_id→term_id). 優劣ではない.",
+        "- anchor は中立規則(e-Gov優先→定義品質→scheme_id→term_id). 優劣ではない.",
         "",
         "_dry-run. candidate JSONL 出力のみ. DB write/canonical mint なし._",
     ]
@@ -343,6 +393,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--overlap-threshold", type=float, default=DEFAULT_OVERLAP)
     ap.add_argument("--reading-missing", choices=["defmatch", "strict"], default="defmatch",
                     help="片側辞書の読み欠落(OCR)時: defmatch=定義一致でhub救済(既定) / strict=読みも一致条件")
+    ap.add_argument("--quality-filter", action="store_true", default=False,
+                    help="空定義/短定義 term を anchor 非適格としてフラグ付け (needs_preprocessing). "
+                         "clean subset 前進戦略(P0.5)で使う.")
     ap.add_argument("--out", required=True, type=Path)
     args = ap.parse_args(argv)
 
@@ -356,7 +409,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.labels:  # 定義 join (remap 前: 生キー stg_term_key で突合). 学陽はインライン定義なので skip される
         attach_definitions(terms, read_jsonl(args.labels), term_key=args.term_key)
     terms = remap_records(terms, fmap)
-    hubs, memberships, stats = build_hubs(terms, args.overlap_threshold, args.reading_missing)
+    hubs, memberships, stats = build_hubs(terms, args.overlap_threshold, args.reading_missing,
+                                          quality_filter=args.quality_filter)
 
     args.out.mkdir(parents=True, exist_ok=True)
     with (args.out / "hub_candidate.jsonl").open("w", encoding="utf-8") as fh:

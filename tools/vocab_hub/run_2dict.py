@@ -59,6 +59,8 @@ def main(argv=None) -> int:
     ap.add_argument("--hourei-entries", default=None)
     ap.add_argument("--out", default=str(Path.home() / "hub_2dict"))
     ap.add_argument("--thresholds", default="0.5,0.6,0.7")
+    ap.add_argument("--quality-filter", action="store_true", default=False,
+                    help="空定義/短定義を anchor 非適格としてフラグ付け (P0.5 clean subset モード)")
     a = ap.parse_args(argv)
 
     yt = find_one("yuhikaku_legal_dict_terms_stg_v3.jsonl", a.yuhikaku_terms)
@@ -77,9 +79,10 @@ def main(argv=None) -> int:
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     thresholds = [float(x) for x in a.thresholds.split(",")]
+    qf = a.quality_filter
     rows = []
     for thr in thresholds:
-        hubs, mem, stats = bh.build_hubs(terms, thr)
+        hubs, mem, stats = bh.build_hubs(terms, thr, quality_filter=qf)
         rows.append((thr, stats, cross_dict_hubs(mem)))
         if abs(thr - 0.6) < 1e-9:
             with (out / "hub_candidate.jsonl").open("w", encoding="utf-8") as fh:
@@ -87,13 +90,23 @@ def main(argv=None) -> int:
                     fh.write(json.dumps(h, ensure_ascii=False) + "\n")
             (out / "hub_build_report.md").write_text(bh.build_report(hubs, mem, stats, thr), encoding="utf-8")
 
-    print("=== しきい値比較 (有斐閣 + 学陽) ===")
-    print(f"{'thr':>4} {'hubs':>9} {'exact統合':>10} {'辞書またぎ':>11} {'読み救済':>10} {'homograph':>11}")
-    for thr, st, xd in rows:
-        print(f"{thr:>4} {st['hubs']:>9} {st['exact_merged_hubs']:>10} {xd:>11} "
-              f"{st.get('reading_missing_matched', 0):>10} {st['homograph_conflicts']:>11}")
+    qf_label = " [--quality-filter]" if qf else ""
+    print(f"=== しきい値比較 (有斐閣 + 学陽){qf_label} ===")
+    if qf:
+        print(f"{'thr':>4} {'hubs':>9} {'exact統合':>10} {'辞書またぎ':>11} {'読み救済':>10} {'homograph':>11} {'空def要前処理':>14} {'短def要前処理':>14}")
+        for thr, st, xd in rows:
+            print(f"{thr:>4} {st['hubs']:>9} {st['exact_merged_hubs']:>10} {xd:>11} "
+                  f"{st.get('reading_missing_matched', 0):>10} {st['homograph_conflicts']:>11} "
+                  f"{st.get('anchors_empty_def', 0):>14} {st.get('anchors_short_def', 0):>14}")
+    else:
+        print(f"{'thr':>4} {'hubs':>9} {'exact統合':>10} {'辞書またぎ':>11} {'読み救済':>10} {'homograph':>11}")
+        for thr, st, xd in rows:
+            print(f"{thr:>4} {st['hubs']:>9} {st['exact_merged_hubs']:>10} {xd:>11} "
+                  f"{st.get('reading_missing_matched', 0):>10} {st['homograph_conflicts']:>11}")
     print(f"\n[run_2dict] report(0.6) -> {out}/hub_build_report.md")
     print("[run_2dict] 「辞書またぎ」= 有斐閣と学陽が同一 hub に統合された数 / homograph = 同見出し+読みで定義が食い違い別hubにした数")
+    if qf:
+        print("[run_2dict] 「空def/短def要前処理」= anchor が空定義/短定義の hub 数 (needs_preprocessing フラグ付き)")
     return 0
 
 
