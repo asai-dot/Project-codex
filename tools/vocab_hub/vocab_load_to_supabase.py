@@ -115,6 +115,11 @@ def main(argv=None) -> int:
     ap.add_argument("--canary-hubs", type=int, default=300)
     ap.add_argument("--host", default="db.vlsunmqpjhzbhipiehzs.supabase.co",
                     help="Supabase direct host (既定=alo-connect). SUPABASE_DB_URL 未設定時に使用")
+    ap.add_argument("--pooler", action="store_true",
+                    help="Session pooler(IPv4)経由. direct が Connection refused のとき使う")
+    ap.add_argument("--pooler-host", default="aws-0-ap-northeast-1.pooler.supabase.com",
+                    help="pooler host (ダッシュボードの値と違えば指定)")
+    ap.add_argument("--port", type=int, default=5432, help="接続ポート(pooler session=5432)")
     ap.add_argument("--dry-run", action="store_true", help="接続せず件数のみ")
     a = ap.parse_args(argv)
 
@@ -134,13 +139,16 @@ def main(argv=None) -> int:
         # プレースホルダ事故防止: パスワードを安全に対話入力し URL を組み立てる
         import getpass
         from urllib.parse import quote
-        host = a.host
-        print(f"[load] SUPABASE_DB_URL 未設定。host={host} へ接続します。")
+        if a.pooler:
+            host, user = a.pooler_host, "postgres.vlsunmqpjhzbhipiehzs"
+        else:
+            host, user = a.host, "postgres"
+        print(f"[load] SUPABASE_DB_URL 未設定。user={user} host={host}:{a.port} へ接続します。")
         pw = getpass.getpass("alo-connect DB password (入力は非表示): ").strip()
         if not pw:
             print("ERROR: パスワードが空です。", file=sys.stderr)
             return 2
-        url = f"postgresql://postgres:{quote(pw, safe='')}@{host}:5432/postgres"
+        url = f"postgresql://{user}:{quote(pw, safe='')}@{host}:{a.port}/postgres"
 
     conn = _connect(url)
     conn.autocommit = False
