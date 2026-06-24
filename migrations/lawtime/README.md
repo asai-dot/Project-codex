@@ -5,6 +5,7 @@
 > ✅ **2026-06-25 owner ratify 済**: v0.2.4 C-option（`placement_v0.2.4/`）が lawtime 配置の**確定設計**。
 > 決裁: [`docs/dd/DD-LAWTIME-001_v0.2.4_owner_ratify_packet.md`](../../docs/dd/DD-LAWTIME-001_v0.2.4_owner_ratify_packet.md) §6。
 > 本番 apply / Supabase 本番反映 / branch 課金 dry-run / canonical / claim_support は **HOLD 継続**（別途 owner 明示 GO）。
+> 段取り: [`docs/dd/DD-LAWTIME-001_v0.2.4_materialize_runbook.md`](../../docs/dd/DD-LAWTIME-001_v0.2.4_materialize_runbook.md)（PHASE A–E / 課金ゼロの DRAFT・実行待ち）。
 >
 > ✅ **2026-06-25 v0.2.4 監査 ratify 済**: RESULT `DDLAWTIME_V024_PLACEMENT_PASS_WITH_NOTES`
 > （Box file_id 2306481004211）。C-option 採用可・**materialize branch dry-run へ GO**（branch/local/fixture/smoke
