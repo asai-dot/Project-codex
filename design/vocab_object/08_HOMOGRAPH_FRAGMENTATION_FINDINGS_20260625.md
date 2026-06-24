@@ -8,8 +8,12 @@
 
 **homograph 44 は owner 判断案件ではなかった。** 定義本体を読むと大半が staging の
 **定義断片化アーティファクト**（1エントリが複数 term 行に割れ、続き/スタブ/空行が別 hub 化）。
-genuine な多義（要 owner 判断）は **重懲役(OCR矛盾疑い)・参議(別概念混入疑い)等ごく少数**のみ。
-同じ断片化が **短定義489 の一部も水増し**している可能性が高い（断片＝短い）。
+defrag_terms.py で再結合/除去すると **homograph 44 → 3**（genuine_split のみ残存）。
+genuine な真の owner 判断は **2件**（参議=別概念で split維持 / 重懲役=OCR取り違えで要修正）+
+将来の給付の訴え1件（実は同概念=merge、保守バイアスで split側に出ただけ）。
+
+**※ 当初仮説「同じ断片化が短定義489も水増し」は実測で外れた**: defrag後 短def 489→485(-4のみ)。
+短定義489は homograph とは**別問題**（単一行で定義が元々短い = 末尾切れ/正規短定義/別parse）で、独自 triage が要る。
 
 ## 1. 自動分類（homograph_review.py / classify_pair）
 
@@ -35,17 +39,31 @@ genuine な多義（要 owner 判断）は **重懲役(OCR矛盾疑い)・参議
 辞書定義が「①②③」の多義・複数段落・相互参照を含むとき、その各片が別 term（同 normalized_pref + 同 reading）
 になり、定義重なりが低いため build_hubs が homograph_split する。**hub構築のバグではなく入力データの断片化**。
 
-## 3. 計画への影響（07 P0.5 の更新）
+## 2.5 defrag_terms.py 実測 (2026-06-25)
 
-- **homograph 44 を owner に投げない**。genuine 数件だけ owner、残りは staging 前処理で消す。
-- **短定義489 の再測が要る**: 断片化 artifact を再結合/除去すると短定義も減るはず。
-  → 短定義 triage（07 §2）の「③parse/結合ミス」がこの断片化と同根。先に断片化を解けば489も縮む。
-- 推奨順:
-  1. staging 断片再結合スクリプト（同 scheme+pref+reading で continuation/subitem を連結、stub/empty/header/list_marker を除去）を read-only 生成 → 効果測定。
-  2. 再測した homograph(genuine のみ) と 短定義(真の末尾切れのみ) で owner パケットを作る。
-  3. clean subset で P1 へ。
+クリーン term セット生成(read-only)→ build_hubs 前後比較:
+
+| 指標 | before | after | 効果 |
+|---|---|---|---|
+| terms | 15985 | 15942 | 断片43行をクリーン(rejoin12/drop12/merge19/genuine5) |
+| hubs | 13229 | 13188 | 重複統合で微減 |
+| **homograph** | **44** | **3** | ✅ artifact再結合で解消、genuine_splitのみ残存 |
+| 短def anchor | 489 | 485 | ❌ **-4のみ。仮説外れ** |
+| 空def anchor | 6 | 3 | ✅ -3 |
+
+## 3. 計画への影響（07 P0.5 の更新 / 実測反映）
+
+- **homograph 44 → 3**: owner判断は実質2件（参議=split維持 / 重懲役=OCR修正）+将来=merge。defragで解決済み。
+- **短定義489 は独立問題（実測で確定）**: defrag後 489→485。断片化とは無関係で、**単一行の元々短い定義**。
+  → 07 §2 の短定義 triage を**そのまま独立に実施**する必要がある（末尾切れ再OCR / 正規短定義はそのまま / 別parse）。
+  仮説「断片化と同根」は外れた。短定義は probe_quality --export の `*_short_def.jsonl` を直接 triage する。
+- 推奨順（更新）:
+  1. ✅ defrag_terms.py で homograph 解消（完了, read-only candidate）。
+  2. owner: genuine_split 2件（参議/重懲役）を判断。
+  3. 短定義489 を独立 triage（export→①末尾切れ②正規短定義③別parse）。
+  4. clean subset（defrag済 + needs_preprocessing無し）で P1 へ。
 
 ## 4. ゲート
 
-read-only。本 findings は分類結果の記録。staging 再結合スクリプトの実適用・DB load は別ゲート。
-homograph_review.py / .jsonl は candidate 出力のみ（DB書き込みなし）。
+read-only。本 findings は分類・実測の記録。defrag の cleaned JSONL は candidate 出力のみ(DB書き込みなし)。
+staging への実反映(generate_staging_v3 修正 or cleaned を正とする判断)・DB load は別ゲート。
