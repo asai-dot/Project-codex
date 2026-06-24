@@ -1,0 +1,204 @@
+{
+ "generated_at_jst": "2026-06-08T17:23:18+0900",
+ "collected_epoch": 1780906998,
+ "probe_version": "0.2",
+ "manifest_hash": "sha256:42f08a7f12fdc798afdf567281958cfe93ee4accb30837ee0b47836981b2096d",
+ "manifest_errors": [],
+ "roots": {
+  "bookdx": "/Users/yuta/Library/CloudStorage/Box-Box/浅井/claude/事務所内本棚DX化計画",
+  "alo": "/Users/yuta/alo-ai",
+  "repo": "/Users/yuta/Project-codex"
+ },
+ "manifest_version": 1,
+ "stages": {
+  "toc_baseline": {
+   "probes": [
+    {
+     "type": "count",
+     "label": "tocファイル",
+     "path": "app/data/toc/isbn_*.json",
+     "count": 3994,
+     "expected": 5206,
+     "ratio": 0.7672,
+     "done": false
+    }
+   ]
+  },
+  "ndl_canonical": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "正規化レポート",
+     "path": "app/data/reports/ndl_canonical_*.md",
+     "present": false,
+     "match_count": 0,
+     "done": false
+    }
+   ]
+  },
+  "legallib_fetch": {
+   "probes": [
+    {
+     "type": "count",
+     "label": "号",
+     "path": "work/legallib_dl/*.json",
+     "count": 4051,
+     "expected": 422,
+     "ratio": 1.0,
+     "done": true
+    }
+   ]
+  },
+  "legallib_article_parser": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "articles",
+     "path": "work/legallib_dl/articles_extracted.jsonl",
+     "present": false,
+     "match_count": 0,
+     "done": false
+    }
+   ]
+  },
+  "resolver": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "decisions",
+     "path": "work/legallib_dl/resolver_decisions.jsonl",
+     "present": true,
+     "match_count": 1,
+     "done": true
+    }
+   ]
+  },
+  "legallib_join_dryrun": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "dryrunレポート",
+     "path": "handoff/legallib_dryrun_*/report.md",
+     "present": false,
+     "match_count": 0,
+     "done": false
+    }
+   ]
+  },
+  "legallib_review": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "承認リスト",
+     "path": "handoff/legallib_dryrun_*/approved_isbns.txt",
+     "present": false,
+     "match_count": 0,
+     "done": false
+    }
+   ]
+  },
+  "legallib_apply": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "適用ログ",
+     "path": "app/data/legallib_apply_log.jsonl",
+     "present": false,
+     "match_count": 0,
+     "done": false
+    }
+   ]
+  },
+  "hastoc_reconcile": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "整合レポート",
+     "path": "app/data/reports/hastoc_reconcile_*.md",
+     "present": false,
+     "match_count": 0,
+     "done": false
+    }
+   ]
+  },
+  "toc_search_index": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "索引",
+     "path": "app/data/toc_search_index.json",
+     "present": true,
+     "match_count": 1,
+     "done": true
+    }
+   ]
+  },
+  "defer_new": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "staging",
+     "path": "handoff/legallib_dryrun_*/defer_staging.jsonl",
+     "present": false,
+     "match_count": 0,
+     "done": false
+    }
+   ]
+  },
+  "gpt_dd_roundtrip": {
+   "probes": [
+    {
+     "type": "roundtrip",
+     "label": "DD",
+     "sent": 0,
+     "returned": 0,
+     "pending_count": 0,
+     "pending": [],
+     "orphan_count": 0,
+     "orphan": [],
+     "duplicate_count": 0,
+     "duplicates": [],
+     "max_age_hours": 24,
+     "done": false
+    }
+   ]
+  },
+  "lawtime_dd": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "結果",
+     "path": "from_gpt/*lawtime*RESULT*.md",
+     "present": false,
+     "match_count": 0,
+     "done": false
+    }
+   ]
+  },
+  "matter_resolution": {
+   "probes": [
+    {
+     "type": "exists",
+     "label": "完了ログ",
+     "path": "cc_work_logs/*matter-id-resolution*complete*.md",
+     "present": false,
+     "match_count": 0,
+     "done": false
+    }
+   ]
+  },
+  "manifest_drift_handoff": {
+   "probes": [
+    {
+     "type": "orphan",
+     "label": "handoff",
+     "scan_count": 0,
+     "declared_count": 0,
+     "orphan_count": 0,
+     "orphan": [],
+     "done": true
+    }
+   ]
+  }
+ }
+}

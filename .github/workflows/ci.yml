@@ -20,6 +20,10 @@ jobs:
         run: python tests/test_supabase_source.py
       - name: Run pipeline dashboard/probe tests (stdlib only, synthetic manifest)
         run: python tests/test_pipeline.py
+      - name: Run legallib join tests (stdlib only, synthetic fixtures)
+        run: python tests/test_legallib_join.py
+      - name: Run legallib handoff-tools tests (stdlib only, synthetic fixtures)
+        run: python tests/test_handoff_tools.py
       - name: Install pytest (for packaged tools)
         run: pip install pytest
       - name: Run alo-gpt-audit package tests (stdlib only, synthetic lanes)

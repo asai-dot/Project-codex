@@ -1,0 +1,133 @@
+{
+  "_draft": {
+    "status": "DRAFT — 未適用。policy_file_change は HOLD (DDTOCADOPT_PASS_WITH_NOTES)。",
+    "must_pass_before_use": "gate_policy_unification_reproduces_existing_projection: 既存 tocattach_projection_dryrun(631クラスタ/116,727ノード)を完全再現(投影hash入力順非依存一致・基底源分布不変)するまで本番 policy へ切替えない。",
+    "supersedes_after_reproduction": [
+      "app/data/toc_merge_policy.json (本流 v2)",
+      "data/toc_merge_policy_legallib.json (Project-codex Fork1)"
+    ],
+    "design_basis": "DD-TOCADOPT-001 v0.2 (owner ratify design-only 2026-06-15) + DD-TOCATTACH-001 v0.3 + DDLEGALLIBCONCORD v0.3.1 Phase0",
+    "owner_decisions": {
+      "OQ-1": "legallib > toc_pdf を維持 (2026-06-15。v2 D-5 ratify を踏襲。toc_pdf は抽出レイヤ・legallib はPhase0でクリーンと実証)",
+      "OQ-2": "granularity_guard 既定 0.2、ただし source 別に再較正可能な parameter",
+      "OQ-3": "弁コム↔legallib 同一本は粒度優先で可、ただし provenance_origin 同一の票水増し禁止",
+      "OQ-4": "Fork1 policy は本 DRAFT が既存 dry-run を完全再現した後に廃止 (即廃止不可)",
+      "OQ-5": "apply 粒度は当面 book 単位 all-or-nothing を維持 (2026-06-17 owner ratify, REAUDIT2 N1-a)。node 単位 partial-apply は実 apply 設計時に再検討。report-only の現段階では影響なし。",
+      "OQ-6": "v0.3.0 report-only 実装を closed packet として受理し次ゲート(実baseline reproduction)へ進める (2026-06-17 owner ratify)。production apply は HOLD 継続。"
+    },
+    "production_use_allowed": false,
+    "parallel_run_period": "本 DRAFT と既存 app/data/toc_merge_policy.json (v2) + data/toc_merge_policy_legallib.json (Fork1) は、reproduction gate green + owner ratify までは並走。Fork1 即廃止は HOLD。",
+    "ci_release_guard": "tests/test_tocadopt.py::test_release_guard が (a) production_use_allowed=false (b) release_boundary.report_only=true (c) policy_version に DRAFT を含む (d) 本流 production policy パスと別物 であることを CI で固定する。"
+  },
+  "policy_version": "unified_v0.1_DRAFT",
+  "principle": "源の優劣でなく本/ノード単位で最良の中身を合成採用。priority は tie-break 専用。",
+  "priority": [
+    "manual",
+    "ndl_partinfo",
+    "publisher",
+    "legallib",
+    "toc_pdf",
+    "lionbolt",
+    "openbd",
+    "books_or_jp",
+    "bencom",
+    "codex_ocr",
+    "zosho_bib_toc",
+    "unknown"
+  ],
+  "confidence": {
+    "manual": 1.0,
+    "ndl_partinfo": 0.95,
+    "publisher": 0.95,
+    "toc_pdf": 0.93,
+    "legallib": 0.92,
+    "lionbolt": 0.85,
+    "openbd": 0.9,
+    "books_or_jp": 0.85,
+    "bencom": 0.8,
+    "zosho_bib_toc": 0.7,
+    "codex_ocr": 0.6,
+    "unknown": 0.5
+  },
+  "protected_sources": ["manual", "ndl_partinfo", "publisher", "toc_pdf"],
+  "step1_identity_gate": {
+    "classifier": "scripts/edition_identity_v2.py:classify_edition_identity_v2",
+    "cluster_only_status": ["resolved_same_manifestation", "manual_resolved"],
+    "to_human_review": ["suspected_different_manifestation", "insufficient_evidence"],
+    "rules": {
+      "edition_number_extracted_from_title": true,
+      "core_title_containment_absorbs_subtitle": true,
+      "year_tolerance": 1,
+      "same_edition_number_ignores_year": true,
+      "isbn_match_alone_does_not_confirm": true,
+      "page_or_publisher_divergence_to_review": true
+    },
+    "note": "DDTOCADOPT Required note 2 / Phase0 regression: 確実な別版26件を除外・装飾副題差は同一通過 (edition_identity_v2_regression.md)"
+  },
+  "step2_base_selection": {
+    "primary_key": "granularity_then_page_coverage",
+    "granularity_guard": {
+      "min_node_ratio_vs_richest_default": 0.2,
+      "min_node_ratio_vs_richest_per_source": {},
+      "blocked_source_contributes": ["votes", "creator_enrichment", "confidence"],
+      "note": "OQ-2: 既定0.2・source別override可。最富源比未満は基底不可(詳細→浅い劣化防止)"
+    },
+    "legallib_simple_only": {
+      "overwrite_only_if_all_simple": true,
+      "never_overwrite_protected_sources": true,
+      "skip_if_existing_already_legallib": true,
+      "note": "Fork1 の品質ゲートを吸収: 既存baseが浅い(simple)ときだけ詳細源で張替え"
+    },
+    "tie_break": "priority ラダー (上記)。granularity/page が同点のときのみ発火"
+  },
+  "step3_node_completion": {
+    "merge": "append_missing_only",
+    "page_numbers_prefer": "with_pages",
+    "page_basis_normalization": "本単位 offset で print/pdf を整合 (Phase0: offset 94.9%本単位単一)",
+    "chapter_author_from": ["ndl_partinfo"],
+    "append_missing_no_node_invention": true,
+    "node_provenance_required": ["source_system", "provenance_origin", "locator", "page_basis", "source_hash"],
+    "note": "Required note 5: 補完ノードは必ずいずれかの source snapshot に存在。invention 禁止"
+  },
+  "step4_protect_and_consensus": {
+    "protected_sources_no_auto_overwrite": true,
+    "votes_by": "provenance_origin",
+    "dedup_same_provenance_origin": true,
+    "consensus_min_independent_origins": 3,
+    "authority_resolver": "scripts/authority_resolver.py (pdf_primary は qualified+版解決+page_basis整合のみ・他は consensus/human_review)",
+    "note": "Required note 4 / OQ-3: votes は source_system でなく provenance_origin 単位。弁コム↔legallib 再配信の二重計上禁止"
+  },
+  "step5_record": {
+    "sticky_toc_node_id": true,
+    "three_layer": "snapshot(不変) / attachment(着脱) / canonical projection",
+    "note": "DD-TOCATTACH v0.3 と整合。本policyは投影層の採用関数を定義するだけで snapshot を破壊しない"
+  },
+  "partinfo_kind_filter": {
+    "attach_kinds": ["contents"],
+    "reject_kinds": ["volume_structure"],
+    "review_kinds": ["mixed_small"],
+    "note": "volume_structure型はDD-LITID親子レーンへ(v2踏襲)"
+  },
+  "rules": {
+    "_deprecated": "DD-TOCADOPT-001-IMPL E1 (owner 裁定 2026-06-16): 本 legacy ブロックは v2 からの残骸。新原則『源の優劣でなく本/ノード単位で最良を合成』に一本化し、merge は append_missing_only のみ。`replace_if_higher_source` は採用しない (高位源での既存ノード置換はしない)。本ブロックは参照されず、reproduction gate 通過後に物理削除する。",
+    "replace_if_higher_source": false,
+    "keep_manual_overrides": true,
+    "merge_same_source": "append_missing_only",
+    "page_numbers_prefer": "with_pages"
+  },
+  "confidence_usage": {
+    "_note": "DD-TOCADOPT-001-IMPL E2: confidence map は現採用関数では未使用。base 選択/合議の重みには使わず、priority(tie-break) と粒度複合指標(depth/node_count/page_coverage)のみで決める。将来 confidence を重みに入れる場合は本キーを usage 仕様に書き換える。"
+  },
+  "release_boundary": {
+    "report_only": true,
+    "hold": [
+      "production apply",
+      "canonical projection apply",
+      "RDB write",
+      "source snapshot mutation",
+      "policy本番切替",
+      "Fork1即廃止",
+      "unresolved manifestation の合議参加"
+    ]
+  }
+}
