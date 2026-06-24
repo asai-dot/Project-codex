@@ -7,6 +7,7 @@
   1. `DD_author_model_resolution_v1`（著者モデル裁定＋実DB照合）
   2. `DD_cinii_publication_ingestion_v1`（CiNii取込設計＋キー実証）
   3. `KAKEN_lean_plan_v1`（KAKEN取得を実装準拠に改訂）
+  4. `DD_eradcode_acquisition_v1`（eradCode取得。**E-1は確証済・着手可**＝§9）
 
 ---
 
@@ -73,3 +74,50 @@
 ## 8. dry-run の雛型
 
 SQL/擬似コードのひな型は `cinii_publication_dryrun_templates_v1` を参照（本番非破壊・staging限定）。
+
+---
+
+## 9. E-1: eradCode 即時投入（取得ゼロの最小ジョブ）＋ person_identifier ハブ
+
+> **最も小さく確実な前進。外部取得ゼロ。** `DD_eradcode_acquisition_v1` 参照。
+> read-only確証済: CiNii NRID `1000`系の**下8桁 = 研究者番号 = eradCode**（NII公式仕様。`1000`+研究者番号8桁の13桁）。
+> 実DB検証: 1000系 **3,654件すべて**下8桁が有効8桁・全件ユニーク・衝突0。
+
+### S0. `authority.person_identifier` 新設（DDL, SEレーン）
+全識別子の正本ハブ。person_history 散在分の移行先＋eradCodeの受け皿（DD_author_model §8.3）。
+
+```sql
+CREATE TABLE authority.person_identifier (
+  identifier_id  text PRIMARY KEY,
+  person_id      text NOT NULL REFERENCES authority.person(person_id),
+  id_system      text NOT NULL,   -- 'nrid'|'kaken_id'(eradCode)|'researchmap'|'orcid'|'ndl_auth'
+  id_value       text NOT NULL,
+  source         text NOT NULL,   -- 'nrid_derived'|'kaken_lookup'|'migrated_person_history'|...
+  confidence     numeric,
+  created_at     timestamptz NOT NULL DEFAULT now()
+);
+-- active 同一性衝突を物理防止（id_system毎）
+CREATE UNIQUE INDEX uq_person_identifier_active
+  ON authority.person_identifier (id_system, id_value);
+```
+
+### E-1 投入（dry-run→ratify後）
+```sql
+-- 1000系 3,654件: NRID下8桁 = eradCode を導出して投入
+INSERT INTO authority.person_identifier (identifier_id, person_id, id_system, id_value, source, confidence)
+SELECT 'pid:erad:'||right(ph.history_value,8), ph.person_id,
+       'kaken_id', right(ph.history_value,8), 'nrid_derived', 0.95
+FROM authority.person_history ph
+WHERE ph.history_type='scholar_nrid' AND left(ph.history_value,4)='1000'
+ON CONFLICT (id_system, id_value) DO NOTHING;   -- 冪等
+-- 併せて scholar_nrid/researchmap_profile/orcid_id も person_identifier へ移行(source='migrated_person_history')
+```
+
+### 受入ゲート（E-1）
+- 投入 = 3,654件（=実測の1000系件数）、id_value 重複0。
+- 一個人複数研究者番号の検出 → `resolution_log` 記録（NII注記の名寄せ課題）。
+
+### このジョブの位置づけ
+- E-1 は **CiNii論文投入(§1-8)や E-2 seed逆引きと独立に先行できる**最小単位。
+- これで 3,654 研究者に eradCode が付き、KAKEN科研費（分野・所属・grant）を正しい person へ overlay する土台ができる。
+- E-2（73k seed逆引き）は KAKEN研究者API の逆引き可否・レート確認後（DD_eradcode §7）。
