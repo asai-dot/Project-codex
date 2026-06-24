@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alo-worker"
+version = "0.1.0"
+description = "Claude Code Worker Queue (docs/worker_queue) の inbox/doing/done/blocked を強制する単一書き手CLI — フォルダ位置=状態"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{ name = "ALO / 浅井法律事務所" }]
+license = { text = "Proprietary" }
+dependencies = []
+
+[project.scripts]
+alo-worker = "alo_worker.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

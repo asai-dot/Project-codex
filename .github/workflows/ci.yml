@@ -23,3 +23,6 @@ jobs:
       - name: Run alo-gpt-audit package tests (stdlib only, synthetic lanes)
         run: PYTHONPATH=src python -m pytest -q
         working-directory: tools/gpt_audit
+      - name: Run alo-worker package tests (stdlib only, synthetic worker queue)
+        run: PYTHONPATH=src python -m pytest -q
+        working-directory: tools/worker_queue
