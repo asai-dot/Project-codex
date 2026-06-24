@@ -626,5 +626,41 @@ class TestLoadArtifacts(unittest.TestCase):
         self.assertEqual(tables["alo_concept_schemes"][0]["authority_rank"], "101")
 
 
+class TestCanaryLoad(unittest.TestCase):
+    def setUp(self):
+        import build_load_artifacts as bla
+        import vocab_load_to_supabase as ld
+        self.bla, self.ld = bla, ld
+
+    def _tables(self):
+        terms = [{"term_id": f"t{i}", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+                  "normalized_pref": f"語{i}", "reading": f"ご{i}",
+                  "definition": f"定義文その{i}である。", "term_tier": 1} for i in range(20)]
+        terms.append({"term_id": "q", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+                      "normalized_pref": "質権", "reading": "しちけん", "definition": "短", "term_tier": 1})
+        terms.append({"term_id": "x", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+                      "normalized_pref": "共有持分", "reading": "きょうゆうもちぶん",
+                      "definition": "→語0", "term_tier": 1})
+        return self.bla.build_artifacts(terms)[0]
+
+    def test_canary_is_fk_closed(self):
+        sub = self.ld.canary_subset(self._tables(), n_hubs=5)
+        tids = {t["term_id"] for t in sub["alo_terms"]}
+        hids = {h["hub_id"] for h in sub["alo_hubs"]}
+        sids = {s["scheme_id"] for s in sub["alo_concept_schemes"]}
+        self.assertTrue(all(h["anchor_term_id"] in tids for h in sub["alo_hubs"]))
+        self.assertTrue(all(m["hub_id"] in hids and m["term_id"] in tids
+                            for m in sub["alo_hub_memberships"]))
+        self.assertTrue(all(r["src_term_id"] in tids
+                            and (r["dst_term_id"] is None or r["dst_term_id"] in tids)
+                            for r in sub["alo_term_relations"]))
+        self.assertTrue(all(t["scheme_id"] in sids for t in sub["alo_terms"]))
+
+    def test_canary_includes_must(self):
+        # needs_preprocessing(質権) は canary に必ず含む
+        sub = self.ld.canary_subset(self._tables(), n_hubs=5)
+        self.assertTrue(any(h["hub_label"] == "質権" for h in sub["alo_hubs"]))
+
+
 if __name__ == "__main__":
     unittest.main()
