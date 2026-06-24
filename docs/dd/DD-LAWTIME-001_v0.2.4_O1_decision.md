@@ -1,7 +1,9 @@
 # DD-LAWTIME-001 v0.2.4 — O1 決定メモ（母屋 edge 削除時の FK 挙動）
 
-> status: **DECISION REQUIRED（owner 決裁待ち / 課金ゼロ）**。本メモは判断材料のみ。DB 操作なし。
-> 関連: [`..._v0.2.4_materialize_runbook.md`](./DD-LAWTIME-001_v0.2.4_materialize_runbook.md) §0/§7（O1 は PHASE D の前に確定が必要）。
+> status: **DECIDED — A 統一RESTRICT（owner asai 2026-06-25）**。設計に反映済（`100_lawtime_schema.sql`）。
+> side-table 2本（`citation_temporal` / `unresolved_queue`）の FK を `ON DELETE CASCADE` → `ON DELETE RESTRICT` に変更。
+> 構造 smoke でガード追加・PASS（「母屋 edge DELETE blocked by RESTRICT」= `alo_edges` 削除が子の FK で拒否）。DB 本番未接触・課金ゼロ。
+> 関連: [`..._v0.2.4_materialize_runbook.md`](./DD-LAWTIME-001_v0.2.4_materialize_runbook.md) §0/§7。
 > 出典: 監査 RESULT `DDLAWTIME_V024_PLACEMENT_PASS_WITH_NOTES`（Box 2306481004211）Notes O1。
 
 ---
@@ -54,9 +56,9 @@ append-only 監査ログ（"評価は消さない" 意図）が**内部で矛盾
 
 ---
 
-## 3. 推奨
+## 3. 推奨 → **採用（A, owner asai 2026-06-25）**
 
-**A（統一 RESTRICT／NO ACTION）** を推奨。
+**A（統一 RESTRICT／NO ACTION）** を推奨 → **owner が A を採用。設計反映済。**
 理由: lawtime は法令の時間軸**証跡**レイヤであり、`temporal_eval_event` を append-only にした設計意図が
 すでに「評価痕は消さない」と宣言している。であれば side-table 側も同じ哲学（RESTRICT）に揃えるのが一貫し、
 母屋 edge の削除を「lawtime を先に片付けた上での意図的操作」に限定できる。サイレントなデータ喪失の経路を塞ぐのが

@@ -90,11 +90,13 @@ CREATE TABLE IF NOT EXISTS lawtime.revision_mapping (
 --    d1law_taikei.alo_edges. Because every row is by construction a citation edge,
 --    the v0.2.3 two-tier rule is enforced INLINE (no NOT VALID dance needed —
 --    the side-table is greenfield). Cross-table completeness/orphan checks live in
---    200_gates.sql. FK is ON DELETE CASCADE: the edge is the canonical fact, the
---    temporal row is its evaluation and must not outlive it. ────────────────────
+--    200_gates.sql. FK is ON DELETE RESTRICT (O1 decision A, 2026-06-25): lawtime is
+--    the legal TIME-AXIS AUDIT layer, so a canonical edge cannot be deleted while a
+--    temporal row references it — clean up lawtime first. This matches the append-only
+--    temporal_eval_event philosophy (evaluations are not silently destroyed). ───────
 CREATE TABLE IF NOT EXISTS lawtime.citation_temporal (
   edge_id                  bigint PRIMARY KEY
-                             REFERENCES d1law_taikei.alo_edges(edge_id) ON DELETE CASCADE,
+                             REFERENCES d1law_taikei.alo_edges(edge_id) ON DELETE RESTRICT,
   as_of_basis              text NOT NULL DEFAULT 'unknown',
   as_of_date               date,
   source_law_revision_uri  text REFERENCES lawtime.law_revision(revision_uri),
@@ -152,9 +154,11 @@ CREATE TRIGGER eval_append_only BEFORE UPDATE OR DELETE ON lawtime.temporal_eval
   FOR EACH ROW EXECUTE FUNCTION lawtime.trg_eval_append_only();
 
 -- ── Unresolved queue (citation edges awaiting temporal resolution) ───────────
+--    FK ON DELETE RESTRICT (O1 decision A, 2026-06-25): same audit-layer rule as
+--    citation_temporal — drain/clear the queue entry before deleting the母屋 edge.
 CREATE TABLE IF NOT EXISTS lawtime.unresolved_queue (
   edge_id     bigint PRIMARY KEY
-                REFERENCES d1law_taikei.alo_edges(edge_id) ON DELETE CASCADE,
+                REFERENCES d1law_taikei.alo_edges(edge_id) ON DELETE RESTRICT,
   reason      text NOT NULL DEFAULT 'unresolved',
   enqueued_at timestamptz NOT NULL DEFAULT now()
 );

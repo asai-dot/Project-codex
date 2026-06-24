@@ -23,9 +23,9 @@
 | **D. 本番 apply** | 確定設計を **production** に migration 適用 | （branch 課金は無、本番は通常） | **要：本番 apply GO** | rollback SQL 要（§7） |
 | **E. 出口接続** | DD-LAWSUBTRANS を serving.* に張り替え | 無〜小 | **要：張り替え GO** | revert 可 |
 
-> ⚠️ **O1 未決**: `citation_temporal` / `unresolved_queue` の `alo_edges(edge_id)` への FK は
-> `ON DELETE CASCADE`。これは「母屋の edge が消えたら時間軸サイドテーブルも消す」運用を意味する。
-> **CASCADE で良いか / RESTRICT にして手運用にするかは owner 未決**（監査 Notes O1）。**PHASE D の前に確定が必要**。
+> ✅ **O1 確定（A 統一RESTRICT, owner 2026-06-25）**: `citation_temporal` / `unresolved_queue` の
+> `alo_edges(edge_id)` への FK は **`ON DELETE RESTRICT`**（設計反映済）。母屋 edge は lawtime が参照中は
+> 削除できず、**先に lawtime 側を片付ける**運用（§7 D-5 の掃除順）。詳細: [`..._O1_decision.md`](./DD-LAWTIME-001_v0.2.4_O1_decision.md)。
 
 ---
 
@@ -135,12 +135,21 @@ branch の接続先に対し `apply_migration` を §3 の順で：
 
 ## 7. PHASE D — 本番 apply（**owner GO 必須**）と rollback
 
-> 🔴 owner の「本番 apply GO」無しに production へ `apply_migration` しない。**O1（CASCADE 可否）確定が前提**（§0）。
+> 🔴 owner の「本番 apply GO」無しに production へ `apply_migration` しない。**O1 は確定済（A 統一RESTRICT）**（§0）。
 
 ### D-1. 直前チェック
 1. PHASE C 全 green が出ていること。
-2. **O1 確定**：`citation_temporal` / `unresolved_queue` の FK を `ON DELETE CASCADE` のままにするか `RESTRICT` に変えるか owner 決裁済みであること。RESTRICT 採用なら 100 の該当2行を修正してから apply。
+2. **O1 = A 統一RESTRICT 確定済**（2026-06-25）。`citation_temporal` / `unresolved_queue` の FK は
+   `ON DELETE RESTRICT`（`100_lawtime_schema.sql` 反映済・smoke ガード PASS）。apply 時は現行の 100 をそのまま使う。
 3. backup/PITR 確認（本番 schema 追加なので影響は加算的だが、念のため復帰点を確認）。
+
+### D-5. 母屋 edge 削除時の掃除順（O1-A 運用）
+RESTRICT のため、本番で母屋 `alo_edges` の特定 edge を消す必要が出たら、**lawtime 側を先に**片付ける：
+1. その `edge_id` の `unresolved_queue` 行を削除（あれば）。
+2. その `edge_id` の `citation_temporal` 行を削除。
+3. `temporal_eval_event` は append-only。**履歴は消さない**（必要なら別表へアーカイブしてから扱う。通常は残す）。
+4. 上記後に母屋 edge を削除。RESTRICT が外れて成功する。
+> この順を踏まない削除は RESTRICT で**意図的にブロック**される（smoke ガード「母屋 edge DELETE blocked by RESTRICT」で確認済）。
 
 ### D-2. apply（母屋ファースト順）
 production 接続で `apply_migration` を §3 の順（100 → 200 → 300）。途中失敗で停止。

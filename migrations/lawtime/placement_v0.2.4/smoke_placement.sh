@@ -71,5 +71,10 @@ guard "side-table two-tier CHECK (unknown branch w/ as_of_date)" \
    VALUES ((SELECT max(edge_id) FROM d1law_taikei.alo_edges),'unknown','2020-01-01','unchecked',false);"
 guard "side-table FK to 母屋 (no such edge)" \
   "INSERT INTO lawtime.citation_temporal(edge_id,as_of_basis,as_of_date,temporal_status) VALUES (999999,'explicit','2020-01-01','current');"
+guard "母屋 edge DELETE blocked by RESTRICT (O1 decision A)" \
+  "INSERT INTO d1law_taikei.alo_edges(src_uri,edge_type,dst_uri) VALUES ('alo:doc:jp:o1#1','cites_statute','alo:law:jp:minpo'); \
+   INSERT INTO lawtime.citation_temporal(edge_id,as_of_basis,as_of_date,temporal_status) \
+   VALUES ((SELECT max(edge_id) FROM d1law_taikei.alo_edges),'explicit','2020-01-01','current'); \
+   DELETE FROM d1law_taikei.alo_edges WHERE edge_id=(SELECT max(edge_id) FROM d1law_taikei.alo_edges);"
 guard "law_work URI CHECK" "INSERT INTO lawtime.law_work(work_uri) VALUES ('LW_minpo');"
 [ "$FAILED" = "0" ] && echo "== STRUCTURAL SMOKE OK (v0.2.4 placement) ==" || { echo "== STRUCTURAL SMOKE FAILED =="; exit 1; }
