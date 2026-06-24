@@ -65,3 +65,27 @@ PYTHONPATH=src python -m pytest -q
 | `test_registry.py` | append/load・md 決定性・後勝ち |
 | `test_cli.py` | status/next/lint/claim/complete/recover/registry の exit code と出力 |
 | `test_acceptance.py` | drain 一件ずつ / 中断→recover→畳む / 冪等リプレイ |
+
+## 自走ランナー（auto-runner）— 発注を無人化する（owner承認 2026-06-25）
+
+手動で `claim`/`complete` を回す代わりに、`run_worker.sh` が
+「wake → claim → 実行 → complete」を headless Claude Code で無人実行する。
+
+```bash
+# 単発：指定タスクを無人で完了まで（人手はこの1行だけ）
+bash tools/worker_queue/run_worker.sh W-20260625-001
+
+# 単発：優先度順に次の1件
+bash tools/worker_queue/run_worker.sh
+
+# 常駐（zero-touch）：15分ごとに自動ドレイン
+cp tools/worker_queue/com.alo.worker.plist ~/Library/LaunchAgents/
+/usr/bin/sed -i '' "s#__HOME__#$HOME#g" ~/Library/LaunchAgents/com.alo.worker.plist
+launchctl load ~/Library/LaunchAgents/com.alo.worker.plist
+```
+
+- 多重起動は `flock`(/tmp/alo_worker.lock) で防止＝長時間ジョブと共存。
+- 長時間の外部取得は nohup 化し、サイクルをまたいで冪等に前進。
+- ログ: `~/alo_worker_runner.log`。
+- `--dangerously-skip-permissions` で無人実行する（owner が設置する自走ワーカー前提）。
+  既定 forbidden は作業票側で効くため、危険操作は各 task の forbidden_actions が縛る。
