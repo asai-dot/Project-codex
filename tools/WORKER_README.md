@@ -23,8 +23,12 @@
 nohup ./tools/worker_watch.sh > ~/worker_watch.log 2>&1 &
 ```
 
-以後、Cloud Web(私)が `artifacts/periodical/.worker_trigger` に発注書パス(ORCH-*.md)を1行書いて push すると、
-watcher が拾って `wake_worker.sh` で自動起動し、トリガを消費する。→ Cloud Web からも「いつでも起こす」。
+以後、**Cloud Web も Mac Cloud Code も同じ統一コマンドで遠隔発注**できる:
+```
+./tools/trigger_worker.sh artifacts/periodical/ORCH-HIGHHOLD-INGEST_order_20260624.md
+```
+これがトリガ `.worker_trigger` を置いて push → watcher が 60s 以内に拾って `wake_worker.sh` で起動し、トリガを消費する。
+（Cloud Web は同等の操作＝トリガを commit/push。Mac で即時起動だけなら `wake_worker.sh` 直叩きでも可。）
 
 ## CONFIG を焼き込む（一度きり）
 `~/.zshrc` 等に:

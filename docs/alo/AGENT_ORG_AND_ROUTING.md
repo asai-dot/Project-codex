@@ -43,9 +43,10 @@ CLAUDE.md から参照され、各 Claude Code インスタンス起動時に読
 - **ローカルちゃんへは必ずチャンク分割**（コンテキスト/能力に収まる単位へ）。
 
 ## 3. 起動チャネル
-- 直接起動: Mac 上で各 `tools/*.sh` を実行（ワーカーは `wake_worker.sh`）。
-- 間接起動（Cloud Web→Mac）: `artifacts/periodical/.worker_trigger` に発注書パスを書いて push。
-  Mac で常駐する `tools/worker_watch.sh` が拾って自動起動。→ Cloud Web からも「いつでも起こす」が可能。
+- 直接起動: Mac 上で `tools/wake_worker.sh <発注書>` を実行（即時）。
+- 遠隔発注（Cloud Web / Mac Cloud Code 共通）: `tools/trigger_worker.sh <発注書>` で `.worker_trigger` を置いて push。
+  Mac で常駐する watcher（`tools/install_worker_watch.sh` で launchd 登録）が 60s 以内に拾って自動起動・トリガ消費。
+  → **Cloud Web からも Mac Cloud Code からも同じ手順でワーカーを起こせる。**
 
 ## 4. 未確定（CONFIG）
 - コーデックスの正確な起動コマンド（`tools/wake_codex.sh` の CONFIG 行）。
