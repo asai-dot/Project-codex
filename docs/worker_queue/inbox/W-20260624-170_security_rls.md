@@ -5,6 +5,7 @@ priority: P3
 owner: external_se
 created_at: 2026-06-24
 owner_decision: 2026-06-24 リスク受容(浅井)。anonキー保有は浅井/花岡/久保の3名のみで露出面が限定的なため owner が飲み込み済み・後日対応。本票は記録として保持し緊急扱い(P0/queued)から外す。再三指摘済みの既知事項。
+owner_decision_2: 2026-06-24(再確認) 司令塔がSupabase MCPで再点検しSupabase advisor の critical 判定(14テーブルRLS無効・anonキーで実PII全行読み書き可)を改めて提示。中身は実クライアント約8年分のChatwork通信(comms 343)。owner は再度「保留・受容継続」を選択。→ RLSは変更しない。本番ETL拡大(W-270でSF/Gmail/Box取込が始まると露出データが増える)前に再判断することを強く推奨。
 request: docs/workflow_model/REQUEST_v0.2.md
 poc: cross-cutting (security)
 goal: Supabase "asai-dot's Project"(nixfjmwxmgugiiuqfuym) の dynamic スキーマ全テーブルで RLS が無効=anonキーで依頼者秘匿通信を含む全行が読取/改変可能。RLS有効化＋適切なポリシー設計を行い、秘匿特権データを保護する。
