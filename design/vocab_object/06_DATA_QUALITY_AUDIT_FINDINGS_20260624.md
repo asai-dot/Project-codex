@@ -6,9 +6,12 @@
 
 ## 0. 結論（一行）
 
-**「きれい」とは言えない。** テキスト品質はまずまず（OCRゴミ ~0%・定義中央値健全）だが、
-**hub 統合を阻む構造的な穴が3つ**残っている。STATUS の「ゴールド確定可」は*見出し突合率*の話で、
-*フィールド健全性*は別問題だった。**まだ前処理が残っている**、が正しい現状認識。
+**初版**: 「きれい」とは言えない。生カウントで hub 統合を阻む穴が3つ見える(空定義712/読み欠落2583/短定義585)。
+
+**更新(§2 で hub構築に通した実測後)**: 3つのうち**2つは見かけの穴**だった。
+空定義712は非tier1の参照行(seed除外が正)で**真の穴は8 hubのみ**、読み欠落はdefmatchで1973救済済み。
+**残る実課題は短定義 anchor 約580 hub のみ** = 局所的な再OCR/末尾切れtriage。大規模前処理は不要。
+STATUS の「ゴールド確定可」は*見出し突合率*の話だったが、hub レベルの穴も実測したら局所的だった。
 
 ## 1. 実測（probe_quality.py / 2026-06-24）
 
@@ -25,28 +28,49 @@
 | 重複(見出し+読み) | 13 | 32 | △ 一部は homograph(正) |
 | 定義長 max | 606 | **3751** | ⚠ 学陽の一部が複数entryを飲み込み疑い |
 
-## 2. 二大穴と影響
+## 2. hub構築で実測した「穴の正体」(2026-06-24 追記 / probe_empty_def + run_2dict --quality-filter)
 
-1. **学陽 読み97%欠落(2583件)**: 読みキー突合が機能しない。→ defmatch(定義重なり)で救済実装済だが、
-   本質的には **読み補完(MeCab/形態素 + 辞書 yomi)** が望ましい。
-2. **有斐閣 空定義5.3%(712件)**: 定義が無い＝定義重なりで統合不能・anchor不適格。
-   → **defmatch でも読みキーでも繋げない真の穴**。再OCR or エントリ補完 or 「定義なし」明示フラグが要る。
+§1 の生カウント(空定義712 等)を **hub 構築に通すと、大半は構造的に吸収される**ことが判明した。
+監査のフィールド健全性カウントと、hub レベルで実際に残る穴は別物だった。
 
-## 3. これが計画に意味すること
+### 2.1 「空定義712」の正体 = ほぼ全部が非tier1の参照行(穴ではない)
 
-- **P2(schema deploy + gold load) の前に前処理フェーズが要る**（または「汚れを flag して load」を明示選択）。
-- 「ゴールド確定可」は**保留**。load 対象は「定義あり・読みあり or defmatch可」の clean subset に限るか、
-  穴(空定義712/読み欠落2583/短定義585)を `needs_reocr` / `needs_yomi` でタグ付けして区別する。
-- DD-DICT-008 の bedrock 物理ゲートとは別に、**入口品質ゲート(空定義/末尾切れを canonical anchor にしない)** が要る。
+`probe_empty_def.py` 実測: 空定義 term 723件の内訳
+- **bedrock+非tier1 (seed除外) = 712** ← 有斐閣の語義サブエントリ/参照行(tier2+)。
+  元から独立定義を持たない正常な行で、bedrock hub を seed しないのが**正しい挙動**。
+- bedrock+tier1 = 11 (うち 単独hub anchor=8 が**真の空定義の穴**, redundant吸収=3)
+- specialty = 0
 
-## 4. 推奨次手（前処理 P0.5）
+→ **空定義の真の穴は 8 hub のみ**。「712件の大穴」は生カウントの誤読だった(STATUSと同じ轍)。
+   build_hubs は非tier1を黙って落とすため `dropped_nontier1` を stats に計上した(no silent drop)。
 
-1. **問題 records を export して triage**（`probe_quality.py --export ~/dict_quality`）:
-   `yuhikaku_empty_def.jsonl`(712) / `yuhikaku_short_def.jsonl`(463) / `hourei_no_reading.jsonl`(2583) 等。
-2. 空定義712: 原典で定義の有無を確認 → 真に空なら参照語(see_also)か削除、OCR脱落なら再OCR(DD-DICT-006)。
-3. 学陽読み欠落: **MeCab 等で yomi 補完**（read-only 生成 → 人手スポット検証）。
-4. 短定義/長見出し/巨大定義: パース見直し（学陽 calibration の sense_sub 過剰吸収を再点検）。
-5. clean になってから P0 較正 → P1 → P2。
+### 2.2 「読み欠落2583」= defmatch で救済済み
+
+`run_2dict.py` 実測(16006 terms): 辞書またぎ統合 **1950** / 読み救済(defmatch) **1973** / homograph 46。
+学陽97%読み欠落は定義重なりで橋渡しされ cross-dict 統合が機能した(前回 辞書またぎ=0 → 解消)。
+本質的には読み補完(MeCab)が望ましいが、hub 統合自体は既に機能している。
+
+### 2.3 唯一の実残課題 = 短定義 anchor 約580 hub
+
+短定義(<8字)が anchor の hub: run_2dict(0.5-0.7) で **507** / probe(0.6) で **581**。
+末尾切れ/OCR脱落の疑い。**これが P0.5 前処理の唯一の実対象**。
+(507 vs 581 の差は triage 時に1本化。構造的結論は不変。)
+
+## 3. これが計画に意味すること(更新)
+
+- **大規模な前処理フェーズは不要**だった。空定義712は非tier1で穴ではなく、読み欠落はdefmatch救済済み。
+- P0.5 は **短定義 anchor 約580 hub の triage** に1本化できる(再OCR/末尾切れ救済)。
+- load 戦略: `--quality-filter` で短def/空def anchor に `needs_preprocessing` を付け、
+  clean subset を先行 load、フラグ付き約580+8は別レーンで triage(option 2 = 前進しつつ並行triage)。
+- DD-DICT-008 の bedrock 物理ゲートに加え、**入口品質ゲート(短定義を canonical anchor にしない)** を quality_filter が担保。
+
+## 4. 推奨次手（前処理 P0.5: 短定義に集中）
+
+1. **短定義 anchor hub を export して triage**（`probe_quality.py --export ~/dict_quality` の `*_short_def.jsonl`）。
+   約580件を「①末尾切れ(再OCR) / ②本当に短い正規定義(そのまま可) / ③parse結合ミス」に3分類。
+2. 空定義 anchor 8 hub: 原典確認 → see_also or 再OCR(少数なので人手で足りる)。
+3. (任意) 学陽読み欠落: MeCab で yomi 補完すると defmatch 依存を減らせる。優先度は低(統合は既に機能)。
+4. clean subset(needs_preprocessing 無し)で P1 → P2 を先行。短def triage は並行レーン。
 
 ## 5. ゲート
 
