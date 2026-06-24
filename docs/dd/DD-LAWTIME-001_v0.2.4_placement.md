@@ -1,6 +1,9 @@
 # DD-LAWTIME-001 v0.2.4 — Supabase 物理配置パッチ（C-option 確定形）
 
-> status: **candidate（design）**。production apply / Supabase materialize は **HOLD**（owner ratify 後）。
+> status: **RATIFIED（design 確定 / owner asai 2026-06-25）**。lawtime 配置の確定設計。
+> production apply / Supabase materialize は引き続き **HOLD**（別途 owner 明示 GO 待ち）。
+> 監査 ratify: RESULT `DDLAWTIME_V024_PLACEMENT_PASS_WITH_NOTES`（Box file_id 2306481004211, 2026-06-25）。
+> owner 決裁: [`DD-LAWTIME-001_v0.2.4_owner_ratify_packet.md`](./DD-LAWTIME-001_v0.2.4_owner_ratify_packet.md) §6。
 > 由来: 配置相談 RESULT `DDLAWTIME_PLACEMENT_PASS_WITH_NOTES`（Box file_id 2305621550301, 2026-06-24）。
 > supersedes（設計上）: v0.2.3a 再構成 base（`001_base_v0.2.2.sql` / `010_patch_v0.2.3.sql`）の
 > 独自 `lawtime.alo_edges` スタンドイン + `search_path` 追記 + text-id identity。

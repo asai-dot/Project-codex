@@ -1,3 +1,6 @@
+-- ⚠️ SUPERSEDED (2026-06-25, owner ratify) by migrations/lawtime/placement_v0.2.4/
+--   (C-option). Kept only as the v0.2.3a structural-smoke artifact. The ratified
+--   gates are the house-style v_gate_lawtime_*_v20260624 in placement_v0.2.4/200_gates.sql.
 -- DD-LAWTIME-001 v0.2.3 — production-DDL patch (transcribed from
 --   docs/dd/DD-LAWTIME-001_v0.2.3_production_patch.md). status: candidate.
 -- Closes v0.2.2 MODIFY_REQUIRED P0-1..P0-4 and adds the R-1 resolved-lawtime views

@@ -1,6 +1,10 @@
 # migrations/lawtime — DD-LAWTIME-001 base (v0.2.2) + production patch (v0.2.3 / 2026-06-23 notes 反映 = v0.2.3a)
 
-> **status: candidate。監査 ratify 済 / owner ratify 待ち。本番未 apply。**
+> **status: RATIFIED（design 確定 / owner asai 2026-06-25）。本番未 apply（HOLD 維持）。**
+>
+> ✅ **2026-06-25 owner ratify 済**: v0.2.4 C-option（`placement_v0.2.4/`）が lawtime 配置の**確定設計**。
+> 決裁: [`docs/dd/DD-LAWTIME-001_v0.2.4_owner_ratify_packet.md`](../../docs/dd/DD-LAWTIME-001_v0.2.4_owner_ratify_packet.md) §6。
+> 本番 apply / Supabase 本番反映 / branch 課金 dry-run / canonical / claim_support は **HOLD 継続**（別途 owner 明示 GO）。
 >
 > ✅ **2026-06-25 v0.2.4 監査 ratify 済**: RESULT `DDLAWTIME_V024_PLACEMENT_PASS_WITH_NOTES`
 > （Box file_id 2306481004211）。C-option 採用可・**materialize branch dry-run へ GO**（branch/local/fixture/smoke

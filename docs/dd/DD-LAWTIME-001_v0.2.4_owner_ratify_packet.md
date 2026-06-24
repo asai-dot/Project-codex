@@ -97,12 +97,14 @@ work_single_fallback_law_id / statute_revision_no_ambiguous_overlap / formal_sta
 
 ## 6. owner 決裁欄
 
-- [ ] **A. v0.2.4 C-option 設計を ratify する**（design 確定。HOLD ラインは §0 のまま維持）。
-- [ ] **B. 修正を要する**（指摘 → design スコープで対応し再提出）。
-- [ ] **C. 保留**（このまま据え置き）。
+- [x] **A. v0.2.4 C-option 設計を ratify する**（design 確定。HOLD ラインは §0 のまま維持）。 ✅ **owner asai 2026-06-25 ratify**
+- [ ] ~~B. 修正を要する~~
+- [ ] ~~C. 保留~~
 
-> ratify されても、§0 の HOLD（production apply / Supabase 本番反映 / branch 課金 dry-run / canonical /
-> claim_support / DDLAWREF / lawsubtrans 張り替え）には**進みません**。それぞれ別途あなたの明示 GO が要ります。
+> **RATIFIED（2026-06-25, owner asai）**: v0.2.4 C-option は lawtime 配置の**確定設計**。
+> ただし §0 の HOLD（production apply / Supabase 本番反映 / branch 課金 dry-run / canonical /
+> claim_support / DDLAWREF / lawsubtrans 張り替え）は**維持**。各々は別途 owner の明示 GO が要る。
 
 ---
-記録: 監査 RESULT 2306481004211 / 実装 commit `90f9d8f` / 証跡 commit は本パケット同梱コミット。
+記録: 監査 RESULT 2306481004211 / 実装 commit `90f9d8f` / 証跡 commit `ab22345` /
+owner ratify 2026-06-25（design 確定・HOLD 維持）。

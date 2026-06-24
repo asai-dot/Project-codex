@@ -1,3 +1,8 @@
+-- ⚠️ SUPERSEDED (2026-06-25, owner ratify). The ratified lawtime placement is the
+--   C-option in migrations/lawtime/placement_v0.2.4/ (see ../../docs/dd/
+--   DD-LAWTIME-001_v0.2.4_placement.md). This file's standalone lawtime.alo_edges
+--   standin + search_path append + text-id identity are RETIRED. Kept only as the
+--   v0.2.3a structural-smoke artifact; do NOT use for the canonical design.
 -- DD-LAWTIME-001 v0.2.2 — base law layer DDL (RECONSTRUCTED, candidate)
 -- ============================================================================
 -- ⚠️ RECONSTRUCTION NOTICE
