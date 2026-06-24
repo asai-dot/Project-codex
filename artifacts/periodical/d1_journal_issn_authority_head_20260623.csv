@@ -12,7 +12,7 @@ NBL,10040,issn,0287-9670,verified,ndl,
 労働法律旬報,5799,ncid,AN00327813,ncid_fallback,cinii,公開ISSN確認できず→NCID基底
 税理,5763,ncid,AN00080095,ncid_fallback,cinii,公開ISSN確認できず→NCID基底
 公正取引,5574,issn,0425-6247,verified,ndl,
-法曹,5505,,,pending,,「法曹」(日本法曹会)か法曹時報の短縮かを要判別
+法曹,5505,ncid,AN00327187,ncid_fallback,cinii,月刊「法曹」(法曹会)。法曹時報とは別誌
 税経通信,4754,ncid,AN00390536,correction,cinii,旧seed 0387-2866は法学論叢のISSN=誤付与
 戸籍時報,4471,issn,0912-1579,verified,kajo,戸籍(NCID AN00274615)とは別誌
 税務弘報,4344,issn,0913-5278,verified,ndl,
@@ -23,16 +23,16 @@ NBL,10040,issn,0287-9670,verified,ndl,
 金融・商事判例,3622,issn,0287-9956,verified,ndl,
 民商法雑誌,3494,issn,1342-5056,verified,ndl,
 自由と正義,3236,issn,0447-7480,verified,nichibenren/cinii,
-手形研究,3165,,,pending,,要ISSN確認
+手形研究,3165,issn,0494-9692,verified,cinii,継続誌=銀行法務21
 季刊労働法,2974,issn,0386-0620,verified,cinii,
 法律のひろば,2930,issn,0916-9806,verified,ndl,巻号運用(ym終端)
 登記研究,2726,ncid,AN00157564,verified,cinii,テイハン。登記インターネットとは別
 時の法令,2661,issn,0493-4067,verified,ndl,
 JCAジャーナル,2409,issn,0386-3042,verified,ndl/jcaa,
-民事研修,2053,,,pending,,要ISSN確認
+民事研修,2053,issn,0912-1587,verified,cinii/ndl,みんけん:民事研修1342-2766は改題後
 月報司法書士,2032,issn,0388-2578,verified,cinii/ndl,
-中央労働時報,2008,,,pending,,要ISSN確認
-季刊労働者の権利,1942,,,pending,,要ISSN確認
+中央労働時報,2008,issn,1342-5269,verified,ndl,別冊中央労働時報は別
+季刊労働者の権利,1942,issn,0286-0821,verified,ndl/cinii,日本労働弁護団
 法曹時報,,issn,0023-9453,verified,cinii/ndl,評釈2位。最高裁調査官解説
 法学協会雑誌,,issn,0022-6815,verified,cinii/tokyo-u,評釈4位。東大法学部紀要
 労働判例,,issn,0387-1878,verified,cinii,労働判例ジャーナル(別誌)と区別
@@ -46,9 +46,6 @@ law&technology,,issn,1346-812X,verified,ndl,
 ビジネスガイド,,ncid,AN0026915X,correction,cinii,旧seed 0387-7035は未登録の誤付与
 businesslawjournal,,issn,1882-7640,verified,existing_canonical,
 判例時報,,issn,0438-5888,verified,ndl,
-手形研究,3165,issn,0494-9692,verified,cinii,継続誌=銀行法務21
-民事研修,2053,issn,0912-1587,verified,cinii/ndl,みんけん:民事研修1342-2766は改題後
-中央労働時報,2008,issn,1342-5269,verified,ndl,別冊中央労働時報は別
 日本労働研究雑誌,1521,issn,0916-3808,verified,jil/ndl,
 自治研究,1388,issn,0287-5209,verified,ndl,第一法規
 法と民主主義,1198,issn,0385-034X,verified,cinii/ndl,日本民主法律家協会
@@ -57,13 +54,10 @@ businesslawjournal,,issn,1882-7640,verified,existing_canonical,
 損害保険研究,1035,issn,0287-6337,verified,jstage,print(online 2434-060X)
 実践成年後見,988,issn,1347-0108,verified,ndl,民事法研究会
 労働経済判例速報,1146,ncid,AN00327835,correction,cinii,旧seedで誤付与是正済(registry)。ISSN無→NCID
-法曹,5505,ncid,AN00327187,ncid_fallback,cinii,月刊「法曹」(法曹会)。法曹時報とは別誌
 速報判例解説,1786,ncid,AA12241495,ncid_fallback,cinii,法学セミナー増刊(新・判例解説Watch)。増刊系
 地方税,1599,ncid,AN00126094,ncid_fallback,cinii,地方財務協会。公開ISSN確認できず
 民事月報,1177,ncid,AN00327733,ncid_fallback,cinii,法務省民事局。公開ISSN確認できず
-判例評論,5858,issn,,pending,,判例時報の評釈別冊。自前ISSN/0438-5888共用かを要確認
 銀行法務,3827,issn,,pending,,銀行法務21(1341-1179)との同一性を要確認(数字破壊回避)
-季刊労働者の権利,1942,issn,0286-0821,verified,ndl/cinii,日本労働弁護団
 法令解説資料総覧,1303,issn,0387-3617,verified,ndl/cinii,第一法規
 月刊民事法情報,1248,issn,0914-417X,verified,ndl,民事法情報センター(1993廃刊)
 JICPAジャーナル,1185,issn,0915-2857,verified,ndl/cinii,会計監査ジャーナルへ改題前。日本公認会計士協会
@@ -172,3 +166,10 @@ TKC税研情報,307,issn,1347-1643,verified,ndl/cinii,TKC税務研究所
 産大法学(京都産業大学),524,issn,0286-3782,verified,cinii/ndl,京都産業大学法学会(NCID AN00099344)
 法学論叢(京都大学),524,issn,0387-2866,verified,cinii/ndl,京都大学法学会。←税経通信に誤付与されていた番号の真の持ち主
 広島法学(広島大学),507,issn,0386-5010,verified,cinii/ndl,広島大学法学会。≠広島法科大学院論集(1880-1897)
+税法学,519,issn,0494-8262,verified,cinii/ndl,日本税法学会/清文社(NCID AN00129784)
+神戸学院法学,445,issn,0386-2046,verified,cinii/ndl,神戸学院大学法学会(NCID AN00085190)。≠神戸法学雑誌
+東洋法学,406,issn,0564-0245,verified,cinii/ndl,東洋大学法学会(NCID AN00171033)
+福岡大学法学論叢,386,issn,0429-8411,verified,cinii/ndl,福岡大学(NCID AN00216550)
+南山法学,362,issn,0387-1592,verified,cinii/ndl,南山大学法学会(NCID AN00181900)
+上智法学論集,356,issn,0447-7588,verified,cinii/ndl,上智大学法学会(NCID AN00115768)
+大阪市立大学法学雑誌,441,ncid,AN00029724,ncid_fallback,cinii/ndl,大阪市立大学法学会。ISSN未surface→NCID基底。後日ISSN差替え可
