@@ -1,6 +1,7 @@
 # DD-XDOC-001 v0.9 — faceted cross-document comparison & alignment（round8 B19〜B23・claim完全性/support scope拘束 閉鎖）candidate
 
 > **id**: DD-XDOC-001 / **version**: candidate v0.9 / **supersedes**: v0.8
+> **lifecycle**: **accepted**（owner 浅井 ratify 2026-06-24、設計のみ）。GPT Pro 監査 `DDXDOC_PASS_WITH_NOTES`（RESULT Box 2303550755480・B19〜B23 設計レベル閉鎖・受入試験6/11 十分）。実装/DDL/DB/mint/Box mutation/OCR/embedding/production pair generation・clustering/昇格/claim-support は**別ゲートで HOLD**（accepted≠deployed）。
 > **owner**: 浅井 / **author**: 番頭(リモートClaude) / **date**: 2026-06-23 JST
 > **gate**: 設計のみ candidate。DDL/DB/Box mutation/mint/学習/embedding/production pair generation/clustering/FRBR・DD-LITID・DD-LITLINK 昇格/block_ref current 昇格/evidence・legal claim support は **HOLD**。
 > **改訂理由（v0.8→v0.9）**: GPT Pro 独立再監査 `DDXDOC_MODIFY_REQUIRED`（RESULT Box 2303196102767・tests 6/11 FAIL）の blocking B19〜B23 + non-blocking 5点を反映。新規レイヤ追加なし。claim member selector 型付き・coverage scope binding・support coverage scope ref・support policy eligibility/non-empty・support edge revision。
@@ -256,4 +257,4 @@ claim-member-undercount（both+1member・B19）／wrong-member-scope・wrong-sid
 ## 14. GO / HOLD / loop_state
 - **GO**：独立 DD 維持／v0.9 限定 patch／上記 negative fixtures／read-only validator 試作。
 - **HOLD**：v0.9 ratify／DDL/DB/mint/Box mutation／OCR/embedding/training／production pair generation・clustering／FRBR・DD-LITID・DD-LITLINK・block_ref current 昇格／evidence・legal claim support。
-- loop_state = **patched（v0.9 B19〜B23・claim完全性/support scope拘束 閉鎖）→ 再投函（再監査）候補**。
+- loop_state = **accepted（owner ratify 2026-06-24・GPT PASS_WITH_NOTES）。設計三部作 LAYOUT/XMODAL/XDOC 完成**。実装は Phase 1 以降・別ゲート。
