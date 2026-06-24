@@ -475,5 +475,25 @@ class TestDefrag(unittest.TestCase):
         self.assertEqual(len(cleaned), 2)  # 両方そのまま
 
 
+class TestShortDefTriage(unittest.TestCase):
+    def setUp(self):
+        import short_def_triage as sdt
+        self.sdt = sdt
+
+    def test_valid_short_crossref(self):
+        for d in ("相続に同じ。", "遺言の略。", "占有をいう。", "民法を見よ"):
+            self.assertEqual(self.sdt.classify_short(d)[0], "valid_short", d)
+
+    def test_truncation_particle_or_no_terminator(self):
+        for d in ("賃金の，", "当該行為を", "物を支配する"):
+            self.assertEqual(self.sdt.classify_short(d)[0], "truncation", d)
+
+    def test_other_complete_short(self):
+        self.assertEqual(self.sdt.classify_short("社団法人。")[0], "other")
+
+    def test_empty(self):
+        self.assertEqual(self.sdt.classify_short("")[0], "empty")
+
+
 if __name__ == "__main__":
     unittest.main()
