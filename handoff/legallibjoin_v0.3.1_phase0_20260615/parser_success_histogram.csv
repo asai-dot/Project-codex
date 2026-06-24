@@ -1,0 +1,16 @@
+content_type,node_bucket,book_count
+<unset>,empty,1
+book,empty,1
+book,1-10,32
+book,11-50,274
+book,51+,2453
+journal,1-10,59
+journal,11-50,291
+journal,51+,72
+material,1-10,26
+material,11-50,105
+material,51+,83
+pubcom,empty,256
+pubcom,1-10,224
+pubcom,11-50,140
+pubcom,51+,35

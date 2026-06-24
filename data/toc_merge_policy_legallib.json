@@ -1,0 +1,44 @@
+{
+  "_comment": "Fork 1: legallib 接合用に拡張した toc_source 優先順位ポリシー。既存 app/data/toc_merge_policy.json を踏襲しつつ ndl / legallib を追加。legallib は rank ベースの一般置換ではなく simple-only ゲートで上書きする (検収: 非simple 劣化0 / 誤マージ0)。",
+  "priority": [
+    "manual",
+    "ndl",
+    "publisher",
+    "toc_pdf",
+    "legallib",
+    "openbd",
+    "books_or_jp",
+    "bencom",
+    "codex_ocr",
+    "unknown"
+  ],
+  "confidence": {
+    "manual": 1.0,
+    "ndl": 0.97,
+    "publisher": 0.95,
+    "toc_pdf": 0.93,
+    "legallib": 0.9,
+    "openbd": 0.9,
+    "books_or_jp": 0.85,
+    "bencom": 0.8,
+    "codex_ocr": 0.6,
+    "unknown": 0.5
+  },
+  "protected_sources": ["manual", "ndl", "publisher", "toc_pdf"],
+  "legallib": {
+    "source": "legallib",
+    "status": "legallib",
+    "overwrite_gate": "simple_only",
+    "rules": {
+      "overwrite_only_if_all_simple": true,
+      "never_overwrite_protected_sources": true,
+      "skip_if_existing_already_legallib": true
+    }
+  },
+  "rules": {
+    "replace_if_higher_source": true,
+    "keep_manual_overrides": true,
+    "merge_same_source": "append_missing_only",
+    "page_numbers_prefer": "with_pages"
+  }
+}

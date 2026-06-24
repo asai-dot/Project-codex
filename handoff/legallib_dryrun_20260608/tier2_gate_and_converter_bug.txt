@@ -1,0 +1,20 @@
+=== Tier2-A: policy ゲート (実 toc の status/source のみで判定) ===
+  9784130311908(openbd,24,flat): tool=overwrite_simple  expected=overwrite_simple  OK
+  9784641046429(bencom,104,nested): tool=overwrite_simple  expected=route_human_review  ✗DIVERGE
+
+=== Tier2-B: converter を実 legallib(115441, nested children) に適用 ===
+  入力: トップレベル2ノード / ファイルの toc_node_count=12 (子含む)
+  現状 convert 出力ノード数: 12  ← 本来12であるべき
+  → children を再帰していないため子ノード 0 件が欠落
+     l1 path=c01 t=別紙(1)－１
+     l2 path=c01.01 t=Ⅰ．募集又は売出しの判定...
+     l2 path=c01.02 t=Ⅱ．特定目的会社に係る...
+     l2 path=c01.03 t=Ⅲ．募集又は売出しに係る...
+     l2 path=c01.04 t=Ⅳ．公開買付届出書の...
+     l1 path=c02 t=別紙(2)－１
+     l2 path=c02.01 t=内部統制府令
+     l3 path=c02.01.01 t=▼総論
+     l3 path=c02.01.02 t=▼内部統制府令第６条...
+     l3 path=c02.01.03 t=▼第６条第６項第１号
+     l2 path=c02.02 t=内部統制府令ガイドライン
+     l3 path=c02.02.01 t=▼１－１

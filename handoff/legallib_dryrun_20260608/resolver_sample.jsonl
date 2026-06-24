@@ -1,0 +1,43 @@
+{"legallib_book_id": "412000", "isbn": "9784324114926", "bucket": "auto_accept", "confidence": 0.881, "_expected_action": "create"}
+{"legallib_book_id": "263015", "isbn": "9784803724950", "bucket": "auto_accept", "confidence": 0.953, "_expected_action": "create"}
+{"legallib_book_id": "208733", "isbn": "9784788289796", "bucket": "auto_accept", "confidence": 0.945, "_expected_action": "create"}
+{"legallib_book_id": "463709", "isbn": "9784766430745", "bucket": "auto_accept", "confidence": 0.975, "_expected_action": "create"}
+{"legallib_book_id": "315803", "isbn": "9784906929931", "bucket": "auto_accept", "confidence": 0.862, "_expected_action": "create"}
+{"legallib_book_id": "296547", "isbn": "9784803700138", "bucket": "auto_accept", "confidence": 0.909, "_expected_action": "create"}
+{"legallib_book_id": "138930", "isbn": "9784130311908", "bucket": "auto_accept", "confidence": 0.934, "_expected_action": "overwrite_simple", "_existing_primary_source": "openbd"}
+{"legallib_book_id": "208152", "isbn": "9784641243026", "bucket": "auto_accept", "confidence": 0.929, "_expected_action": "overwrite_simple", "_existing_primary_source": "openbd"}
+{"legallib_book_id": "257205", "isbn": "9784797282665", "bucket": "auto_accept", "confidence": 0.95, "_expected_action": "overwrite_simple", "_existing_primary_source": "openbd"}
+{"legallib_book_id": "262517", "isbn": "9784797255676", "bucket": "auto_accept", "confidence": 0.948, "_expected_action": "overwrite_simple", "_existing_primary_source": "openbd"}
+{"legallib_book_id": "346015", "isbn": "9784589042873", "bucket": "auto_accept", "confidence": 0.909, "_expected_action": "overwrite_simple", "_existing_primary_source": "openbd"}
+{"legallib_book_id": "387100", "isbn": "9784539730218", "bucket": "auto_accept", "confidence": 0.898, "_expected_action": "overwrite_simple", "_existing_primary_source": "books_or_jp"}
+{"legallib_book_id": "5632", "isbn": "9784817844057", "bucket": "auto_accept", "confidence": 0.872, "_expected_action": "overwrite_simple", "_existing_primary_source": "bencom"}
+{"legallib_book_id": "319621", "isbn": "9784539727447", "bucket": "auto_accept", "confidence": 0.984, "_expected_action": "overwrite_simple", "_existing_primary_source": "books_or_jp"}
+{"legallib_book_id": "110627", "isbn": "9784897613925", "bucket": "auto_accept", "confidence": 0.897, "_expected_action": "overwrite_simple", "_existing_primary_source": "bencom"}
+{"legallib_book_id": "236870", "isbn": "9784384049183", "bucket": "auto_accept", "confidence": 0.863, "_expected_action": "overwrite_simple", "_existing_primary_source": "books_or_jp"}
+{"legallib_book_id": "380875", "isbn": "9784865563443", "bucket": "auto_accept", "confidence": 0.864, "_expected_action": "overwrite_simple", "_existing_primary_source": "bencom"}
+{"legallib_book_id": "363694", "isbn": "9784417015222", "bucket": "auto_accept", "confidence": 0.867, "_expected_action": "route_human_review"}
+{"legallib_book_id": "355477", "isbn": "9784865564877", "bucket": "auto_accept", "confidence": 0.979, "_expected_action": "route_human_review"}
+{"legallib_book_id": "180845", "isbn": "9784535521063", "bucket": "auto_accept", "confidence": 0.861, "_expected_action": "route_human_review"}
+{"legallib_book_id": "451674", "isbn": "9784641046429", "bucket": "auto_accept", "confidence": 0.891, "_expected_action": "route_human_review"}
+{"legallib_book_id": "58835", "isbn": "9784788284821", "bucket": "auto_accept", "confidence": 0.938, "_expected_action": "route_human_review"}
+{"legallib_book_id": "355062", "isbn": "", "bucket": "auto_accept", "confidence": 0.856, "_expected_action": "defer_staging"}
+{"legallib_book_id": "72945", "isbn": "", "bucket": "auto_accept", "confidence": 0.882, "_expected_action": "defer_staging"}
+{"legallib_book_id": "250067", "isbn": "", "bucket": "auto_accept", "confidence": 0.891, "_expected_action": "defer_staging"}
+{"legallib_book_id": "185908", "isbn": "", "bucket": "auto_accept", "confidence": 0.861, "_expected_action": "defer_staging"}
+{"legallib_book_id": "292812", "isbn": "", "bucket": "auto_accept", "confidence": 0.903, "_expected_action": "blocked_bad_isbn"}
+{"legallib_book_id": "210974", "isbn": "", "bucket": "auto_accept", "confidence": 0.913, "_expected_action": "blocked_bad_isbn"}
+{"legallib_book_id": "353568", "isbn": "9784539726372", "bucket": "human_review", "confidence": 0.677, "_expected_action": "review_queue"}
+{"legallib_book_id": "239028", "isbn": "9784535515048", "bucket": "human_review", "confidence": 0.683, "_expected_action": "review_queue"}
+{"legallib_book_id": "354730", "isbn": "9784539729960", "bucket": "human_review", "confidence": 0.68, "_expected_action": "review_queue"}
+{"legallib_book_id": "349999", "isbn": "9784897614311", "bucket": "human_review", "confidence": 0.564, "_expected_action": "review_queue"}
+{"legallib_book_id": "274386", "isbn": "9784766429183", "bucket": "human_review", "confidence": 0.671, "_expected_action": "review_queue"}
+{"legallib_book_id": "5051", "isbn": "9784817843036", "bucket": "defer_new", "confidence": 0.857, "_expected_action": "defer_staging"}
+{"legallib_book_id": "262766", "isbn": "", "bucket": "defer_new", "confidence": 0.948, "_expected_action": "defer_staging"}
+{"legallib_book_id": "238779", "isbn": "", "bucket": "defer_new", "confidence": 0.896, "_expected_action": "defer_staging"}
+{"legallib_book_id": "426525", "isbn": "", "bucket": "defer_new", "confidence": 0.884, "_expected_action": "defer_staging"}
+{"legallib_book_id": "117516", "isbn": "9784000000007", "bucket": "auto_accept", "confidence": 0.95, "_expected_action": "skip_idempotent"}
+{"legallib_book_id": "115441", "isbn": "9789999990001", "bucket": "auto_accept", "confidence": 0.91, "_expected_action": "blocked_missing_isbn"}
+{"legallib_book_id": "321779", "isbn": "9784326349999", "bucket": "auto_accept", "confidence": 0.92, "_expected_action": "blocked_ambiguous_isbn"}
+{"legallib_book_id": "250565", "isbn": "9784326349999", "bucket": "auto_accept", "confidence": 0.9, "_expected_action": "blocked_ambiguous_isbn"}
+{"legallib_book_id": "224420", "isbn": "9784326341111", "bucket": "auto_accept", "confidence": 0.93, "_expected_action": "blocked_ambiguous_book"}
+{"legallib_book_id": "224420", "isbn": "9784326342222", "bucket": "auto_accept", "confidence": 0.93, "_expected_action": "blocked_ambiguous_book"}
