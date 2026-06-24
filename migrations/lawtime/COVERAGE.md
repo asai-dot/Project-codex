@@ -9,6 +9,12 @@
 正本との差分を潰せない。監査の HOLD（production apply / canonical ratify / claim_support serving）は
 本表 + 追加 gate（N-1/N-2/N-3/N-4）が閉じ、owner が ratify するまで維持する。
 
+> ⚠️ **2026-06-24 訂正**: 本表は当初「`alo_edges` はどこにも未実体化のスタンドイン」を前提にしていたが、
+> 実際は **asai-dot's Project の `d1law_taikei` に本物の `alo_edges`（URI-edge: src_uri/edge_type/dst_uri 等）が存在**する。
+> よって §1 の `alo_edges` 行（および src_id/dst_id 等の R 列）は、**実 `d1law_taikei.alo_edges` との衝突・統合**として
+> 読み替えること。schema 配置は再相談中（`docs/dd/20260624_lawtime_supabase_placement_DDLAWTIME_REQUEST.md`）。
+> P/L/R 分類・enum 規則（§2/§3）自体は配置に依らず有効。
+
 凡例（provenance）:
 - **P** = `docs/dd/DD-LAWTIME-001_v0.2.3_production_patch.md`（承認済 patch doc）が明示的に参照する列。確度高。
 - **L** = `migrations/lawsubtrans/*` が消費する列（DD-LAWSUBTRANS 接続点）。確度高。
