@@ -97,9 +97,8 @@ processes:
     next_state: WF-01
     evidence: [DS-021_HP_form_access, EV-inflow]
     automation_candidate: 自然発生データから流入経路候補
-    confirm_status: provisional
-    pending: [owner_grill]   # G-12 流入経路必須化
-    source: Phase0 §1 WF-00
+    confirm_status: confirmed   # owner裁定 G-12/D-030（W-181）流入経路=必須〜準必須で確定
+    source: Phase0 §1 WF-00; G-12; D-030
     decomposition:
       Trigger: [TR-inflow]
       Actor: [ACT-lawyer, ACT-clerk]
@@ -179,7 +178,7 @@ processes:
     evidence: [EV-005_conflict_check_requested, EV-006_conflict_check_completed]
     automation_candidate: 名称候補生成・既存関係グラフ検索
     confirm_status: provisional
-    pending: [owner_grill, staff_interview]   # G-13 最小データ要件 / 中森: 運用Q-038/046/047
+    pending: [staff_interview]   # G-13(最小データ=相手方・関係者氏名を構造化)はowner裁定済→owner_grill除去。運用粒度Q-038/046/047は中森聴取依存で残置
     human_gate: HG-01
     source: Phase0 §1 WF-03; G-13
     decomposition:
@@ -206,9 +205,8 @@ processes:
     next_state: WF-05
     evidence: [EV-007_triage_completed]
     automation_candidate: 期限・分野・不適合候補抽出
-    confirm_status: provisional
-    pending: [owner_grill]
-    source: Phase0 §1 WF-04
+    confirm_status: confirmed   # owner裁定 G-07/D-008（W-181）PoC1=相談〜受任に受入トリアージを含むで確定
+    source: Phase0 §1 WF-04; G-07; D-008
     decomposition:
       Trigger: [TR-conflict-pass]
       Actor: [ACT-lawyer]
@@ -234,7 +232,7 @@ processes:
     evidence: [EV-008_consultation_date_options_sent, EV-009_consultation_scheduled]
     automation_candidate: 日程候補生成・確定検知
     confirm_status: provisional
-    pending: [sf_survey, owner_grill]   # 2-A Q-062
+    pending: [sf_survey]   # owner_grill除去: 2-A Q-062は20問グリル外の後続キュー論点でowner裁定なし。日程フィールドのSF実査依存は残置
     source: Phase0 §1 WF-05
     decomposition:
       Trigger: [TR-consult-go]
@@ -287,9 +285,8 @@ processes:
     next_state: WF-08
     evidence: [EV-015_consultation_started, EV-016_consultation_completed, EV-017_advice_recorded]
     automation_candidate: 参加者・要点・アクション抽出
-    confirm_status: provisional
-    pending: [owner_grill]   # G-14 相談票正本形態
-    source: Phase0 §1 WF-07
+    confirm_status: confirmed   # owner裁定 G-14/D-026（W-181）相談票=専用様式なし→Notta+GoogleDoc+Calendar合成で束ねる(Box-U1解消)
+    source: Phase0 §1 WF-07; G-14; D-026
     decomposition:
       Trigger: [TR-appointment-due]
       Actor: [ACT-lawyer]
@@ -314,9 +311,8 @@ processes:
     next_state: WF-09
     evidence: [EV-018_followup_question_received, EV-019_post_consult_decision_recorded, Ledger:trace2]
     automation_candidate: 論点・不足・次行動候補
-    confirm_status: provisional
-    pending: [owner_grill]   # G-12 失注理由必須化
-    source: Phase0 §1 WF-08; Ledger trace2(失注)
+    confirm_status: confirmed   # owner裁定 G-12/D-030（W-181）失注理由=enum選択式(①当方お断り②先方失注/離脱③受任に至らず④その他)で確定。「お断り」と「失注」を区別
+    source: Phase0 §1 WF-08; Ledger trace2(失注); G-12; D-030
     decomposition:
       Trigger: [TR-consult-complete]
       Actor: [ACT-lawyer]
@@ -395,10 +391,9 @@ processes:
     next_state: WF-12
     evidence: [EV-025_proposal_revision_requested, EV-026_proposal_accepted, EV-028_engagement_signed, Ledger:trace1:0103-0104]
     automation_candidate: 受諾/署名検知・差分比較
-    confirm_status: provisional
-    pending: [owner_grill]   # G-06 受任成立=人間必須ゲート
-    human_gate: HG-02
-    source: Phase0 §1 WF-11; Ledger trace1:0103(accept)/0104(signed)
+    confirm_status: confirmed   # owner裁定 G-06/D-023（W-181）受任成立(HG-02)は人間必須ゲートでなくoptional(置けるが必須でない)。受任=複数シグナル合成しdeclaredと突合(G-11/D-028)
+    human_gate: HG-02   # optional gate（マスト3点外。human_gates.gates HG-02 参照）
+    source: Phase0 §1 WF-11; Ledger trace1:0103(accept)/0104(signed); G-06; D-023
     decomposition:
       Trigger: [TR-client-response]
       Actor: [ACT-lawyer, ACT-clerk]
@@ -505,9 +500,8 @@ processes:
     next_state: WF-16
     evidence: [EV-038_work_item_created, EV-039_work_item_started, EV-041_work_item_completed, EV-042_work_session_recorded, EV-043_draft_created]
     automation_candidate: 作業セッション自動束ね
-    confirm_status: provisional
-    pending: [owner_grill]   # G-08 WorkItem必須5項目
-    source: Phase0 §1 WF-15
+    confirm_status: confirmed   # owner裁定 G-08/D-011/D-025（W-181）WorkItem必須=担当/期限/案件/次アクションの4点+Chatworkタスク対応(DS-023)で確定
+    source: Phase0 §1 WF-15; G-08; D-011
     decomposition:
       Trigger: [TR-work-spawned]
       Actor: [ACT-lawyer, ACT-clerk]
@@ -532,9 +526,8 @@ processes:
     next_state: WF-17
     evidence: [EV-044_internal_review_requested, EV-045_internal_review_completed]
     automation_candidate: 差分・チェック候補
-    confirm_status: provisional
-    pending: [owner_grill]
-    source: Phase0 §1 WF-16
+    confirm_status: confirmed   # owner裁定 G-06/D-023（W-181）人間必須ゲートはマスト3点のみ。内部レビュー承認はマスト外(対外文書最終送付HG-04が品質マスト)
+    source: Phase0 §1 WF-16; G-06; D-023
     decomposition:
       Trigger: [TR-draft-done]
       Actor: [ACT-reviewer]
@@ -560,9 +553,9 @@ processes:
     evidence: [EV-046_client_review_requested, EV-047_client_approval_received, EV-048_deliverable_sent, EV-049_court_filing_submitted, EV-050_delivery_acknowledged, Ledger:trace3:deliverable_sent]
     automation_candidate: 送付証跡の自動取得
     confirm_status: provisional
-    pending: [owner_grill, sf_survey]   # G-06 対外成果物最終送付=人間必須 / G-11 到達正本所在
-    human_gate: HG-04
-    source: Phase0 §1 WF-17; Box実査(5)(9); Ledger trace3
+    pending: [sf_survey]   # owner_grill除去: G-06(対外成果物最終送付=人間必須HG-04)・G-11(到達正本所在=SF正/Box最強)はowner裁定済(D-023/D-028)。到達正本の現行SFフィールド有無はSF実査依存で残置
+    human_gate: HG-04   # マスト②対外文書の最終送付(G-06/D-023 confirmed)
+    source: Phase0 §1 WF-17; Box実査(5)(9); Ledger trace3; G-06; G-11; D-023
     decomposition:
       Trigger: [TR-send-approved]
       Actor: [ACT-lawyer, ACT-clerk]
