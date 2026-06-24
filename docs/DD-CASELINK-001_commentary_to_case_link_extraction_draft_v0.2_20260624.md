@@ -105,7 +105,10 @@ v0.2 で語彙を正典に合わせた結果、正典側の改修は **最小限
 - 精度 gold = **スキーマ＋scorer done**: `case_link_eval.py` + `case_link_gold_template.jsonl`(評釈/正式評釈/論文)。edge_type 別 precision・stance 正解率・route 分布を出す。目標 `evaluates/review_chain=0.97`(誤リンク最有害)・`compares=0.90`・stance=0.85(`case_vocab`)。合成 gold 上は自己無矛盾(precision 1.0)＝**実数は実 corpus=Mac CC**。
 - consistency_gate = **恒久化済**: `test_case_consistency.py` に「`case_link_map` emit・link gold・precision target keys ⊆ `case_vocab`(=35_link_layer ミラー)」を追加。**PASS**。本文採掘語彙のドリフトを CI で停止。
 - corpus-level = **Mac CC**: D1-LIC 5,475 を本文採掘し、masthead 対象以外の本文 mention を vendor_implicit review として抽出。`evaluates` 精度を実 gold で測る。残るは citation-span 検出器(正規表現＋符号正規化の実体)のみ。
-- independent_meaning_audit = 未了（DDCASE ゲート）。owner_approval = 未了。
+- independent_meaning_audit = **DDCASELINK_PASS_WITH_NOTES**（2026-06-25 / GPT Pro / result Box `2306671864233`, req `2306670304557`）。
+  - **GO**: v0.2 設計 ratify / fixture tests / read-only corpus dry run。**HOLD**: production 変更・自動 promotion。
+  - **Notes（3件・いずれも v0.2 で充足済＝追認）**: ①既存の正典リンク語彙を使う(→§1 crosswalk 済) ②本文由来候補は review に留める(→§2 vendor_implicit→review 済) ③同旨/反対は新 link type でなく qualifier(→§7-1 stance 列・新 edge_type 不要 済)。**v0.3 改修は不要**。
+- owner_approval = **未了**（PASS_WITH_NOTES につき 3行ダイジェストで浅井先生 ratify 待ち）。
 
 ### 8.1 写像決定表（`case_link_map.map_mention` の実装則）
 | article_type | source | role | resolved | → edge_type | stance | assertion_mode | route |
