@@ -120,6 +120,8 @@ def main(argv=None) -> int:
     ap.add_argument("--pooler-host", default="aws-0-ap-northeast-1.pooler.supabase.com",
                     help="pooler host (ダッシュボードの値と違えば指定)")
     ap.add_argument("--port", type=int, default=5432, help="接続ポート(pooler session=5432)")
+    ap.add_argument("--pw-file", default=None,
+                    help="DBパスワードをこのファイルから読む(getpass貼付が不安定な端末向け)")
     ap.add_argument("--dry-run", action="store_true", help="接続せず件数のみ")
     a = ap.parse_args(argv)
 
@@ -144,7 +146,11 @@ def main(argv=None) -> int:
         else:
             host, user = a.host, "postgres"
         print(f"[load] SUPABASE_DB_URL 未設定。user={user} host={host}:{a.port} へ接続します。")
-        pw = getpass.getpass("alo-connect DB password (入力は非表示): ").strip()
+        if a.pw_file:
+            pw = Path(a.pw_file).expanduser().read_text(encoding="utf-8").strip()
+            print(f"[load] パスワードを {a.pw_file} から読み込み(長さ{len(pw)})。")
+        else:
+            pw = getpass.getpass("alo-connect DB password (入力は非表示): ").strip()
         if not pw:
             print("ERROR: パスワードが空です。", file=sys.stderr)
             return 2
