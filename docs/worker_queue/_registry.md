@@ -7,3 +7,4 @@ append-only。SoT はフォルダ位置と RESULT ラベル。本表は派生控
 | --- | --- | --- | --- | --- | --- |
 | 2026-06-24T13:25:25+09:00 | W-20260624-101 | P0 | done | WORKER_PASS | GPT 再監査 → ratify |
 | 2026-06-24T13:25:25+09:00 | W-20260624-120 | P0 | done | WORKER_PASS | GPT 再監査 → ratify |
+| 2026-06-24T16:28:57+09:00 | W-20260624-102 | P0 | done | WORKER_PASS | GPT 再監査 → ratify |
