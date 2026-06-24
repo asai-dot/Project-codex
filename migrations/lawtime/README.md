@@ -1,6 +1,12 @@
 # migrations/lawtime — DD-LAWTIME-001 base (v0.2.2) + production patch (v0.2.3 / 2026-06-23 notes 反映 = v0.2.3a)
 
-> **status: candidate。監査 + owner ratify が前提。本番未 apply。**
+> **status: candidate。監査 ratify 済 / owner ratify 待ち。本番未 apply。**
+>
+> ✅ **2026-06-25 v0.2.4 監査 ratify 済**: RESULT `DDLAWTIME_V024_PLACEMENT_PASS_WITH_NOTES`
+> （Box file_id 2306481004211）。C-option 採用可・**materialize branch dry-run へ GO**（branch/local/fixture/smoke
+> 範囲限定）。本番 apply / Supabase 本番反映 / canonical / claim_support は **HOLD 継続**。
+> 追加 Notes 3 件（lawref 分離 / CASCADE 削除運用 / **C-INT-1,2 を materialize 必須受入条件**）は
+> `docs/dd/DD-LAWTIME-001_v0.2.4_placement.md` §11 に反映。
 >
 > ✅ **2026-06-24 配置 ratify 済 → 確定形は v0.2.4（C-option）。**
 > 配置相談の RESULT `DDLAWTIME_PLACEMENT_PASS_WITH_NOTES`（Box file_id 2305621550301）で
