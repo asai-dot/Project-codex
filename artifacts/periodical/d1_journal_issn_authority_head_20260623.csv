@@ -172,4 +172,5 @@ TKC税研情報,307,issn,1347-1643,verified,ndl/cinii,TKC税務研究所
 福岡大学法学論叢,386,issn,0429-8411,verified,cinii/ndl,福岡大学(NCID AN00216550)
 南山法学,362,issn,0387-1592,verified,cinii/ndl,南山大学法学会(NCID AN00181900)
 上智法学論集,356,issn,0447-7588,verified,cinii/ndl,上智大学法学会(NCID AN00115768)
-大阪市立大学法学雑誌,441,ncid,AN00029724,ncid_fallback,cinii/ndl,大阪市立大学法学会。ISSN未surface→NCID基底。後日ISSN差替え可
+大阪市立大学法学雑誌,441,issn,0441-0351,verified,omu_repo/cinii,大阪市立大学法学会(NCID AN00029724)。i-repositoryで0441-0351確認
+青山法学論集,331,issn,0518-1208,verified,cinii,青山学院大学法学会(NCID AN00009024)。衝突した法学論集(駒沢)とは別
