@@ -505,5 +505,40 @@ class TestShortDefTriage(unittest.TestCase):
             self.assertEqual(self.sdt.classify_short(d)[0], "other", d)
 
 
+class TestXrefExtract(unittest.TestCase):
+    def setUp(self):
+        import xref_extract as xr
+        self.xr = xr
+
+    def test_parse_target_arrow_and_quote(self):
+        cases = [("→持分", "持分"), ("⇨外債", "外債"), ("↳吏員", "吏員"),
+                 ("「経理」", "経理"), ("→「規程」", "規程"), ("↓", None)]
+        for d, exp in cases:
+            self.assertEqual(self.xr.parse_xref_target(d), exp, d)
+
+    def test_resolve_alias_edge(self):
+        # 共有持分`→持分` が 持分 hub に解決される
+        terms = [
+            {"term_id": "t1", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "持分", "reading": "もちぶん", "definition": "権利の量的な部分をいう。", "term_tier": 1},
+            {"term_id": "t2", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "共有持分", "reading": "きょうゆうもちぶん", "definition": "→持分", "term_tier": 1},
+        ]
+        edges, unresolved = self.xr.build_alias_edges(terms)
+        self.assertEqual(len(edges), 1)
+        self.assertEqual(edges[0]["source_pref"], "共有持分")
+        self.assertEqual(edges[0]["target_pref"], "持分")
+        self.assertTrue(edges[0]["resolved"])
+
+    def test_unresolved_when_target_hub_absent(self):
+        terms = [
+            {"term_id": "t3", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "計理", "reading": "けいり", "definition": "「経理」", "term_tier": 1},
+        ]
+        edges, unresolved = self.xr.build_alias_edges(terms)
+        self.assertEqual(len(edges), 0)
+        self.assertEqual(len(unresolved), 1)  # 経理 hub が無い
+
+
 if __name__ == "__main__":
     unittest.main()
