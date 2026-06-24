@@ -63,3 +63,11 @@ businesslawjournal,,issn,1882-7640,verified,existing_canonical,
 民事月報,1177,ncid,AN00327733,ncid_fallback,cinii,法務省民事局。公開ISSN確認できず
 判例評論,5858,issn,,pending,,判例時報の評釈別冊。自前ISSN/0438-5888共用かを要確認
 銀行法務,3827,issn,,pending,,銀行法務21(1341-1179)との同一性を要確認(数字破壊回避)
+季刊労働者の権利,1942,issn,0286-0821,verified,ndl/cinii,日本労働弁護団
+法令解説資料総覧,1303,issn,0387-3617,verified,ndl/cinii,第一法規
+月刊民事法情報,1248,issn,0914-417X,verified,ndl,民事法情報センター(1993廃刊)
+JICPAジャーナル,1185,issn,0915-2857,verified,ndl/cinii,会計監査ジャーナルへ改題前。日本公認会計士協会
+日本労働法学会誌,928,issn,0386-0639,verified,cinii,法律文化社。号ごとISBN併存
+地方自治,932,issn,0287-8534,verified,ndl,ぎょうせい(判例地方自治とは別)
+登記インターネット,1201,ncid,AA11407650,ncid_fallback,cinii,民事法情報センター(2010終刊)。登記研究とは別
+月刊債権管理,682,issn,,pending,,銀行研修社。検索で0914-417X(月刊民事法情報)誤返り=要再確認
