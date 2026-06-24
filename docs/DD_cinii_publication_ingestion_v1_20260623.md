@@ -66,9 +66,14 @@ publication_id / person_id / primary_evidence_id / claim_status / confidence / d
 
 ## 4. 人物突合（CiNii著者 → authority.person）と trust_tier
 
-**既存の接続点を使う**: `authority.person_history`(history_type=`scholar_nrid`, 73,155件) に研究者番号が入っている。
-CiNii creator の NRID → person_history.scholar_nrid 突合で `person_id` が取れる（※history_value のNRID表記を要確認）。
-将来は `authority.person_identifier` ハブに集約。
+**既存の接続点を使う**: `authority.person_history`(history_type=`scholar_nrid`) に研究者番号が入っている。
+CiNii creator の NRID → person_history.scholar_nrid の**完全一致**で `person_id` が取れる。
+
+**実DB確認済(2026-06-23)**:
+- scholar_nrid は **13桁数値**（例 `1000000000034`、KAKEN由来の "1000+" 形）。history_value=history_normalized で前置なし → 突合は文字列完全一致でよい。
+- **73,155行 = 73,155 distinct person = 73,155 distinct NRID の 1:1:1**（source=`cinii_identifier_traces`）。
+  → **DB側にNRID多重(汚染)は無い**（既に解決済み）。汚染対策は *流入する CiNii creator 側*（1著者に複数NRID列挙）だけでよい（§6-2）。
+- 将来は `authority.person_identifier` ハブに集約。
 
 trust_tier のはしご（実装の high/medium/low に合わせる）:
 
@@ -113,8 +118,14 @@ trust_tier のはしご（実装の high/medium/low に合わせる）:
 
 **HOLD（ratifyまで）**: authority.* への本番INSERT / person canonical 昇格 / biblio.authors統合。
 
-## 9. 未確定（要確認）
+## 9. 確認結果と残課題（2026-06-23 実測）
 
-- `person_history` の scholar_nrid の値表記（NRID桁・前置の有無）→ 突合関数の確定に必要。
-- CiNii creator の personIdentifier に KAKEN_RESEARCHERS(eradCode系)がどの程度入るか→ KAKEN直結の歩留まり。
-- 法律系 176誌の ISSN マスタの所在（`kaken_law_scholars/legal_journal_issn_filter.jsonl` が候補）。
+確認済（設計確定）:
+- ✅ **突合キー**: scholar_nrid=13桁数値・1:1:1・前置なし → CiNii NRID と文字列完全一致で `person_id` 解決。**73,155 研究者がhard-join可能**。
+- ✅ **CiNii側のキー存在率**（task04 実測）: CRID 100% / ISSN(系) 100%(PISSN98/ISSN86/LISSN85/NCID99) / NRID は creator.personIdentifier に格納 → publication冪等・人物突合・誌スコープ いずれも成立。
+- ✅ **法律誌ISSNマスタは存在**: `kaken_law_scholars/legal_journal_issn_filter.jsonl`(法律系 ~150誌) ＋ OPAC雑誌レジストリ 1,347誌。.jsonl は Box のテキスト抽出不可だが取込パイプラインが直接読む。
+
+残課題:
+- ⚠️ **dry-run対象件数の実測**: CiNii detail ~638,021件を法律ISSNで絞った件数は未計測（サンプルは紀要論文偏り）。フィルタ実走で確定（§8-1）。
+- ⚠️ **KAKEN直結の歩留まり**: KAKEN参照は本文37%にあるが**構造化 project ID フィールドは無い**。eradCode直結は不可、NRID経由で接続。
+- ⚠️ **eradCode は authority に未投入**（DD_author_model §8.3）→ person_identifier ハブ新設時に受け皿を用意。
