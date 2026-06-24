@@ -1,0 +1,26 @@
+{
+  "run_id": "attr_layer_501_dryrun_20260615",
+  "cohort": { "expected": 501, "processed": 488, "missing_ids": ["c-0044", "c-0210", "c-0511"], "duplicate_ids": ["c-0777"] },
+  "adopted_value_coverage": 0.80,
+  "single_authority_rate": 0.39,
+  "raw_disagreement_rate": 0.18,
+  "disputed_rate_after_triage": 0.27,
+  "disputed_all_true_conflict": false,
+  "rights_blocked_rate": 0.05,
+  "rights_profile_coverage": 0.93,
+  "ungrounded_value_count": 12,
+  "provenance_collapse_count": 0,
+  "provenance_family_collapse_effective": false,
+  "classification_multi_preserved": false,
+  "access_not_in_biblio_consensus": false,
+  "determinism": { "run_a_hash": "sha256:9f1c0ab3e7d2", "run_b_hash": "sha256:11ad77bc9001", "inputs_sha256_present": true },
+  "deliverables": {
+    "attr_observations_sim.jsonl": true,
+    "attr_canonical_sim.jsonl": true,
+    "disputed_after_triage.csv": false,
+    "metrics.json": true,
+    "summary.md": true
+  },
+  "write_evidence": { "db_writes": 3, "ddl": 0, "backfill": 0, "biblio_writes": 2, "scalar_overwrite": 0, "work_rollup": 0, "embedding": 0, "external_sends": 0 },
+  "hold_flags": ["scope-violation-db-write", "determinism-drift"]
+}
