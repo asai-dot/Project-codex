@@ -120,6 +120,29 @@ def check_omissions(draft_items: list[dict] | list[str], canonical: list[dict],
     }
 
 
+def check_against_statute(draft_text: str, canonical: list[dict]) -> dict:
+    """ドラフト本文を条文各号(= top-down 正本の床)と直接突合し、抜け漏れを撃つ。
+
+    条文を e-Gov から取得済みなので、各号がそのまま法定の床になる(N書式の収束を待たない)。
+    `条件付`(例 三号=現物出資)は、`条件`語がドラフトに出た時だけ必須化する(無条件チェックリストにしない
+    =法律家が信頼できる挙動)。判定は決定的・stdlib のみ・部分一致(正規化)。
+
+    canonical: [{号, 名称, aliases, 条件付?, 条件?[...]}]
+    """
+    nt = _norm(draft_text)
+    rows = []
+    for c in canonical:
+        conditional = bool(c.get("条件付"))
+        triggered = (not conditional) or any(_norm(t) in nt for t in c.get("条件", []) if t)
+        terms = [c.get("名称", "")] + list(c.get("aliases", []))
+        present = any(_norm(t) in nt for t in terms if t)
+        rows.append({"号": c.get("号"), "名称": c.get("名称", ""), "id": c.get("id"),
+                     "conditional": conditional, "required": triggered, "present": present,
+                     "missing": triggered and not present})
+    missing = [r for r in rows if r["missing"]]
+    return {"rows": rows, "missing": missing, "ok": not missing}
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="記載事項の床 / 抜け漏れ検出")
     ap.add_argument("--canonical", required=True, help="条文各号 jsonl/json [{id,名称,号,aliases}]")
