@@ -10,6 +10,12 @@ WORK="$(mktemp -d)"; CHUNK="${CHUNK:-400}"
 PROMPT='次の各行は タブ区切りで id<TAB>タイトル。各行をちょうど1つの種別に分類し、id<TAB>種別 だけを1行ずつ返せ。種別は次のいずれかの語そのもの: 判例評釈,論説・論文,解説,立法・改正解説,座談会・対談,判例紹介,書評,資料,連載・コラム,その他。迷ったら その他。説明文は出力しない。'
 
 [ -f "$IN" ] || { echo "入力なし: $IN（git pull 済か確認）" >&2; exit 2; }
+# OLLAMA_MODEL 未指定なら ollama list から qwen/qen 系を自動検出（無ければ qwen2.5）
+if [ -z "${OLLAMA_MODEL:-}" ]; then
+  OLLAMA_MODEL="$(ollama list 2>/dev/null | awk 'NR>1{print $1}' | grep -iE 'qwen|qen' | head -1)"
+  [ -z "$OLLAMA_MODEL" ] && OLLAMA_MODEL="qwen2.5"
+  export OLLAMA_MODEL; echo "[classify] モデル自動検出: $OLLAMA_MODEL"
+fi
 # article_id(1列目), title(末尾列) を id<TAB>title へ。CSVヘッダ位置に依存しないようpythonで抽出。
 python3 - "$IN" "$WORK/ids.tsv" <<'PY'
 import csv,sys
