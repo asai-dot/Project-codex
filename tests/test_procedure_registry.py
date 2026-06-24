@@ -16,8 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from procedure_registry import (  # noqa: E402
-    crosswalk, promotion_report, validate_family_membership, validate_registry,
-    validate_transition)
+    crosswalk, is_production_loadable, promotion_report, validate_family_membership,
+    validate_registry, validate_transition)
 
 _PASS = 0
 _FAIL = 0
@@ -61,23 +61,52 @@ def test_real_registry_v02_healthy():
     check(ol["status"] == "candidate" and ol.get("definition"), "通常清算=candidate+操作的定義")
 
 
+def _full_ratified():
+    """MF-3 v0.3: 全フィールド揃った owner_ratified の正例(完全根拠集合)。"""
+    return {"id": "x", "name": "X", "kind": "procedure", "status": "owner_ratified",
+            "ratified_by": "asai", "ratified_at": "2026-06-24",
+            "ratification_basis_type": "statutory_plus_practice",
+            "ratification_basis_refs": ["owner judgment 1"],
+            "statutory_or_official_refs": ["会社法第748条"],
+            "source_family_refs": ["商業登記全書/7"],
+            "legal_basis_refs": ["会社法第748条以下"],
+            "ratification_note": "公式条文+実務書による"}
+
+
+def _registry_with(*entries, materialization="noncanonical"):
+    return {"materialization_status": materialization, "entries": list(entries)}
+
+
 def test_validate_invariants():
     # owner_ratified なのに ratify メタ無し → 違反。
-    bad = {"entries": [{"id": "x", "name": "X", "kind": "procedure", "status": "owner_ratified"}]}
+    bad = _registry_with({"id": "x", "name": "X", "kind": "procedure", "status": "owner_ratified"})
     errs = validate_registry(bad)
-    check(any("ratified_by" in e for e in errs), "owner_ratified に ratify メタ必須")
-    # MF-3: ratified_by/at だけでは不足(根拠類型/refs/note が要る)。
-    meta_only = {"entries": [{"id": "x", "name": "X", "kind": "procedure", "status": "owner_ratified",
-                              "ratified_by": "asai", "ratified_at": "2026-06-20"}]}
-    check(any("ratification_basis_type" in e for e in validate_registry(meta_only)),
-          "owner_ratified に ratification_basis_type 必須(MF-3)")
-    # 根拠まで揃えば通る。
-    good = {"entries": [{"id": "x", "name": "X", "kind": "procedure", "status": "owner_ratified",
-                         "ratified_by": "asai", "ratified_at": "2026-06-20",
-                         "ratification_basis_type": "owner_legal_judgment",
-                         "ratification_basis_refs": ["owner note 1"],
-                         "ratification_note": "owner の独立判断"}]}
-    check(validate_registry(good) == [], "根拠付き owner_ratified は健全")
+    check(any("ratified_by" in e for e in errs), "owner_ratified に ratified_by 必須")
+    # MF-3 v0.3: owner note だけでは通らない(各根拠フィールドを non-empty で要求)。
+    note_only = _registry_with({"id": "x", "name": "X", "kind": "procedure", "status": "owner_ratified",
+                                "ratified_by": "asai", "ratified_at": "2026-06-20",
+                                "ratification_basis_type": "owner_legal_judgment",
+                                "ratification_basis_refs": ["owner note 1"],
+                                "ratification_note": "owner の独立判断"})
+    errs = validate_registry(note_only)
+    check(any("statutory_or_official_refs" in e for e in errs), "MF-3: statutory_or_official_refs 必須")
+    check(any("source_family_refs" in e for e in errs), "MF-3: source_family_refs 必須")
+    check(any("legal_basis_refs" in e for e in errs), "MF-3: legal_basis_refs 必須")
+    # 完全根拠集合 → 健全。
+    good = _registry_with(_full_ratified())
+    check(validate_registry(good) == [], "完全根拠 owner_ratified は健全")
+    # 各根拠フィールドを1つずつ落とすと必ず違反(per-field negative fixtures)。
+    for field in ["ratification_basis_refs", "statutory_or_official_refs",
+                  "source_family_refs", "legal_basis_refs"]:
+        e = _full_ratified()
+        e[field] = []  # 空リスト=non-empty 違反
+        reg = _registry_with(e)
+        check(any(field in m for m in validate_registry(reg)),
+              f"MF-3: {field} 空でブロック")
+    # basis_type 不正 → 違反。
+    e = _full_ratified(); e["ratification_basis_type"] = "made_up"
+    check(any("ratification_basis_type" in m for m in validate_registry(_registry_with(e))),
+          "ratification_basis_type の enum 強制")
     # superseded の参照先が無い → 違反。
     dangling = {"entries": [{"id": "x", "name": "X", "kind": "procedure",
                              "status": "superseded", "superseded_by": "zzz"}]}
@@ -133,7 +162,9 @@ def test_family_membership_invariants():
         {"id": "fam", "name": "F", "kind": "procedure_family", "status": "candidate"},
         {"id": "p1", "name": "P1", "kind": "procedure", "status": "candidate"},
     ]
-    ok = {"entries": base, "family_membership": [{"family_id": "fam", "procedure_id": "p1"}]}
+    ok = {"entries": base, "family_membership": [
+        {"family_id": "fam", "procedure_id": "p1", "valid_from": "2026-06-23",
+         "valid_to": None, "source_basis": "book"}]}
     check(validate_family_membership(ok) == [], "正しい membership は健全")
     # 参照先なし。
     bad_ref = {"entries": base, "family_membership": [{"family_id": "fam", "procedure_id": "ghost"}]}
@@ -153,20 +184,50 @@ def test_rollup_silent_narrowing_guard():
     """MF-2: rollup の意味縮小には supersession 記録を要求(説明文だけの暗黙縮小を弾く)。"""
     spine_ids = {"commercial_nonlitigation"}
     # keep_unchanged は supersession 不要。
-    keep = {"entries": [], "rollup_notes": [
+    keep = {"materialization_status": "noncanonical", "entries": [], "rollup_notes": [
         {"rollup_id": "commercial_nonlitigation", "action": "keep_unchanged", "semantic": "..."}]}
     check(validate_registry(keep, spine_ids) == [], "keep_unchanged は記録不要で健全")
     # narrow なのに supersession 無し → 違反。
-    narrow = {"entries": [], "rollup_notes": [
+    narrow = {"materialization_status": "noncanonical", "entries": [], "rollup_notes": [
         {"rollup_id": "commercial_nonlitigation", "action": "narrow", "semantic": "..."}]}
     check(any("silent narrowing" in e for e in validate_registry(narrow, spine_ids)),
           "narrow に supersession 無しは違反(MF-2)")
     # supersession 記録を添えれば通る。
-    narrow_ok = {"entries": [], "rollup_notes": [
+    narrow_ok = {"materialization_status": "noncanonical", "entries": [], "rollup_notes": [
         {"rollup_id": "commercial_nonlitigation", "action": "narrow", "semantic": "..."}],
         "supersession": [{"rollup_id": "commercial_nonlitigation", "note": "split 記録"}]}
     check(not any("silent narrowing" in e for e in validate_registry(narrow_ok, spine_ids)),
           "supersession 付き narrow は許容")
+
+
+def test_canonical_boundary():
+    """§5.4: candidate dry-run と canonical L1 の境界を機械可読に固定。"""
+    reg = _load("pipeline/procedure_registry.json")
+    check(reg.get("materialization_status") == "noncanonical", "実 registry は noncanonical 宣言")
+    check(not is_production_loadable(reg), "noncanonical は production loader が拒否")
+    check(is_production_loadable({"materialization_status": "canonical"}), "canonical のみ受理")
+    # materialization_status 欠落/不正は違反。
+    check(any("materialization_status" in m for m in validate_registry({"entries": []})),
+          "materialization_status 欠落をブロック")
+    check(any("materialization_status" in m
+              for m in validate_registry({"materialization_status": "x", "entries": []})),
+          "materialization_status の enum 強制")
+
+
+def test_membership_validity_checks():
+    """MF-1 v0.3: valid_from 必須 / valid_to>valid_from / source_basis 必須。"""
+    base = [{"id": "fam", "name": "F", "kind": "procedure_family", "status": "candidate"},
+            {"id": "p1", "name": "P1", "kind": "procedure", "status": "candidate"}]
+    no_vf = {"entries": base, "family_membership": [
+        {"family_id": "fam", "procedure_id": "p1", "source_basis": "book"}]}
+    check(any("valid_from 必須" in e for e in validate_family_membership(no_vf)), "valid_from 必須")
+    bad_range = {"entries": base, "family_membership": [
+        {"family_id": "fam", "procedure_id": "p1", "valid_from": "2026-06-23",
+         "valid_to": "2026-06-01", "source_basis": "book"}]}
+    check(any("valid_to" in e for e in validate_family_membership(bad_range)), "valid_to>valid_from")
+    no_src = {"entries": base, "family_membership": [
+        {"family_id": "fam", "procedure_id": "p1", "valid_from": "2026-06-23", "valid_to": None}]}
+    check(any("source_basis" in e for e in validate_family_membership(no_src)), "source_basis 必須")
 
 
 def test_crosswalk():
@@ -182,7 +243,8 @@ def test_crosswalk():
 
 def main() -> int:
     for t in [test_lifecycle_transitions, test_real_registry_v02_healthy, test_validate_invariants,
-              test_family_membership_invariants, test_rollup_silent_narrowing_guard,
+              test_family_membership_invariants, test_membership_validity_checks,
+              test_rollup_silent_narrowing_guard, test_canonical_boundary,
               test_promotion_real_inventory_holds, test_promotion_eligibility_rules, test_crosswalk]:
         print(f"• {t.__name__}")
         t()

@@ -29,6 +29,11 @@ KIND_ENUM = ["procedure", "procedure_family", "procedure_variant"]
 MEMBER_KINDS = {"procedure", "procedure_variant"}  # family の member になれる kind
 # owner_ratified の根拠類型(MF-3)。証拠と判断を区別して監査可能にする。
 RATIFICATION_BASIS_TYPES = ["owner_legal_judgment", "statutory_plus_practice", "multi_source"]
+# owner_ratified に non-empty 必須の根拠フィールド(MF-3 v0.3)。証拠と判断を完全に固定する。
+RATIFY_REQUIRED_SCALARS = ["ratified_by", "ratified_at", "ratification_basis_type", "ratification_note"]
+RATIFY_REQUIRED_LISTS = ["ratification_basis_refs", "statutory_or_official_refs",
+                         "source_family_refs", "legal_basis_refs"]
+MATERIALIZATION = ["noncanonical", "canonical"]  # production loader は canonical のみ受理
 
 # status lifecycle の許可遷移。owner_ratified は ratify を経た時だけ。終端は superseded/deprecated。
 ALLOWED_TRANSITIONS: dict[str, set[str]] = {
@@ -103,6 +108,10 @@ def promotion_report(observations: list[dict], registry: dict | None = None) -> 
 def validate_registry(registry: dict, spine_ids: set[str] | None = None) -> list[str]:
     """registry の不変条件を検査。違反メッセージのリストを返す(空=健全)。"""
     errs: list[str] = []
+    # canonical 境界(§5.4): 機械可読な materialization フラグ。production loader は canonical のみ受理。
+    mat = registry.get("materialization_status")
+    if mat not in MATERIALIZATION:
+        errs.append(f"materialization_status は {MATERIALIZATION} のいずれか必須 (現値 {mat!r})")
     ids = {e.get("id") for e in registry.get("entries", [])}
     for e in registry.get("entries", []):
         eid = e.get("id", "<no-id>")
@@ -113,17 +122,17 @@ def validate_registry(registry: dict, spine_ids: set[str] | None = None) -> list
         if e.get("kind") not in KIND_ENUM:
             errs.append(f"{eid}: kind 不正 ({e.get('kind')!r})")
         if e.get("status") == "owner_ratified":
-            if not (e.get("ratified_by") and e.get("ratified_at")):
-                errs.append(f"{eid}: owner_ratified には ratified_by/ratified_at が必須(自動昇格禁止)")
-            # MF-3: 証拠と判断の区別。根拠類型 + 根拠 + note を要求。
-            if e.get("ratification_basis_type") not in RATIFICATION_BASIS_TYPES:
-                errs.append(f"{eid}: owner_ratified には ratification_basis_type が必須 "
+            # MF-3 v0.3: 全根拠フィールドを non-empty で要求(証拠と判断を完全固定)。
+            for k in RATIFY_REQUIRED_SCALARS:
+                if not e.get(k):
+                    errs.append(f"{eid}: owner_ratified には {k} が必須")
+            if e.get("ratification_basis_type") and e["ratification_basis_type"] not in RATIFICATION_BASIS_TYPES:
+                errs.append(f"{eid}: ratification_basis_type 不正 "
                             f"({'/'.join(RATIFICATION_BASIS_TYPES)})")
-            if not e.get("ratification_note"):
-                errs.append(f"{eid}: owner_ratified には ratification_note が必須")
-            if not (e.get("ratification_basis_refs") or e.get("statutory_or_official_refs")):
-                errs.append(f"{eid}: owner_ratified には ratification_basis_refs か "
-                            f"statutory_or_official_refs が必須")
+            for k in RATIFY_REQUIRED_LISTS:
+                v = e.get(k)
+                if not (isinstance(v, list) and len(v) > 0):
+                    errs.append(f"{eid}: owner_ratified には {k}(非空リスト) が必須")
         if e.get("status") == "superseded":
             tgt = e.get("superseded_by")
             if not tgt:
@@ -177,10 +186,23 @@ def validate_family_membership(registry: dict) -> list[str]:
             errs.append(f"family_membership: procedure_id={pid} は procedure/variant でない")
         if m.get("status") and m["status"] not in STATUS:
             errs.append(f"family_membership: status 不正 ({m.get('status')!r})")
+        # MF-1 v0.3: validity / source_basis の整合(CLOSED WITH NOTES の補強)。
+        vf, vt = m.get("valid_from"), m.get("valid_to")
+        if not vf:
+            errs.append(f"family_membership({fid},{pid}): valid_from 必須")
+        if vt is not None and vf and not (str(vt) > str(vf)):
+            errs.append(f"family_membership({fid},{pid}): valid_to は valid_from より後 か null")
+        if not (m.get("source_basis") or "").strip():
+            errs.append(f"family_membership({fid},{pid}): source_basis 必須(空不可)")
         if (fid, pid) in seen:
             errs.append(f"family_membership: 重複 ({fid},{pid})")
         seen.add((fid, pid))
     return errs
+
+
+def is_production_loadable(registry: dict) -> bool:
+    """production loader が受理してよいか(§5.4 canonical 境界)。design fixture は弾く。"""
+    return registry.get("materialization_status") == "canonical"
 
 
 def _check_rollup_semantics(registry: dict, spine_ids: set[str] | None) -> list[str]:

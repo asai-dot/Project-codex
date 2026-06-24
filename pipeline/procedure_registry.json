@@ -1,8 +1,10 @@
 {
-  "version": 0.2,
+  "version": 0.3,
   "layer": "L1_registry",
-  "_comment": "【正準レジストリ(L1)・v0.2】DDPROCREG_MODIFY_REQUIRED(20260622)反映。商事再分類を candidate として dry-run 生成(owner_ratified は0件のまま=本番HOLD)。MF-1: family membership を family_membership crosswalk で規範表現。MF-2: commercial_nonlitigation は scope narrowing せず legacy bridge のみ(rollup_notes 参照)。MF-3: owner_ratified には ratification_basis_* を必須。MF-4: ordinary_liquidation は candidate 止め+操作的定義。entries の definition は候補(実務観測由来)であり owner ratify 前。",
-  "audit": "docs/dd/20260621_commercialreclass_v0.1_DDPROCREG_RESULT.md (DDPROCREG_MODIFY_REQUIRED)",
+  "registry_mode": "design_fixture",
+  "materialization_status": "noncanonical",
+  "_comment": "【設計フィクスチャ(L1・noncanonical)・v0.3】DDPROCREG v0.2 RESULT(20260624)反映。商事再分類を candidate として dry-run 生成(owner_ratified は0件のまま=本番HOLD)。materialization_status=noncanonical: production loader は受理しない(§5.4 canonical 境界)。MF-1: family_membership crosswalk(validity/source 検査つき)。MF-2: commercial_nonlitigation は keep_unchanged(scope narrowing せず)。MF-3 v0.3: owner_ratified には ratification_basis_type/refs/statutory_or_official_refs/source_family_refs/legal_basis_refs/note を全て非空で必須(validator 強制)。MF-4: ordinary_liquidation は candidate 止め+操作的定義+applicable_entity_types。entries の definition は候補(実務観測由来)であり owner ratify 前。",
+  "audit": "docs/dd/20260623_commercialreclass_v0.2_DDPROCREG_RESULT.md (DDPROCREG_MODIFY_REQUIRED)",
   "status_lifecycle": ["observed", "candidate", "owner_ratified", "superseded", "deprecated"],
   "promotion_rule": "candidate 昇格: 独立2 source_family、または 法令/公式1 source + 実務書1 source。owner_ratified への昇格は owner ratify のみ(ツールは候補提示だけ・自動昇格しない)。",
   "ratify_note": "owner_ratified エントリは owner が ratification_basis_type / ratification_basis_refs / statutory_or_official_refs / source_family_refs / ratification_note を付けて追記する(MF-3)。番頭(Claude)は候補提示と検算のみ。HOLD: 自動 procedure 確定・spine 正本置換・DB write。",
@@ -39,13 +41,17 @@
      "start_trigger": "株式交付計画", "terminal_state": "効力発生・登記",
      "legal_basis_refs": [], "source_basis": [{"type": "practice", "ref": "商業登記全書/7 第6編"}],
      "flow_ref": {"path": "pipeline/procedure_flow/commercial_share_delivery.json", "flow_status": "draft",
-                  "note": "flow acceptance は L1 ratification と別ゲート(Q-E)。identity の独立証拠には数えない。"}},
+                  "artifact_version": "v0.1",
+                  "artifact_hash": "sha256:093af2011f966adf515bc4e8056367202b06c7030b48780c7aed09275555a0f1",
+                  "source_lineage": "bencom 綺麗TOC(商業登記全書/7 第6編 株式交付)由来・書式付きフロー雛形",
+                  "note": "flow acceptance は L1 ratification と別ゲート(Q-E §2.2)。identity の独立証拠には数えない。"}},
 
     {"id": "ordinary_liquidation", "kind": "procedure", "status": "candidate", "name": "通常清算",
      "aliases": ["通常清算"], "legacy_rollup_id": null,
      "definition": "解散した株式会社が清算人の下で債務弁済・残余財産分配を経て法人格を消滅させる手続のうち、特別清算によらないもの。",
      "start_trigger": "会社の解散", "terminal_state": "清算結了の登記",
-     "legal_basis_refs": [], "source_basis": [{"type": "practice", "ref": "株式会社・各種法人別 清算手続と書式 第2章"}],
+     "legal_basis_refs": [], "applicable_entity_types": ["株式会社"],
+     "source_basis": [{"type": "practice", "ref": "株式会社・各種法人別 清算手続と書式 第2章"}],
      "note": "特別清算(insolvency_special_liquidation)と別 procedure。単一 source ゆえ candidate 止め(MF-4)。"}
   ],
   "family_membership": [

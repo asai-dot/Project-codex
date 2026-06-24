@@ -256,7 +256,20 @@ registry の owner_ratified も自動で書かない。テスト `tests/test_pro
   `ratification_note` を validator が必須化（証拠と判断を区別して監査可能に）。
 - **MF-4**: 商事6手続 + `ordinary_liquidation` を **candidate として dry-run 生成**（owner_ratified 0件・
   操作的定義/start_trigger/terminal_state 付き）。share_delivery は `flow_ref`（別ゲート・identity 証拠に
-  数えない）。**再投函（v0.2 再監査）は owner 判断**。
+  数えない）。
+
+**v0.3 patch（DDPROCREG v0.2 RESULT 反映・本番 write なし）** — 最小受入条件を機械化:
+- **MF-3 強化**: owner_ratified は `ratified_by/ratified_at/ratification_basis_type(enum)/
+  ratification_basis_refs[]/statutory_or_official_refs[]/source_family_refs[]/legal_basis_refs[]/
+  ratification_note` を **全て non-empty で validator 強制**。owner note だけの正例は削除、各フィールドの
+  per-field negative fixture で固定（§5.1-5.3）。
+- **canonical 境界（§5.4）**: registry に `registry_mode: design_fixture` /
+  `materialization_status: noncanonical` を付与。`is_production_loadable()` が canonical のみ受理。
+  validator が materialization_status の enum を強制（dry-run candidate と canonical L1 を機械可読に分離）。
+- **MF-1 補強**: membership に `valid_from` 必須 / `valid_to>valid_from`(or null) / `source_basis` 非空。
+- **flow_ref provenance（§2.2）**: `artifact_version/artifact_hash/source_lineage` を付与。
+- **MF-4**: `ordinary_liquidation` に `applicable_entity_types` facet。
+- **再投函（v0.3 再監査）は owner 判断**。test log を commit SHA と紐付けて REQUEST に同梱（§5.5）。
 
 ---
 
