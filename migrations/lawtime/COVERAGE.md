@@ -9,16 +9,25 @@
 正本との差分を潰せない。監査の HOLD（production apply / canonical ratify / claim_support serving）は
 本表 + 追加 gate（N-1/N-2/N-3/N-4）が閉じ、owner が ratify するまで維持する。
 
-> ⚠️ **2026-06-24 訂正**: 本表は当初「`alo_edges` はどこにも未実体化のスタンドイン」を前提にしていたが、
-> 実際は **asai-dot's Project の `d1law_taikei` に本物の `alo_edges`（URI-edge: src_uri/edge_type/dst_uri 等）が存在**する。
-> よって §1 の `alo_edges` 行（および src_id/dst_id 等の R 列）は、**実 `d1law_taikei.alo_edges` との衝突・統合**として
-> 読み替えること。schema 配置は再相談中（`docs/dd/20260624_lawtime_supabase_placement_DDLAWTIME_REQUEST.md`）。
-> P/L/R 分類・enum 規則（§2/§3）自体は配置に依らず有効。
+> ⚠️ **2026-06-24 訂正 → 解決（配置 ratify 済）**: 本表は当初「`alo_edges` はどこにも未実体化のスタンドイン」を
+> 前提にしていたが、実際は **asai-dot's Project の `d1law_taikei` に本物の `alo_edges`（URI-edge:
+> src_uri/edge_type/dst_uri 等）が存在**する。配置相談の RESULT
+> `DDLAWTIME_PLACEMENT_PASS_WITH_NOTES`（Box file_id 2305621550301）で **C-option 確定**:
+> citation edge 本体は `d1law_taikei.alo_edges`、時間評価属性は `lawtime.citation_temporal`
+> （edge_id keyed side-table）。独自 `lawtime.alo_edges` スタンドイン・src_id/dst_id・search_path は**撤回**。
+> ⇒ §1 の `alo_edges` 行・src_id/dst_id 行は **v0.2.4 で廃止**された（`docs/dd/DD-LAWTIME-001_v0.2.4_placement.md`
+> および `migrations/lawtime/placement_v0.2.4/`）。本 COVERAGE は v0.2.3a 構造スモーク DDL の境界記述として残す。
+> P/L/R 分類・enum 規則（§2/§3）自体は配置に依らず有効（v0.2.4 の `citation_temporal` 列にも引き継ぐ）。
 
 凡例（provenance）:
 - **P** = `docs/dd/DD-LAWTIME-001_v0.2.3_production_patch.md`（承認済 patch doc）が明示的に参照する列。確度高。
 - **L** = `migrations/lawsubtrans/*` が消費する列（DD-LAWSUBTRANS 接続点）。確度高。
 - **R** = recon 推定（patch/lawsubtrans のどちらにも明示が無く、整合のために再構成が補った）。**要正本照合**。
+
+> ⚠️ **R 列の置換可能性（v0.2.3a 監査 should_fix #1）**: provenance=**R** の列・値域は
+> recon inference であり、**将来 正本（v0.2.x 設計）との突合で差分が出れば置換され得る**。
+> R 列は確定仕様ではなく candidate で、materialize 前に正本差分で潰す対象。v0.2.4 の
+> `lawtime.citation_temporal` / `law_revision` / `law_succession_edge` の各 `(recon: R)` CHECK も同様。
 
 ---
 

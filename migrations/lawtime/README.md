@@ -1,21 +1,40 @@
 # migrations/lawtime — DD-LAWTIME-001 base (v0.2.2) + production patch (v0.2.3 / 2026-06-23 notes 反映 = v0.2.3a)
 
-> **status: candidate（RECONSTRUCTED）。監査 + owner ratify が前提。本番未 apply。**
+> **status: candidate。監査 + owner ratify が前提。本番未 apply。**
 >
-> ⚠️ **2026-06-24 重要訂正 — 前提（グリーンフィールド）が崩れた。**
-> 本 README は当初「法令層はどこにも未 materialize」「`alo_edges` はどこにも無いのでスタンドインを自前生成」と
-> 記していたが、**これは誤り**。asai-dot's Project に既に **`d1law_taikei` schema（URI ベースの法令体系 KOS）が在り、
-> 本物の `alo_edges`（`src_uri/edge_type/dst_uri/...`）と claim_support gate・serving view の流儀が確立済**だった。
-> ⇒ 再構成の `lawtime.alo_edges` スタンドイン・`law_work_id` text-id・search_path 追記は **実態と衝突する疑い**。
-> **schema 配置は GPT お目付け役へ再相談中**（`docs/dd/20260624_lawtime_supabase_placement_DDLAWTIME_REQUEST.md`,
-> Box file_id 2305223370418）。回答 ratify までこのディレクトリの SQL の schema 設計は**確定でない**。
+> ✅ **2026-06-24 配置 ratify 済 → 確定形は v0.2.4（C-option）。**
+> 配置相談の RESULT `DDLAWTIME_PLACEMENT_PASS_WITH_NOTES`（Box file_id 2305621550301）で
+> **C-option 確定**。確定形の SQL・設計は:
+> - 設計: **[`docs/dd/DD-LAWTIME-001_v0.2.4_placement.md`](../../docs/dd/DD-LAWTIME-001_v0.2.4_placement.md)**
+> - SQL 一式: **`migrations/lawtime/placement_v0.2.4/`**（母屋 fixture / lawtime schema / gates / serving / smoke）
+>
+> C-option の要点: citation edge 本体＝既存 **`d1law_taikei.alo_edges`**（母屋）、時間評価属性＝
+> **`lawtime.citation_temporal`（edge_id keyed side-table）**、identity＝**URI**、名前解決＝**明示修飾（search_path 廃止）**、
+> 出口＝**`serving` schema**、gate＝**house style `v_gate_lawtime_*_v20260624`**。
+> ⇒ 本ディレクトリ直下の `001_base_v0.2.2.sql` / `010_patch_v0.2.3.sql`（独自 `lawtime.alo_edges` スタンドイン・
+> text-id・search_path 追記）は **v0.2.4 で設計上 superseded**。v0.2.3a 構造スモーク artifact として残置するのみ。
 >
 > owner 決定（2026-06-24）で固定: **project は asai-dot's Project（d1law_taikei 同居）**／
-> **alo-connect は空のまま（動的DB予約）**。残る論点は project 内の schema/モデル形（A/B/C 案）。
+> **alo-connect は空のまま（動的DB予約）**。
 >
-> 2026-06-23 監査（`DDLAWTIME_MODIFY_REQUIRED`）の must_fix / notes は反映済:
+> 2026-06-23 監査（v0.2.3a `DDLAWTIME_PASS_WITH_NOTES`）の must_fix / notes 反映済:
 > 列 provenance・enum 丸め規則は **[`COVERAGE.md`](./COVERAGE.md)**、追加 gate（N-1〜N-4）は `010_patch`。
+> should_fix #1（R 列の置換可能性）は COVERAGE 冒頭、#2（gate 名 + 失敗時 owner action）は下表、
+> #3（sample resolver の golden 固定）は `placement_v0.2.4/sample_resolver.sql`。
 > production apply / materialize は **HOLD**（owner ratify 待ち）。
+>
+> ### gate 一覧と失敗時 owner action（should_fix #2）
+> | gate（v0.2.4 house style） | 由来 | 失敗時 owner action |
+> |---|---|---|
+> | `v_gate_lawtime_citation_edge_missing_side_table_v20260624` | C-INT | resolver 再走 or unresolved_queue 投入 |
+> | `v_gate_lawtime_side_table_orphan_or_noncitation_v20260624` | C-INT | side-table 行削除 or edge_type 是正 |
+> | `v_gate_lawtime_resolved_revision_covers_asof_v20260624` | P0-2 | 版再解決（resolution_method 見直し） |
+> | `v_gate_lawtime_claim_support_requires_resolved_v20260624` | P0-3 | claim_support_eligible を false へ / 条件充足 |
+> | `v_gate_lawtime_succession_no_ambiguous_overlap_v20260624` | P0-4 | lineage_event_id 付与 or confidence 降格 |
+> | `v_gate_lawtime_work_single_fallback_law_id_v20260624` | N-1 | succession 明示 or 版整理 |
+> | `v_gate_lawtime_statute_revision_no_ambiguous_overlap_v20260624` | N-2 | 版区間 [from,to) の是正 |
+> | `v_gate_lawtime_formal_status_inconsistent_v20260624` | N-3/N-4 | corpus 状態語の再マップ |
+> | （v0.2.3a 旧名 `gate_*` は上記へ改名。`010_patch` の旧 gate は構造スモーク用に残置） |
 
 ## なぜ「reconstructed」か
 オリジナルの **v0.2.2 base DDL がこのリポジトリに存在しなかった**（`docs/dd/DD-LAWTIME-001_v0.2.3_production_patch.md` という
