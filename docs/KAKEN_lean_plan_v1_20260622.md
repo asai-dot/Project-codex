@@ -189,6 +189,7 @@
 | 人 ↔ 判例 | (評釈著者→判例) | dynamic.cases | ❌ cases=0(投入待ち) |
 
 - 識別子の正しい置き場所は **新設 `authority.person_identifier`**（現状 person_history に散在）。fp_type相当 = `nrid/kaken_id(eradCode)/researchmap_id/orcid/ndl_auth_id`。**KAKEN を繋ぐ実装上の一手はこれ**（DD §8.3/§8.5）。
+- **eradCode 取得は全件クロールでなく seed逆引き**（既存73k研究者起点）＋1000系3,654の導出。詳細・実測は `DD_eradcode_acquisition_v1`。旧採番7日クロールは廃止。
 - マッチは **hard ID(NRID等) → 氏名+収録誌(ISSN)候補** の順。曖昧は claim_status と trust_tier で段階管理（既存実装と同型）。
 - **同名異人/異名同人の解決がコストの中心**。設計投資をここに寄せる（§0.5）。
 
@@ -216,8 +217,7 @@
 | DB 書込（PACSigny/person_links/external_author_evidence/object_registry INSERT） | V038 dryrun gate 通過 ＋ 重複/コンフリクト率が閾値内 ＋ ロールバック手順あり ＋ Owner ratify | staging テーブルへ限定 load → 差分検証 |
 | 人物 canonical 化 | gold サンプルで同定 precision ≥ 合意閾値 ＋ person observation schema 確定 ＋ 衝突キュー裁定済 | candidate → canonical 昇格バッチ（可逆） |
 | PERSONDATAPILOT(gold) マージ | exact-overlap / false-positive 率を別レーンで実測 ＋ import preview OK | レーン限定マージ（`researchmap_new_2026`）|
-| 旧採番 拡大取得 | §2.4 サンプルで `<field>` 法判定 precision/recall が閾値超 ＋ ownership 確定 | 経路 Y 本実行（分野スコープ列挙）|
-| PUBLICLY 全件 | 小サンプルでスキーマ互換確認 | 互換なら同抽出器再利用 / 非互換なら別レーン |
+| 旧採番 拡大取得 | §2.4 サンプルで `<field>` 法判定 precision/recall が閾値超 ＋ ownership 確定 | 経路 Y 本実行（分野スコープ列挙）|| PUBLICLY 全件 | 小サンプルでスキーマ互換確認 | 互換なら同抽出器再利用 / 非互換なら別レーン |
 | PDF 一括 | 高価値 project の優先表 ＋ ストレージ/OCR 計画 ＋ 著作権/規約整理 | ターゲット限定 fetch |
 | prestige_score を権威利用 | gold サンプルで専門家期待と一致検証 | 検証通過まで実験的ランキング止まり |
 
