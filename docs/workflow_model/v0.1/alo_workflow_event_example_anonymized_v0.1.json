@@ -1,0 +1,149 @@
+{
+  "schema_version": "alo-workflow-event-0.1",
+  "event_id": "alo:event:demo:proposal_sent:0001",
+  "event_type": "proposal_sent",
+  "event_category": "提案",
+  "occurred_at": "2026-01-15T06:20:00Z",
+  "captured_at": "2026-01-15T06:20:08Z",
+  "effective_at": "2026-01-15T06:20:00Z",
+  "matter_ref": {
+    "system": "Salesforce",
+    "object_type": "leala__Consultation__c",
+    "record_id": "a0D_DEMO_001",
+    "display_name": "匿名相談A",
+    "uri": null
+  },
+  "consultation_ref": {
+    "system": "Salesforce",
+    "object_type": "leala__Consultation__c",
+    "record_id": "a0D_DEMO_001",
+    "display_name": "匿名相談A",
+    "uri": null
+  },
+  "actor": {
+    "actor_type": "staff",
+    "actor_id": "staff:demo:clerk01",
+    "role": "送付担当",
+    "display_name": "事務局A"
+  },
+  "counterparties": [
+    {
+      "actor_type": "prospect",
+      "actor_id": "party:demo:prospect01",
+      "role": "依頼候補",
+      "display_name": "匿名依頼候補"
+    }
+  ],
+  "source": {
+    "system": "Gmail",
+    "native_id": "msg_demo_0001",
+    "source_kind": "email",
+    "thread_id": "thread_demo_0001",
+    "url": null,
+    "content_hash": "sha256:DEMO",
+    "source_timestamp": "2026-01-15T06:20:00Z"
+  },
+  "summary": "見積書、委任契約書案及び関連契約案を一式で送付した。",
+  "state_transition": {
+    "state_machine": "consultation",
+    "from_state": "proposal_pending",
+    "to_state": "proposal_sent",
+    "basis": "observed",
+    "reason_code": "proposal_package_sent",
+    "reason_text": null
+  },
+  "work_item": {
+    "work_item_id": "task:demo:followup001",
+    "title": "提案後の回答確認",
+    "status": "open",
+    "owner_ref": {
+      "system": "Salesforce",
+      "object_type": "User",
+      "record_id": "005_DEMO_01",
+      "display_name": "担当弁護士A",
+      "uri": null
+    },
+    "due_at": "2026-01-22T09:00:00Z",
+    "waiting_on": "依頼候補",
+    "completion_definition": "承諾、修正依頼、辞退又は次回面談日が確定すること",
+    "completion_evidence_refs": [],
+    "parent_work_item_id": null
+  },
+  "document_refs": [
+    {
+      "document_id": "box:demo:quote:v2",
+      "system": "Box",
+      "box_file_id": "BOX_DEMO_001",
+      "box_version_id": "2",
+      "document_type": "見積書",
+      "direction": "outbound",
+      "lifecycle_state": "sent",
+      "package_id": "proposal:demo:001",
+      "content_hash": "sha256:DEMOQUOTE",
+      "recipient_party_ids": [
+        "party:demo:prospect01"
+      ]
+    },
+    {
+      "document_id": "box:demo:engagement:v1",
+      "system": "Box",
+      "box_file_id": "BOX_DEMO_002",
+      "box_version_id": "1",
+      "document_type": "委任契約書案",
+      "direction": "outbound",
+      "lifecycle_state": "sent",
+      "package_id": "proposal:demo:001",
+      "content_hash": "sha256:DEMOENGAGEMENT",
+      "recipient_party_ids": [
+        "party:demo:prospect01"
+      ]
+    }
+  ],
+  "decision": null,
+  "finance": {
+    "finance_event_type": "quote",
+    "currency": "JPY",
+    "amount": null,
+    "fee_type": "retainer_and_success_fee",
+    "client_party_id": "party:demo:prospect01",
+    "payer_party_id": "party:demo:prospect01",
+    "invoice_id": null,
+    "external_reference": null,
+    "due_at": null,
+    "balance_after": null
+  },
+  "deadlines": [],
+  "extracted_facts": {
+    "proposal_package_id": "proposal:demo:001",
+    "attachment_count": 2
+  },
+  "confidence": 0.98,
+  "review": {
+    "status": "approved",
+    "reviewer_ref": {
+      "system": "Salesforce",
+      "object_type": "User",
+      "record_id": "005_DEMO_02",
+      "display_name": "事務局A",
+      "uri": null
+    },
+    "reviewed_at": "2026-01-15T06:21:00Z",
+    "comment": "宛先・版・添付を確認"
+  },
+  "provenance": {
+    "ingest_run_id": "gmail-ingest-demo-20260115",
+    "extractor_version": "alo-connect-email-0.1",
+    "model_id": "demo-model",
+    "prompt_or_policy_version": "proposal-event-policy-0.1",
+    "source_refs": [
+      "gmail:msg_demo_0001",
+      "box:BOX_DEMO_001:v2",
+      "box:BOX_DEMO_002:v1"
+    ],
+    "payload_hash": "sha256:DEMOPAYLOAD"
+  },
+  "invalidates_event_ids": [],
+  "extensions": {
+    "demo": true
+  }
+}
