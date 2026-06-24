@@ -24,6 +24,18 @@ jobs:
         run: python tests/test_legallib_join.py
       - name: Run legallib handoff-tools tests (stdlib only, synthetic fixtures)
         run: python tests/test_handoff_tools.py
+      - name: Run edition/repair/concordance subsystem tests (stdlib only, synthetic fixtures)
+        run: |
+          set -e
+          for t in \
+            tests/test_c1_readiness.py tests/test_concordance.py tests/test_concordance_pipeline.py \
+            tests/test_data_health.py tests/test_edition_adversarial.py tests/test_edition_identity_v2.py \
+            tests/test_golden.py tests/test_golden_edition.py tests/test_golden_repair.py \
+            tests/test_phase0_inventory.py tests/test_publisher_norm.py tests/test_quarantine_ledger.py \
+            tests/test_regression_taxonomy.py tests/test_repair.py tests/test_resolver_resend.py \
+            tests/test_tocadopt.py tests/test_v031_authority.py tests/test_v031_gates.py; do
+            echo "== $t =="; python "$t"
+          done
       - name: Install pytest (for packaged tools)
         run: pip install pytest
       - name: Run alo-gpt-audit package tests (stdlib only, synthetic lanes)

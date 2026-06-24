@@ -1,0 +1,36 @@
+{
+  "9784100000044": {
+    "base_source": "legallib",
+    "base_source_distribution": {
+      "legallib": 1
+    },
+    "book_cluster_id": "9784100000044",
+    "nodes": [
+      {
+        "chapter_author": null,
+        "page_end": null,
+        "page_start": 1,
+        "parent_id": null,
+        "provenance_origin": "legallib_extraction",
+        "source_snapshot_hash": "sha256:ll",
+        "title_norm": "第1章総論",
+        "toc_node_id": "sha256:b7a962c48e8eb1f9"
+      }
+    ],
+    "projection_sha": "sha256:be377d06c9e2c2d0c3905c302549e952e44b82e0fa6c4adc1c046e9e4ffd20d9"
+  },
+  "9784100000088": {
+    "base_source": "ndl_partinfo",
+    "base_source_distribution": {},
+    "book_cluster_id": "9784100000088",
+    "nodes": [],
+    "projection_sha": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "9784100000099": {
+    "base_source": "legallib",
+    "base_source_distribution": {},
+    "book_cluster_id": "9784100000099",
+    "nodes": [],
+    "projection_sha": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  }
+}

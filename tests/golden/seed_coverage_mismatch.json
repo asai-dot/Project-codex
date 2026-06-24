@@ -1,0 +1,23 @@
+{
+  "id": "seed_coverage_mismatch",
+  "note": "起動確認用 seed: 片ソースが極端に少ない coverage mismatch。実データ golden で置換予定。",
+  "book": {
+    "isbn": "9784000000027",
+    "title": "会社法",
+    "source_meta": {
+      "openbd": {"isbn": "9784000000027", "title": "会社法", "publisher": "X", "year": "2020", "page_count": 600, "page_basis": "print_page"},
+      "legallib": {"isbn": "9784000000027", "title": "会社法", "publisher": "X", "year": "2020", "page_count": 600, "page_basis": "pdf_page"}
+    },
+    "sources": {
+      "openbd": [{"title": "総論", "depth": 1}],
+      "legallib": [{"title": "総論", "depth": 1}, {"title": "第1編 設立", "depth": 1}, {"title": "第1章", "depth": 2}, {"title": "第2章", "depth": 2}, {"title": "第2編 株式", "depth": 1}]
+    }
+  },
+  "expect": {
+    "risk": "medium",
+    "conflict_patterns": ["coverage_mismatch", "page_basis_mismatch"],
+    "edition_identity_status": "resolved_same_manifestation",
+    "all_nodes_accounted_for": true,
+    "min_unresolved": 1
+  }
+}

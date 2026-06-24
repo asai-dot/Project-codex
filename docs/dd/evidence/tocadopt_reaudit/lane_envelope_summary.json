@@ -1,0 +1,344 @@
+{
+  "adopt_version": "0.3.0",
+  "adoptable_count": 1,
+  "books": 12,
+  "policy_version": "unified_v0.1_DRAFT",
+  "rows": [
+    {
+      "base_source": "legallib",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "non_consensus_or_empty"
+        ],
+        "conditions": {
+          "authority_resolved": true,
+          "consensus_ok": false,
+          "identity_ok": true,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "resolved_same_manifestation"
+      },
+      "isbn": "9784100000011",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 0,
+        "pending_human_review": 4,
+        "rejected": 0
+      },
+      "title": "契約法"
+    },
+    {
+      "base_source": "legallib",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "non_consensus_or_empty",
+          "authority_human_review"
+        ],
+        "conditions": {
+          "authority_resolved": false,
+          "consensus_ok": false,
+          "identity_ok": true,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "resolved_same_manifestation"
+      },
+      "isbn": "9784100000022",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 0,
+        "pending_human_review": 8,
+        "rejected": 0
+      },
+      "title": "会社法"
+    },
+    {
+      "base_source": "legallib",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "identity_unresolved",
+          "non_consensus_or_empty",
+          "authority_human_review"
+        ],
+        "conditions": {
+          "authority_resolved": false,
+          "consensus_ok": false,
+          "identity_ok": false,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "suspected_different_manifestation"
+      },
+      "isbn": "9784100000033",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 0,
+        "pending_human_review": 2,
+        "rejected": 0
+      },
+      "title": "民事訴訟法"
+    },
+    {
+      "base_source": "legallib",
+      "envelope": {
+        "adoptable": true,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [],
+        "conditions": {
+          "authority_resolved": true,
+          "consensus_ok": true,
+          "identity_ok": true,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "resolved_same_manifestation"
+      },
+      "isbn": "9784100000044",
+      "lanes": {
+        "accepted": 1,
+        "non_adoptable": 0,
+        "pending_human_review": 0,
+        "rejected": 0
+      },
+      "title": "行政法"
+    },
+    {
+      "base_source": "legallib",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "non_consensus_or_empty",
+          "authority_human_review"
+        ],
+        "conditions": {
+          "authority_resolved": false,
+          "consensus_ok": false,
+          "identity_ok": true,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "resolved_same_manifestation"
+      },
+      "isbn": "9784100000055",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 0,
+        "pending_human_review": 2,
+        "rejected": 0
+      },
+      "title": "刑事訴訟法"
+    },
+    {
+      "base_source": "ndl_partinfo",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "non_consensus_or_empty",
+          "authority_human_review"
+        ],
+        "conditions": {
+          "authority_resolved": false,
+          "consensus_ok": false,
+          "identity_ok": true,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "resolved_same_manifestation"
+      },
+      "isbn": "9784100000066",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 0,
+        "pending_human_review": 2,
+        "rejected": 0
+      },
+      "title": "労働法"
+    },
+    {
+      "base_source": "legallib",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "identity_unresolved",
+          "non_consensus_or_empty",
+          "authority_human_review"
+        ],
+        "conditions": {
+          "authority_resolved": false,
+          "consensus_ok": false,
+          "identity_ok": false,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "insufficient_evidence"
+      },
+      "isbn": "9784100000077",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 0,
+        "pending_human_review": 1,
+        "rejected": 0
+      },
+      "title": "知的財産法"
+    },
+    {
+      "base_source": "ndl_partinfo",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "non_consensus_or_empty",
+          "authority_human_review"
+        ],
+        "conditions": {
+          "authority_resolved": false,
+          "consensus_ok": false,
+          "identity_ok": true,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "resolved_same_manifestation"
+      },
+      "isbn": "9784100000088",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 0,
+        "pending_human_review": 1,
+        "rejected": 1
+      },
+      "title": "倒産法"
+    },
+    {
+      "base_source": "legallib",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "non_consensus_or_empty",
+          "authority_human_review",
+          "non_adoptable_nodes_present"
+        ],
+        "conditions": {
+          "authority_resolved": false,
+          "consensus_ok": false,
+          "identity_ok": true,
+          "no_hard_blocker": false,
+          "provenance_ok": true
+        },
+        "edition_identity": "resolved_same_manifestation"
+      },
+      "isbn": "9784100000099",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 1,
+        "pending_human_review": 0,
+        "rejected": 0
+      },
+      "title": "租税法"
+    },
+    {
+      "base_source": "legallib",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "identity_unresolved",
+          "non_consensus_or_empty",
+          "authority_human_review"
+        ],
+        "conditions": {
+          "authority_resolved": false,
+          "consensus_ok": false,
+          "identity_ok": false,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "insufficient_evidence"
+      },
+      "isbn": "9784100000110",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 0,
+        "pending_human_review": 2,
+        "rejected": 0
+      },
+      "title": "民事訴訟法"
+    },
+    {
+      "base_source": "legallib",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "non_consensus_or_empty",
+          "authority_human_review"
+        ],
+        "conditions": {
+          "authority_resolved": false,
+          "consensus_ok": false,
+          "identity_ok": true,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "resolved_same_manifestation"
+      },
+      "isbn": "9784100000121",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 0,
+        "pending_human_review": 1,
+        "rejected": 0
+      },
+      "title": "行政法"
+    },
+    {
+      "base_source": "ndl_partinfo",
+      "envelope": {
+        "adoptable": false,
+        "apply_target": "accepted_node_set",
+        "apply_unit": "book_envelope",
+        "blockers": [
+          "non_consensus_or_empty",
+          "authority_human_review"
+        ],
+        "conditions": {
+          "authority_resolved": false,
+          "consensus_ok": false,
+          "identity_ok": true,
+          "no_hard_blocker": true,
+          "provenance_ok": true
+        },
+        "edition_identity": "resolved_same_manifestation"
+      },
+      "isbn": "9784100000132",
+      "lanes": {
+        "accepted": 0,
+        "non_adoptable": 0,
+        "pending_human_review": 1,
+        "rejected": 0
+      },
+      "title": "労働法"
+    }
+  ]
+}

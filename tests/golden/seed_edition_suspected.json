@@ -1,0 +1,23 @@
+{
+  "id": "seed_edition_suspected",
+  "note": "起動確認用 seed: ISBN/年/ページ差による別版疑い (apply ブロックされるべき高リスク)。",
+  "book": {
+    "isbn": "9784000000034",
+    "title": "民法",
+    "source_meta": {
+      "legallib": {"isbn": "9784000000034", "title": "民法", "publisher": "Y", "year": "2015", "page_count": 400, "page_basis": "print_page"},
+      "bencom": {"isbn": "9784000000041", "title": "民法", "publisher": "Y", "year": "2022", "page_count": 480, "page_basis": "print_page"}
+    },
+    "sources": {
+      "legallib": [{"title": "第1章 総則", "depth": 1}, {"title": "第2章 物権", "depth": 1}],
+      "bencom": [{"title": "第1章 総則", "depth": 1}, {"title": "第2章 物権", "depth": 1}, {"title": "第3章 債権", "depth": 1}]
+    }
+  },
+  "expect": {
+    "risk": "high",
+    "conflict_patterns": ["edition_mismatch_suspected"],
+    "edition_identity_status": "suspected_different_manifestation",
+    "all_nodes_accounted_for": true,
+    "min_unresolved": 1
+  }
+}
