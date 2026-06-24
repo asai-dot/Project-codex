@@ -1,0 +1,932 @@
+journal_canonical,article_count,key_type,key_value,status,source,note
+ジュリスト,24177,issn,0448-0791,seed_verified,seed:ndl/issnportal,
+金融法務事情,12793,issn,2185-3223,seed_verified,seed:ndl,旧旬刊金融法務事情0451-9787は別
+判例タイムズ,10778,issn,0438-5896,seed_verified,seed:ndl,
+NBL,10040,issn,0287-9670,seed_verified,seed:ndl,
+旬刊商事法務,9328,issn,0289-1107,seed_verified,seed:ndl,
+法学セミナー,8596,issn,0439-3295,seed_verified,seed:ndl/cinii,
+国際商事法務,6911,issn,0287-7511,seed_verified,seed:ndl/cinii,
+法律時報,6718,issn,0387-3420,seed_verified,seed:ndl,
+法学教室,5959,issn,0389-2220,seed_verified,seed:ndl,
+判例評論,5858,ncid,AN00326923,seed_ncid_fallback,seed:cinii_confirmed,判例時報付録。独立ISSN無→NCID AN00326923。公開ISSN未付与
+労働法律旬報,5799,ncid,AN00327813,seed_ncid_fallback,seed:cinii,公開ISSN確認できず→NCID基底
+税理,5763,ncid,AN00080095,seed_ncid_fallback,seed:cinii,公開ISSN確認できず→NCID基底
+公正取引,5574,issn,0425-6247,seed_verified,seed:ndl,
+法曹,5505,ncid,AN00327187,seed_ncid_fallback,seed:cinii,月刊「法曹」(法曹会)。法曹時報とは別誌
+税経通信,4754,ncid,AN00390536,seed_correction,seed:cinii,旧seed 0387-2866は法学論叢のISSN=誤付与
+戸籍時報,4471,issn,0912-1579,seed_verified,seed:kajo,戸籍(NCID AN00274615)とは別誌
+税務弘報,4344,issn,0913-5278,seed_verified,seed:ndl,
+月刊税務事例,4175,issn,0910-5786,seed_verified,seed:cinii/ndl,
+ビジネス法務,4155,ncid,AA11504883,seed_correction,seed:cinii,旧seed 1347-4146は未登録の誤付与
+月刊登記情報,3891,issn,1345-4129,seed_verified,seed:cinii/ndl,登記研究とは別誌
+銀行法務,3827,issn,1341-1179,issn_batch_confirmed,issn_batch_20260622,ndl_name=銀行法務21 = Banking law journal 21 evidence=80 1996→2025
+金融・商事判例,3622,issn,0287-9956,seed_verified,seed:ndl,
+民商法雑誌,3494,issn,1342-5056,seed_verified,seed:ndl,
+自由と正義,3236,issn,0447-7480,seed_verified,seed:nichibenren/cinii,
+手形研究,3165,issn,0494-9692,seed_verified,seed:cinii,継続誌=銀行法務21
+銀行法務21,3000,issn,1341-1179,seed_verified,seed:ndl/cinii,銀行法務(短縮表記)と数字破壊で分裂させない
+季刊労働法,2974,issn,0386-0620,seed_verified,seed:cinii,
+法律のひろば,2930,issn,0916-9806,seed_verified,seed:ndl,巻号運用(ym終端)
+登記研究,2726,ncid,AN00157564,seed_verified,seed:cinii,テイハン。登記インターネットとは別
+時の法令,2661,issn,0493-4067,seed_verified,seed:ndl,
+JCAジャーナル,2409,issn,0386-3042,seed_verified,seed:ndl/jcaa,
+民事研修,2053,issn,0912-1587,seed_verified,seed:cinii/ndl,みんけん:民事研修1342-2766は改題後
+月報司法書士,2032,issn,0388-2578,seed_verified,seed:cinii/ndl,
+中央労働時報,2008,issn,1342-5269,seed_verified,seed:ndl,別冊中央労働時報は別
+季刊労働者の権利,1942,issn,0286-0821,seed_verified,seed:ndl/cinii,日本労働弁護団
+法学研究(慶応義塾大学),1833,issn,0439-3252,issn_batch_confirmed,issn_batch_20260622,ndl_name=愛知学院大学論叢. 法學研究 evidence=42 1958→2026
+速報判例解説,1786,ncid,AA12241495,seed_ncid_fallback,seed:cinii,法学セミナー増刊(新・判例解説Watch)。増刊系
+民法判例百選,1626,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+地方税,1599,ncid,AN00126094,seed_ncid_fallback,seed:cinii,地方財務協会。公開ISSN確認できず
+日本労働研究雑誌,1521,issn,0916-3808,seed_verified,seed:jil/ndl,
+労働法学研究会報,1418,issn,1342-5064,issn_batch_confirmed,issn_batch_20260622,ndl_name=労働法学研究会報 evidence=79 1957→2024
+自治研究,1388,issn,0287-5209,seed_verified,seed:ndl,第一法規
+労働判例,1318,issn,0387-1878,seed_verified,seed:cinii,労働判例ジャーナル(別誌)と区別
+法令解説資料総覧,1303,issn,0387-3617,seed_verified,seed:ndl/cinii,第一法規
+法学協会雑誌,1299,issn,0022-6815,seed_verified,seed:cinii/tokyo-u,評釈4位。東大法学部紀要
+月刊民事法情報,1248,issn,0914-417X,seed_verified,seed:ndl,民事法情報センター(1993廃刊)
+登記インターネット,1201,ncid,AA11407650,seed_ncid_fallback,seed:cinii,民事法情報センター(2010終刊)。登記研究とは別
+法と民主主義,1198,issn,0385-034X,seed_verified,seed:cinii/ndl,日本民主法律家協会
+会社法務A2Z,1196,issn,1882-059X,seed_verified,seed:cinii/ndl,第一法規
+JICPAジャーナル,1185,issn,0915-2857,seed_verified,seed:ndl/cinii,会計監査ジャーナルへ改題前。日本公認会計士協会
+民事月報,1177,ncid,AN00327733,seed_ncid_fallback,seed:cinii,法務省民事局。公開ISSN確認できず
+労働経済判例速報,1146,ncid,AN00327835,seed_correction,seed:cinii,旧seedで誤付与是正済(registry)。ISSN無→NCID
+立命館法学,1135,issn,0483-1330,issn_batch_confirmed,issn_batch_20260622,ndl_name=立命館法學 = Ritsumeikan hogaku / 立命館大学法学会 編 evidence=66 1954→2026
+賃金と社会保障,1093,issn,0911-4718,seed_verified,seed:ndl,旬報社
+季刊事業再生と債権管理,1070,issn,1348-8953,seed_verified,seed:cinii,金融財政事情研究会
+法学新報(中央大学),1070,issn,0009-6296,issn_batch_confirmed,issn_batch_20260622,ndl_name=法学新報 = The Chuo law review / 中央大学法学会 [編] evidence=77 1950→2025
+月刊登記先例解説集,1062,ncid,AN00328066,seed_ncid_fallback,seed:cinii,テイハン(1996終刊)。公開ISSN無
+損害保険研究,1035,issn,0287-6337,seed_verified,seed:jstage,print(online 2434-060X)
+早稲田法学,1023,issn,0389-0546,issn_batch_confirmed,issn_batch_20260622,ndl_name=早稲田法学 = The Waseda law review evidence=52 1980→2024
+実践成年後見,988,issn,1347-0108,seed_verified,seed:ndl,民事法研究会
+地方自治,970,issn,0287-8534,seed_verified,seed:ndl,ぎょうせい(判例地方自治とは別)
+憲法判例百選,953,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+名古屋大学法政論集,943,issn,0439-5905,issn_batch_confirmed,issn_batch_20260622,"ndl_name=名古屋大学法政論集 = Nagoya University, journal of law and politics / 名古屋大学大学院法学研究科 編 evidence=77 1955→2019"
+日本労働法学会誌,928,issn,0386-0639,seed_verified,seed:cinii,法律文化社。号ごとISBN併存
+ケース研究,917,issn,0287-4296,seed_verified,seed:cinii,家庭事件研究会/日本調停協会連合会
+早稲田大学大学院法研論集,908,issn,0285-9378,issn_batch_confirmed,issn_batch_20260622,ndl_name=早稲田大学大学院法研論集 = The Graduate School law review evidence=77 1999→2025
+判例時報,900,issn,0438-5888,seed_verified,seed:ndl,
+同志社法学,892,issn,0387-7612,issn_batch_confirmed,issn_batch_20260622,ndl_name=同志社法学 = The Doshisha law review / 同志社法学会 編 evidence=74 1949→2026
+行政判例百選,867,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+阪大法学,866,issn,0438-4997,issn_batch_confirmed,issn_batch_20260622,ndl_name=阪大法学 = Osaka law review / 大阪大学大学院法学研究科 編 evidence=78 1953→2026
+最高裁判所判例解説――民事篇<平成,851,,,unresolved,,NDL該当なし |sru:no_key
+北大法学論集,833,issn,0385-5953,issn_batch_confirmed,issn_batch_20260622,ndl_name=北大法学論集 = The Hokkaido law review evidence=79 1965→2024
+法令ニュース,762,issn,0286-1054,issn_batch_confirmed,issn_batch_20260622,ndl_name=法令ニュース evidence=78 1996→2001
+法律論叢,727,issn,0389-5947,issn_batch_confirmed,issn_batch_20260622,ndl_name=法律論叢 / 明治大学法律研究所 [編] evidence=78 1953→2026
+法政研究,704,issn,0387-2882,issn_batch_confirmed,issn_batch_20260622,ndl_name=法政研究 evidence=34 1956→2025
+警察学論集,694,issn,0287-6345,seed_verified,seed:ndl,旧字警察學論集はalias
+月刊債権管理,682,issn,1348-8953,issn_batch_confirmed,issn_batch_20260622,ndl_name=事業再生と債権管理 = The turnaround & credit management evidence=37 2003→2026
+研修,649,ncid,AN00327540,seed_ncid_fallback,seed:cinii,誌友会(法務総合研究所系)。公開ISSN無
+判例研究,640,,,unresolved,,NDL該当なし
+関西大学法学論集,624,issn,0437-648X,issn_batch_confirmed,issn_batch_20260622,ndl_name=関西大学法学論集 / 関西大学法学会 編 evidence=78 1954→2019
+法学(東北大学),616,issn,0389-0538,issn_batch_confirmed,issn_batch_20260622,ndl_name=法學研究 : 法律・政治・社会 evidence=13 1968→2018
+労働判例百選<第,592,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+名城法学,590,issn,0461-6898,issn_batch_confirmed,issn_batch_20260622,ndl_name=名城法学 / 名城大学法学会 [編] evidence=69 1957→2026
+龍谷法学,587,issn,0286-4258,issn_batch_confirmed,issn_batch_20260622,ndl_name=龍谷法学 evidence=51 1969→2024
+日本法学(日本大学),583,issn,0287-4601,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本法學 = Journal of law / 日本大学法学会 [編] evidence=75 1957→2025
+租税判例百選<第,575,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+法の支配,575,issn,0439-2892,seed_verified,seed:cinii/ndl,日本法律家協会
+週刊法律新聞,564,ncid,AN10042106,seed_ncid_fallback,seed:cinii,法律新聞社(2020終刊)。公開ISSN無
+民事訴訟法判例百選<第,555,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+労働法令通信,524,ncid,AN00327799,seed_ncid_fallback,seed:cinii,労働法令協会。公開ISSN無
+産大法学(京都産業大学),524,issn,0286-3782,issn_batch_confirmed,issn_batch_20260622,ndl_name=産大法学 / 京都産業大学法学会 編 evidence=80 1967→2015
+法学論叢(京都大学),524,issn,0387-2866,issn_batch_confirmed,issn_batch_20260622,ndl_name=法学論叢 = Kyoto law review evidence=48 1950→2021
+白門,520,issn,1342-3304,issn_batch_confirmed,issn_batch_20260622,ndl_name=白門国文 / 中央大学国文学会 編 evidence=1 1999→1999
+税法学,519,issn,0494-8262,issn_batch_confirmed,issn_batch_20260622,ndl_name=税法学 = Tax jurisprudence evidence=62 1951→2024
+広島法学(広島大学),507,issn,0386-5010,issn_batch_confirmed,issn_batch_20260622,ndl_name=広島法学 = The Hiroshima law journal / 広島大学法学会 編 evidence=78 1978→2026
+パテント,501,issn,0287-4954,seed_verified,seed:ndl,日本弁理士会(別冊パテント2436-5858は別)
+現代法律実務の諸問題<平成,493,,,unresolved,,NDL該当なし
+判例セレクト,486,ncid,AA1115468X,seed_ncid_fallback,seed:cinii,法学教室別冊付録(法学教室本体0389-2220とは別id)
+家庭裁判月報,471,issn,0451-5234,seed_verified,seed:ndl,最高裁(終刊)
+倒産判例百選<第,456,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+神戸学院法学,445,issn,0386-2046,issn_batch_confirmed,issn_batch_20260622,ndl_name=神戸学院法学 evidence=77 1970→2025
+大阪市立大学法学雑誌,441,issn,0441-0351,issn_batch_confirmed,issn_batch_20260622,ndl_name=大阪市立大学法学雑誌 = Hōgaku zasshi (journal of law and politics) of Osaka City University evidence=80 1954→2022
+手形小切手判例百選<第,427,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+民事訴訟雑誌,406,issn,0075-4188,seed_verified,seed:cinii,日本民事訴訟法学会/法律文化社
+東洋法学,406,issn,0564-0245,issn_batch_confirmed,issn_batch_20260622,ndl_name=東洋法学 evidence=78 1959→2025
+労働運動,398,issn,0289-6443,issn_batch_confirmed,issn_batch_20260622,ndl_name=国際労働運動 evidence=1 1997→1997
+捜査研究,398,issn,0286-8490,seed_verified,seed:ndl/cinii,東京法令出版
+福岡大学法学論叢,386,issn,0429-8411,issn_batch_confirmed,issn_batch_20260622,ndl_name=福岡大學法學論叢 = Fukuoka University review of law / 福岡大学法学論叢編集委員会 編 evidence=79 1971→2026
+LIBRA,385,issn,1341-9498,seed_verified,seed:toben,東京弁護士会会報
+知財管理,369,issn,1340-847X,seed_verified,seed:jipa/cinii,日本知的財産協会
+西南学院大学法学論集,368,issn,0286-3286,issn_batch_confirmed,issn_batch_20260622,ndl_name=西南学院大学法学論集 evidence=78 1968→2022
+民事法研究,367,,,unresolved,,NDL該当なし
+発明,364,issn,0385-7115,seed_verified,seed:cinii_ndl_confirmed,発明推進協会(月刊発明)。CiNii NCID:AN00354736
+南山法学,362,issn,0387-1592,issn_batch_confirmed,issn_batch_20260622,ndl_name=南山法学 evidence=78 1977→2025
+法律科学研究所年報,360,issn,2185-2278,seed_verified,seed:ndl_confirmed,明治学院大学法律科学研究所年報。NDLサーチ確認済
+上智法学論集,356,issn,0447-7588,issn_batch_confirmed,issn_batch_20260622,ndl_name=上智法学論集 = Sophia law review evidence=80 1966→2024
+北海学園大学法学研究,356,issn,0385-7255,issn_batch_confirmed,issn_batch_20260622,ndl_name=北海学園大学法学研究 = The Hokkai-Gakuen law journal evidence=73 1970→2024
+独協法学,355,issn,0389-9942,seed_verified,seed:cinii_confirmed,獨協大学 独協法学。CiNii AN00174199
+岡山大学法学会雑誌,354,issn,0386-3050,issn_batch_confirmed,issn_batch_20260622,ndl_name=岡山大学法学会雑誌 / 岡山大学法学会 編 evidence=74 1970→2025
+労働経済旬報,352,issn,1342-5242,issn_batch_confirmed,issn_batch_20260622,ndl_name=労働経済旬報 evidence=80 1950→2000
+独禁法審決・判例百選<第,351,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+大阪弁護士会,344,,,unresolved,,NDL該当なし
+会社法判例百選<第,342,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+季刊実務民事法,342,issn,0288-5107,seed_verified,seed:cinii,日本評論社
+法学志林(法政大学),342,issn,0387-2874,issn_batch_confirmed,issn_batch_20260622,ndl_name=法學志林 = Review of law and political sciences evidence=78 1949→2025
+法学政治学論究(慶応義塾大学),337,issn,0916-278X,seed_verified,seed:ndl_overlay_suffix,慶應義塾大学 法学政治学論究。ndl_overlay suffix-match
+Law & Technology,335,issn,1346-812X,seed_verified,seed:alias,law&technology(民事法研究会)の表記ゆれ=同一誌
+専修法学論集,334,issn,0386-5800,issn_batch_confirmed,issn_batch_20260622,ndl_name=専修法学論集 evidence=80 1969→2026
+貿易と関税,333,issn,0406-4984,seed_verified,seed:cinii,日本関税協会
+地方自治職員研修,331,issn,1341-3929,issn_batch_confirmed,issn_batch_20260622,ndl_name=地方自治職員研修 evidence=79 1996→2016
+青山法学論集,331,issn,0518-1208,issn_batch_confirmed,issn_batch_20260622,ndl_name=青山法学論集 = The Aoyama law review / 青山学院大学法学会 編 evidence=77 1959→2012
+商法(総則・商行為)判例百選<第,328,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+警察時報,328,ncid,AN00327438,seed_ncid_fallback,seed:cinii,警察時報社(2012終刊)。公開ISSN無
+家族法判例百選<第,323,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+最高裁判所判例解説――民事篇<昭和,322,,,unresolved,,NDL該当なし |sru:no_key
+亜細亜法学,321,issn,0388-6611,issn_batch_confirmed,issn_batch_20260622,ndl_name=亜細亜法学 / 亜細亜大学法学研究所 編 evidence=80 1966→2021
+月刊消費者,317,issn,0288-8122,issn_batch_confirmed,issn_batch_20260622,ndl_name=月刊消費者信用 = The consumer credit monthly evidence=44 1996→2025
+判例セレクト’,316,,,unresolved,,NDL該当なし
+コピライト,310,issn,0912-9782,seed_verified,seed:ndl,著作権情報センター
+新聞研究,309,issn,0288-0652,issn_batch_confirmed,issn_batch_20260622,ndl_name=新聞研究 / 日本新聞協会 [編] evidence=74 1951→2025
+TKC税研情報,307,issn,1347-1643,seed_verified,seed:ndl/cinii,TKC税務研究所
+慶応法学,304,issn,1880-0750,seed_verified,seed:ndl_overlay_suffix,慶應義塾大学法科大学院 慶應法学。ndl_overlay suffix-match
+論究ジュリスト,302,issn,2187-1302,issn_batch_confirmed,issn_batch_20260622,ndl_name=論究ジュリスト = Quarterly jurist evidence=46 2012→2022
+医療判例解説,297,,,unresolved,,NDL該当なし |sru:no_key
+法政理論,297,issn,0286-1577,issn_batch_confirmed,issn_batch_20260622,ndl_name=法政理論 / 新潟大学法学会 編 evidence=75 1972→2026
+島大法学,289,issn,0583-0362,issn_batch_confirmed,issn_batch_20260622,ndl_name=島大法学 evidence=79 1971→2026
+愛知大学法学部法経論集,281,issn,0916-5673,issn_batch_confirmed,issn_batch_20260622,ndl_name=愛知大学法学部法経論集 evidence=80 1997→2014
+経営法務,280,,,unresolved,,NDL該当なし |sru:no_key
+社会保障判例百選<第,279,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+愛知学院大学論叢(法学研究),276,issn,0439-3252,issn_batch_confirmed,issn_batch_20260622,ndl_name=愛知学院大学論叢. 法學研究 evidence=74 1958→2026
+一橋法学,273,issn,1347-0388,issn_batch_confirmed,issn_batch_20260622,ndl_name=一橋法学 / 「一橋法学」編集委員会 編 evidence=79 2002→2025
+神戸法学雑誌(神戸大学),272,issn,0452-2400,issn_batch_confirmed,issn_batch_20260622,ndl_name=神戸法学雑誌 = Kobe law journal evidence=74 1951→2022
+大学院研究年報(法学研究科篇)(中央大学),272,,,unresolved,,NDL該当なし
+公法研究,262,issn,0286-2492,issn_batch_confirmed,issn_batch_20260622,ndl_name=早稲田政治公法研究 = The Waseda study of politics and public law / 早稲田大学大学院政治学研究科 編 evidence=49 1996→2011
+宗教法,259,issn,0288-6820,seed_verified,seed:cinii,宗教法学会
+日本労働協会雑誌,255,issn,0029-0378,seed_verified,seed:cinii,日本労働研究雑誌(0916-3808)の前身
+香川法学,255,issn,0286-9705,issn_batch_confirmed,issn_batch_20260622,ndl_name=香川法学 = Kagawa law review / 香川大学法学会 編 evidence=77 1982→2025
+東京大学大学院法学政治学研究科専修コース研究年報,254,,,unresolved,,NDL該当なし |sru:no_key
+創価法学,253,issn,0388-3019,issn_batch_confirmed,issn_batch_20260622,ndl_name=創価法学 = The Soka law review evidence=79 1976→2019
+金沢法学,251,issn,0451-324X,issn_batch_confirmed,issn_batch_20260622,ndl_name=金沢法学 evidence=72 1955→2024
+家庭の法と裁判,250,issn,2189-1702,seed_verified,seed:amazon/cinii,
+千葉大学法学論集,250,issn,0912-7208,issn_batch_confirmed,issn_batch_20260622,ndl_name=千葉大学法学論集 = Chiba journal of law and politics / 千葉大学法学会 編 evidence=73 1991→2026
+熊本法学,245,issn,0452-8204,issn_batch_confirmed,issn_batch_20260622,ndl_name=熊本法学 = Kumamoto law review evidence=79 1964→2026
+法学研究論集(明治大学),244,issn,1340-9131,sru_unique,ndl_sru:isPartOf_issn,NDL該当なし |sru exact n=44
+日本の科学者,237,issn,0029-0335,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本の科学者 = Journal of Japanese scientists / 日本科学者会議 編 evidence=76 1966→2026
+修道法学(広島修道大学),231,issn,0386-6467,seed_verified,seed:ndl_overlay_suffix,広島修道大学 修道法学。ndl_overlay suffix-match
+国際私法判例百選<第,229,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+立教法学,225,issn,0485-1250,issn_batch_confirmed,issn_batch_20260622,ndl_name=立教法学 = St. Paul's review of law and politics / 立教法学会 編 evidence=72 1964→2026
+日税研論集,217,issn,0912-9685,issn_batch_confirmed,issn_batch_20260622,ndl_name=日税研論集 / 日本税務研究センター 編 evidence=67 1996→2025
+成蹊法学,216,issn,0388-8827,issn_batch_confirmed,issn_batch_20260622,"ndl_name=成蹊法学 = The journal of law, political science and humanities / 成蹊大学法学会 編 evidence=78 1969→2026"
+日本不動産学会誌,215,issn,0911-3576,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本不動産学会誌 = The Japanese journal of real estate sciences / 日本不動産学会出版編集委員会 編 evidence=75 1985→2025
+交通事故判例百選<第,214,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+白鴎法学,213,issn,1348-8473,issn_batch_confirmed,issn_batch_20260622,ndl_name=白鴎法学 evidence=80 1994→2025
+神奈川法学,209,issn,0453-185X,issn_batch_confirmed,issn_batch_20260622,ndl_name=神奈川法学 evidence=74 1965→2026
+民事執行・保全判例百選<第,208,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+琉大法学,206,issn,0485-7763,issn_batch_confirmed,issn_batch_20260622,"ndl_name=琉大法學 / 琉球大学人文社会学部, 琉球大学大学院法務研究科 編 evidence=79 1972→2025"
+法政論集,205,issn,0439-5905,issn_batch_confirmed,issn_batch_20260622,"ndl_name=名古屋大学法政論集 = Nagoya University, journal of law and politics / 名古屋大学大学院法学研究科 編 evidence=41 1955→2019"
+佐賀大学経済論集,202,issn,0286-7230,issn_batch_confirmed,issn_batch_20260622,ndl_name=佐賀大学経済論集 / 佐賀大学経済学会 evidence=80 1977→2010
+大阪経大論集,200,issn,0474-7909,issn_batch_confirmed,issn_batch_20260622,ndl_name=大阪経大論集 = Journal of Osaka University of Economics / 大阪経大学会 編 evidence=80 1954→2015
+成城法学,200,issn,0386-5711,issn_batch_confirmed,issn_batch_20260622,ndl_name=成城法学 = Seijo law review / 成城大学法学会 編 evidence=58 1979→2024
+民事訴訟法判例百選,197,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+一橋論叢,196,issn,0018-2818,issn_batch_confirmed,issn_batch_20260622,ndl_name=一橋論叢 = The Hitotsubashi review / 一橋大学一橋学会一橋論叢編集所 編 evidence=80 1938→2005
+近畿大学法学,195,issn,0916-4537,issn_batch_confirmed,issn_batch_20260622,ndl_name=近畿大学法学 = Kindai University law review / 近畿大学法学会 編 evidence=64 1954→2026
+富大経済論集,194,issn,0286-3642,issn_batch_confirmed,issn_batch_20260622,"ndl_name=富大経済論集 = The journal of economic studies, University of Toyama : 富山大学紀要 / 編集委員会 編 evidence=78 1950→2025"
+中京法学,189,issn,0286-2654,issn_batch_confirmed,issn_batch_20260622,ndl_name=中京法学 = Chukyo law review evidence=78 1966→2022
+刑事弁護,188,,,unresolved,,NDL該当なし
+駿河台法学,188,issn,0914-9112,issn_batch_confirmed,issn_batch_20260622,ndl_name=駿河台法学 = Surugadai journal of law and politics / 駿河台法学編集委員会 編 evidence=42 1988→2026
+日仏法学,187,issn,0286-7281,issn_batch_confirmed,issn_batch_20260622,ndl_name=日仏法学 / 日仏法学会 編 evidence=71 1973→2025
+都市問題研究,184,issn,0387-3390,issn_batch_confirmed,issn_batch_20260622,ndl_name=都市問題研究 = Journal of municipal problems / 大阪市政策企画室企画部総合計画担当 編 evidence=76 1949→2009
+愛媛法学会雑誌,183,issn,0389-8571,issn_batch_confirmed,issn_batch_20260622,ndl_name=愛媛法学会雑誌 = Ehime law journal / 愛媛大学法学会編集委員会 編 evidence=80 1982→2019
+都道府県展望,176,,,unresolved,,NDL該当なし
+立正法学論集,174,issn,0286-4800,issn_batch_confirmed,issn_batch_20260622,ndl_name=立正法学論集 = The Rissho law review evidence=78 1982→2023
+官公労働,173,issn,0917-1592,issn_batch_confirmed,issn_batch_20260622,ndl_name=官公労働 evidence=71 1952→1998
+関東学院法学,173,issn,0918-063X,issn_batch_confirmed,issn_batch_20260622,ndl_name=関東学院法学 = Kanto Gakuin law review / 関東学院法学編集委員会 編 evidence=72 1996→2025
+地方自治判例百選<第,168,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+情報法制研究,168,issn,2433-0264,issn_batch_confirmed,issn_batch_20260622,ndl_name=情報法制研究 evidence=70 2017→2025
+九州法学会会報,166,,,unresolved,,NDL該当なし
+久留米大学法学,165,issn,0915-0463,issn_batch_confirmed,issn_batch_20260622,ndl_name=久留米大学法学 evidence=55 1998→2023
+横浜国際経済法学,164,issn,0919-9357,issn_batch_confirmed,issn_batch_20260622,ndl_name=横浜国際経済法学 = Yokohama law review / 横浜国際経済法学会 編 evidence=78 1993→2013
+鹿児島大学法学論集,163,issn,0389-0813,ndl_unique,ndl_serial_overlay,
+資料版商事法務,162,issn,0911-4408,issn_batch_confirmed,issn_batch_20260622,ndl_name=資料版商事法務 evidence=80 1999→2024
+企業法学,161,issn,2187-0144,issn_batch_confirmed,issn_batch_20260622,ndl_name=企業法学研究 evidence=36 2014→2024
+九大法学,160,issn,0453-0209,issn_batch_confirmed,issn_batch_20260622,ndl_name=九大法学 = Kyudai law review evidence=73 1996→2025
+司法研修所論集,159,issn,1342-5080,seed_verified,seed:cinii_confirmed,ISSN confirmed CiNii NCID:AN00107442。候補9784866841281はISBNで除外
+大東法学,158,issn,0287-0940,issn_batch_confirmed,issn_batch_20260622,ndl_name=大東法学 evidence=77 1976→2026
+東京都立大学法学会雑誌,153,issn,0386-8745,issn_batch_confirmed,issn_batch_20260622,ndl_name=東京都立大学法学会雑誌 / 東京都立大学法学会 編 evidence=78 1961→2005
+六甲台論集(法学政治学篇)(神戸大学),153,,,unresolved,,NDL該当なし
+下級審商事判例評釈(昭和,153,,,unresolved,,NDL該当なし |sru:no_key
+ローヤー,152,,,unresolved,,NDL該当なし |sru:no_key
+京都学園法学,152,issn,0916-4715,issn_batch_confirmed,issn_batch_20260622,ndl_name=京都学園法学 = Kyoto Gakuen law review / 京都学園大学法学会 編 evidence=37 1996→2015
+国士舘法学,152,issn,0286-8911,ndl_unique,ndl_serial_overlay,
+日本国際経済法学会年報,151,issn,1342-1301,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本国際経済法学会年報 = International economic law / 日本国際経済法学会 編 evidence=64 1992→2024
+中央学院大学法学論叢,149,issn,0916-4022,issn_batch_confirmed,issn_batch_20260622,ndl_name=中央学院大学法学論叢 evidence=80 1987→2022
+刑事法ジャーナル,149,,,unresolved,,NDL該当なし
+九州国際大学法学論集,148,issn,1341-061X,issn_batch_confirmed,issn_batch_20260622,ndl_name=九州国際大学法学論集 = Kyusyu International University law journal evidence=54 1994→2023
+国学院法学,148,issn,0454-1723,issn_batch_confirmed,issn_batch_20260622,ndl_name=国学院法学 evidence=79 1963→2022
+明治学院大学法学研究,144,issn,1349-4074,issn_batch_confirmed,issn_batch_20260622,ndl_name=明治学院大学法学研究 = Meiji Gakuin law journal evidence=80 2004→2026
+札幌学院法学,139,issn,0910-0121,issn_batch_confirmed,issn_batch_20260622,ndl_name=札幌学院法学 evidence=80 1988→2026
+ビジネスガイド,137,ncid,AN0026915X,seed_correction,seed:cinii,旧seed 0387-7035は未登録の誤付与
+帝京法学,137,issn,0288-1659,issn_batch_confirmed,issn_batch_20260622,ndl_name=帝京法学 = Teikyo law review evidence=73 1970→2024
+東海法学,136,issn,0913-4441,issn_batch_confirmed,issn_batch_20260622,ndl_name=東海法学 = Tokai law review evidence=64 1987→2018
+消費者法判例百選<第,135,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+住民と自治,133,issn,1343-6244,issn_batch_confirmed,issn_batch_20260622,ndl_name=住民と自治 = Jumin to jichi monthly / 自治体問題研究所 編 evidence=71 1997→2026
+横浜法学,133,issn,2188-1766,issn_batch_confirmed,issn_batch_20260622,ndl_name=横浜法学 = Yokohama law review / 横浜法学会 編 evidence=74 2013→2026
+法学研究(大阪学院大学),133,issn,0439-3252,issn_batch_confirmed,issn_batch_20260622,ndl_name=愛知学院大学論叢. 法學研究 evidence=42 1958→2026
+明治大学法科大学院論集,132,issn,2187-364X,issn_batch_confirmed,issn_batch_20260622,ndl_name=明治大学法科大学院論集 = Meiji Law School review evidence=72 2006→2026
+松山大学論集,132,issn,0916-3298,issn_batch_confirmed,issn_batch_20260622,ndl_name=松山大学論集 evidence=78 1989→2022
+帝塚山法学,131,issn,1343-9596,issn_batch_confirmed,issn_batch_20260622,ndl_name=帝塚山法学 = Tezukayama law review evidence=68 1998→2021
+月刊民放,131,issn,0387-3811,issn_batch_confirmed,issn_batch_20260622,ndl_name=月刊民放 = Commercial broadcasting monthly / 日本民間放送連盟 編 evidence=80 1996→2017
+消費者法判例百選(別冊ジュリスト,129,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+年報医事法学,129,issn,0912-7194,issn_batch_confirmed,issn_batch_20260622,ndl_name=年報医事法学 / 日本医事法学会 編 evidence=66 1996→2025
+下級審商事判例評釈――昭和,129,,,unresolved,,NDL該当なし |sru:no_key
+民事執行・保全判例百選(別冊ジュリスト,127,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+関西大学大学院法学ジャーナル,124,issn,0286-8350,issn_batch_confirmed,issn_batch_20260622,ndl_name=関西大学大学院法学ジャーナル evidence=47 1967→2025
+環境法判例百選<第,123,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+渉外判例百選<第,123,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+流経法学(流通経済大学),122,ncid,AA11640418,sru_ncid,ndl_sru:isPartOf_ncid,NDL該当なし |sru ncid n=39
+沖縄法学,121,issn,0287-0649,issn_batch_confirmed,issn_batch_20260622,ndl_name=沖縄法学 evidence=67 1973→2025
+山梨学院大学法学論集,120,issn,0387-6160,issn_batch_confirmed,issn_batch_20260622,ndl_name=山梨学院大学法学論集 evidence=50 1985→2025
+彦根論叢,120,issn,0387-5989,issn_batch_confirmed,issn_batch_20260622,ndl_name=彦根論叢 evidence=73 1950→2017
+甲南法学,120,issn,0452-4179,issn_batch_confirmed,issn_batch_20260622,ndl_name=甲南法学 evidence=76 1967→2025
+下級審商事判例評釈(平成,120,,,unresolved,,NDL該当なし |sru:no_key
+月刊交通,119,issn,0385-7956,issn_batch_confirmed,issn_batch_20260622,ndl_name=月刊交通 / 道路交通研究会 編 evidence=80 1998→2026
+民法研究,118,issn,2188-7063,issn_batch_confirmed,issn_batch_20260622,ndl_name=民法研究. 第2集 : Review of civil law = Revue de droit civil = Zeitschrift für burgerliches Recht evidence=61 2018→2026
+"法学セミナー別冊付録,p",116,,,unresolved,,NDL該当なし |sru:no_key
+摂南法学,115,issn,0915-1265,issn_batch_confirmed,issn_batch_20260622,ndl_name=摂南法学 / 摂南大学法学部 編 evidence=76 1989→2026
+商学論集,114,issn,0287-8070,issn_batch_confirmed,issn_batch_20260622,ndl_name=商学論集 evidence=33 1943→2017
+マスコミ市民,111,,,unresolved,,NDL該当なし |sru:no_key
+朝日法学論集,111,issn,0915-0072,issn_batch_confirmed,issn_batch_20260622,ndl_name=朝日法学論集 evidence=80 1988→2026
+保険法判例百選(別冊ジュリスト,110,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+民事執行法判例百選(別冊ジュリスト,110,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+信州大学法学論集,109,issn,1347-1198,issn_batch_confirmed,issn_batch_20260622,ndl_name=信州大学法学論集 = Law review / 信州大学経済学部 編 evidence=80 2002→2014
+大阪経済法科大学法学論集,109,issn,0386-0108,issn_batch_confirmed,issn_batch_20260622,ndl_name=大阪経済法科大学法学論集 evidence=79 1979→2021
+清和法学研究,108,issn,1340-7546,issn_batch_confirmed,issn_batch_20260622,ndl_name=清和法学研究 = The Seiwa journal of law & politics evidence=79 1994→2018
+メディア判例百選(別冊ジュリスト,107,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+税経新報,107,,,unresolved,,NDL該当なし |sru:no_key
+商法判例百選(別冊ジュリスト,106,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+月刊高校教育,106,,,unresolved,,NDL該当なし |sru:no_key
+法学雑誌ta^tonnement(タートンヌマン),106,,,unresolved,,NDL該当なし |sru:no_key
+著作権判例百選<第,105,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+日本大学大学院法学研究年報,105,issn,0287-4245,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本大学大学院法学研究年報 evidence=80 1999→2024
+法学会雑誌(首都大学東京),105,issn,1880-7615,seed_verified,seed:cinii_confirmed,首都大学東京（旧都立大学）法学会雑誌 後継誌 2005年〜。CiNii AA12070417
+メディア判例百選<第,104,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+供託先例判例百選<第,104,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+商法研究,104,,,unresolved,,NDL該当なし
+慶応義塾大学大学院法学研究科論文集,104,issn,0286-3723,sru_unique,ndl_sru:isPartOf_issn,NDL該当なし |sru exact n=37
+明治学院大学法科大学院ローレビュー,104,issn,1349-4376,issn_batch_confirmed,issn_batch_20260622,ndl_name=明治学院大学法科大学院ローレビュー = Meiji Gakuin University Graduate Law School law review evidence=79 2004→2017
+国際私法判例百選<新法対応補正版>(別冊ジュリスト,103,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+TKC税研時報,103,,,unresolved,,NDL該当なし |sru:no_key
+国際私法判例百選(別冊ジュリスト,101,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+商業登記先例判例百選(別冊ジュリスト,101,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+供託先例判例百選(別冊ジュリスト,101,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+市政,101,issn,0385-0390,issn_batch_confirmed,issn_batch_20260622,ndl_name=都市政策 evidence=7 1991→1994
+姫路法学(姫路独協大学),101,issn,0914-9570,ndl_unique,ndl_serial_overlay,
+札幌法学(札幌大学),101,issn,0915-809X,ndl_unique,ndl_serial_overlay,
+金融商品取引法判例百選(別冊ジュリスト,100,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+不動産取引判例百選<第,100,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+会社法判例百選(別冊ジュリスト,100,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+損害保険判例百選<第,100,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+Patents & Licensing,100,,,unresolved,,NDL該当なし |sru:no_key
+選挙,100,,,unresolved,,NDL該当なし |sru:no_key
+私法学研究(駒沢大学),99,ncid,AN00107373,sru_ncid,ndl_sru:isPartOf_ncid,NDL該当なし |sru ncid n=49
+三重大学法経論叢,98,issn,0289-7156,issn_batch_confirmed,issn_batch_20260622,ndl_name=三重大学法経論叢 evidence=79 1984→2025
+広島法科大学院論集,97,issn,1880-1897,issn_batch_confirmed,issn_batch_20260622,ndl_name=広島法科大学院論集 = Hiroshima law review evidence=72 2005→2026
+商法(保険・海商)判例百選<第,96,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+学習院大学法学会雑誌,96,issn,1341-7444,issn_batch_confirmed,issn_batch_20260622,ndl_name=学習院大学法学会雑誌 = Gakushuin review of law and politics / 学習院大学法学会 編 evidence=73 1996→2025
+関東学園大学法学紀要,96,issn,0917-3137,issn_batch_confirmed,issn_batch_20260622,"ndl_name=関東学園大学法学紀要 = Kanto Gakuen University, journal of law and politics / 関東学園大学法学紀要編集担当 編 evidence=57 1991→2009"
+法学研究所紀要(大阪経済法科大学),95,,,unresolved,,NDL該当なし
+経団連月報,94,,,unresolved,,NDL該当なし |sru:no_key
+公証法学,92,issn,0288-5786,issn_batch_confirmed,issn_batch_20260622,ndl_name=公証法学 evidence=78 1972→2024
+東北法学,92,issn,0385-7468,issn_batch_confirmed,issn_batch_20260622,ndl_name=東北法学 / 東北大学大学院東北法学刊行会 編 evidence=46 2009→2026
+特許管理,92,,,unresolved,,NDL該当なし |sru:no_key
+弁護士研修講座<平成,92,,,unresolved,,NDL該当なし |sru:no_key
+青森法政論叢,92,issn,1345-8094,issn_batch_confirmed,issn_batch_20260622,ndl_name=青森法政論叢 / 青森法学会 編 evidence=79 2000→2025
+高岡法学,90,issn,0915-9339,issn_batch_confirmed,issn_batch_20260622,ndl_name=高岡法学 evidence=80 1990→2024
+英米判例百選<第,89,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+大阪府立大学経済研究,89,issn,0473-4661,issn_batch_confirmed,issn_batch_20260622,ndl_name=大阪府立大学経済研究叢書 evidence=10 1960→2023
+専修法研論集,89,issn,0914-2347,issn_batch_confirmed,issn_batch_20260622,ndl_name=専修法研論集 : 専修大学大学院紀要 / 「専修法研論集」編集委員会 編 evidence=72 1999→2025
+志学館法学,89,issn,1345-5893,issn_batch_confirmed,issn_batch_20260622,ndl_name=志學館法学 = Shigakukan law review / 志學館大学法学部 編 evidence=79 2000→2025
+平成法政研究,88,issn,1342-6796,issn_batch_confirmed,issn_batch_20260622,ndl_name=平成法政研究 / 平成国際大学法政学会 [編] evidence=80 1996→2026
+桃山法学,88,issn,1348-1312,issn_batch_confirmed,issn_batch_20260622,ndl_name=桃山法学 evidence=78 2003→2025
+医事法判例百選<第,87,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+Law & Practice,86,,,unresolved,,NDL該当なし |sru:no_key
+人権通信,86,issn,0289-3150,issn_batch_confirmed,issn_batch_20260622,ndl_name=人権通信 : 全国人権擁護委員連合会機関誌 / 全国人権擁護委員連合会 [編] evidence=56 1966→1998
+福岡大学大学院論集,86,issn,0386-507X,issn_batch_confirmed,issn_batch_20260622,ndl_name=福岡大学大学院論集 = Journal of the Graduate School of Fukuoka University / 福岡大学大学院論集刊行委員会 編 evidence=79 2000→2015
+最高裁判所判例解説――刑事篇<平成,85,,,unresolved,,NDL該当なし |sru:no_key
+日本大学法科大学院法務研究,84,issn,1349-7820,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本大学法科大学院法務研究 evidence=80 2005→2026
+東北学院大学論集,84,issn,0385-4094,issn_batch_confirmed,issn_batch_20260622,ndl_name=東北学院大学論集. 法律学 evidence=79 1965→2004
+明治学院論叢(法学研究),83,issn,0918-9858,issn_batch_confirmed,issn_batch_20260622,ndl_name=明治学院論叢 evidence=3 1967→1978
+静岡大学法経研究,82,issn,0287-2005,ndl_unique,ndl_serial_overlay,
+日本女性法律家協会会報,81,,,unresolved,,NDL該当なし |sru:no_key
+神奈川大学法学研究所研究年報,81,issn,0388-9025,issn_batch_confirmed,issn_batch_20260622,ndl_name=神奈川大学法学研究所研究年報 evidence=77 1980→2023
+法学ガイド,81,,,unresolved,,NDL該当なし |sru:no_key
+公益法人,80,,,unresolved,,NDL該当なし
+立教大学大学院法学研究,80,issn,0388-5429,issn_batch_confirmed,issn_batch_20260622,ndl_name=立教大学大学院法学研究 / 立教大学大学院法学研究会 編 evidence=76 1999→2026
+現代法学(東京経済大学),80,issn,1345-9821,sru_unique,ndl_sru:isPartOf_issn,NDL該当なし |sru exact n=35
+税務大学校論叢,80,issn,0286-8938,issn_batch_confirmed,issn_batch_20260622,ndl_name=税務大学校論叢 evidence=26 1970→2020
+現代法律実務の諸問題<令和,79,,,unresolved,,NDL該当なし
+高崎経済大学論集,78,issn,0496-7534,issn_batch_confirmed,issn_batch_20260622,ndl_name=高崎経済大学論集 = The Economic journal of Takasaki City University of Economics evidence=76 1963→2024
+京女法学,76,issn,2186-7194,issn_batch_confirmed,issn_batch_20260622,ndl_name=京女法学 = Kyojo hougaku : Kyojo journal of law and politics evidence=80 2011→2026
+公企労研究,74,,,unresolved,,NDL該当なし |sru:no_key
+東北学院法学,74,issn,1880-8697,issn_batch_confirmed,issn_batch_20260622,ndl_name=東北学院法学 = The Tohoku Gakuin University review of law and political science evidence=67 2006→2024
+比較法学(早稲田大学),74,issn,0440-8055,seed_verified,seed:ndl_overlay_suffix,早稲田大学 比較法学。ndl_overlay suffix-match
+用地,73,,,unresolved,,NDL該当なし |sru:no_key
+龍谷大学大学院法学研究,71,issn,1345-4544,issn_batch_confirmed,issn_batch_20260622,"ndl_name=龍谷大学大学院法学研究 = The bulletin of the Graduate School of Law, Ryukoku University / 龍谷大学大学院法学研究編集委員会 編 evidence=50 1999→2025"
+部落問題研究,71,issn,0287-7856,issn_batch_confirmed,issn_batch_20260622,ndl_name=部落問題研究 : 部落問題研究所紀要 evidence=59 1965→2025
+社会科学論集,70,issn,0389-407X,issn_batch_confirmed,issn_batch_20260622,ndl_name=社会科学論集 : 高知短期大学研究報告 / 高知短期大学社会科学会 編 evidence=80 1955→2021
+シュトイエル,67,,,unresolved,,NDL該当なし |sru:no_key
+大東文化大学法学研究所報,67,ncid,AN10486981,sru_ncid,ndl_sru:isPartOf_ncid,NDL該当なし |sru ncid n=48
+学習院大学大学院法学研究科法学論集,67,issn,0919-391X,issn_batch_confirmed,issn_batch_20260622,ndl_name=学習院大学大学院法学研究科法学論集 evidence=80 1993→2026
+沖縄法政研究,67,issn,1344-8242,issn_batch_confirmed,issn_batch_20260622,ndl_name=沖縄法政研究 / 沖縄法政研究所 [編] evidence=76 1999→2026
+現代法律実務の諸問題(上)<平成,67,,,unresolved,,NDL該当なし
+労働福祉,64,,,unresolved,,NDL該当なし |sru:no_key
+不法行為法(法学セミナー増刊)』所収p,64,,,unresolved,,NDL該当なし |sru:no_key
+弁護士研修講座――平成,64,,,unresolved,,NDL該当なし |sru:no_key
+比較憲法学研究,63,,,unresolved,,NDL該当なし
+現代判例民法学の課題――森泉章教授還暦記念論集』所収p,63,,,unresolved,,NDL該当なし |sru:no_key
+商標・意匠・不正競争判例百選(別冊ジュリスト,61,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+最高裁判所判例解説――民事篇<令和,60,,,unresolved,,NDL該当なし |sru:no_key
+拓殖大学論集,60,issn,0288-6650,issn_batch_confirmed,issn_batch_20260622,ndl_name=拓殖大学論集 / 拓殖大学研究所 [編] evidence=71 1956→1992
+商標・意匠・不正競争判例百選<第,59,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+名経法学,58,issn,1340-3664,issn_batch_confirmed,issn_batch_20260622,ndl_name=名経法学 = Meikei law review evidence=50 1999→2017
+大学と学生,57,issn,0286-4657,issn_batch_confirmed,issn_batch_20260622,ndl_name=大学と学生 / 日本学生支援機構 編 evidence=77 1982→2010
+宮崎産業経営大学法学論集,57,issn,0915-2016,issn_batch_confirmed,issn_batch_20260622,ndl_name=宮崎産業経営大学法学論集 evidence=80 1988→2024
+現代判例民法学の理論と展望――森泉章先生古稀祝賀論集』所収p,57,,,unresolved,,NDL該当なし |sru:no_key
+InfoCom REVIEW,56,,,unresolved,,NDL該当なし |sru:no_key
+法政法科大学院紀要,56,,,unresolved,,NDL該当なし |sru:no_key
+下関市立大学論集,55,issn,0387-5296,issn_batch_confirmed,issn_batch_20260622,ndl_name=下関市立大学論集 = Shimonoseki City University review / 下関市立大学学会 編 evidence=78 1978→2019
+駒沢法学,54,ncid,AA11606475,sru_ncid,ndl_sru:isPartOf_ncid,NDL該当なし |sru ncid n=50
+青山社会科学紀要,54,issn,0286-3901,issn_batch_confirmed,issn_batch_20260622,ndl_name=青山社会科学紀要 evidence=80 1973→2026
+岡山商科大学法学論叢,53,issn,0919-5807,issn_batch_confirmed,issn_batch_20260622,ndl_name=岡山商科大学法学論叢 / 岡山商科大学学会 [編] evidence=77 1993→2026
+武蔵大学論集,53,issn,0287-1181,issn_batch_confirmed,issn_batch_20260622,ndl_name=武蔵大学論集 = The journal of Musashi University evidence=80 1953→2020
+白鴎大学大学院法学研究年報,53,issn,1880-2699,ndl_unique,ndl_serial_overlay,
+最高裁判所判例解説――刑事篇<昭和,52,,,unresolved,,NDL該当なし |sru:no_key
+学習院法務研究,52,issn,1884-8737,issn_batch_confirmed,issn_batch_20260622,ndl_name=学習院法務研究 evidence=80 2010→2026
+下級審商事判例評釈,52,,,unresolved,,NDL該当なし |sru:no_key
+専修大学法学研究所所報,52,issn,0913-7165,issn_batch_confirmed,issn_batch_20260622,ndl_name=専修大学法学研究所所報 evidence=75 1999→2026
+北大法学研究科ジュニア・リサーチ・ジャーナル,52,ncid,AN1046383X,sru_ncid,ndl_sru:isPartOf_ncid,NDL該当なし |sru ncid n=50
+八幡大学論集,51,issn,0385-3578,issn_batch_confirmed,issn_batch_20260622,ndl_name=八幡大学論集 / 八幡大学法経学会 [編] evidence=79 1956→1989
+神戸法学年報(神戸大学),51,issn,0912-3709,ndl_unique,ndl_serial_overlay,
+愛知学院大学法学部同窓会創立,51,,,unresolved,,NDL該当なし |sru:no_key
+関西大学法科大学院ジャーナル,51,,,unresolved,,NDL該当なし |sru:no_key
+CIPICジャーナル,50,,,unresolved,,NDL該当なし |sru:no_key
+商事法務,50,,,unresolved,,NDL該当なし
+季刊用地,50,,,unresolved,,NDL該当なし |sru:no_key
+法と秩序,50,,,unresolved,,NDL該当なし |sru:no_key
+民法の基本判例<第,50,,,unresolved,,NDL該当なし |sru:no_key
+民法の基本判例(別冊法学教室 基本判例シリーズ,50,,,unresolved,,NDL該当なし |sru:no_key
+白鴎大学法科大学院紀要,50,issn,1882-4277,issn_batch_confirmed,issn_batch_20260622,ndl_name=白鴎大学法科大学院紀要 evidence=79 2007→2017
+著作権研究,50,issn,0387-9399,issn_batch_confirmed,issn_batch_20260622,ndl_name=著作権研究 = Copyright law journal / 著作権法学会 編 evidence=57 1967→2019
+環境法判例百選(別冊ジュリスト,49,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+消費者取引判例百選(別冊ジュリスト,49,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+中京大学大学院生法学研究論集,49,issn,0389-7958,ndl_unique,ndl_serial_overlay,
+三重法経,49,issn,0287-5810,issn_batch_confirmed,issn_batch_20260622,ndl_name=三重法經 evidence=78 1958→2019
+法学紀要(日本大学),48,issn,0287-0665,issn_batch_confirmed,issn_batch_20260622,"ndl_name=法学紀要 = Journal of law, political science and economics evidence=1 1984→1984"
+会社法――重要問題と解説<改訂版>(法学演習講座,48,,,unresolved,,NDL該当なし |sru:no_key
+現代刑事法,48,,,unresolved,,NDL該当なし |sru:no_key
+刑事訴訟法判例百選<第,47,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+宗教判例百選<第,47,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+会社判例百選<第,47,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+早稲田大学法務研究論叢,47,issn,2432-1702,issn_batch_confirmed,issn_batch_20260622,ndl_name=早稲田大学法務研究論叢 evidence=79 2016→2025
+西南学院大学大学院法学研究論集,47,issn,0287-4881,issn_batch_confirmed,issn_batch_20260622,ndl_name=西南学院大学大学院法学研究論集 = Seinan Gakuin University Graduate School graduate studies in law / 西南学院大学大学院 編 evidence=48 1982→2026
+法学,47,issn,0389-0538,issn_batch_confirmed,issn_batch_20260622,ndl_name=法學研究 : 法律・政治・社会 evidence=13 1968→2018
+新倒産判例百選(別冊ジュリスト,46,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+基本法学(岩波講座),46,,,unresolved,,NDL該当なし |sru:no_key
+特許判例百選<第,45,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+大東ロージャーナル,45,issn,1880-1242,issn_batch_confirmed,issn_batch_20260622,ndl_name=大東ロージャーナル = Daito law journal evidence=79 2005→2018
+近畿大学法科大学院論集,45,issn,1349-791X,issn_batch_confirmed,issn_batch_20260622,ndl_name=近畿大学法科大学院論集 = The law review of Kinki University Law School / 近畿大学法科大学院 編 evidence=77 2005→2019
+建築関係法令の研究,44,,,unresolved,,NDL該当なし |sru:no_key
+法学会雑誌(東京都立大学),43,issn,0386-8745,seed_verified,seed:cinii_ndl_confirmed,東京都立大学法学会雑誌 〜2005年。CiNii AN00163975
+秋田法学(ノースアジア大学),43,,,unresolved,,NDL該当なし |sru:no_key
+高千穂論叢,43,issn,0388-7340,issn_batch_confirmed,issn_batch_20260622,ndl_name=高千穂論叢 / 高千穂大学高千穂学会 編 evidence=77 1968→2026
+政経論叢,42,issn,0387-3285,issn_batch_confirmed,issn_batch_20260622,ndl_name=政経論叢 evidence=36 1951→2026
+熊本ロージャーナル,42,ncid,AA12274982,sru_ncid,ndl_sru:isPartOf_ncid,NDL該当なし |sru ncid n=41
+憲法論叢,41,issn,1343-635X,issn_batch_confirmed,issn_batch_20260622,ndl_name=憲法論叢 = Constitutional law review evidence=10 1997→2010
+民事手続法学の新たな地平――青山善充先生古稀祝賀論文集』所収p,41,,,unresolved,,NDL該当なし |sru:no_key
+法経論集,41,issn,0287-9921,issn_batch_confirmed,issn_batch_20260622,ndl_name=愛知大学法経論集. 経済・経営篇 evidence=51 1976→2026
+Hitotsubashi Journal of Law and Politics,40,,,unresolved,,NDL該当なし |sru:no_key
+富士大学紀要,40,issn,0385-5007,issn_batch_confirmed,issn_batch_20260622,ndl_name=富士大学紀要 / 富士大学学術研究会 編 evidence=79 1976→2023
+徳山大学論叢,40,issn,0287-3680,issn_batch_confirmed,issn_batch_20260622,ndl_name=徳山大学論叢 = The Review of Tokuyama University evidence=66 1979→2019
+民法学と比較法学の諸相,40,,,unresolved,,NDL該当なし |sru:no_key
+近大法学,40,issn,0288-2809,issn_batch_confirmed,issn_batch_20260622,ndl_name=近大法学 / 近畿大学法学会 編 evidence=55 1969→1989
+続現代民法学の基本問題――内山尚三 黒木三郎 石川利夫先生古稀記念』所収p,39,,,unresolved,,NDL該当なし |sru:no_key
+教育判例百選<第,38,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+刑政,38,issn,0287-4628,issn_batch_confirmed,issn_batch_20260622,ndl_name=刑政 : The Japanese journal of correction evidence=50 1957→2026
+東北学院大学法学政治学研究所紀要,38,issn,0919-4347,issn_batch_confirmed,issn_batch_20260622,ndl_name=東北学院大学法学政治学研究所紀要 = Bulletin of Institute for Research in Law & Political Science / 東北学院大学法学政治学研究所 編 evidence=50 2000→2021
+要件事実・事実認定論と基礎法学の新たな展開――伊藤滋夫先生喜寿記念』所収p,38,,,unresolved,,NDL該当なし |sru:no_key
+下級審商事判例評釈(平成元年-,38,,,unresolved,,NDL該当なし |sru:no_key
+精神医学,38,issn,0300-032X,issn_batch_confirmed,issn_batch_20260622,ndl_name=臨床精神医学 = Japanese journal of clinical psychiatry evidence=10 2011→2025
+公害・環境判例百選(別冊ジュリスト,37,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+日本経大論集,37,issn,2185-5676,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本経大論集 evidence=78 2010→2022
+立命館大学法学部ニューズレター,37,,,unresolved,,NDL該当なし
+東北法学会会報(東北大学),36,,,unresolved,,NDL該当なし
+現代民法学の理論と課題――遠藤浩先生傘寿記念』所収p,36,,,unresolved,,NDL該当なし |sru:no_key
+北九州大学法政論集,35,issn,0287-6930,issn_batch_confirmed,issn_batch_20260622,ndl_name=北九州大学法政論集 evidence=80 1977→1999
+民事法の諸問題,35,,,unresolved,,NDL該当なし
+企業法学の論理と体系――永井和之先生古稀記念論文集』所収p,35,,,unresolved,,NDL該当なし |sru:no_key
+農業法研究,35,issn,0549-5822,issn_batch_confirmed,issn_batch_20260622,ndl_name=農業法研究 / 日本農業法学会 編 evidence=73 1968→2025
+保険学保険法学の課題と展望――大谷孝一博士古稀記念』所収p,34,,,unresolved,,NDL該当なし |sru:no_key
+憲法の基本判例(別冊法学教室 基本判例シリーズ,34,,,unresolved,,NDL該当なし |sru:no_key
+憲法訴訟(法学セミナー増刊)』所収p,34,,,unresolved,,NDL該当なし
+青山法務研究論集,34,issn,2185-0631,issn_batch_confirmed,issn_batch_20260622,ndl_name=青山法務研究論集 = Aoyama law journal / 青山学院大学法務研究学会 編 evidence=77 2010→2022
+民法学の課題と展望――石田喜久夫先生古稀記念』所収p,33,,,unresolved,,NDL該当なし |sru:no_key
+昭和商法学史――岩崎稜先生追悼論文集』所収p,33,,,unresolved,,NDL該当なし |sru:no_key
+群馬法専紀要,33,,,unresolved,,NDL該当なし |sru:no_key
+専修大学今村法律研究室報,32,issn,2189-5716,sru_unique,ndl_sru:isPartOf_issn,NDL該当なし |sru exact n=50
+神奈川大学大学院法学研究論集,32,issn,0915-3128,issn_batch_confirmed,issn_batch_20260622,ndl_name=神奈川大学大学院法学研究論集 / 神奈川大学大学院法学研究科 編 evidence=80 1989→2025
+日独法学,32,issn,0286-5351,issn_batch_confirmed,issn_batch_20260622,ndl_name=日独法学 = Jahrbuch der Japanisch-Deutchen Gesellschaft für Rechtswissenschaft / 日独法学会 編 evidence=64 1977→2009
+民事法学への挑戦と新たな構築――鈴木禄弥先生追悼論集』所収p,32,,,unresolved,,NDL該当なし |sru:no_key
+法政法学(法政大学),32,,,unresolved,,NDL該当なし |sru:no_key
+商法学における論争と省察――服部榮三先生古稀記念』所収p,32,,,unresolved,,NDL該当なし |sru:no_key
+慶応義塾大学法学部法律学科開設,32,,,unresolved,,NDL該当なし
+女性と法(法学セミナー増刊 総合特集シリーズ,32,,,unresolved,,NDL該当なし |sru:no_key
+演習民事訴訟法(法学教室選書)』所収p,32,,,unresolved,,NDL該当なし |sru:no_key
+医事法判例百選(別冊ジュリスト,31,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+岡山商大論叢,31,issn,0286-8652,issn_batch_confirmed,issn_batch_20260622,ndl_name=岡山商大論叢 = Journal of Okayama Shoka University evidence=77 1971→2015
+大阪公立大学法学雑誌,31,issn,2758-4879,issn_batch_confirmed,issn_batch_20260622,ndl_name=大阪公立大学法学雑誌 = Hōgaku zasshi (journal of law and politics) of Osaka Metropolitan University evidence=67 1954→2026
+明治大学大学院紀要(法学篇),31,,,unresolved,,NDL該当なし
+日弁連研修叢書 現代法律実務の諸問題(上)<昭和,31,,,unresolved,,NDL該当なし |sru:no_key
+立正大学法制研究所研究年報,31,issn,2189-5902,issn_batch_confirmed,issn_batch_20260622,ndl_name=立正大学法制研究所研究年報 = Annual journal of the Legal System Research Institute of Rissho University evidence=59 2012→2022
+最高裁判所判例解説――民事篇<平成元年度>』所収p,30,,,unresolved,,NDL該当なし |sru:no_key
+保安と外勤,30,,,unresolved,,NDL該当なし |sru:no_key
+明星大学経済学研究紀要,30,issn,0385-5678,issn_batch_confirmed,issn_batch_20260622,"ndl_name=明星大学経済学研究紀要 = Meisei University, the bulletin of economic studies / 明星大学経済学研究紀要編集委員会 編 evidence=78 1979→2024"
+労働法学の展望――菅野和夫先生古稀記念論集』所収p,30,,,unresolved,,NDL該当なし |sru:no_key
+英米法学(中央大学),30,,,unresolved,,NDL該当なし |sru:no_key
+社会労働研究,30,issn,0287-4210,issn_batch_confirmed,issn_batch_20260622,ndl_name=社会労働研究 = Society and labour / 法政大学社会学部学会 編 evidence=79 1955→1999
+法学ジャーナル(明治学院大学大学院),29,issn,0286-8350,issn_batch_confirmed,issn_batch_20260622,"ndl_name=法学ジャーナル = The journal of law, the Postgraduate Course of Kansai University evidence=59 1986→2024"
+第一経大論集,29,issn,0286-9691,issn_batch_confirmed,issn_batch_20260622,ndl_name=第一経大論集 / 第一経済大学経済研究会 編 evidence=67 1978→2006
+愛媛法学,28,issn,0389-8571,issn_batch_confirmed,issn_batch_20260622,ndl_name=愛媛法学会雑誌 = Ehime law journal / 愛媛大学法学会編集委員会 編 evidence=73 1982→2019
+教職研修,28,,,unresolved,,NDL該当なし |sru:no_key
+日本スポーツ法学会年報,28,issn,1340-8895,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本スポーツ法学会年報 evidence=72 1998→2024
+現代企業法学の理論と動態(上)(奥島孝康先生古稀記念論文集,28,,,unresolved,,NDL該当なし
+法学研究論集(亜細亜大学),28,issn,1340-9131,sru_unique,ndl_sru:isPartOf_issn,NDL該当なし |sru exact n=44
+法学論集(駒沢大学),28,issn,0518-1208,issn_batch_confirmed,issn_batch_20260622,ndl_name=青山法学論集 = The Aoyama law review / 青山学院大学法学会 編 evidence=26 1974→2012
+民事訴訟法学の新たな展開――中村英郎教授古稀祝賀』所収p,28,,,unresolved,,NDL該当なし |sru:no_key
+労働法学の理論と課題――片岡昇先生還暦記念』所収p,28,,,unresolved,,NDL該当なし |sru:no_key
+自治研修,28,,,unresolved,,NDL該当なし |sru:no_key
+中央学院大学社会システム研究所紀要,27,issn,1346-2083,issn_batch_confirmed,issn_batch_20260622,"ndl_name=中央学院大学社会システム研究所紀要 = Bulletin of the Social System Research Institute, Chuo Gakuin University evidence=80 2001→2018"
+学校経営,27,issn,2187-672X,issn_batch_confirmed,issn_batch_20260622,ndl_name=学校経営学論集 / 『学校経営学論集』編集委員会 編 evidence=1 2014→2014
+秋田法学(秋田経済法科大学),27,,,unresolved,,NDL該当なし |sru:no_key
+茨城大学政経学会雑誌,27,issn,0286-5734,issn_batch_confirmed,issn_batch_20260622,ndl_name=茨城大学政経学会雑誌 = The journal of political scinece and economics evidence=73 1955→2012
+大宮ローレビュー,26,issn,1880-0203,issn_batch_confirmed,issn_batch_20260622,ndl_name=大宮ローレビュー = Omiya law review evidence=80 2005→2015
+日本民法学の新たな時代――星野英一先生追悼』所収p,26,,,unresolved,,NDL該当なし |sru:no_key
+民事法学の歴史と未来――田山輝明先生古稀記念論文集』所収p,26,,,unresolved,,NDL該当なし |sru:no_key
+民法学の新たな展開 高島平蔵教授古稀記念』所収p,26,,,unresolved,,NDL該当なし |sru:no_key
+弁護士研修講座――昭和,26,,,unresolved,,NDL該当なし |sru:no_key
+タイム,25,,,unresolved,,NDL該当なし |sru:no_key
+民法学の現在と近未来』所収p,25,,,unresolved,,NDL該当なし |sru:no_key
+名城法学論集,24,issn,0911-2456,issn_batch_confirmed,issn_batch_20260622,ndl_name=名城法学論集 : 大学院研究年報 / 名城大学大学院法学研究科研究年報編集委員会 編 evidence=78 1997→2023
+岐阜経済大学論集,24,issn,0386-5932,issn_batch_confirmed,issn_batch_20260622,ndl_name=岐阜経済大学論集 The Journal of Gifu Keizai University evidence=80 1967→2013
+駒沢大学法学部研究紀要,24,ncid,AN00093778,sru_ncid,ndl_sru:isPartOf_ncid,NDL該当なし |sru ncid n=50
+社会の発展と民法学――近江幸治先生古稀記念論文集(下)』所収p,24,,,unresolved,,NDL該当なし |sru:no_key
+株式譲渡と株主権行使(慶応義塾大学法学研究会叢書,24,,,unresolved,,NDL該当なし |sru:no_key
+桐蔭法学(桐蔭横浜大学),24,issn,1341-3791,ndl_unique,ndl_serial_overlay,
+倒産法学の軌跡と展望――櫻井孝一先生古稀祝賀』所収p,24,,,unresolved,,NDL該当なし |sru:no_key
+現代民法学の基本問題(下)――内山尚三・黒木三郎・石川利夫先生還暦記念』所収p,24,,,unresolved,,NDL該当なし |sru:no_key
+現代法律実務の諸問題(上・下)<昭和,24,,,unresolved,,NDL該当なし
+金融判例,24,issn,0917-8589,issn_batch_confirmed,issn_batch_20260622,ndl_name=金融判例研究 / 金融法学会 編 evidence=45 1996→2021
+民法学の伝統と新たな構想――宮本健蔵先生古稀記念』所収p,23,,,unresolved,,NDL該当なし |sru:no_key
+社会の発展と民法学――近江幸治先生古稀記念論文集(上)』所収p,23,,,unresolved,,NDL該当なし |sru:no_key
+独占禁止法,23,,,unresolved,,NDL該当なし |sru:no_key
+京都大学法学部創立,23,,,unresolved,,NDL該当なし |sru:no_key
+補講民法学』所収p,23,,,unresolved,,NDL該当なし |sru:no_key
+法学協会百周年記念論文集,23,,,unresolved,,NDL該当なし |sru:no_key
+現代民法学の基本問題(中)――内山尚三・黒木三郎・石川利夫先生還暦記念』所収p,23,,,unresolved,,NDL該当なし |sru:no_key
+現代民法学の基本問題(上)――内山尚三・黒木三郎・石川利夫先生還暦記念』所収p,23,,,unresolved,,NDL該当なし |sru:no_key
+法経論叢,23,issn,0289-7156,issn_batch_confirmed,issn_batch_20260622,ndl_name=三重大学法経論叢 evidence=74 1984→2025
+北陸法学,22,issn,0919-9640,issn_batch_confirmed,issn_batch_20260622,ndl_name=北陸法学 evidence=80 1993→2006
+要件事実論と民法学との対話』所収p,22,,,unresolved,,NDL該当なし |sru:no_key
+現代法律実務の諸問題(下)<平成,22,,,unresolved,,NDL該当なし
+青森中央学院大学研究紀要,22,issn,1344-9990,issn_batch_confirmed,issn_batch_20260622,ndl_name=青森中央学院大学研究紀要 = ACGU journal / 青森中央学院大学研究推進委員会 編 evidence=80 1999→2025
+明治大学法科大学院ジェンダー法センター年報,21,,,unresolved,,NDL該当なし |sru:no_key
+歴史評論,21,issn,0386-8907,issn_batch_confirmed,issn_batch_20260622,ndl_name=歴史評論 = Historical journal / 歴史科学協議会 編 evidence=72 1951→2026
+日本社会と市民法学――清水誠先生追悼論集』所収p,21,,,unresolved,,NDL該当なし |sru:no_key
+民法学における法と政策――平井宜雄先生古稀記念』所収p,21,,,unresolved,,NDL該当なし |sru:no_key
+現代民法学の理論と実務の交錯――高木多喜男先生古稀記念』所収p,21,,,unresolved,,NDL該当なし |sru:no_key
+現代企業法学の課題と展開』所収p,21,,,unresolved,,NDL該当なし |sru:no_key
+慶応義塾創立,21,,,unresolved,,NDL該当なし
+清和研究論集,21,issn,1341-1217,issn_batch_confirmed,issn_batch_20260622,ndl_name=清和研究論集 evidence=79 1995→2025
+CCR,20,,,unresolved,,NDL該当なし |sru:no_key
+世界,20,issn,1349-3450,issn_batch_confirmed,issn_batch_20260622,"ndl_name=芸術世界 : 東京工芸大学芸術学部紀要 = Artworld : bulletin of Faculty of Arts, Tokyo Institute of Polytechnics / 東京工芸大学芸術学部紀要編集委員会 編 evidence=1 2023→2023"
+企業法研究,20,issn,0915-6399,issn_batch_confirmed,issn_batch_20260622,ndl_name=企業法研究 = Journal of business laws evidence=37 1989→2003
+判例地方自治,20,issn,0913-610X,issn_batch_confirmed,issn_batch_20260622,ndl_name=判例地方自治 / 地方自治判例研究会 編 evidence=72 1999→2024
+北大法政ジャーナル,20,ncid,AA12442260,sru_ncid,ndl_sru:isPartOf_ncid,NDL該当なし |sru ncid n=50
+地方財務,20,issn,0916-9814,issn_batch_confirmed,issn_batch_20260622,ndl_name=地方財務 / ぎょうせい 編 evidence=26 1996→2022
+季刊教育法,20,issn,0913-1094,issn_batch_confirmed,issn_batch_20260622,ndl_name=季刊教育法 = Quarterly education law evidence=78 1973→2023
+月報全青司,20,,,unresolved,,NDL該当なし |sru:no_key
+社会の発展と権利の創造――民法・環境法学の最前線 淡路剛久先生古稀祝賀』所収p,20,,,unresolved,,NDL該当なし |sru:no_key
+日独憲法学の創造力――栗城壽夫先生古稀記念(上)』所収p,20,,,unresolved,,NDL該当なし |sru:no_key
+現代民事法学の理論(下)――西原道雄先生古稀記念』所収p,20,,,unresolved,,NDL該当なし |sru:no_key
+民法学の軌跡と展望――國井和郎先生還暦記念論文集』所収p,20,,,unresolved,,NDL該当なし |sru:no_key
+公法学の法と政策(上)――金子宏先生古稀祝賀』所収p,20,,,unresolved,,NDL該当なし
+財産法学の新展開――幾代通先生献呈論集』所収p,20,,,unresolved,,NDL該当なし |sru:no_key
+憲法の基本問題(別冊法学教室 基本問題シリーズ,20,,,unresolved,,NDL該当なし |sru:no_key
+現代消費者法,20,issn,1883-3233,issn_batch_confirmed,issn_batch_20260622,ndl_name=現代消費者法 evidence=67 2008→2026
+九州産業大学商経論叢,19,issn,0286-7842,issn_batch_confirmed,issn_batch_20260622,ndl_name=九州産業大学商経論叢 = Review of commerce and business evidence=56 1964→2004
+横浜商大論集,19,issn,0287-6825,issn_batch_confirmed,issn_batch_20260622,ndl_name=横浜商大論集 / 横浜商科大学学術研究会 編 evidence=53 1967→2018
+戦後法学と憲法――歴史・現状・展望 長谷川正安先生追悼論集』所収p,19,,,unresolved,,NDL該当なし |sru:no_key
+民法学における古典と革新――藤岡康宏先生古稀記念論文集』所収p,19,,,unresolved,,NDL該当なし |sru:no_key
+法学研究科論集(北海学園大学大学院),19,,,unresolved,,NDL該当なし
+現代民事法学の構想――内山尚三先生追悼』所収p,19,,,unresolved,,NDL該当なし |sru:no_key
+現代社会と民法学の動向(上)――不法行為 加藤一郎先生古稀記念』所収p,19,,,unresolved,,NDL該当なし
+これからの家族(法学セミナー増刊・総合特集シリーズ,19,,,unresolved,,NDL該当なし
+経済法学会年報,19,issn,1342-1301,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本国際経済法学会年報 = International economic law / 日本国際経済法学会 編 evidence=30 1992→2024
+現代法律実務の諸問題<令和元年度研修版>(日弁連研修叢書)』所収p,19,,,unresolved,,NDL該当なし
+神奈川法学(学生論文集),18,issn,0453-185X,issn_batch_confirmed,issn_batch_20260622,ndl_name=神奈川法学 evidence=74 1965→2026
+駒沢大学大学院公法学研究,18,issn,0385-955X,issn_batch_confirmed,issn_batch_20260622,ndl_name=駒沢大学大学院公法学研究 evidence=80 1975→2007
+青山学院大学総合研究所法学研究センター研究叢書,18,issn,0917-6683,issn_batch_confirmed,issn_batch_20260622,ndl_name=青山学院大学総合研究所法学研究センター研究叢書 evidence=65 1993→2002
+日本民法学の形成と課題(下)――星野英一先生古稀祝賀』所収p,18,,,unresolved,,NDL該当なし |sru:no_key
+民事法学の新展開――鈴木祿彌先生古稀記念』所収p,18,,,unresolved,,NDL該当なし |sru:no_key
+現代法律実務の諸問題(上)<平成元年版>(日弁連研修叢書)』所収p,18,,,unresolved,,NDL該当なし
+平成法学(福山平成大学),17,issn,1342-0879,seed_verified,seed:ndl_overlay_suffix,福山平成大学 平成法学。ndl_overlay suffix-match
+大憲論叢,16,,,unresolved,,NDL該当なし
+沖大法学,16,issn,0389-1909,issn_batch_confirmed,issn_batch_20260622,ndl_name=沖大法学 / 沖縄大学法学会 編 evidence=41 1975→1999
+法学政治学研究(成蹊大学大学院),16,,,unresolved,,NDL該当なし
+民事法学の基礎的課題――植木哲先生古稀記念論文集』所収p,16,,,unresolved,,NDL該当なし |sru:no_key
+改憲を問う――民主主義法学からの視座(法律時報増刊)』所収p,16,,,unresolved,,NDL該当なし
+比較と歴史のなかの日本法学――比較法学への日本からの発信(早稲田大学比較法研究所叢書,16,,,unresolved,,NDL該当なし
+現代企業法学の研究――筑波大学大学院企業法学専攻,16,,,unresolved,,NDL該当なし |sru:no_key
+現代社会と民法学の動向(下)――民法一般 加藤一郎先生古稀記念』所収p,16,,,unresolved,,NDL該当なし
+学習院大学法学部研究年報,16,issn,0435-0456,issn_batch_confirmed,issn_batch_20260622,ndl_name=学習院大学法学部研究年報 = Gakushuin review of law and politics / 学習院大学法学会 編 evidence=77 1967→2017
+国際法判例百選<第,15,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+医療過誤判例百選<第,15,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+中小企業信用保険公庫月報,15,issn,0578-2422,issn_batch_confirmed,issn_batch_20260622,ndl_name=中小企業信用保険公庫月報 / 中小企業信用保険公庫 編 evidence=80 1959→1996
+企業法学の展望――大野正道先生退官記念』所収p,15,,,unresolved,,NDL該当なし |sru:no_key
+行政法学の未来に向けて――阿部泰隆先生古稀記念』所収p,15,,,unresolved,,NDL該当なし |sru:no_key
+"憲法改正問題――いま,憲法学から改憲論議を問う(法律時報増刊)』所収p",15,,,unresolved,,NDL該当なし |sru:no_key
+現代民事法学の理論(上)――西原道雄先生古稀記念』所収p,15,,,unresolved,,NDL該当なし |sru:no_key
+現代社会の家族と法――第,15,,,unresolved,,NDL該当なし |sru:no_key
+産業経済研究,15,issn,0389-7036,issn_batch_confirmed,issn_batch_20260622,ndl_name=産業経済研究 = The journal of the Society for Studies on Industrial Economies evidence=27 1955→2005
+事件処理に必要な税法の知識――親族・相続編(専門講座講義録)(研修叢書,15,,,unresolved,,NDL該当なし |sru:no_key
+調査時報,15,issn,0287-8135,issn_batch_confirmed,issn_batch_20260622,ndl_name=農政調査時報 evidence=29 1969→2025
+国際法判例百選(別冊ジュリスト,14,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+徳山大学総合経済研究所紀要,14,issn,0387-6586,issn_batch_confirmed,issn_batch_20260622,ndl_name=徳山大学総合経済研究所紀要 evidence=80 1979→2004
+憲法の尊厳――奥平憲法学の継承と展開』所収p,14,,,unresolved,,NDL該当なし |sru:no_key
+法創造の比較法学――先端的課題への挑戦』所収p,14,,,unresolved,,NDL該当なし |sru:no_key
+朝日大学大学院法学研究論集,14,issn,1344-297X,issn_batch_confirmed,issn_batch_20260622,ndl_name=朝日大学大学院法学研究論集 = The Graduate School law review evidence=52 1997→2009
+教育基本法改正の動向(日本教育法学会年報,14,,,unresolved,,NDL該当なし |sru:no_key
+教育法制の再編と教育法学の将来(日本教育法学会年報,14,,,unresolved,,NDL該当なし |sru:no_key
+日本民法学の形成と課題(上)――星野英一先生古稀祝賀』所収p,14,,,unresolved,,NDL該当なし |sru:no_key
+女性そして男性(法学セミナー増刊 総合特集シリーズ,14,,,unresolved,,NDL該当なし |sru:no_key
+市民のための法律家(法学セミナー増刊 総合特集シリーズ,14,,,unresolved,,NDL該当なし |sru:no_key
+訟務月報,14,,,unresolved,,NDL該当なし
+民主主義法学と研究者の使命――広渡清吾先生古稀記念論文集』所収p,13,,,unresolved,,NDL該当なし |sru:no_key
+慶応の法律学 公法,13,,,unresolved,,NDL該当なし
+現時法学の理論と実践――伊東乾教授喜寿記念論文集』所収p,13,,,unresolved,,NDL該当なし |sru:no_key
+ドイツ民法典の編纂と法学』所収p,13,,,unresolved,,NDL該当なし |sru:no_key
+投資者保護の法理(神戸学院大学法学研究叢書,13,,,unresolved,,NDL該当なし |sru:no_key
+特技懇,13,,,unresolved,,NDL該当なし |sru:no_key
+刑法判例百選,12,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+季刊現代警察,12,issn,0388-4325,issn_batch_confirmed,issn_batch_20260622,ndl_name=季刊現代警察 = The modern Japanese police quarterly evidence=80 1998→2021
+松山商大論集,12,issn,0461-4593,issn_batch_confirmed,issn_batch_20260622,ndl_name=松山商大論集 / 松山商科大学商経研究会 編 evidence=80 1952→1988
+法学研究年誌(東北学院大学),12,,,unresolved,,NDL該当なし |sru:no_key
+私的独占規制の現代的課題(日本経済法学会年報,12,,,unresolved,,NDL該当なし |sru:no_key
+関西大学法学研究所研究所報,12,,,unresolved,,NDL該当なし |sru:no_key
+情報社会の公法学――川上宏二郎先生古稀記念論文集』所収p,12,,,unresolved,,NDL該当なし |sru:no_key
+持株会社と独占禁止法(経済法学会年報,12,,,unresolved,,NDL該当なし |sru:no_key
+改正独占禁止法の,12,,,unresolved,,NDL該当なし |sru:no_key
+法と政治の理論と現実(下)――関西大学法学部百周年記念論文集』所収p,12,,,unresolved,,NDL該当なし |sru:no_key
+現代私法学の課題と展望(上)――林良平先生還暦記念論文集』所収p,12,,,unresolved,,NDL該当なし |sru:no_key
+労働法の知識と実務,12,,,unresolved,,NDL該当なし |sru:no_key
+民事交通事故訴訟の実務,12,,,unresolved,,NDL該当なし |sru:no_key
+日弁連研修叢書 現代法律実務の諸問題(下)<昭和,12,,,unresolved,,NDL該当なし |sru:no_key
+酒田短期大学研究論集,12,issn,0916-8133,issn_batch_confirmed,issn_batch_20260622,ndl_name=酒田短期大学研究論集 / 酒田短期大学研究論集編集委員会 編 evidence=32 1991→2000
+京都学園大学経済経営学部論集,11,issn,2189-9738,issn_batch_confirmed,issn_batch_20260622,"ndl_name=京都学園大学経済経営学部論集 = The Faculty of Economics and Business Administration journal, Kyoto Gakuen University / 京都学園大学経済経営学部学会 編 evidence=70 1991→2019"
+弘前大学経済研究,11,issn,0387-3978,issn_batch_confirmed,issn_batch_20260622,ndl_name=弘前大学経済研究 = Hirosaki economic review evidence=77 1988→2022
+東亜法学論叢,11,issn,1342-8446,issn_batch_confirmed,issn_batch_20260622,ndl_name=東亜法学論叢 evidence=51 1996→2003
+特許権侵害に基づく損害賠償(日本工業所有権法学会年報,11,,,unresolved,,NDL該当なし |sru:no_key
+ネットワーク産業の規制改革と競争政策(日本経済法学会年報,11,,,unresolved,,NDL該当なし |sru:no_key
+優越的地位の濫用規制の展開(日本経済法学会年報,11,,,unresolved,,NDL該当なし |sru:no_key
+日本大学法学部創設,11,,,unresolved,,NDL該当なし |sru:no_key
+分権時代と自治体法学』所収p,11,,,unresolved,,NDL該当なし |sru:no_key
+変容する世界と法律・政治・文化(上)――北海学園大学法学部,11,,,unresolved,,NDL該当なし
+市民法学の歴史的・思想的展開――原島重義先生傘寿』所収p,11,,,unresolved,,NDL該当なし |sru:no_key
+融合する法律学(上)――筑波大学法科大学院創設記念・企業法学専攻創設,11,,,unresolved,,NDL該当なし
+現代私法学の課題――伊藤進教授古稀記念論文集』所収p,11,,,unresolved,,NDL該当なし |sru:no_key
+独占禁止法改正(日本経済法学会年報,11,,,unresolved,,NDL該当なし |sru:no_key
+法学部開校記念論文集』所収p,11,,,unresolved,,NDL該当なし |sru:no_key
+公益事業の規制改革と競争政策(日本経済法学会年報,11,,,unresolved,,NDL該当なし |sru:no_key
+変動期における法と国際関係――一橋大学法学部創立,11,,,unresolved,,NDL該当なし |sru:no_key
+公法学の法と政策――金子宏先生古稀祝賀(下)』所収p,11,,,unresolved,,NDL該当なし |sru:no_key
+教育立法と学校自治・参加(日本教育法学会年報,11,,,unresolved,,NDL該当なし |sru:no_key
+技術革新・技術取引と競争政策(日本経済法学会年報,11,,,unresolved,,NDL該当なし |sru:no_key
+規制緩和と消費者(経済法学会年報,11,,,unresolved,,NDL該当なし |sru:no_key
+手続法的行政法学の理論』所収p,11,,,unresolved,,NDL該当なし |sru:no_key
+借地・借家制度の検証――意向調査の分析と法改正の方向(関西大学法学研究所研究叢書,11,,,unresolved,,NDL該当なし |sru:no_key
+企業・現代社会・法――現代企業法・法学入門』所収p,11,,,unresolved,,NDL該当なし |sru:no_key
+官庁と官僚(法学セミナー増刊 総合特集シリーズ,11,,,unresolved,,NDL該当なし |sru:no_key
+現代人権論(公法学研究,11,,,unresolved,,NDL該当なし |sru:no_key
+賠償医学,11,,,unresolved,,NDL該当なし |sru:no_key
+季刊科学と思想,10,issn,0287-7384,issn_batch_confirmed,issn_batch_20260622,ndl_name=季刊科学と思想 / 新日本出版社 [編] evidence=80 1971→1992
+独占禁止法のエンフォースメント――新たな課題に対して(日本経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+競争法と消費者(日本経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+租税憲法学の展開』所収p,10,,,unresolved,,NDL該当なし |sru:no_key
+不当な取引制限規制の現代的展開(日本経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+持続可能な社会への転換期における法と法学(法社会学,10,,,unresolved,,NDL該当なし |sru:no_key
+企業結合規制の新たな課題(日本経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+知的財産と独占禁止法(日本経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+独禁法執行のための行政手続と司法審査――公取委の審判制度廃止論との関連において(日本経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+慶応の法律学 商事法――慶応義塾創立,10,,,unresolved,,NDL該当なし |sru:no_key
+優越的地位の濫用(日本経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+企業結合規制の再検討(日本経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+市民法学の課題と展望――清水誠先生古稀記念論集』所収p,10,,,unresolved,,NDL該当なし |sru:no_key
+私法学の再構築(北海道大学法学部ライブラリー,10,,,unresolved,,NDL該当なし |sru:no_key
+金融・証券市場の規制と競争(経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+日本企業の構造・行動と法(経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+流通と法――市場開放と流通問題(経済法学会年報,10,,,unresolved,,NDL該当なし |sru:no_key
+知的財産権と独占禁止法(経済法学会年報,10,,,unresolved,,NDL該当なし
+近代私法学の形成と現代法理論』所収p,10,,,unresolved,,NDL該当なし |sru:no_key
+人権と報道を考える(法学セミナー増刊総合特集シリーズ,10,,,unresolved,,NDL該当なし |sru:no_key
+日本工業所有権法学会年報,10,issn,0387-1754,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本工業所有権法学会年報 = Annual of industrial property law / 日本工業所有権法学会 編 evidence=61 1979→2022
+熊本商大論集,10,issn,0451-0585,issn_batch_confirmed,issn_batch_20260622,ndl_name=熊本商大論集 evidence=79 1954→1993
+法律実務と税金の諸問題(専門講座講義録)(研修叢書,10,,,unresolved,,NDL該当なし |sru:no_key
+信州大学経済学論集,9,issn,0288-0466,issn_batch_confirmed,issn_batch_20260622,"ndl_name=信州大学経済学論集 = Economic review, Shinshu University evidence=79 1968→2016"
+共済と保険,9,issn,2187-1795,issn_batch_confirmed,issn_batch_20260622,ndl_name=共済と保険 / 共済保険研究会 編 evidence=80 1996→2025
+北海学園大学学園論集,9,issn,0385-7271,issn_batch_confirmed,issn_batch_20260622,ndl_name=北海学園大学学園論集 = The journal of Hokkai-Gakuen University / 北海学園大学学術研究会 編 evidence=69 1966→2026
+東亜大学紀要,9,issn,1348-8414,issn_batch_confirmed,issn_batch_20260622,ndl_name=東亜大学紀要 = Bulletin of University of East Asia evidence=65 2004→2026
+沖縄大学法経学部紀要,9,issn,1346-3128,issn_batch_confirmed,issn_batch_20260622,ndl_name=沖縄大学法経学部紀要 evidence=43 2001→2018
+競争法とフェアネス(日本経済法学会年報,9,,,unresolved,,NDL該当なし |sru:no_key
+流通・取引慣行と独禁法――新たな課題に向けて(日本経済法学会年報,9,,,unresolved,,NDL該当なし |sru:no_key
+立憲主義の危機と教育法(日本教育法学会年報,9,,,unresolved,,NDL該当なし |sru:no_key
+神奈川大学法学部,9,,,unresolved,,NDL該当なし
+不公正な取引方法規制の再検討(日本経済法学会年報,9,,,unresolved,,NDL該当なし |sru:no_key
+慶応の法律学 民事法――慶応義塾創立,9,,,unresolved,,NDL該当なし |sru:no_key
+慶応の法律学 民事手続法――慶応義塾創立,9,,,unresolved,,NDL該当なし |sru:no_key
+法学会誌(明治大学),9,,,unresolved,,NDL該当なし
+松山法学,9,issn,1349-7537,issn_batch_confirmed,issn_batch_20260622,ndl_name=松山法学 / 松山法学編集室 編 evidence=36 2000→2005
+独占禁止法のエンフォースメント(日本経済法学会年報,9,,,unresolved,,NDL該当なし |sru:no_key
+教育改革と地方分権(日本教育法学会年報,9,,,unresolved,,NDL該当なし |sru:no_key
+競争秩序と民事法(日本経済法学会年報,9,,,unresolved,,NDL該当なし |sru:no_key
+現代民法学の諸問題――玉田弘毅先生古稀記念論文集』所収p,9,,,unresolved,,NDL該当なし |sru:no_key
+日本の取引慣行と独禁法(経済法学会年報,9,,,unresolved,,NDL該当なし |sru:no_key
+名城大学創立,9,,,unresolved,,NDL該当なし |sru:no_key
+法学・政治学の動向――北海学園大学法学部,9,,,unresolved,,NDL該当なし |sru:no_key
+石油カルテル最高裁刑事判決(経済法学会年報,9,,,unresolved,,NDL該当なし |sru:no_key
+法と政治の現代的課題(大阪大学法学部創立,9,,,unresolved,,NDL該当なし |sru:no_key
+政治学論集,8,issn,0286-9888,issn_batch_confirmed,issn_batch_20260622,ndl_name=政治学論集 evidence=52 1975→1998
+公法の諸問題,8,,,unresolved,,NDL該当なし |sru:no_key
+企業結合規制の理論的課題(日本経済法学会年報,8,,,unresolved,,NDL該当なし |sru:no_key
+戦後日本憲法学,8,,,unresolved,,NDL該当なし
+次世代への挑戦――法学部半世紀の伝統を糧に 北海学園大学法学部,8,,,unresolved,,NDL該当なし |sru:no_key
+立正大学法学部創立,8,,,unresolved,,NDL該当なし |sru:no_key
+人権の刑事法学――村井敏邦先生古稀記念論文集』所収p,8,,,unresolved,,NDL該当なし |sru:no_key
+転換期の法と文化――京都学園大学法学部,8,,,unresolved,,NDL該当なし |sru:no_key
+変容する社会の法と理論――上智大学法学部創設,8,,,unresolved,,NDL該当なし |sru:no_key
+融合する法律学(下)――筑波大学法科大学院創設記念・企業法学専攻創設,8,,,unresolved,,NDL該当なし
+現代先端法学の展開――田島裕教授記念』所収p,8,,,unresolved,,NDL該当なし |sru:no_key
+社会的規制と競争政策(日本経済法学会年報,8,,,unresolved,,NDL該当なし |sru:no_key
+教育基本法,8,,,unresolved,,NDL該当なし
+現代の法と政治――立正大学法学部創立,8,,,unresolved,,NDL該当なし |sru:no_key
+独協大学法学部創設,8,,,unresolved,,NDL該当なし |sru:no_key
+独禁法の執行力の強化(経済法学会年報,8,,,unresolved,,NDL該当なし |sru:no_key
+仮の権利保護をめぐる諸問題――労働仮処分・出版差止仮処分を中心にして(慶応義塾大学法学研究会叢書,8,,,unresolved,,NDL該当なし |sru:no_key
+国際通商と法――貿易摩擦を素材として(経済法学会年報,8,,,unresolved,,NDL該当なし |sru:no_key
+法学政治学の新機軸――法学部創設,8,,,unresolved,,NDL該当なし |sru:no_key
+情報・通信と競争政策(経済法学会年報,8,,,unresolved,,NDL該当なし |sru:no_key
+法学ガイダンス’,8,,,unresolved,,NDL該当なし
+現代私法学の課題と展望(中)――林良平先生還暦記念論文集』所収p,8,,,unresolved,,NDL該当なし |sru:no_key
+法学と政治学の現代的展開(岡山大学創立,8,,,unresolved,,NDL該当なし |sru:no_key
+会社法の法的論点と実務――弁護士専門研修講座』所収p,8,,,unresolved,,NDL該当なし |sru:no_key
+法律事務のA to Z――事務職員研修講義録,8,,,unresolved,,NDL該当なし |sru:no_key
+鹿児島経大論集,8,issn,0288-0741,issn_batch_confirmed,issn_batch_20260622,ndl_name=鹿児島経大論集 evidence=80 1960→2000
+ビジネスサイエンス,7,,,unresolved,,NDL該当なし |sru:no_key
+明治大学短期大学紀要,7,issn,0389-5963,issn_batch_confirmed,issn_batch_20260622,ndl_name=明治大学短期大学紀要 evidence=80 1957→2003
+ボーダレスエコノミーと特許権の属地性(日本工業所有権法学会年報,7,,,unresolved,,NDL該当なし |sru:no_key
+交通法学の生成と展開(交通法研究,7,,,unresolved,,NDL該当なし |sru:no_key
+名古屋学院大学法学部開設記念論文集』所収p,7,,,unresolved,,NDL該当なし |sru:no_key
+競争法の国際的執行(日本経済法学会年報,7,,,unresolved,,NDL該当なし |sru:no_key
+現代における法と政治の探求――香川大学法学部創設,7,,,unresolved,,NDL該当なし |sru:no_key
+憲法の理論を求めて――奥平憲法学の継承と展開』所収p,7,,,unresolved,,NDL該当なし |sru:no_key
+新自由主義教育改革と教育三法(日本教育法学会年報,7,,,unresolved,,NDL該当なし |sru:no_key
+関西大学法学会誌,7,issn,0911-6265,issn_batch_confirmed,issn_batch_20260622,ndl_name=関西大学法学会誌 = The bulletin of the Law Society / 関西大学法学会 編 evidence=78 1956→2017
+区分所有建物の法的課題(関西大学法学研究所研究叢書,7,,,unresolved,,NDL該当なし |sru:no_key
+日韓法政システムの多様性と共通性(関西大学法学研究所研究叢書,7,,,unresolved,,NDL該当なし |sru:no_key
+公共調達と独禁法・入札契約制度等(日本経済法学会年報,7,,,unresolved,,NDL該当なし |sru:no_key
+教育法学と子どもの人権――兼子仁教授退職記念論集』所収p,7,,,unresolved,,NDL該当なし |sru:no_key
+法学と政治学の諸相――熊本大学法学部創立,7,,,unresolved,,NDL該当なし |sru:no_key
+戦後憲法学の展開――和田英夫教授古稀記念論集』所収p,7,,,unresolved,,NDL該当なし |sru:no_key
+法学の諸問題』所収p,7,,,unresolved,,NDL該当なし |sru:no_key
+西ドイツ比較法学の諸問題(日本比較法研究所翻訳叢書,7,,,unresolved,,NDL該当なし |sru:no_key
+中央大学,7,,,unresolved,,NDL該当なし
+学校教育の理念と現実(日本教育法学会年報,7,,,unresolved,,NDL該当なし |sru:no_key
+独禁法違反と民事責任(経済法学会年報,7,,,unresolved,,NDL該当なし |sru:no_key
+現代私法学の課題と展望(下)――林良平先生還暦記念論文集』所収p,7,,,unresolved,,NDL該当なし |sru:no_key
+"法学セミナー増刊,p",7,,,unresolved,,NDL該当なし |sru:no_key
+法学研究,7,issn,0439-3252,issn_batch_confirmed,issn_batch_20260622,ndl_name=愛知学院大学論叢. 法學研究 evidence=42 1958→2026
+平成,7,,,unresolved,,NDL該当なし |sru:no_key
+現代法律実務の諸問題(下)<平成元年版>(日弁連研修叢書)』所収p,7,,,unresolved,,NDL該当なし
+最高裁判所判例解説――刑事篇<平成元年度>』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+明大商学論叢,6,issn,0389-5955,issn_batch_confirmed,issn_batch_20260622,"ndl_name=明大商学論叢 = The Bulletin of the Faculty of Commerce, Meiji University / 明治大学商学研究所 編 evidence=80 1955→2021"
+東京商船大学研究報告,6,issn,0493-4466,issn_batch_confirmed,issn_batch_20260622,ndl_name=東京商船大学研究報告. 人文科学 / 東京商船大学 [編] evidence=80 1960→2003
+法学教育研究会誌,6,issn,2187-171X,issn_batch_confirmed,issn_batch_20260622,ndl_name=法学教育研究会誌 / 法学教育研究会 編 evidence=18 2016→2020
+国際法学の諸相――到達点と展望 村瀬信也先生古稀記念』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+現代市民法学と民法典(龍谷大学社会科学研究所叢書,6,,,unresolved,,NDL該当なし |sru:no_key
+明治大学法学部創立,6,,,unresolved,,NDL該当なし
+憲法における普遍性と固有性――憲法学会,6,,,unresolved,,NDL該当なし |sru:no_key
+法学と政治学の新たなる展開――岡山大学創立,6,,,unresolved,,NDL該当なし |sru:no_key
+新教育基本法と教育法学(日本教育法学会年報,6,,,unresolved,,NDL該当なし |sru:no_key
+教育基本法体制の危機と教育法(日本教育法学会年報,6,,,unresolved,,NDL該当なし |sru:no_key
+教育における公共性の再構築(日本教育法学会年報,6,,,unresolved,,NDL該当なし |sru:no_key
+新世紀の公法学――手島孝先生古稀祝賀論集』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+教育改革」と教育基本法制(日本教育法学会年報,6,,,unresolved,,NDL該当なし |sru:no_key
+先端技術分野における特許保護(日本工業所有権法学会年報,6,,,unresolved,,NDL該当なし |sru:no_key
+転換期の法学・政治学(北海学園大学法学部,6,,,unresolved,,NDL該当なし |sru:no_key
+法学の諸課題』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+比較公法学の諸問題――伊藤満先生喜寿記念』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+法と政治の現代的課題――明治学院大学法学部,6,,,unresolved,,NDL該当なし |sru:no_key
+大東文化大学法学部創設,6,,,unresolved,,NDL該当なし |sru:no_key
+インターネットの法律実務(弁護士専門研修講座)』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+金融商品取引法の知識と実務(弁護士専門研修講座)』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+消費者法の知識と実務(弁護士専門研修講座)』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+不動産法の知識と実務(弁護士専門研修講座)』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+建築紛争の知識と実務(弁護士専門研修講座)』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+倒産法の実務,6,,,unresolved,,NDL該当なし |sru:no_key
+離婚事件の実務(弁護士専門研修講座)』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+民事交通事故訴訟の実務――保険実務と損害額の算定(弁護士専門研修講座)』所収p,6,,,unresolved,,NDL該当なし |sru:no_key
+文部時報,5,issn,0916-9830,issn_batch_confirmed,issn_batch_20260622,ndl_name=文部時報 = The monthly journal of Monbusho / 文部省 編 evidence=80 1948→1998
+日本大学法学部知財ジャーナル,5,issn,1882-7535,issn_batch_confirmed,issn_batch_20260622,ndl_name=日本大学法学部知財ジャーナル : 日本大学法学部国際知的財産研究所紀要 / 日本大学法学部国際知的財産研究所 編 evidence=54 2008→2026
+日本福祉大学研究紀要,5,issn,1345-1758,ndl_unique,ndl_serial_overlay,
+桐蔭法科大学院紀要,5,issn,1881-1027,issn_batch_confirmed,issn_batch_20260622,ndl_name=桐蔭法科大学院紀要 = Toin Law School review / 桐蔭横浜大学大学院法務研究科 編 evidence=16 2006→2015
+教育における平等と「市民社会」(日本教育法学会年報,5,,,unresolved,,NDL該当なし |sru:no_key
+新時代の刑事法学(下)――椎橋隆幸先生古稀記念』所収p,5,,,unresolved,,NDL該当なし
+新時代の刑事法学(上)――椎橋隆幸先生古稀記念』所収p,5,,,unresolved,,NDL該当なし
+教育の国家責任とナショナル・ミニマム(日本教育法学会年報,5,,,unresolved,,NDL該当なし |sru:no_key
+法と政治の現代的諸相――松山大学法学部,5,,,unresolved,,NDL該当なし |sru:no_key
+"法実務,法理論,基礎法学の再定位――法学研究者養成への示唆』所収p",5,,,unresolved,,NDL該当なし |sru:no_key
+白山法学(東洋大学法科大学院),5,issn,1880-1161,sru_unique,ndl_sru:isPartOf_issn,NDL該当なし |sru exact n=50
+営業秘密の保護(日本工業所有権法学会年報,5,,,unresolved,,NDL該当なし
+香川大学法学部創設,5,,,unresolved,,NDL該当なし
+国法学の諸問題――宮田豊先生古稀記念』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+法と政治――,5,issn,0288-0709,sru_unique,ndl_sru:isPartOf_issn,NDL該当なし |sru exact n=34
+警察の現在(法学セミナー増刊総合特集シリーズ,5,,,unresolved,,NDL該当なし |sru:no_key
+マス・メディアの現在(法学セミナー増刊総合特集シリーズ,5,,,unresolved,,NDL該当なし |sru:no_key
+これからの地方自治(法学セミナー増刊総合特集シリーズ,5,,,unresolved,,NDL該当なし
+情報・インターネット法の知識と実務(弁護士専門研修講座)』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+高齢者をめぐる法律問題(弁護士専門研修講座)』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+中小企業法務の実務(弁護士専門研修講座)』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+労働法の知識と実務(弁護士専門研修講座)』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+独占禁止法の知識と実務(弁護士専門研修講座)』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+会社法の今日的課題と実務(弁護士専門研修講座)』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+倒産法の実務――破産手続から管財業務の破産手続を中心に(弁護士専門研修講座)』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+相続・遺言――遺産分割と弁護士実務(弁護士専門研修講座)』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+市民社会と法をめぐる今日的課題<平成元年版>(日司連研修叢書)』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+市民社会と法をめぐる今日的課題<昭和,5,,,unresolved,,NDL該当なし |sru:no_key
+弁護士研修講座――平成元年度講義録』所収p,5,,,unresolved,,NDL該当なし |sru:no_key
+京都大学教養部政法論集,4,issn,0289-5358,issn_batch_confirmed,issn_batch_20260622,ndl_name=政法論集 : 京都大学教養部政法論集 / 京都大学教養部法政学会 [編] evidence=33 1967→1992
+刑弁情報,4,,,unresolved,,NDL該当なし |sru:no_key
+奈良法学会雑誌,4,issn,0914-921X,issn_batch_confirmed,issn_batch_20260622,ndl_name=奈良法学会雑誌 evidence=79 1988→2017
+帯広畜産大学学術研究報告 人文社会科学論集,4,issn,1348-0588,issn_batch_confirmed,issn_batch_20260622,"ndl_name=帯広畜産大学学術研究報告, 人文社会科学論集 evidence=9 2003→2003"
+永世中立,4,,,unresolved,,NDL該当なし |sru:no_key
+新型コロナウイルスと法学(法律時報増刊)』所収p,4,,,unresolved,,NDL該当なし
+法の基層と展開――法学部教育の可能性 桐蔭横浜大学法学部,4,,,unresolved,,NDL該当なし |sru:no_key
+特許制度と競争政策(日本工業所有権法学会年報,4,,,unresolved,,NDL該当なし |sru:no_key
+商標の保護(日本工業所有権法学会年報,4,,,unresolved,,NDL該当なし |sru:no_key
+解釈法学と政策法学』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+刑事法学の現代的展開――斎藤靜敬先生古稀祝賀記念論文集』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+現代の法学と政治学の諸問題――川上宏二郎先生退職記念論文集』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+"憲法と有事法制――いま,憲法学から有事法制を問う(法律時報増刊)』所収p",4,,,unresolved,,NDL該当なし |sru:no_key
+経営法学年報(福山平成大学),4,,,unresolved,,NDL該当なし
+環境法学の挑戦――淡路剛久教授・阿部泰隆教授還暦記念』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+刑事法学の潮流と展望――大野眞義先生古稀祝賀』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+スポーツ法学専門分科会年報,4,,,unresolved,,NDL該当なし |sru:no_key
+教育参加と子どもの権利条約(日本教育法学会年報,4,,,unresolved,,NDL該当なし |sru:no_key
+桐蔭法学(桐蔭学園横浜大学),4,issn,1341-3791,ndl_unique,ndl_serial_overlay,
+公法学の開拓線――手島孝先生還暦祝賀論集』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+現代法学の諸相――岡山商科大学法経学部創設記念論集』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+"比較憲法学研究創刊号,p",4,,,unresolved,,NDL該当なし |sru:no_key
+司法省法学校におけるボアソナードの講義に関する研究(関西大学法学研究所研究叢書,4,,,unresolved,,NDL該当なし |sru:no_key
+今日の最高裁判所――原点と現点(法学セミナー増刊)』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+憲法と民事手続法(慶応義塾大学法学研究会叢書,4,,,unresolved,,NDL該当なし |sru:no_key
+上智大学法学部創設,4,,,unresolved,,NDL該当なし
+熊本学園大学論集 総合科学,4,issn,1341-0210,ndl_unique,ndl_serial_overlay,
+租税争訟をめぐる実務の知識(弁護士専門研修講座)』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+"相続関係事件の実務――寄与分・特別受益,遺留分,税務処理(弁護士専門研修講座)』所収p",4,,,unresolved,,NDL該当なし |sru:no_key
+債権回収の知識と実務(弁護士専門研修講座)』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+企業法務と組織内弁護士の実務(弁護士専門研修講座)』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+消費者法の法的論点と実務(弁護士専門研修講座)』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+クーリング・オフと抗弁権(国民生活センター研修副読本「消費者保護講座」シリーズ)』所収p,4,,,unresolved,,NDL該当なし |sru:no_key
+駒沢大学北海道教養部研究紀要,4,ncid,AN10172688,sru_ncid,ndl_sru:isPartOf_ncid,NDL該当なし |sru ncid n=43
+最高裁判所判例解説――刑事篇<令和,3,,,unresolved,,NDL該当なし |sru:no_key
+内外教育,3,,,unresolved,,NDL該当なし |sru:no_key
+城西大学経済経営紀要,3,issn,0386-6947,issn_batch_confirmed,issn_batch_20260622,ndl_name=城西大学経済経営紀要 evidence=80 1978→2026
+帝京女子短期大学紀要,3,,,unresolved,,NDL該当なし |sru:no_key
+教育人権保障の到達点と課題(日本教育法学会年報,3,,,unresolved,,NDL該当なし |sru:no_key
+持続可能性環境法学への誘い――浅野直人先生喜寿記念(環境法研究別冊)』所収p,3,,,unresolved,,NDL該当なし |sru:no_key
+商標権の効力の制限(日本工業所有権法学会年報,3,,,unresolved,,NDL該当なし |sru:no_key
+刑事法の諸問題,3,,,unresolved,,NDL該当なし
+立法の法哲学――立法学の再定位(法哲学年報,3,,,unresolved,,NDL該当なし |sru:no_key
+自由と安全の刑事法学――生田勝義先生古稀祝賀論文集』所収p,3,,,unresolved,,NDL該当なし |sru:no_key
+日独公法学の挑戦――グローバル化社会の公法』所収p,3,,,unresolved,,NDL該当なし |sru:no_key
+商標の使用と権利侵害(日本工業所有権法学会年報,3,,,unresolved,,NDL該当なし
+不当な支配」と教育の自由(日本教育法学会年報,3,,,unresolved,,NDL該当なし |sru:no_key
+人間回復の刑事法学』所収p,3,,,unresolved,,NDL該当なし |sru:no_key
+子どもと教師をめぐる教育法学の新課題(日本教育法学会年報,3,,,unresolved,,NDL該当なし |sru:no_key
+"国際法学の地平――歴史,理論,実証 大沼保昭先生記念論文集』所収p",3,,,unresolved,,NDL該当なし |sru:no_key
+発展する東アジアと法学の課題』所収p,3,,,unresolved,,NDL該当なし |sru:no_key
+法と政治の,3,,,unresolved,,NDL該当なし
+民主主義法学・刑事法学の展望(下)――小田中聰樹先生古稀記念論文集 刑法・民主主義と法』所収p,3,ncid,BA74806659,sru_ncid,ndl_sru:isPartOf_ncid,NDL該当なし |sru ncid n=9
+"白鴎大学大学院法学研究年報創刊号,p",3,,,unresolved,,NDL該当なし |sru:no_key
+特許関係訴訟と審判(日本工業所有権法学会年報,3,,,unresolved,,NDL該当なし |sru:no_key
+国家と自由――憲法学の可能性』所収p,3,,,unresolved,,NDL該当なし |sru:no_key
+教育における<国家>と<個人>(日本教育法学会年報,3,,,unresolved,,NDL該当なし
+刑事実体法と裁判手続――法学博士井上正治先生追悼論集』所収p,3,,,unresolved,,NDL該当なし |sru:no_key
+日独憲法学の創造力――栗城壽夫先生古稀記念(下)』所収p,3,,,unresolved,,NDL該当なし |sru:no_key
+比較法学の課題と展望――大木雅夫先生古稀記念』所収p,3,,,unresolved,,NDL該当なし |sru:no_key
+"志学館法学創刊号,p",3,,,unresolved,,NDL該当なし |sru:no_key
+"白鴎法学創刊号,p",3,,,unresolved,,NDL該当なし |sru:no_key
+EC統合とEC法の展開(関西大学法学研究所研究叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+これからの男の自立(法学セミナー増刊総合特集シリーズ,3,,,unresolved,,NDL該当なし |sru:no_key
+医事法学叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+これからの天皇制(法学セミナー増刊 総合特集シリーズ,3,,,unresolved,,NDL該当なし |sru:no_key
+現代の裁判(法学セミナー増刊 総合特集シリーズ,3,,,unresolved,,NDL該当なし |sru:no_key
+現代国家と参加(公法学研究,3,,,unresolved,,NDL該当なし |sru:no_key
+憲法と平和保障(法学セミナー増刊 総合特集シリーズ,3,,,unresolved,,NDL該当なし |sru:no_key
+現代の弁護士(市民編)(法学セミナー増刊 総合特集シリーズ,3,,,unresolved,,NDL該当なし |sru:no_key
+法学論叢,3,issn,0387-2866,issn_batch_confirmed,issn_batch_20260622,ndl_name=法学論叢 = Kyoto law review evidence=48 1950→2021
+知的財産法研究,3,issn,1348-6519,issn_batch_confirmed,issn_batch_20260622,ndl_name=知的財産法研究 = Studies on laws of intellectual property evidence=32 2003→2014
+子どもをめぐる法律問題(弁護士専門研修講座)』所収p,3,,,unresolved,,NDL該当なし |sru:no_key
+事業承継(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+新破産法――破産法・破産規則・改正民事再生法等の解説(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+労働法の諸問題――過労自殺・解雇・リストラをめぐって(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+相続紛争処理と弁護士実務(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+保険の実務学(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+独占禁止法(専門講座講義録)(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+弁護士のための製造物責任法(専門講座講義録)(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+バブル崩壊に伴う法律問題(専門講座講義録)(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+破産に代わる倒産処理手続(専門講座講義録)(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+商法改正・商事保全事件と会社関係実務(専門講座講義録)(東弁研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+最近の労働問題――弁護士実務に役立つ労働問題の実践的な解説(専門講座講義録)(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+新「借地借家法」――法律の概要と弁護士に役立つ実践的な解説(専門講座講義録)(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+中小企業と会社法――商法違反の惹起する諸問題(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+不動産譲渡所得課税の実務(専門講座講義録)(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+離婚事件をめぐる実務上の問題点(専門講座講義録)(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+保全処分に関する諸問題(研修叢書,3,,,unresolved,,NDL該当なし |sru:no_key
+軍事民論,3,,,unresolved,,NDL該当なし
+健康と体力,2,,,unresolved,,NDL該当なし |sru:no_key
+教育の「貧困化」と教育法(日本教育法学会年報,2,,,unresolved,,NDL該当なし |sru:no_key
+市民法学の新たな地平を求めて――法哲学・市民法学・法解釈学に関する諸問題 篠原敏雄先生追悼論文集』所収p,2,,,unresolved,,NDL該当なし |sru:no_key
+知的財産権の帰属(日本工業所有権法学会年報,2,,,unresolved,,NDL該当なし |sru:no_key
+戦後,2,,,unresolved,,NDL該当なし |sru:no_key
+教育の政治化と子ども・教師の危機(日本教育法学会年報,2,,,unresolved,,NDL該当なし |sru:no_key
+現代知的財産法講座,2,,,unresolved,,NDL該当なし
+臨床法学セミナー(早稲田大学),2,issn,1883-1265,issn_batch_confirmed,issn_batch_20260622,ndl_name=臨床法学セミナー evidence=1 2015→2015
+知的財産法の現状と課題(日本工業所有権法学会年報,2,,,unresolved,,NDL該当なし |sru:no_key
+グローバル化と法――〈日本におけるドイツ年〉法学研究集会』所収p,2,,,unresolved,,NDL該当なし |sru:no_key
+刑事法学の現代的課題――阿部純二先生古稀祝賀論文集』所収p,2,,,unresolved,,NDL該当なし |sru:no_key
+知的財産と先使用権(日本工業所有権法学会年報,2,,,unresolved,,NDL該当なし |sru:no_key
+教育法制の変動と教育法学(日本教育法学会年報,2,,,unresolved,,NDL該当なし |sru:no_key
+"鹿児島大学法学論集別冊,p",2,,,unresolved,,NDL該当なし |sru:no_key
+特許制度のハーモナイゼーション(日本工業所有権法学会年報,2,,,unresolved,,NDL該当なし |sru:no_key
+"松山法学創刊号,p",2,,,unresolved,,NDL該当なし |sru:no_key
+転換期の刑事法学――井戸田侃先生古稀祝賀論文集』所収p,2,,,unresolved,,NDL該当なし |sru:no_key
+デザインの法的保護(日本工業所有権法学会年報,2,,,unresolved,,NDL該当なし |sru:no_key
+法学教育におけるコンピュータの利用(関西大学法学研究所研究叢書,2,,,unresolved,,NDL該当なし |sru:no_key
+刑事法学の現代的状況――内藤謙先生古稀祝賀』所収p,2,,,unresolved,,NDL該当なし |sru:no_key
+EC統合から欧州連合への展望(関西大学法学研究所研究叢書,2,,,unresolved,,NDL該当なし |sru:no_key
+租税法学と関連学問領域(租税法研究,2,,,unresolved,,NDL該当なし |sru:no_key
+大東文化大学法学部大学院創設,2,,,unresolved,,NDL該当なし |sru:no_key
+これからの精神医療(法学セミナー増刊総合特集シリーズ,2,,,unresolved,,NDL該当なし |sru:no_key
+東洋法学会会報,2,,,unresolved,,NDL該当なし |sru:no_key
+法と政治の理論と現実(上)――関西大学法学部百周年記念論文集』所収p,2,,,unresolved,,NDL該当なし |sru:no_key
+韓国法学論文選,2,,,unresolved,,NDL該当なし |sru:no_key
+教育改革の動向と教育法(日本教育法学会年報,2,,,unresolved,,NDL該当なし |sru:no_key
+教育法学の現代的課題(法政大学現代法研究所叢書,2,,,unresolved,,NDL該当なし |sru:no_key
+現代の弁護士(司法編)(法学セミナー増刊 総合特集シリーズ,2,,,unresolved,,NDL該当なし |sru:no_key
+行政法の知識と実務,2,,,unresolved,,NDL該当なし |sru:no_key
+医療過誤訴訟の専門知識とノウハウ(弁護士専門研修講座)』所収p,2,,,unresolved,,NDL該当なし |sru:no_key
+都市再開発・土地収用・土地区画整理の実務(専門講座講義録)(東弁研修叢書,2,,,unresolved,,NDL該当なし |sru:no_key
+市民社会と法をめぐる今日的課題<平成,2,,,unresolved,,NDL該当なし |sru:no_key
+民事弁護における訴訟活動(専門講座講義録)(研修叢書,2,,,unresolved,,NDL該当なし |sru:no_key
+不動産取引に関する行政法規(専門講座講義録)(研修叢書,2,,,unresolved,,NDL該当なし |sru:no_key
+知っておきたい身近なM&Aの利用方法とその要点――専門講座講義録(研修叢書,2,,,unresolved,,NDL該当なし |sru:no_key
+少年法判例百選(別冊ジュリスト,1,ncid,BN01263667,seed_bessatsu_jurist,seed:cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+北海道医療大学人間基礎科学論集,1,issn,1346-3020,issn_batch_confirmed,issn_batch_20260622,ndl_name=北海道医療大学人間基礎科学論集 evidence=78 2000→2025
+広島修大論集,1,issn,0387-5873,issn_batch_confirmed,issn_batch_20260622,ndl_name=広島修大論集. 人文編 = Studies in the humanities and sciences evidence=33 1975→2008
+サプライチェーンにおける特許権侵害(日本工業所有権法学会年報,1,,,unresolved,,NDL該当なし |sru:no_key
+植物新品種等の知的財産法による保護(日本工業所有権法学会年報,1,,,unresolved,,NDL該当なし |sru:no_key
+意匠法改正の検討(日本工業所有権法学会年報,1,,,unresolved,,NDL該当なし |sru:no_key
+憲法施行,1,,,unresolved,,NDL該当なし |sru:no_key
+特許にすべきものは何か(日本工業所有権法学会年報,1,,,unresolved,,NDL該当なし |sru:no_key
+刑事法学におけるトポス論の実践――津田重憲先生追悼論文集』所収p,1,,,unresolved,,NDL該当なし |sru:no_key
+イノベーションと特許政策(日本工業所有権法学会年報,1,,,unresolved,,NDL該当なし |sru:no_key
+通常実施権の当然対抗(日本工業所有権法学会年報,1,,,unresolved,,NDL該当なし |sru:no_key
+教育法学,1,,,unresolved,,NDL該当なし
+刑事法学の新展開――八木國之博士追悼論文集』所収p,1,,,unresolved,,NDL該当なし |sru:no_key
+発明の本質的部分の保護の適否(日本工業所有権法学会年報,1,,,unresolved,,NDL該当なし |sru:no_key
+慶応の法律学 刑事法――慶応義塾創立,1,,,unresolved,,NDL該当なし |sru:no_key
+法哲学と法学教育――ロースクール時代の中で(法哲学年報,1,,,unresolved,,NDL該当なし |sru:no_key
+変容する世界と法律・政治・文化(下)――北海学園大学法学部,1,,,unresolved,,NDL該当なし
+"白山法学(東洋大学法科大学院)創刊号,p",1,issn,1880-1161,sru_unique,ndl_sru:isPartOf_issn,NDL該当なし |sru exact n=50
+アジア法文化と国民国家,1,,,unresolved,,NDL該当なし |sru:no_key
+国際協力の時代の国際法(関西大学法学研究所研究叢書,1,,,unresolved,,NDL該当なし
+刑事法学の現実と展開――齊藤誠二先生古稀記念』所収p,1,,,unresolved,,NDL該当なし |sru:no_key
+"現代法学(東京経済大学)創刊号,p",1,issn,1345-9821,sru_unique,ndl_sru:isPartOf_issn,NDL該当なし |sru exact n=35
+"法学研究科論集(北海学園大学大学院)創刊号,p",1,,,unresolved,,NDL該当なし
+"経営法学年報(福山平成大学)創刊号,p",1,,,unresolved,,NDL該当なし
+環境法学の生成と未来――山村恒年先生古稀記念論集』所収p,1,,,unresolved,,NDL該当なし |sru:no_key
+知的財産権と環境(日本工業所有権法学会年報,1,,,unresolved,,NDL該当なし |sru:no_key
+刑事法学の課題と展望――香川達夫博士古稀祝賀』所収p,1,,,unresolved,,NDL該当なし |sru:no_key
+EC法と欧州連合の現状(関西大学法学研究所研究叢書,1,,,unresolved,,NDL該当なし |sru:no_key
+刑事法学の歴史と課題――吉川経夫先生古稀祝賀論文集』所収p,1,,,unresolved,,NDL該当なし |sru:no_key
+刑事法学の現代的展開(上)刑法編・刑事訴訟編――八木國之先生古稀祝賀論文集』所収p,1,,,unresolved,,NDL該当なし |sru:no_key
+ナチス法の思想と現実(関西大学法学研究所研究叢書,1,,,unresolved,,NDL該当なし |sru:no_key
+これからの日米安保(法学セミナー増刊総合特集シリーズ,1,,,unresolved,,NDL該当なし |sru:no_key
+国際法の基本問題(別冊法学教室 基本問題シリーズ,1,,,unresolved,,NDL該当なし |sru:no_key
+法学研究(一橋大学),1,issn,0439-3252,issn_batch_confirmed,issn_batch_20260622,ndl_name=愛知学院大学論叢. 法學研究 evidence=42 1958→2026
+刑事法学の諸相(下)――井上正治博士還暦祝賀』所収p,1,,,unresolved,,NDL該当なし |sru:no_key
+教育行政の動向と教育法(日本教育法学会年報,1,,,unresolved,,NDL該当なし |sru:no_key
+知的財産権訴訟(研修叢書,1,,,unresolved,,NDL該当なし
+無体財産権法の実務――専門講座講義録(研修叢書,1,,,unresolved,,NDL該当なし |sru:no_key
+社会科学論叢,1,issn,2432-3519,issn_batch_confirmed,issn_batch_20260622,ndl_name=人文社会科学論叢 evidence=41 2016→2026

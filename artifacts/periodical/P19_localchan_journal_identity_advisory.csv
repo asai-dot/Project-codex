@@ -1,0 +1,78 @@
+journal,art,sru_status,llm_pick,picked_candidate,picked_issn,llm_uncertain,advisory_class,llm_reason
+判例評論,5858,sru_review_substring,1,判例評論 584号 (ISSN無),,False,advisory_same_noissn,号数付は同一
+判例研究,640,sru_review_substring,none,,,True,none_unresolved,総称と限定語付き
+現代法律実務の諸問題<平成,493,sru_review_substring,0,日本弁護士連合会編・現代法律実務の諸問題平成22年度 (ISSN無),,False,advisory_same_noissn,年度付は同一
+民事法研究,367,sru_review_substring,none,,,True,none_unresolved,refは総称、candは特定誌
+法律科学研究所年報,360,sru_review_substring,0,明治学院大学法律科学研究所年報 / 明治学院大学法律科学研究所 編 (ISSN 2185-2278),2185-2278,False,advisory_same_issn,大学名接頭一致
+大阪弁護士会,344,sru_review_substring,none,,,True,none_unresolved,refは組織名、candは編者付
+判例セレクト’,316,sru_review_substring,none,,,True,none_unresolved,号数/年別表記違い
+大学院研究年報(法学研究科篇)(中央大学),272,sru_review_substring,2,中央大学大学院研究年報 = Bulletin of graduate studies / 中央大学大学院研究年報編集委員会 編 (ISSN無),,False,advisory_same_noissn,中央大学大学院研究年報
+刑事弁護,188,sru_review_substring,0,季刊刑事弁護 (ISSN無),,False,advisory_same_noissn,季刊刑事弁護
+都道府県展望,176,sru_review_substring,0,都道府県展望 3月号 (ISSN無),,False,advisory_same_noissn,号数違いは同一
+九州法学会会報,166,sru_review_substring,0,九州法学会会報 2003年 (ISSN無),,False,advisory_same_noissn,年度違いは同一
+六甲台論集(法学政治学篇)(神戸大学),153,sru_review_substring,0,六甲台論集. 法学政治学篇 (ISSN無),,False,advisory_same_noissn,編集部名は同一
+刑事法ジャーナル,149,sru_review_substring,0,刑事法ジャーナル 22号(未定 (校正中)) (ISSN無),,False,advisory_same_noissn,号数/年度は同一誌の表記ゆれ
+法学会雑誌(首都大学東京),105,sru_review_substring,none,,,True,none_unresolved,大学名接頭で別誌
+商法研究,104,sru_review_substring,none,,,True,none_unresolved,商法研究は総称
+法学研究所紀要(大阪経済法科大学),95,sru_review_substring,1,大阪経済法科大学法学研究所紀要 (ISSN無),,False,advisory_same_noissn,大阪経済法科大学法学研究所紀要はrefの略称
+公益法人,80,sru_review_substring,none,,,True,none_unresolved,月刊公益法人は別誌
+現代法律実務の諸問題<令和,79,sru_review_substring,0,日本弁護士連合会編・現代法律実務の諸問題平成22年度 (ISSN無),,False,advisory_same_noissn,年度は同一
+現代法律実務の諸問題(上)<平成,67,sru_review_substring,none,,,True,none_unresolved,旧字/号数違い
+比較憲法学研究,63,sru_review_substring,0,比較憲法学会 比較憲法学研究 (ISSN無),,False,advisory_same_noissn,同一誌
+商事法務,50,sru_review_substring,3,旬刊商事法務 (ISSN無),,False,advisory_same_noissn,旬刊商事法務
+法学会雑誌(東京都立大学),43,sru_review_substring,1,東京都立大学法学会雑誌 / 東京都立大学法学会 編 (ISSN 0389-8571),0389-8571,False,advisory_same_issn,refとcand1の誌名核が一致。東京都立大学法学会雑誌はrefの「法学会雑誌(東京都立大学)」の略称。
+立命館大学法学部ニューズレター,37,sru_review_substring,0,立命館大学法学部ニューズレター 32号 (ISSN無),,False,advisory_same_noissn,refとcand0の誌名核が一致。号数は同一シリアルの表記ゆれ。
+東北法学会会報(東北大学),36,sru_review_substring,0,東北法学会会報 25号 (ISSN無),,False,advisory_same_noissn,refとcand0の誌名核が一致。号数は同一シリアルの表記ゆれ。
+民事法の諸問題,35,sru_review_substring,1,民事法の諸問題 第5(上巻) (ISSN無),,False,advisory_same_noissn,号数違い
+憲法訴訟(法学セミナー増刊)』所収p,34,sru_review_substring,none,,,True,none_unresolved,別物
+慶応義塾大学法学部法律学科開設,32,sru_review_substring,1,慶應義塾大学法学部法律学科開設百年記念論文集 (ISSN無),,False,advisory_same_noissn,旧字新字
+明治大学大学院紀要(法学篇),31,sru_review_substring,0,明治大学大学院紀要　法学篇 (ISSN無),,False,advisory_same_noissn,表記ゆれなし、号数なし
+現代企業法学の理論と動態(上)(奥島孝康先生古稀記念論文集,28,sru_review_substring,0,『現代企業法学の理論と動態』(記念論文集・誠文堂) (ISSN無),,False,advisory_same_noissn,記念論文集と同一
+現代法律実務の諸問題(上・下)<昭和,24,sru_review_substring,0,日本弁護士連合会編・現代法律実務の諸問題平成22年度 (ISSN無),,False,advisory_same_noissn,号数・年度付くが同一
+現代法律実務の諸問題(下)<平成,22,sru_review_substring,none,,,True,none_unresolved,refに「(下)」が付くがcandは「平成22年度」で別物
+慶応義塾創立,21,sru_review_substring,none,,,True,none_unresolved,refは創立記念の総称でcandは特定分野の論文集
+公法学の法と政策(上)――金子宏先生古稀祝賀』所収p,20,sru_review_substring,none,,,True,none_unresolved,refは所収pでcandは古稀祝賀のタイトル
+法学研究科論集(北海学園大学大学院),19,sru_review_substring,1,北海学園大学大学院法学研究科論集 (ISSN無),,False,advisory_same_noissn,号数違い
+現代社会と民法学の動向(上)――不法行為 加藤一郎先生古稀記念』所収p,19,sru_review_substring,none,,,True,none_unresolved,別物
+これからの家族(法学セミナー増刊・総合特集シリーズ,19,sru_review_substring,none,,,True,none_unresolved,別物
+現代法律実務の諸問題<令和元年度研修版>(日弁連研修叢書)』所収p,19,sru_review_substring,none,,,True,none_unresolved,年度違い
+現代法律実務の諸問題(上)<平成元年版>(日弁連研修叢書)』所収p,18,sru_review_substring,none,,,True,none_unresolved,年度違い
+大憲論叢,16,sru_review_substring,0,西日本短期大学大憲論叢 (ISSN無),,False,advisory_same_noissn,誌名核一致
+法学政治学研究(成蹊大学大学院),16,sru_review_substring,none,,,True,none_unresolved,ref と cands は異なる大学名
+改憲を問う――民主主義法学からの視座(法律時報増刊)』所収p,16,sru_review_substring,1,法律時報増刊『改憲を問う――民主主義法学からの視座』 (ISSN無),,False,advisory_same_noissn,法律時報増刊の同一誌
+比較と歴史のなかの日本法学――比較法学への日本からの発信(早稲田大学比較法研究所叢書,16,sru_review_substring,0,比較法研究所叢書34比較と歴史のなかの日本法学――比較法学への日本からの発信(早稲田大学比較法研究所【編】) (ISSN無),,False,advisory_same_noissn,叢書名一致
+現代社会と民法学の動向(下)――民法一般 加藤一郎先生古稀記念』所収p,16,sru_review_substring,none,,,True,none_unresolved,refは論文の収録部分で、candは雑誌名。別物
+訟務月報,14,sru_review_substring,none,,,True,none_unresolved,candに『日本法学』が付加されており、別物
+慶応の法律学 公法,13,sru_review_substring,none,,,True,none_unresolved,candは特定の記念論文集で、refは雑誌名と異なる
+変容する世界と法律・政治・文化(上)――北海学園大学法学部,11,sru_review_substring,1,北海学園大学法学部『変容する世界と法律・政治・文化』(上巻)(株)ぎょうせい (ISSN無),,False,advisory_same_noissn,上巻表記一致
+融合する法律学(上)――筑波大学法科大学院創設記念・企業法学専攻創設,11,sru_review_substring,2,筑波大学法科大学院創設記念・企業法学専攻創設15周年記念論集『融合する法律学』 (ISSN無),,False,advisory_same_noissn,記念論集表記一致
+知的財産権と独占禁止法(経済法学会年報,10,sru_review_substring,none,,,True,none_unresolved,別物
+神奈川大学法学部,9,sru_review_substring,none,,,True,none_unresolved,refは部名で論文集の名前ではない
+法学会誌(明治大学),9,sru_review_substring,none,,,True,none_unresolved,refは法学会誌だがcandsは芸術療法学会誌や早稲田法学会誌
+戦後日本憲法学,8,sru_review_substring,none,,,True,none_unresolved,refは雑誌名だがcandsは増刊の特集
+融合する法律学(下)――筑波大学法科大学院創設記念・企業法学専攻創設,8,sru_review_substring,1,筑波大学法科大学院創設記念等『融合する法律学』 下巻 (ISSN無),,False,advisory_same_noissn,下巻と同一の誌名核
+教育基本法,8,sru_review_substring,none,,,True,none_unresolved,refは総称、candは別誌
+法学ガイダンス’,8,sru_review_substring,0,法学ガイダンス'84 (ISSN無),,False,advisory_same_noissn,旧字新字/表記ゆれ
+中央大学,7,sru_review_substring,none,,,True,none_unresolved,ref は単独の大学名で、cands は全て具体的な紀要・年報。表記ゆれや旧字新字の問題ではない。大学名単独は雑誌名では
+現代法律実務の諸問題(下)<平成元年版>(日弁連研修叢書)』所収p,7,sru_review_substring,0,日本弁護士連合会編・現代法律実務の諸問題平成22年度 (ISSN無),,False,advisory_same_noissn,旧字新字/号数違い
+明治大学法学部創立,6,sru_review_substring,none,,,True,none_unresolved,refは創立記念の総称、candは記念論文集。別物
+新時代の刑事法学(下)――椎橋隆幸先生古稀記念』所収p,5,sru_review_substring,none,,,True,none_unresolved,ref に(下)が付くが候補は全般
+新時代の刑事法学(上)――椎橋隆幸先生古稀記念』所収p,5,sru_review_substring,none,,,True,none_unresolved,ref に(上)が付くが候補は全般
+営業秘密の保護(日本工業所有権法学会年報,5,sru_review_substring,none,,,True,none_unresolved,ref は年報の一部で候補は別誌
+香川大学法学部創設,5,sru_review_substring,none,,,True,none_unresolved,ref は創設記念の特集で、cand は30周年記念論文集。号数/周年年数が異なる。
+これからの地方自治(法学セミナー増刊総合特集シリーズ,5,sru_review_substring,none,,,True,none_unresolved,ref は法学セミナー増刊総合特集シリーズの一部だが、cand は地方自治の別誌。
+新型コロナウイルスと法学(法律時報増刊)』所収p,4,sru_review_substring,none,,,True,none_unresolved,ref は法律時報増刊の一部で、cand は増刊の詳細タイトル。増刊の別誌と判断。
+経営法学年報(福山平成大学),4,sru_review_substring,0,福山平成大学経営法学年報 (ISSN無),,False,advisory_same_noissn,表記ゆれ
+上智大学法学部創設,4,sru_review_substring,none,,,True,none_unresolved,別物
+刑事法の諸問題,3,sru_review_substring,0,専修大学法学研究所紀要『刑事法の諸問題』 (ISSN無),,False,advisory_same_noissn,表記ゆれ
+商標の使用と権利侵害(日本工業所有権法学会年報,3,sru_review_substring,0,日本工業所有権法学会年報『商標の使用と権利侵害』 (ISSN無),,False,advisory_same_noissn,表記ゆれ/旧字新字
+法と政治の,3,sru_review_substring,none,,,True,none_unresolved,一般総称
+教育における<国家>と<個人>(日本教育法学会年報,3,sru_review_substring,none,,,True,none_unresolved,ref に括弧内が付くが、cands は単純な「教育」。括弧内が誌名核の一部か不明。旧字/号数違い等で確実でないため不確
+軍事民論,3,sru_review_substring,0,軍事民論. 特集 (ISSN無),,False,advisory_same_noissn,表記ゆれなし
+現代知的財産法講座,2,sru_review_substring,none,,,True,none_unresolved,編者・年度付
+教育法学,1,sru_review_substring,none,,,True,none_unresolved,号数違い
+変容する世界と法律・政治・文化(下)――北海学園大学法学部,1,sru_review_substring,none,,,True,none_unresolved,ref は下巻だが候補は上巻と全巻
+国際協力の時代の国際法(関西大学法学研究所研究叢書,1,sru_review_substring,0,関西大学法学研究所研究叢書第30冊 国際協力の時代の国際法 (ISSN無),,False,advisory_same_noissn,cand 0 は研究叢書第30冊でref と一致
+"法学研究科論集(北海学園大学大学院)創刊号,p",1,sru_review_substring,1,北海学園大学大学院法学研究科論集 (ISSN無),,False,advisory_same_noissn,ref とcand 1 は誌名核一致
+"経営法学年報(福山平成大学)創刊号,p",1,sru_review_substring,0,福山平成大学経営法学年報 (ISSN無),,False,advisory_same_noissn,旧字新字/表記ゆれなし、誌名核一致。創刊号は号数違いで同一誌。
+知的財産権訴訟(研修叢書,1,sru_review_substring,none,,,True,none_unresolved,一般総称で、候補は特定論文集。別物。
