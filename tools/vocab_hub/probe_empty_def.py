@@ -48,8 +48,17 @@ def main(argv=None) -> int:
         terms.extend(ah.adapt(entries, "hourei_yougo_jiten_11", 102))
 
     # 空定義 term の id 集合
-    empty_ids = {bh._tid(t) for t in terms if not (t.get("definition") or "").strip()}
+    empty_terms = [t for t in terms if not (t.get("definition") or "").strip()]
+    empty_ids = {bh._tid(t) for t in empty_terms}
     print(f"[probe] 空定義 term: {len(empty_ids)}")
+
+    # 空定義 term の素性分類: なぜ membership に出ないか
+    e_nontier1 = sum(1 for t in empty_terms
+                     if bh.is_bedrock(t.get("authority_rank")) and str(t.get("term_tier", "1")) != "1")
+    e_tier1_bedrock = sum(1 for t in empty_terms
+                          if bh.is_bedrock(t.get("authority_rank")) and str(t.get("term_tier", "1")) == "1")
+    e_specialty = sum(1 for t in empty_terms if not bh.is_bedrock(t.get("authority_rank")))
+    print(f"  内訳: bedrock+tier1={e_tier1_bedrock} / bedrock+非tier1(seed除外)={e_nontier1} / specialty={e_specialty}")
 
     hubs, mem, stats = bh.build_hubs(terms, 0.6, quality_filter=True)
 

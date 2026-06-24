@@ -153,6 +153,10 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP, reading_mi
     by_tid = {_tid(t): t for t in terms}
     bedrock_all = [t for t in terms if is_bedrock(t.get("authority_rank")) and str(t.get("term_tier", "1")) == "1"]
     specialty = [t for t in terms if not is_bedrock(t.get("authority_rank"))]
+    # bedrock ランクだが tier!=1 (語義サブエントリ/参照行) は seed しない.
+    # 黙って消さず件数を記録する (no silent drop).
+    dropped_nontier1 = [t for t in terms
+                        if is_bedrock(t.get("authority_rank")) and str(t.get("term_tier", "1")) != "1"]
 
     # defmatch: 読み欠落 bedrock を分離して第2パスで処理 (groups は読みあり term のみで作る)
     if reading_missing == "defmatch":
@@ -317,6 +321,7 @@ def build_hubs(terms: List[dict], threshold: float = DEFAULT_OVERLAP, reading_mi
 
     stats = {
         "terms_total": len(terms), "bedrock_terms": len(bedrock_all), "specialty_terms": len(specialty),
+        "dropped_nontier1": len(dropped_nontier1),
         "bedrock_reading_missing": len(bedrock_noread),
         "hubs": len(hubs), "homograph_conflicts": homograph_conflicts,
         "specialty_attached": specialty_attached,
@@ -344,7 +349,8 @@ def build_report(hubs, memberships, stats, threshold) -> str:
         "> DD-DICT-008 Stage1-3(+5). 全 hub_status=provisional. canonical 昇格なし.",
         f"> 定義重なり率 閾値: {threshold} (Q2: 暫定. Wave0 実測で再校正)",
         "",
-        f"- Term 総数: **{stats['terms_total']}**  (bedrock {stats['bedrock_terms']} / specialty {stats['specialty_terms']})",
+        f"- Term 総数: **{stats['terms_total']}**  (bedrock {stats['bedrock_terms']} / specialty {stats['specialty_terms']}"
+        + (f" / 非tier1 seed除外 {stats['dropped_nontier1']}" if stats.get('dropped_nontier1') else "") + ")",
         f"- 生成 hub: **{stats['hubs']}**  (exact統合 {stats['exact_merged_hubs']} / canonical昇格可(rank≤102のみ) {canonical_eligible})",
         f"- 同綴異義 homograph_conflict(統合せず別hub): **{stats['homograph_conflicts']}**",
         f"- 読み欠落 bedrock: **{stats.get('bedrock_reading_missing', 0)}**  "
