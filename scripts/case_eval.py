@@ -58,7 +58,7 @@ def score(gold: dict, pred: dict, tiers: dict | None = None) -> dict:
     obs = list(gold)
     tp = fp = fn = 0
     tier_pos = {}   # tier -> [tp, fp]  (same_pred ペアのみ)
-    RISK = {"A": 0, "B": 1, "C": 2}
+    RISK = {"A": 0, "B": 1, "C": 2, "prov": 3}  # case_vocab.TIER_RISK と一致(prov 含む)
     for a, b in _pairs(obs):
         sg = gold[a] == gold[b]
         sp = pred[a] == pred[b]

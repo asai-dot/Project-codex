@@ -19,6 +19,13 @@ read-only。DB/DDL なし。検証は test_case_corroborate.py。
 from __future__ import annotations
 from collections import defaultdict
 
+# L1 identity 補強に使える判例DB源(case_vocab.CASELAW_SOURCES と一致させること)。
+# モジュール定数化して整合テストで検証可能にする。
+CASELAW_SOURCES = frozenset({
+    "D1-Law", "NII", "saikousai-hp", "saikousai-db", "hanrei-times", "hanrei-hisho",
+    "lexdb-tkc", "westlaw-japan", "kakyu-saibansho-hp", "chizai-kosai-hp",
+})
+
 
 def corroborate(assignment: dict, obs_by_id: dict, links: list[dict]):
     """assignment[oid]=case_key / obs_by_id[oid]={source, external_id} /
@@ -35,12 +42,10 @@ def corroborate(assignment: dict, obs_by_id: dict, links: list[dict]):
         if o.get("external_id"):
             extref_to_case[f'{o["source"]}:{o["external_id"]}'] = ck
 
-    # L1: 独立 *判例DB* 源の数で identity confidence
-    CASELAW = {"D1-Law", "NII", "saikousai-hp", "saikousai-db", "hanrei-times", "hanrei-hisho",
-               "lexdb-tkc", "westlaw-japan", "kakyu-saibansho-hp", "chizai-kosai-hp"}
+    # L1: 独立 *判例DB* 源の数で identity confidence (CASELAW_SOURCES=モジュール定数)
     case_confidence = {}
     for ck, d in per_case.items():
-        caselaw_sources = d["sources"] & CASELAW
+        caselaw_sources = d["sources"] & CASELAW_SOURCES
         n = len(caselaw_sources)
         level = ("multi_source_agree" if n >= 2 else
                  "single_source" if n == 1 else "non_caselaw_only")
