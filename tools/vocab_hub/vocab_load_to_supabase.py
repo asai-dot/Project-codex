@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""STEP C: vocab_load 生成物を Supabase(alo-connect) に load する (canary->batch).
+"""STEP C: vocab_load 生成物を Supabase(asai-dot Project) に load する (canary->batch).
 
 build_load_artifacts.py が出した ~/vocab_load/*.jsonl を FK 順に投入する.
   alo_concept_schemes -> alo_terms -> alo_hubs -> alo_hub_memberships -> alo_term_relations
@@ -11,7 +11,7 @@ build_load_artifacts.py が出した ~/vocab_load/*.jsonl を FK 順に投入す
   - --dry-run: 接続せず subset 件数だけ表示.
 
 接続: 環境変数 SUPABASE_DB_URL (Supabase の direct connection string)
-  例: export SUPABASE_DB_URL='postgresql://postgres:<PW>@db.vlsunmqpjhzbhipiehzs.supabase.co:5432/postgres'
+  例: export SUPABASE_DB_URL='postgresql://postgres:<PW>@db.nixfjmwxmgugiiuqfuym.supabase.co:5432/postgres'
 依存: psycopg2  ( pip install psycopg2-binary )
 
     python3 tools/vocab_hub/vocab_load_to_supabase.py --dir ~/vocab_load            # canary
@@ -113,8 +113,8 @@ def main(argv=None) -> int:
     ap.add_argument("--dir", default=str(Path.home() / "vocab_load"))
     ap.add_argument("--batch", action="store_true", help="全件 load (既定は canary)")
     ap.add_argument("--canary-hubs", type=int, default=300)
-    ap.add_argument("--host", default="db.vlsunmqpjhzbhipiehzs.supabase.co",
-                    help="Supabase direct host (既定=alo-connect). SUPABASE_DB_URL 未設定時に使用")
+    ap.add_argument("--host", default="db.nixfjmwxmgugiiuqfuym.supabase.co",
+                    help="Supabase direct host (既定=asai-dot Project). SUPABASE_DB_URL 未設定時に使用")
     ap.add_argument("--pooler", action="store_true",
                     help="Session pooler(IPv4)経由. direct が Connection refused のとき使う")
     ap.add_argument("--pooler-host", default="aws-0-ap-northeast-1.pooler.supabase.com",
@@ -142,7 +142,7 @@ def main(argv=None) -> int:
         import getpass
         from urllib.parse import quote
         if a.pooler:
-            host, user = a.pooler_host, "postgres.vlsunmqpjhzbhipiehzs"
+            host, user = a.pooler_host, "postgres.nixfjmwxmgugiiuqfuym"
         else:
             host, user = a.host, "postgres"
         print(f"[load] SUPABASE_DB_URL 未設定。user={user} host={host}:{a.port} へ接続します。")
@@ -150,7 +150,7 @@ def main(argv=None) -> int:
             pw = Path(a.pw_file).expanduser().read_text(encoding="utf-8").strip()
             print(f"[load] パスワードを {a.pw_file} から読み込み(長さ{len(pw)})。")
         else:
-            pw = getpass.getpass("alo-connect DB password (入力は非表示): ").strip()
+            pw = getpass.getpass("DB password (入力は非表示): ").strip()
         if not pw:
             print("ERROR: パスワードが空です。", file=sys.stderr)
             return 2
