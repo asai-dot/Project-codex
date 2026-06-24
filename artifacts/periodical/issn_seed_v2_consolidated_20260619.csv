@@ -1,0 +1,28 @@
+journal_norm,issn,issn_l,evidence_source,source_ref,status,note
+税経通信,0387-2866,,internal_bibrecords,"biblio.bib_records(147行)",confirmed,web検索では取れず内部DBで解決
+ビジネス法務,1347-4146,,internal_bibrecords,"biblio.bib_records(56行)",confirmed,BUSINESS LAW JOURNAL(1882-6377)とは別誌
+交通事故民事裁判例集,0389-6544,,internal_bibrecords,"biblio.bib_records(19行)",confirmed,web検索では取れず内部DBで解決
+法学教室,0389-2220,,internal_bibrecords+ndl_tsv,"bib_records; 法学教室_NDL_raw.tsv",confirmed,
+ビジネスガイド,0387-7035,,internal_bibrecords,"biblio.bib_records(10行)",confirmed,
+jcaジャーナル,0386-3042,0386-3042,internal_bibrecords,"biblio.bib_records(134行)",confirmed,ただしstaging216中214は通巻欠=Track B
+法律時報,0387-3420,0387-3420,ndl_box_tsv,"NDL_magazine/法律時報_書誌情報DL.tsv(file 2163759657037)",confirmed,日本評論社。staging「法律時報e-book」はこのISSNか電子版別ISSNか要判断
+ジュリスト,0448-0791,,existing_seed+ndl_tsv,"staging canonical; ジュリスト_NDL_raw.tsv",confirmed,
+判例タイムズ,0438-5896,,existing_seed+ndl_tsv,"staging; 判例タイムズ_NDL_raw.tsv",confirmed,
+旬刊商事法務,0289-1107,,existing_seed+ndl_tsv,"staging; 旬刊商事法務_raw.tsv",confirmed,
+金融・商事判例,0287-9956,,existing_seed+ndl_tsv,"staging; 金融商事判例_raw.tsv",confirmed,
+NBL,0287-9670,,existing_seed+ndl_tsv,"staging; NBL_raw.tsv",confirmed,
+民商法雑誌,1342-5056,,existing_seed+ndl_tsv,"staging; 民商法雑誌_raw.tsv",confirmed,
+法律のひろば,0916-9806,,internal_bibrecords+ndl_tsv,"bib_records(28行); 法律のひろば_NDL_raw.tsv",confirmed,
+警察学論集,0287-6345,,internal_bibrecords+ndl_tsv,"bib_records(11行); 警察学論集_NDL_raw.tsv",confirmed,旧字「警察學論集」をtitle_variantsで吸収(staging2号が別扱い)
+家庭の法と裁判,2189-1702,,existing_seed,"staging canonical",confirmed,
+金融法務事情,2185-3223,,cinii+ndlsearch,"NCID AN00327573; NDLサーチ I000010872301",confirmed,現タイトルのISSN。旧『旬刊金融法務事情』0451-9787は別シリアル
+労働経済判例速報,,,ncid_key,"CiNii NCID AN00327835; 出版者=経団連事業サービス; Box TSV(file 2049062759276)はISSN列全900行空",ncid_key,ISSNがTSV/web/CiNii(403)で取得不可→決定ルールでNCID基底。判明次第追補
+労働判例,0387-1878,,cinii,"CiNii NCID AN00256533; staging出版者=産労総合研究所",confirmed,労働判例ジャーナル(労働開発研究会)とは別誌と中身で確定
+法律時報e-book,,,resolved_separate_manifestation,"日本評論社告知; staging巻号=印刷版と一致",separate_manifestation,【決定】印刷版とは別manifestation。自身は無ISSN(Kindle/ASIN・特集抜粋)。印刷号(0387-3420)へ巻号・通巻でリンクのみ
+戸籍,,,resolved_ncid_key,"CiNii NCID AN00274615; 出版者=テイハン",ncid_key,【決定】issue_id_v2はNCID/NDLBibID基底(AN00274615)。戸籍時報(AN00230176)とは別誌
+登記研究,,,resolved_ncid_key,"CiNii NCID AN00157564; 出版者=テイハン",ncid_key,【決定】issue_id_v2はNCID/NDLBibID基底(AN00157564)。登記インターネットとは別誌
+law&technology,1346-812X,,webcatplus,"Webcat Plus 1346812X; 出版者=民事法研究会",confirmed,L&T。旧誌名期は0916-2593(別)
+法と哲学,2188-711X,,websearch_unverified,"信山社; NCID未取得; ISSN出典ページ未確認",candidate,2188-711Xはweb要約のみで未検証(姉妹番号2188-3858と混同リスク)。検証まで暫定。NCIDキー併用可
+季刊刑事弁護,,,ncid_key,"CiNii NCID AN10468265; 出版者=現代人文社",ncid_key,ISSN露出せず(CiNii403)→NCID基底でissue_id_v2。判明次第追補
+人事の地図,,,needs_pull,"出版者=産労総合研究所(経営書院); NCID未取得",needs_pull,ISSN/NCID未取得。産労系で要追加調査
+jcaaビジネスジャーナル,,,new_no_issn,"出版者=日本商事仲裁協会; 2025新刊(No.2,4号のみ)",new_no_issn,2025創刊の新誌でISSN未付番の可能性大。jcaジャーナル(0386-3042)とは別物

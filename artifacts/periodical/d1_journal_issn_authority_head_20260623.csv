@@ -1,0 +1,176 @@
+journal_canonical,d1_article_count,key_type,key_value,status,source,note
+ジュリスト,24177,issn,0448-0791,verified,ndl/issnportal,
+金融法務事情,12793,issn,2185-3223,verified,ndl,旧旬刊金融法務事情0451-9787は別
+判例タイムズ,10778,issn,0438-5896,verified,ndl,
+NBL,10040,issn,0287-9670,verified,ndl,
+旬刊商事法務,9349,issn,0289-1107,verified,ndl,
+法学セミナー,8596,issn,0439-3295,verified,ndl/cinii,
+国際商事法務,6919,issn,0287-7511,verified,ndl/cinii,
+法律時報,6718,issn,0387-3420,verified,ndl,
+法学教室,5959,issn,0389-2220,verified,ndl,
+判例評論,5858,issn,,pending,,判例時報の評釈別冊。自前ISSN有無を要確認(判例時報0438-5888に紐づく可能性)
+労働法律旬報,5799,ncid,AN00327813,ncid_fallback,cinii,公開ISSN確認できず→NCID基底
+税理,5763,ncid,AN00080095,ncid_fallback,cinii,公開ISSN確認できず→NCID基底
+公正取引,5574,issn,0425-6247,verified,ndl,
+法曹,5505,ncid,AN00327187,ncid_fallback,cinii,月刊「法曹」(法曹会)。法曹時報とは別誌
+税経通信,4754,ncid,AN00390536,correction,cinii,旧seed 0387-2866は法学論叢のISSN=誤付与
+戸籍時報,4471,issn,0912-1579,verified,kajo,戸籍(NCID AN00274615)とは別誌
+税務弘報,4344,issn,0913-5278,verified,ndl,
+月刊税務事例,4175,issn,0910-5786,verified,cinii/ndl,
+ビジネス法務,4155,ncid,AA11504883,correction,cinii,旧seed 1347-4146は未登録の誤付与
+月刊登記情報,3891,issn,1345-4129,verified,cinii/ndl,登記研究とは別誌
+銀行法務21,3000,issn,1341-1179,verified,ndl/cinii,銀行法務(短縮表記)と数字破壊で分裂させない
+金融・商事判例,3622,issn,0287-9956,verified,ndl,
+民商法雑誌,3494,issn,1342-5056,verified,ndl,
+自由と正義,3236,issn,0447-7480,verified,nichibenren/cinii,
+手形研究,3165,issn,0494-9692,verified,cinii,継続誌=銀行法務21
+季刊労働法,2974,issn,0386-0620,verified,cinii,
+法律のひろば,2930,issn,0916-9806,verified,ndl,巻号運用(ym終端)
+登記研究,2726,ncid,AN00157564,verified,cinii,テイハン。登記インターネットとは別
+時の法令,2661,issn,0493-4067,verified,ndl,
+JCAジャーナル,2409,issn,0386-3042,verified,ndl/jcaa,
+民事研修,2053,issn,0912-1587,verified,cinii/ndl,みんけん:民事研修1342-2766は改題後
+月報司法書士,2032,issn,0388-2578,verified,cinii/ndl,
+中央労働時報,2008,issn,1342-5269,verified,ndl,別冊中央労働時報は別
+季刊労働者の権利,1942,issn,0286-0821,verified,ndl/cinii,日本労働弁護団
+法曹時報,,issn,0023-9453,verified,cinii/ndl,評釈2位。最高裁調査官解説
+法学協会雑誌,,issn,0022-6815,verified,cinii/tokyo-u,評釈4位。東大法学部紀要
+労働判例,,issn,0387-1878,verified,cinii,労働判例ジャーナル(別誌)と区別
+交通事故民事裁判例集,,ncid,BN14939714,correction,cinii,旧seed 0389-6544は未登録。巻-号で一意化
+戸籍,,ncid,AN00274615,verified,cinii,戸籍時報とは別
+季刊刑事弁護,,ncid,AN10468265,verified,cinii,
+法と哲学,,isbn_per_issue,,verified,shinzansha,号ごと固有ISBN。ISSN無
+law&technology,,issn,1346-812X,verified,ndl,
+警察学論集,,issn,0287-6345,verified,ndl,旧字警察學論集はalias
+家庭の法と裁判,,issn,2189-1702,verified,amazon/cinii,
+ビジネスガイド,,ncid,AN0026915X,correction,cinii,旧seed 0387-7035は未登録の誤付与
+businesslawjournal,,issn,1882-7640,verified,existing_canonical,
+判例時報,,issn,0438-5888,verified,ndl,
+日本労働研究雑誌,1521,issn,0916-3808,verified,jil/ndl,
+自治研究,1388,issn,0287-5209,verified,ndl,第一法規
+法と民主主義,1198,issn,0385-034X,verified,cinii/ndl,日本民主法律家協会
+会社法務A2Z,1196,issn,1882-059X,verified,cinii/ndl,第一法規
+賃金と社会保障,1093,issn,0911-4718,verified,ndl,旬報社
+損害保険研究,1035,issn,0287-6337,verified,jstage,print(online 2434-060X)
+実践成年後見,988,issn,1347-0108,verified,ndl,民事法研究会
+労働経済判例速報,1146,ncid,AN00327835,correction,cinii,旧seedで誤付与是正済(registry)。ISSN無→NCID
+速報判例解説,1786,ncid,AA12241495,ncid_fallback,cinii,法学セミナー増刊(新・判例解説Watch)。増刊系
+地方税,1599,ncid,AN00126094,ncid_fallback,cinii,地方財務協会。公開ISSN確認できず
+民事月報,1177,ncid,AN00327733,ncid_fallback,cinii,法務省民事局。公開ISSN確認できず
+銀行法務,3827,issn,,pending,,銀行法務21(1341-1179)との同一性を要確認(数字破壊回避)
+法令解説資料総覧,1303,issn,0387-3617,verified,ndl/cinii,第一法規
+月刊民事法情報,1248,issn,0914-417X,verified,ndl,民事法情報センター(1993廃刊)
+JICPAジャーナル,1185,issn,0915-2857,verified,ndl/cinii,会計監査ジャーナルへ改題前。日本公認会計士協会
+日本労働法学会誌,928,issn,0386-0639,verified,cinii,法律文化社。号ごとISBN併存
+地方自治,932,issn,0287-8534,verified,ndl,ぎょうせい(判例地方自治とは別)
+登記インターネット,1201,ncid,AA11407650,ncid_fallback,cinii,民事法情報センター(2010終刊)。登記研究とは別
+月刊債権管理,682,issn,,pending,,銀行研修社。検索で0914-417X(月刊民事法情報)誤返り=要再確認
+季刊事業再生と債権管理,1070,issn,1348-8953,verified,cinii,金融財政事情研究会
+ケース研究,917,issn,0287-4296,verified,cinii,家庭事件研究会/日本調停協会連合会
+法の支配,575,issn,0439-2892,verified,cinii/ndl,日本法律家協会
+パテント,501,issn,0287-4954,verified,ndl,日本弁理士会(別冊パテント2436-5858は別)
+家庭裁判月報,471,issn,0451-5234,verified,ndl,最高裁(終刊)
+民事訴訟雑誌,406,issn,0075-4188,verified,cinii,日本民事訴訟法学会/法律文化社
+月刊登記先例解説集,1062,ncid,AN00328066,ncid_fallback,cinii,テイハン(1996終刊)。公開ISSN無
+週刊法律新聞,564,ncid,AN10042106,ncid_fallback,cinii,法律新聞社(2020終刊)。公開ISSN無
+捜査研究,398,issn,0286-8490,verified,ndl/cinii,東京法令出版
+知財管理,369,issn,1340-847X,verified,jipa/cinii,日本知的財産協会
+LIBRA,385,issn,1341-9498,verified,toben,東京弁護士会会報
+研修,649,ncid,AN00327540,ncid_fallback,cinii,誌友会(法務総合研究所系)。公開ISSN無
+労働法令通信,524,ncid,AN00327799,ncid_fallback,cinii,労働法令協会。公開ISSN無
+判例セレクト,486,ncid,AA1115468X,ncid_fallback,cinii,法学教室別冊付録(法学教室本体0389-2220とは別id)
+Law & Technology,335,issn,1346-812X,verified,alias,law&technology(民事法研究会)の表記ゆれ=同一誌
+法令ニュース,762,issn,,pending,,国政情報センター。ISSN未確認
+発明,364,issn,,pending,,発明推進協会(月刊発明)。ISSN未確認
+季刊実務民事法,342,issn,0288-5107,verified,cinii,日本評論社
+貿易と関税,333,issn,0406-4984,verified,cinii,日本関税協会
+コピライト,310,issn,0912-9782,verified,ndl,著作権情報センター
+宗教法,259,issn,0288-6820,verified,cinii,宗教法学会
+日本労働協会雑誌,255,issn,0029-0378,verified,cinii,日本労働研究雑誌(0916-3808)の前身
+TKC税研情報,307,issn,1347-1643,verified,ndl/cinii,TKC税務研究所
+警察時報,328,ncid,AN00327438,ncid_fallback,cinii,警察時報社(2012終刊)。公開ISSN無
+医療判例解説,297,issn,,pending,,医事法令社(民事法研究会でない)。ISSN要確認
+民法判例百選,1626,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+憲法判例百選,953,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+行政判例百選,867,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+労働判例百選<第,592,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+租税判例百選<第,575,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+民事訴訟法判例百選<第,555,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+倒産判例百選<第,456,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+手形小切手判例百選<第,427,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+独禁法審決・判例百選<第,351,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+会社法判例百選<第,342,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+商法(総則・商行為)判例百選<第,328,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+家族法判例百選<第,323,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+社会保障判例百選<第,279,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+国際私法判例百選<第,229,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+交通事故判例百選<第,214,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+民事執行・保全判例百選<第,208,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+民事訴訟法判例百選,197,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+地方自治判例百選<第,168,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+消費者法判例百選<第,135,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+消費者法判例百選(別冊ジュリスト,129,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+民事執行・保全判例百選(別冊ジュリスト,127,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+環境法判例百選<第,123,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+渉外判例百選<第,123,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+保険法判例百選(別冊ジュリスト,110,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+民事執行法判例百選(別冊ジュリスト,110,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+メディア判例百選(別冊ジュリスト,107,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+商法判例百選(別冊ジュリスト,106,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+著作権判例百選<第,105,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+メディア判例百選<第,104,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+供託先例判例百選<第,104,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+国際私法判例百選<新法対応補正版>(別冊ジュリスト,103,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+国際私法判例百選(別冊ジュリスト,101,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+商業登記先例判例百選(別冊ジュリスト,101,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+供託先例判例百選(別冊ジュリスト,101,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+金融商品取引法判例百選(別冊ジュリスト,100,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+不動産取引判例百選<第,100,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+会社法判例百選(別冊ジュリスト,100,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+損害保険判例百選<第,100,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+商法(保険・海商)判例百選<第,96,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+英米判例百選<第,89,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+医事法判例百選<第,87,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+商標・意匠・不正競争判例百選(別冊ジュリスト,61,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+商標・意匠・不正競争判例百選<第,59,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+環境法判例百選(別冊ジュリスト,49,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+消費者取引判例百選(別冊ジュリスト,49,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+刑事訴訟法判例百選<第,47,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+宗教判例百選<第,47,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+会社判例百選<第,47,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+新倒産判例百選(別冊ジュリスト,46,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+特許判例百選<第,45,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+教育判例百選<第,38,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+公害・環境判例百選(別冊ジュリスト,37,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+医事法判例百選(別冊ジュリスト,31,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+国際法判例百選<第,15,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+医療過誤判例百選<第,15,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+国際法判例百選(別冊ジュリスト,14,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+刑法判例百選,12,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+少年法判例百選(別冊ジュリスト,1,ncid,BN01263667,class_bessatsu_jurist,cinii,別冊ジュリスト系(有斐閣)。号=別冊ジュリストNo.で一意化
+法学研究(慶応義塾大学),1833,issn,0389-0538,verified,cinii/ndl,慶應義塾大学法学研究会(NCID AN00224504)。≠慶應法学/法学研究科論文集
+立命館法学,1135,issn,0483-1330,verified,cinii/ndl,立命館大学法学会(NCID AN00250209)。print。online=2434-1975
+法学新報(中央大学),1070,issn,0009-6296,verified,cinii/ndl,中央大学法学会(NCID AN00224650)
+早稲田法学,944,issn,0389-0546,verified,cinii/ndl,早稲田大学法学会(NCID AN00259112)。≠早稲田法学会誌
+名古屋大学法政論集,943,issn,0439-5905,verified,cinii/ndl,名古屋大学(NCID AN00180624)。print。online=2758-3856
+同志社法学,892,issn,0387-7612,verified,cinii/ndl,同志社法学会(NCID AN00165970)
+阪大法学,866,issn,0438-4997,verified,cinii/ndl,大阪大学法学会(NCID AN00206353)
+北大法学論集,833,issn,0385-5953,verified,cinii/ndl,北海道大学(NCID AN00227353)
+法律論叢,727,issn,0389-5947,verified,cinii/ndl,明治大学法律研究所(NCID AN00227047)
+法政研究,704,issn,0387-2882,verified,cinii/ndl,九州大学法政学会(NCID AN00225744)。≠法政論集(名大)
+関西大学法学論集,624,issn,0437-648X,verified,cinii/ndl,関西大学法学会(NCID AN00047180)
+法学(東北大学),616,issn,0385-5082,verified,cinii/ndl,東北大学法学会(NCID AN00224402)。≠東北法学/東北ローレビュー
+龍谷法学,587,issn,0286-4258,verified,cinii/ndl,龍谷大学法学会
+日本法学(日本大学),583,issn,0287-4601,verified,cinii/ndl,日本大学法学会(NCID AN00197718)
+名城法学,537,issn,0461-6898,verified,cinii/ndl,名城大学法学会
+産大法学(京都産業大学),524,issn,0286-3782,verified,cinii/ndl,京都産業大学法学会(NCID AN00099344)
+法学論叢(京都大学),524,issn,0387-2866,verified,cinii/ndl,京都大学法学会。←税経通信に誤付与されていた番号の真の持ち主
+広島法学(広島大学),507,issn,0386-5010,verified,cinii/ndl,広島大学法学会。≠広島法科大学院論集(1880-1897)
+税法学,519,issn,0494-8262,verified,cinii/ndl,日本税法学会/清文社(NCID AN00129784)
+神戸学院法学,445,issn,0386-2046,verified,cinii/ndl,神戸学院大学法学会(NCID AN00085190)。≠神戸法学雑誌
+東洋法学,406,issn,0564-0245,verified,cinii/ndl,東洋大学法学会(NCID AN00171033)
+福岡大学法学論叢,386,issn,0429-8411,verified,cinii/ndl,福岡大学(NCID AN00216550)
+南山法学,362,issn,0387-1592,verified,cinii/ndl,南山大学法学会(NCID AN00181900)
+上智法学論集,356,issn,0447-7588,verified,cinii/ndl,上智大学法学会(NCID AN00115768)
+大阪市立大学法学雑誌,441,issn,0441-0351,verified,omu_repo/cinii,大阪市立大学法学会(NCID AN00029724)。i-repositoryで0441-0351確認
+青山法学論集,331,issn,0518-1208,verified,cinii,青山学院大学法学会(NCID AN00009024)。衝突した法学論集(駒沢)とは別

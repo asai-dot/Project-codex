@@ -1,0 +1,12 @@
+journal_norm,issn_candidate,issn_l,evidence_source,source_ref,status,achievable_lift_issueno,note
+法律時報e-book,0387-3420,0387-3420,web_search,"NDL R100000002-I000000021843; nippyo.co.jp",review_web,36,印刷版法律時報のISSN-L。e-book版が別ISSNか要確認(owner/NDL)
+労働判例,0387-1878,,web_search,"NDL R100000002-I000000024571(産労総合研究所)",review_web,33,産労総合研究所
+法学教室,0389-2220,,web_search,"CiNii ncid AN10064470(有斐閣)",review_web,6,有斐閣月刊
+金融法務事情,0451-9787,,web_search,"CiNii ncid AN00327573; NDL R100000002-I000010872301",review_web,15,旧「旬刊金融法務事情」0451-9787 / 現2185-3223。通号2283継続=どちらを正とするか要判断
+jcaジャーナル,0386-3042,0386-3042,web_search,"NDL R100000002-I000000000273(日本商事仲裁協会)",review_web,2,issue_no有は2号のみ。残214は通巻欠=Track B(通巻抽出)へ
+警察学論集,0287-6345,,existing_seed,"staging既canonical41号",confirmed,0,旧字「警察學論集」をtitle_variantsで吸収(現状2号が別扱い)
+戸籍,,,web_search,"CiNii ncid AN00274615; NDL R100000002-I000000008623(テイハン)",review_ndl,58,ISSN未surface。NCID経由でNDL-gz確認要。旧誌名 全國連合戸籍事務協議會機關誌
+交通事故民事裁判例集,,,web_search,"CiNii ncid AN00011547(ぎょうせい/帝国地方行政学会)",review_ndl,50,ISSN未surface。判例集の通巻設計は別途注記
+季刊刑事弁護,,,web_search,"CiNii ncid AN10468265(現代人文社,1994-)",review_ndl,40,ISSN未surface。NCID経由で確認要
+労働経済判例速報,,,web_search,"CiNii ncid AN00327835(経団連事業サービス)",review_ndl,10,ISSN未surface
+登記研究,,,web_search,"CiNii ncid AN00157564(テイハン)",review_ndl,2,ISSN未surface
