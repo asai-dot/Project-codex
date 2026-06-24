@@ -1,0 +1,20 @@
+{
+  "_comment": "legallibjoin v0.3.1 調整可能パラメータの単一ソース。実データ Phase A で数値だけ差し替える(コード変更不要)。全て report-only 判定にのみ影響し、本番書き込みは別途 apply_guard が制御する。",
+  "_version": "0.3.1",
+  "coverage_mismatch_ratio": 3.0,
+  "edition_page_tolerance": 0.1,
+  "edition_year_tolerance": 1,
+  "edition_classifier_version": "v1",
+  "_edition_classifier_version_note": "DD-EDIDENT-001 が ratify されたら 'v2' に。Phase0 実測で v1 は別版過検知 (344中226偽陽性)、v2 は 344->72。既定は安全側に v1。",
+  "_page_tolerance_basis": "per_book_offset_corrected: Phase0 所見6 — 生 pdf_page 差でなく本単位 offset(前付け頁数, 94.9%本内単一) 補正後に評価する。",
+  "pdf_required_confidence": "high",
+  "pdf_required_coverage": "full_toc",
+  "appendix_misclassified_min": 2,
+  "health": {
+    "weight_l1_bib": 30,
+    "weight_l2_toc": 40,
+    "weight_l3_body": 30,
+    "l2_rich_min_depth": 2,
+    "l2_rich_min_nodes": 5
+  }
+}
