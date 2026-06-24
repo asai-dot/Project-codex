@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "title": "ALO 静的/動的DB 構築 パイプライン",
+  "_comment": "ステージ・依存・進捗の測り方(probe)を宣言。probe.root は roots 名 (bookdx=Box同期の事務所内本棚DX化計画 / alo=~/alo-ai / repo=このリポジトリの checkout)。expected 件数や path は実環境に合わせて随時更新。これは『全体像の地図』であり、実状態は collector が埋める。",
+  "roots": {
+    "bookdx": "Box 同期 .../claude/事務所内本棚DX化計画",
+    "alo": "~/alo-ai",
+    "repo": "Project-codex の checkout"
+  },
+  "tracks": {
+    "static": "静的DB (蔵書 canonical / BookDX)",
+    "dynamic": "動的DB (ALOナレッジ / matter / Gmail / lawtime)",
+    "ops": "運用・ドリフト検知"
+  },
+  "stages": [
+    {
+      "id": "toc_baseline",
+      "title": "TOC ベースライン (openbd/GT マージ)",
+      "track": "static", "owner": "mac", "depends_on": [],
+      "probes": [{"type": "count", "root": "bookdx", "path": "app/data/toc/isbn_*.json", "expected": 5206, "label": "tocファイル"}],
+      "note": "既存の app/data/toc。legallib 接合のベース。"
+    },
+    {
+      "id": "ndl_canonical",
+      "title": "NDL 正本照合・正規化",
+      "track": "static", "owner": "mac", "depends_on": [],
+      "probes": [{"type": "exists", "root": "bookdx", "path": "app/data/reports/ndl_canonical_*.md", "label": "正規化レポート"}],
+      "note": "schema 設計書 phase3 (4,636件)。進捗 probe は実レポート名に合わせて更新。"
+    },
+    {
+      "id": "legallib_fetch",
+      "title": "legallib 取得 (STEP A)",
+      "track": "static", "owner": "mac", "depends_on": [],
+      "probes": [{"type": "count", "root": "alo", "path": "work/legallib_dl/*.json", "expected": 422, "label": "号"}],
+      "note": "422号 / 124,529 nodes 取得済の想定。"
+    },
+    {
+      "id": "legallib_article_parser",
+      "title": "雑誌→論文 entity 抽出",
+      "track": "static", "owner": "mac", "depends_on": ["legallib_fetch"],
+      "probes": [{"type": "exists", "root": "alo", "path": "work/legallib_dl/articles_extracted.jsonl", "label": "articles"}],
+      "note": "journal の論文分解 (別タスク)。書籍接合とは独立。"
+    },
+    {
+      "id": "resolver",
+      "title": "resolver (book↔ISBN 突合)",
+      "track": "static", "owner": "mac", "depends_on": ["legallib_fetch", "toc_baseline"],
+      "probes": [{"type": "exists", "root": "alo", "path": "work/legallib_dl/resolver_decisions.jsonl", "label": "decisions"}],
+      "note": "auto_accept 1839 / human_review 305 / defer_new 616 を出力。"
+    },
+    {
+      "id": "legallib_join_dryrun",
+      "title": "legallib 接合 ドライラン",
+      "track": "static", "owner": "mac", "depends_on": ["resolver"],
+      "probes": [{"type": "exists", "root": "repo", "path": "handoff/legallib_dryrun_*/report.md", "label": "dryrunレポート"}],
+      "note": "発注書: docs/handoff_mac_session_legallib_join.md。"
+    },
+    {
+      "id": "legallib_review",
+      "title": "接合レビュー (diff/トリアージ→承認)",
+      "track": "static", "owner": "web", "depends_on": ["legallib_join_dryrun"],
+      "probes": [{"type": "exists", "root": "repo", "path": "handoff/legallib_dryrun_*/approved_isbns.txt", "label": "承認リスト"}],
+      "note": "render_proposed_diff / triage_review_queue で裁定し approved_isbns.txt を作る。"
+    },
+    {
+      "id": "legallib_apply",
+      "title": "legallib 本適用 (--commit)",
+      "track": "static", "owner": "mac", "depends_on": ["legallib_review"],
+      "probes": [{"type": "exists", "root": "bookdx", "path": "app/data/legallib_apply_log.jsonl", "label": "適用ログ"}],
+      "note": "legallib_join_apply.py --commit --only-isbns approved_isbns.txt。"
+    },
+    {
+      "id": "hastoc_reconcile",
+      "title": "hasToc 整合",
+      "track": "static", "owner": "mac", "depends_on": ["legallib_apply"],
+      "probes": [{"type": "exists", "root": "bookdx", "path": "app/data/reports/hastoc_reconcile_*.md", "label": "整合レポート"}],
+      "note": "接合 ISBN の books.json.hasToc を立てる。"
+    },
+    {
+      "id": "toc_search_index",
+      "title": "toc_search_index 再構築",
+      "track": "static", "owner": "mac", "depends_on": ["legallib_apply"],
+      "probes": [{"type": "exists", "root": "bookdx", "path": "app/data/toc_search_index.json", "label": "索引"}],
+      "note": "legallib ノードを全文検索索引へ取り込み。"
+    },
+    {
+      "id": "defer_new",
+      "title": "defer_new 処理 (OCR奥付→再NDL)",
+      "track": "static", "owner": "mac", "depends_on": ["legallib_join_dryrun"],
+      "probes": [{"type": "exists", "root": "repo", "path": "handoff/legallib_dryrun_*/defer_staging.jsonl", "label": "staging"}],
+      "note": "616件。canonical 未収録。別パイプライン。"
+    },
+    {
+      "id": "gpt_dd_roundtrip",
+      "title": "GPT DD 往復 (to_gpt → from_gpt)",
+      "track": "dynamic", "owner": "gpt", "depends_on": [],
+      "probes": [{"type": "roundtrip", "root": "alo", "sent": "to_gpt/*.md", "returned": "from_gpt/*.md", "max_age_hours": 24, "label": "DD"}],
+      "note": "送信(REQUEST)に対し戻り(RESULT)が来ているか。未戻り=待ち、古い未戻り=詰まり。"
+    },
+    {
+      "id": "lawtime_dd",
+      "title": "lawtime v0.1 DD",
+      "track": "dynamic", "owner": "gpt", "depends_on": ["gpt_dd_roundtrip"],
+      "probes": [{"type": "exists", "root": "alo", "path": "from_gpt/*lawtime*RESULT*.md", "label": "結果"}],
+      "note": "DD-LAWTIME-001。"
+    },
+    {
+      "id": "matter_resolution",
+      "title": "matter ID 解決",
+      "track": "dynamic", "owner": "mac", "depends_on": [],
+      "probes": [{"type": "exists", "root": "alo", "path": "cc_work_logs/*matter-id-resolution*complete*.md", "label": "完了ログ"}],
+      "note": "rounds 1-3 など。probe は実ログ名に合わせて更新。"
+    },
+    {
+      "id": "manifest_drift_handoff",
+      "title": "handoff ドリフト検知 (未宣言成果物)",
+      "track": "ops", "owner": "web", "depends_on": [],
+      "probes": [{"type": "orphan", "root": "repo", "scan": "handoff/**/*.md",
+        "declared": ["handoff/legallib_dryrun_*/report.md", "handoff/*/*RESULT*.md"],
+        "label": "handoff"}],
+      "note": "manifest が拾っていない handoff 成果物を炙り出す (v0.2 orphan probe)。declared は実体に合わせて更新。"
+    }
+  ]
+}
