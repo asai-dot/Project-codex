@@ -315,5 +315,41 @@ class TestQualityFilter(unittest.TestCase):
         self.assertEqual(stats["terms_short_def"], 1)
 
 
+class TestHomographReview(unittest.TestCase):
+    def test_collect_pairs_pairs_anchor_with_split(self):
+        import homograph_review as hr
+        # 同scheme内 genuine homograph: anchor 側定義と split 側定義を対にする
+        terms = [
+            {"term_id": "a", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "社員", "reading": "しゃいん",
+             "definition": "会社法上の構成員たる地位をいう", "term_tier": 1},
+            {"term_id": "b", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "社員", "reading": "しゃいん",
+             "definition": "労働者一般を指す日常語のこと", "term_tier": 1},
+        ]
+        pairs, stats = hr.collect_pairs(terms, 0.6)
+        self.assertEqual(len(pairs), 1)
+        p = pairs[0]
+        self.assertEqual(p["pref"], "社員")
+        self.assertTrue(p["same_scheme"])
+        self.assertTrue(p["anchor"]["definition"])   # anchor 側定義が引けている
+        self.assertTrue(p["conflict"]["definition"])  # split 側定義が引けている
+        self.assertNotEqual(p["anchor"]["term_id"], p["conflict"]["term_id"])
+
+    def test_cross_scheme_not_homograph(self):
+        import homograph_review as hr
+        # cross-scheme は merge ポリシー -> homograph に出ない
+        terms = [
+            {"term_id": "a", "scheme_id": "yuhikaku", "authority_rank": 101,
+             "normalized_pref": "占有", "reading": "せんゆう",
+             "definition": "物を事実上支配すること", "term_tier": 1},
+            {"term_id": "b", "scheme_id": "hourei", "authority_rank": 102,
+             "normalized_pref": "占有", "reading": "せんゆう",
+             "definition": "全く無関係な別概念xyzをいう", "term_tier": 1},
+        ]
+        pairs, _ = hr.collect_pairs(terms, 0.6)
+        self.assertEqual(len(pairs), 0)
+
+
 if __name__ == "__main__":
     unittest.main()
