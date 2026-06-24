@@ -540,5 +540,45 @@ class TestXrefExtract(unittest.TestCase):
         self.assertEqual(len(unresolved), 1)  # 経理 hub が無い
 
 
+class TestLoadArtifacts(unittest.TestCase):
+    def setUp(self):
+        import build_load_artifacts as bla
+        self.bla = bla
+
+    def _terms(self):
+        return [
+            {"term_id": "y1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "占有", "reading": "せんゆう", "definition": "物を事実上支配すること。", "term_tier": 1},
+            {"term_id": "q1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "質権", "reading": "しちけん", "definition": "短い", "term_tier": 1},
+            {"term_id": "x1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "共有持分", "reading": "きょうゆうもちぶん", "definition": "→持分", "term_tier": 1},
+            {"term_id": "m1", "scheme_id": "yuhikaku_legal_dict", "authority_rank": 101,
+             "normalized_pref": "持分", "reading": "もちぶん", "definition": "権利の量的部分をいう。", "term_tier": 1},
+        ]
+
+    def test_tables_have_all_schema_keys(self):
+        tables, _ = self.bla.build_artifacts(self._terms())
+        for k in ("alo_concept_schemes", "alo_terms", "alo_hubs",
+                  "alo_hub_memberships", "alo_term_relations"):
+            self.assertIn(k, tables)
+
+    def test_short_def_anchor_flagged_in_hub(self):
+        tables, _ = self.bla.build_artifacts(self._terms())
+        qhub = [h for h in tables["alo_hubs"] if h["hub_label"] == "質権"]
+        self.assertTrue(qhub and "short_def" in qhub[0]["needs_preprocessing"])
+
+    def test_xref_becomes_relation(self):
+        tables, _ = self.bla.build_artifacts(self._terms())
+        rels = tables["alo_term_relations"]
+        self.assertTrue(any(r["dst_label"] == "持分" for r in rels))
+
+    def test_def_quality_tagged(self):
+        tables, _ = self.bla.build_artifacts(self._terms())
+        dq = {r["normalized_pref"]: r["def_quality"] for r in tables["alo_terms"]}
+        self.assertEqual(dq["占有"], "ok")
+        self.assertEqual(dq["共有持分"], "cross_reference")
+
+
 if __name__ == "__main__":
     unittest.main()
