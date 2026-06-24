@@ -57,7 +57,9 @@ DD-LITID の構造（read-only candidate 段階・mint/confirm は HOLD）：
 - **GO**：read-only inventory・coverage計測・route別評価・review packet。**HOLD**：mint・canonical昇格・backfill・production write。
 
 ## 6. Phase 1 への正しい接続（DD-LITID と整合）
+**前提（owner 確定 2026-06-23）**：611 スキャンPDF は**全冊が biblio TOC 背骨に繋がるべき**。84/611 は asset 同定が未完なだけ（別ユニバースではない）。各スキャン本には対応する biblio 書誌（TOC 有）が存在する前提。
 - **カーネルの asset 同定は DD-LITID の read-only route 候補で行う**（生 join で「繋がっている/いない」を断じない）。これは GO 範囲。
-- Phase 1 パイロットは、DD-LITID route で **identity candidate が強い（複数 route 合意 or 人手確定済み）書籍**から選ぶ。「契約解除/解消」3冊（契約解消の法律実務・不動産の法務・新民法対応 契約審査手続マニュアル）は holding_bencom_link で book_id 連結が既にあり candidate が強い→パイロット適格。当初の要件事実シリーズは DD-LITID route 候補を確認してから可否判断（生 join の不在＝未連結 と即断しない）。
-- ロードマップ Phase 1 の「asset 同定」前提タスクは、**新規実装ではなく DD-LITID の read-only route を XDOC/LAYOUT スライスに接続する**こと（巨人の肩・再発明しない）。
-- スケール（611冊の背骨連結）も DD-LITID の workstream で進む（本スレッドで独自に reconcile しない）。
+- **カーネル＝要件事実/賃貸借終了の論点を維持**（formobj キラーアプリの標的）。要件事実シリーズに TOC はあり、PDF と未連結なだけ。前版で「契約解除3冊に乗り換え」としたのは前提崩れの早とちりで撤回。
+- **Phase 1 T1（前提タスク）＝カーネル本（2〜3冊）の DD-LITID identity 確定**：read-only route 候補生成→人手 confirm で、その本の scanned PDF（pdf_folder_id）↔ biblio book_id（TOC）を結ぶ。少数本なので bounded。これで要件事実カーネルの「目次→PDF→本文」が成立。
+- スケール（611冊全部の背骨連結）も DD-LITID の workstream（WS-A/WS-B）で進む。本スレッドで独自に reconcile しない・新規同定器を作らない（巨人の肩）。
+- なお holding_bencom_link で既連結の84冊は identity candidate が強く、同定の gold/検証に使える。
