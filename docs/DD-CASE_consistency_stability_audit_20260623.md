@@ -31,7 +31,7 @@ confidentiality / redistribution / **EGRESS_SINKS(5点)** / **FORUM_TYPES(7)** /
 
 ## 4. ゲート（恒久）
 - **`scripts/test_case_consistency.py`** = 13項目。各モジュール/データ(seed/gold/semantics)の語彙が `case_vocab` と一致するか検査。**PASS**。
-- **`scripts/test_case_pipeline_e2e.py`** = ①〜⑤を共有 fixture で連結。bind→eval(false_merge=0)→cross-source→corroborate→cite-gate→review が **破綻なく通る**。**PASS**。
+- **`scripts/test_case_pipeline_e2e.py`** = ①〜⑥を共有 fixture で連結。bind→eval(false_merge=0)→cross-source→corroborate→cite-gate→review→**CASELINK(本文採掘→型付きエッジ)** が **破綻なく通る**。⑥は評釈 masthead→`evaluates`(vendor_explicit/auto)が②の canonical case に一致し④の公開 case と同一であることまで接続確認。**PASS**。
 - 既存単体テスト（norm/symbol/eval/bind/corroborate/cite/review/jufu/v0.2）= 全 **OK**（回帰なし）。
 
 ## 5. 残（実データ前の前提・Mac CC）
