@@ -18,7 +18,8 @@
 | PHASE | 何をする | 課金 | 鍵（owner GO） | 取消可否 |
 |---|---|---|---|---|
 | **A. 事前確認** | 母屋 `d1law_taikei.alo_edges` の現況を read-only 確認 | 無 | 不要（read-only） | — |
-| **B. branch dry-run** | Supabase の **preview branch** を作り、そこへ 100/200/300 を apply して gate を回す | **有（branch 課金）** | **要：課金 GO** | branch 削除で戻せる |
+| **B′. 課金ゼロ dry-run** | 母屋を read-only introspect → fixture を実物に合わせ → ローカル smoke 再実行 | **無** | read-only 許可のみ（課金 GO 不要） | local（戻す概念なし） |
+| **B. branch dry-run（任意）** | Supabase の **preview branch** を作り、そこへ 100/200/300 を apply して gate を回す | **有（branch 課金）** | **要：課金 GO** | branch 削除で戻せる |
 | **C. 受入判定** | 8 gate 空 + C-INT-1/2 + golden resolver diff を確認 | 無 | 不要（判定のみ） | — |
 | **D. 本番 apply** | 確定設計を **production** に migration 適用 | （branch 課金は無、本番は通常） | **要：本番 apply GO** | rollback SQL 要（§7） |
 | **E. 出口接続** | DD-LAWSUBTRANS を serving.* に張り替え | 無〜小 | **要：張り替え GO** | revert 可 |
@@ -76,9 +77,48 @@ apply は必ずこの順。**100 の前に母屋が無いと FK が張れない*
 
 ---
 
-## 4. PHASE B — branch dry-run（**課金あり・owner GO 必須**）
+## 4. PHASE B′ — 課金ゼロ dry-run（**推奨・read-only・branch 不要**）
+
+> 💡 **branch を作らずに「100/200/300 が本物の母屋に当たるか」を検証する。** 課金ゼロ。
+> 有料 branch（§4-bis）が足すのは「本物の**実データ**に対する gate 結果」だけ。
+> スキーマ不一致という主リスクは本 PHASE で潰せる。
+
+考え方: ローカル smoke は母屋を fixture（`000_*`）で模している。その fixture を**本物の
+`d1law_taikei.alo_edges` に 1:1 で合わせ**れば、ローカル PG16 での再 smoke が「本物スキーマに対する
+dry-run」と等価になる（FK 型整合・citation 種別・PK 型・RESTRICT ガードまで確認できる）。
+
+### B′-1. 母屋を read-only で introspect（書込みゼロ・課金ゼロ）
+`execute_sql` で `introspect_d1law_taikei.sql` の SELECT 群を流す（**SELECT のみ／branch 作らない**）：
+- alo_edges の列・型・NULL・既定値／PK の実型（`edge_id`）／citation 種別カラム／CHECK 制約／
+  既存被参照 FK／lawtime・serving の名前衝突。
+> read-only でも本番 project を「触る」ので、owner の read-only 許可だけは要る（課金は発生しない）。
+
+### B′-2. fixture を実物に合わせる
+取得結果で `000_external_dependency_d1law_taikei.sql` の `alo_edges` 定義を**実物と一致**させる
+（列名・型・PK・種別カラム・関連 CHECK）。差分があれば 100 側の FK/two-tier 前提と突き合わせ、
+不整合は**この時点で**修正（PHASE D 前に潰す）。
+
+### B′-3. ローカル smoke 再実行（無料）
+`smoke_placement.sh`（PG16）を実物そっくりの母屋で再走：
+1. 100→200→300 が当たる（FK 型一致）。
+2. `seed_clean` → `verify_dry_run` で 8 gate 空。
+3. `sample_resolver` が `evidence/` golden と一致（C-INT-2）。
+4. RESTRICT ガード（母屋 edge DELETE blocked）が効く。
+
+**B′ 終了条件**: 実物整合の fixture で smoke 全 PASS。これで「本物スキーマに対する dry-run」は完了。
+ここまで**課金ゼロ**。実データに対する確認まで要る場合のみ §4-bis（有料 branch）へ。
+
+> ✅ **B′ 実施済（2026-06-25, 課金ゼロ）**: 結果は [`..._v0.2.4_B-prime_dryrun_evidence.md`](./DD-LAWTIME-001_v0.2.4_B-prime_dryrun_evidence.md)。
+> スキーマ面は GO（FK 型一致／名前衝突なし／smoke 全 PASS）。ただし母屋に statute-citation edge が
+> **0 件**＝gate の citation `edge_type` は placeholder 未照合（DDLAWREF 待ち / blocking note #5）。
+> → PHASE D を今やっても `citation_temporal` は空のまま（実用上 inert）。有料 branch も現状は得る情報が乏しい。
+
+---
+
+## 4-bis. PHASE B — branch dry-run（**課金あり・owner GO 必須／任意**）
 
 > 🔴 **この PHASE は Supabase の preview branch を作る＝課金が発生する。** owner の「課金 GO」無しに `create_branch` を呼ばない。
+> B′ でスキーマ整合は取れているので、これは「**本物の実データに対する gate 結果まで見たい時だけ**」の任意ステップ。
 
 ### B-0. 課金の事前提示（owner 承認の materialize）
 1. `get_cost`（type=`branch`, project_id=`<PROJECT_ID>`）で見積りを取得 → owner に金額提示。
