@@ -28,12 +28,15 @@ while true; do
     echo "[worker_watch] トリガ検出: order=$ORDER ($(date))"
     case "$ORDER" in
       artifacts/periodical/ORCH-*.md)
-        git pull origin "$BRANCH" -q --rebase 2>/dev/null || git pull origin "$BRANCH" -q || true
+        # ★再発防止: 競合/未マージ状態を必ず解除し origin に揃えてから処理する
+        git merge --abort 2>/dev/null; git rebase --abort 2>/dev/null
+        git reset -q --hard "origin/$BRANCH" 2>/dev/null || true
+        git clean -fdq 2>/dev/null || true
         bash ./tools/wake_worker.sh "$ORDER" || echo "[worker_watch] 起動失敗"
-        # トリガ消費（削除して push）— 同じトリガでの多重起動を防ぐ
+        # トリガ消費（cleanな状態なので成功する）— 多重起動を防ぐ
         git rm -q "$TRIGGER" 2>/dev/null \
           && git commit -q -m "worker_watch: $ORDER 起動につきトリガ消費" \
-          && (git push -q origin "$BRANCH" || true)
+          && { git fetch origin "$BRANCH" -q 2>/dev/null; git rebase "origin/$BRANCH" -q 2>/dev/null || git rebase --abort 2>/dev/null; git push -q origin "$BRANCH" 2>/dev/null || echo "[worker_watch] 消費push失敗(次周期で再試行)"; }
         ;;
       *)
         echo "[worker_watch] 不正なorder($ORDER) — 無視。トリガは ORCH-*.md のみ許可。"

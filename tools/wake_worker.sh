@@ -25,8 +25,10 @@ case "$ORDER" in
   *) echo "拒否: 発注書は artifacts/periodical/ORCH-*.md のみ ($ORDER)" >&2; exit 2;;
 esac
 
-echo "[wake_worker] pull $BRANCH ..."
-git pull origin "$BRANCH" --rebase 2>/dev/null || git pull origin "$BRANCH" || true
+echo "[wake_worker] sync $BRANCH (競合安全) ..."
+git merge --abort 2>/dev/null; git rebase --abort 2>/dev/null
+git fetch origin "$BRANCH" -q 2>/dev/null && git reset -q --hard "origin/$BRANCH" 2>/dev/null || \
+  { git pull origin "$BRANCH" --rebase 2>/dev/null || true; }
 
 if [ ! -f "$ORDER" ]; then
   echo "発注書が見つからない: $ORDER" >&2; exit 3
