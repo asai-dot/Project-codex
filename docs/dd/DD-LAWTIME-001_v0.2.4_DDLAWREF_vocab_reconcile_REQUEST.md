@@ -4,6 +4,7 @@
 > 発信: DD-LAWTIME-001 v0.2.4（lawtime 配置・ratify 済）
 > 種別: **decision_requested**（blocking note #5 の実体）。lawtime からの**照会のみ** — lawtime は edge_type を発明・拡張しない。
 > 日付: 2026-06-25 ／ 課金ゼロ（本 REQUEST 作成は read-only 調査に基づく）
+> 共有: **2026-06-25 Box `gpt_ometsuke/to_gpt` に送付済**（file_id `2309304297318`）。**DDLAWREF/GPT お目付け役の RESULT 待ち**。
 
 ---
 
