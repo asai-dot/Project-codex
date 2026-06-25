@@ -13,9 +13,28 @@
 --    predicate, carried forward verbatim; it MUST be reconciled with the DDLAWREF
 --    taxonomy before production (blocking note #5 / decision_requested edge_type).
 --      => ('cites_statute','statute_ref','applies_statute')
+--
+-- 🔁 SINGLE SWAP POINT: the set lives in ONE place — the view
+--    lawtime.citation_edge_type_v20260624 below — and the gates reference it by
+--    subquery. When DDLAWREF reconciles the real statute-citation vocabulary,
+--    edit ONLY that view (one place), not each gate.
+--    B′ read-only dry-run (2026-06-25) confirmed the live 母屋 holds ONLY
+--    edge_type 'classified_under' (0 statute-citation edges) — so this predicate
+--    matches NOTHING in production today and is pending DDLAWREF.
+--    See docs/dd/DD-LAWTIME-001_v0.2.4_DDLAWREF_vocab_reconcile_REQUEST.md.
 -- ============================================================================
 
 BEGIN;
+
+-- ── Citation-edge predicate: THE single source of truth (see header). ────────
+--    Mirrors the DDLAWREF-owned statute-citation edge_type set. Placeholder until
+--    reconciled. Returns the allowed edge_type values; gates IN/NOT IN this set.
+CREATE OR REPLACE VIEW lawtime.citation_edge_type_v20260624 AS
+  SELECT edge_type FROM (VALUES
+    ('cites_statute'),
+    ('statute_ref'),
+    ('applies_statute')
+  ) AS t(edge_type);
 
 -- ── INTEGRATION (C-option): every statute-citation edge has exactly one temporal
 --    side-table row, and no side-table row is orphaned / points at a non-citation
@@ -25,7 +44,7 @@ BEGIN;
 CREATE OR REPLACE VIEW lawtime.v_gate_lawtime_citation_edge_missing_side_table_v20260624 AS
   SELECT e.edge_id
   FROM d1law_taikei.alo_edges e
-  WHERE e.edge_type IN ('cites_statute','statute_ref','applies_statute')
+  WHERE e.edge_type IN (SELECT edge_type FROM lawtime.citation_edge_type_v20260624)
     AND NOT EXISTS (SELECT 1 FROM lawtime.citation_temporal ct WHERE ct.edge_id = e.edge_id);
 
 -- G-INT-2: side-table row whose edge is missing OR not a statute-citation edge.
@@ -34,7 +53,7 @@ CREATE OR REPLACE VIEW lawtime.v_gate_lawtime_side_table_orphan_or_noncitation_v
   FROM lawtime.citation_temporal ct
   LEFT JOIN d1law_taikei.alo_edges e ON e.edge_id = ct.edge_id
   WHERE e.edge_id IS NULL
-     OR e.edge_type NOT IN ('cites_statute','statute_ref','applies_statute');
+     OR e.edge_type NOT IN (SELECT edge_type FROM lawtime.citation_edge_type_v20260624);
 
 -- ── P0-2. resolved 版の as_of カバレッジ両端検査（side-table 版）────────────────
 CREATE OR REPLACE VIEW lawtime.v_gate_lawtime_resolved_revision_covers_asof_v20260624 AS
