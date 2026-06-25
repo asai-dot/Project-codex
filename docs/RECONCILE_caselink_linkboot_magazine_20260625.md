@@ -32,6 +32,11 @@
   `article_type_local_v0.1.csv`(type=判例評釈) → article_id/title/body_text を引き、masthead 対象判例は HANREI-TARGET 抽出（court/date/事件）で埋める → `case_link_corpus_dryrun.py`。
 - これで **magazine(上流) → CASELINK(L5 engine)** が一本で繋がり、二重実装も二重コーパス整形も発生しない。
 
+## ✅ RATIFY（浅井先生 2026-06-25）
+§3 の3レイヤ別正本 ＋ 「**magazine L5(HANREI-TARGET) は新規実装せず CASELINK engine に委譲**」を ratify。
+→ §4 の単一 dry-run（magazine 判例評釈 subset を入力に CASELINK engine を1回回す）へ。
+旧 "CASELINK"(案件リンク, data-linking) の改称は別途。
+
 ## 5. owner に決めてほしいこと
 - (a) §3 のレイヤ別正本＋接続を ratify するか。
 - (b) magazine L5(HANREI-TARGET) を**新規実装せず CASELINK engine に委譲**することの合意（雑誌ヘッドとの調整）。

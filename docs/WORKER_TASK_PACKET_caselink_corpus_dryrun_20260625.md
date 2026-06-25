@@ -1,49 +1,42 @@
-# WORKER_TASK_PACKET — CASELINK: 実 D1-LIC 5,475 で評釈→判例リンク corpus dry-run
+# WORKER_TASK_PACKET — CASELINK L5: magazine 判例評釈 subset で評釈→判例リンク dry-run（統合版・正本ratified）
 
-> 正本: `asai-dot/Project-codex` ブランチ `claude/precedent-object-progress-gwb47u` の
-> `docs/WORKER_TASK_PACKET_caselink_corpus_dryrun_20260625.md` ＋ `scripts/case_link_corpus_dryrun.py` /
-> `scripts/case_citation_span.py` / `scripts/case_link_{extract,map,eval}.py`。
-> ワーカーは本ブランチを pull して実行すること。本ファイルが指示の正本。
+> 正本: `asai-dot/Project-codex` ブランチ `claude/precedent-object-progress-gwb47u` の本ファイル ＋
+> `scripts/case_link_corpus_dryrun.py` / `case_citation_span.py` / `case_link_{extract,map,eval}.py`。
+> **入力は magazine ブランチの判例評釈 subset**（RECONCILE_caselink_linkboot_magazine_20260625.md ratified に基づく）。
+> ワーカーは本ブランチを pull して実行。RECONCILE で「magazine L5 は新規実装せず本 engine を呼ぶ」と確定済。
 
 ```yaml
-task_id: WORKER_20260625_CASELINK_CORPUS_DRYRUN_001
-executor: claude-worker   # Mac CC（実 D1-LIC 5,475 解説コーパスと D1/リーガルライブラリー認証を持つ唯一の実行者）
+task_id: WORKER_20260625_CASELINK_L5_DRYRUN_002
+executor: claude-worker   # Mac CC（magazine成果物 + D1-LIC + 認証を持つ実行者）
 permission_tags: [read-only, no-production-db-write, no-DDL, no-stance-column-apply-HOLD, no-canonical-promotion, no-accepted-edge, no-Box-delete]
-output_path: _claude_dispatch/from_worker/20260625_caselink_corpus_dryrun_RESULT.md
-upload_target: (任意・owner判断) Box CODEX/handoff
+output_path: _claude_dispatch/from_worker/20260625_caselink_L5_dryrun_RESULT.md
 stop_condition: one-pass-complete | needs_decision | blocked | budget_exhausted | max_turns
+depends_on: magazine の記事種別分類 (artifacts/periodical/article_type_local_v0.1.csv, 判例評釈ラベル)
 ```
 
-## 意味づけ（owner）
-DD-CASELINK-001 **accepted v1.0** の GO「read-only corpus dry run」。雑誌・文献の**本文**から評釈と判例を
-**型付きエッジ**で繋ぐ設計が、実 D1-LIC でどれだけ **auto(evaluates) vs review(compares)** に振れ、
-実 **evaluates 精度**がどうかを初めて実データで測る。「評釈と判例を丁寧に繋いで意味層を厚くする」の実証一歩。
-**read-only**。alo_edges への実 write・canonical 昇格・stance 列 DDL は **HOLD**（別 GO 案件）。
+## 意味づけ（owner ratified 2026-06-25）
+3レイヤ正本確定: **magazine=上流(記事↔号/種別) / CASELINK=L5判例リンクengine / LINKBOOT=法令リンク**。
+本タスクは **magazine(上流) → CASELINK(L5 engine)** を一本で繋ぐ**単一**dry-run。二重実装・二重コーパス整形を作らない。**read-only**。stance列DDL・alo_edges実write・canonical昇格は HOLD。
 
 ## 手順（bounded・順に）
-1. ブランチ pull → harness green 確認: `python3 scripts/test_case_citation_span.py` / `test_case_link_map.py` / `test_case_pipeline_e2e.py`（全 PASS が前提。FAIL なら blocked 報告）。
-2. **D1-LIC 5,475 解説レコードを入力スキーマへ整形** → `caselink_corpus_d1lic_5475.jsonl`（1行=1記事）:
-   ```json
-   {"article_id":"...","article_type":"commentary|note|article",
-    "masthead_citation":"令和3年(ワ)第123号"(D1-LIC crosswalk の対象判例があれば/無ければ省略),
-    "is_formal_review":true(正式評釈シリーズのみ),"body_text":"解説本文プレーンテキスト"}
-   ```
-   - `article_type`: 書誌 genre から分類（評釈/判例研究→`commentary` / 判例紹介・解説→`note` / 論文・論説→`article`）。判別不能は `note`。
-   - `masthead_citation`: D1-LIC crosswalk の**対象判例**(構造化済み)を入れる。これが auto(vendor_explicit)路の入力。
-3. **分布 dry-run**: `python3 scripts/case_link_corpus_dryrun.py --corpus caselink_corpus_d1lic_5475.jsonl > dryrun_report.json`。
-   → `articles / edges_emitted / route_distribution(auto vs review) / edge_type_counts / stance_counts` を取得。
-4. **精度サンプル（stretch・可能なら）**: ランダム **N=100** 記事を抽出し、D1-LIC crosswalk or 人手で**正解エッジ**(記事→判例,役割,stance)を付け `caselink_gold_sample.jsonl`（`app/data/case_identity/case_link_gold_template.jsonl` と同形の `expected_edges`）。`case_link_eval.py` の GOLD を差し替えて **evaluates/compares precision・stance 正解率**を出す。目標: evaluates/review_chain=0.97 / compares=0.90 / stance=0.85。
-5. **span 取りこぼしメモ**: 正規表現(`case_citation_span.CITATION_RE`)で拾えない/誤検出した引用書式の実例を **≤20件** 列挙（書式の型だけ。本文丸写し不要）。
-6. `output_path` に §7 schema で報告。
+1. `git pull origin claude/precedent-object-progress-gwb47u` → harness green 確認（`python3 scripts/test_case_citation_span.py` 他）。
+2. **入力＝magazine の判例評釈 subset を取得**:
+   - magazine ブランチ(`claude/magazine-object-analysis-seg9cr`)から `artifacts/periodical/article_type_local_v0.1.csv`(type=判例評釈 の行) と、対応する記事メタ/本文(`build/labeled_v0.2.1/article_meta_labeled.jsonl` 等)を read-only で参照。
+   - **classify がまだ pilot で 判例評釈 subset が未確定なら blocked 報告**（magazine L5 上流待ち）。pilot 分だけでも回す場合は件数を明記。
+3. **入力スキーマへ整形** `caselink_L5_input.jsonl`（1行=1記事）:
+   `{"article_id","article_type":"commentary"(判例評釈),"masthead_citation":<対象判例 court/date/事件 があれば。D1-LIC crosswalk or タイトル/書誌から>,"is_formal_review":<正式評釈シリーズ>,"body_text":<記事本文>}`
+4. **dry-run**: `python3 scripts/case_link_corpus_dryrun.py --corpus caselink_L5_input.jsonl > L5_dryrun_report.json`
+   → `articles / edges_emitted / route_distribution(auto vs review) / edge_type_counts / stance_counts`。
+5. **精度サンプル（stretch）**: N=100 に正解エッジ(記事→判例,役割,stance)を付け `case_link_eval.py` で evaluates/compares precision・stance 正解率。目標 evaluates/review_chain=0.97 / compares=0.90 / stance=0.85。
+6. **span 取りこぼしメモ** ≤20件（`case_citation_span.CITATION_RE` で拾えない引用書式の型）。
+7. `output_path` に報告（件数・分布・精度・取りこぼし・blocked 有無）。
 
 ## Forbidden
-- **stance 列 DDL の適用 / alo_edges への実 write / canonical 昇格 / accepted edge 化**（すべて HOLD＝別 owner GO + Wave57 MAP_UPDATE 案件。番頭の領分）。
-- 本番DB書込 / DDL / SF書戻 / Box ファイル削除。
-- `case_link_*` や `case_vocab` の**設計改変**（語彙・写像則の変更は番頭＝remote Claude の領分。取りこぼしは §5 で**報告**するに留める）。
-- 実案件個人情報の露出（解説本文に依頼者/個人特定情報があれば匿名化 or 除外し needs_decision）。
+- stance 列 DDL 適用 / alo_edges 実 write / canonical 昇格 / accepted edge 化（全 HOLD＝別 owner GO + Wave57 MAP_UPDATE）。
+- magazine の上流成果物への書込み（read-only 参照のみ）。
+- `case_link_*` / `case_vocab` の設計改変（番頭領分。取りこぼしは §6 で報告のみ）。
+- **新たな評釈→判例抽出器を別実装すること**（＝RECONCILE 違反。必ず本 engine を使う）。
+- 実案件個人情報の露出（あれば匿名化 or 除外し needs_decision）。
 
 ## 完了後
-番頭(remote Claude)が `dryrun_report` と precision を読み、repo 側で:
-(a) route 閾値/方針の調整、(b) **span 検出器の取りこぼし対応**（正規表現拡張・符号正規化強化）、
-(c) 必要なら DD v0.3 反映 or 正典反映パッチの微調整、(d) 結果を整合監査ドキュメントへ記録。
-production 反映（stance 列ほか）は引き続き別 GO で。
+番頭(remote Claude=head)が report を読み、(a) route 閾値/span 拡張、(b) magazine head と L5 接続点(HANREI-TARGET→case_link_extract の masthead 入力)の確定、(c) 結果を RECONCILE/整合監査へ記録。production 反映(stance列ほか)は別 GO。
