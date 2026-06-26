@@ -1,7 +1,6 @@
 # DD-LAWREF-001 設計ノート v0.1 — 法令間「接続軸」（委任チェーン・条文間参照・行政解釈レイヤ）
 
-> **status**: design-accepted (PASS_WITH_NOTES)（DDLAWREF gate 通過 2026-06-24。反映 notes を §9 に取り込み済。
-> production/accept は別ゲート＋ owner ratify を経る）/ **owner**: 浅井 / **author**: Project-codex (claude-code remote)
+> **status**: accepted（owner ratify 2026-06-26。production DDL/DB write・claim_support serving は HOLD。e-Gov API sandbox allowlist 追加は別 GO 待ち）/ **owner**: 浅井 / **author**: Project-codex (claude-code remote)
 > **recorded_at**: 2026-06-23 / **gate**: `DDLAWREF` → **DDLAWREF_PASS_WITH_NOTES (2026-06-24)**
 > **audit**: REQUEST `docs/audit/DDLAWREF_v0.1_20260623_REQUEST.md` / RESULT `docs/audit/DDLAWREF_v0.1_20260623_RESULT.md`
 > **depends_on**: DD-LAWTIME-001（形式軸）/ DD-LAWSUBTRANS-001（実質軸・assertion overlay）/
