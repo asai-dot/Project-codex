@@ -19,47 +19,63 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 EXTRACT = ROOT / "pipeline" / "floor" / "statute_floor_extract.json"
 
-_KANJI_RUN = re.compile(r"[一-龥]{3,8}")
-# 単独では情報が薄い語を除外(汎用すぎる共通語)。
-_STOP = {"事項", "関する", "とするとき", "するもの", "に関する事", "関する事項",
-         "その他", "場合", "とき", "もの", "及びそ"}
+# 法令の接続詞・係り受けを語境界として除去(「資本金及び資本準備金」→ 資本金 / 資本準備金)。
+_CONJ = re.compile(r"及び|並びに|又は|若しくは|その他の|その他|に関する事項|に関する|に係る"
+                   r"|における|に掲げる事項|に掲げる|に規定する|に定める|についての")
+# 単独では情報の薄い汎用語(錨にしない)。
+_STOP = {"事項", "場合", "当該", "前項", "各号", "以下", "同じ", "規定", "内容", "とき",
+         "もの", "その", "これ", "次に", "前条", "前各号", "定める", "前号", "方法"}
+_KANJI = re.compile(r"[一-龥]+")
 
 
 def _norm(s: str) -> str:
     return unicodedata.normalize("NFKC", str(s or ""))
 
 
-def _terms(item: dict) -> set[str]:
-    """1号の名称/aliasesから漢字連続(>=3字)の語候補を集める。"""
-    out: set[str] = set()
-    for s in [item.get("名称", "")] + list(item.get("aliases", [])):
-        for m in _KANJI_RUN.findall(_norm(s)):
-            for L in range(3, len(m) + 1):
-                for i in range(len(m) - L + 1):
-                    g = m[i:i + L]
-                    if g not in _STOP:
-                        out.add(g)
+def _clean_chunks(text: str) -> list[str]:
+    """名称/aliasを接続詞で割り、漢字名詞句(>=2字)のチャンクへ。接続詞漢字は端から剥ぐ。"""
+    t = _CONJ.sub("、", _norm(text))
+    out = []
+    for raw in _KANJI.findall(t):
+        c = raw.strip("及又並若其他")  # 端に残った接続詞漢字を除去
+        if len(c) >= 2 and c not in _STOP:
+            out.append(c)
     return out
 
 
-def link(procs: list[dict]) -> list[dict]:
-    """床ペアごとに、共通語を共有する号の組を返す(最長一致を代表に)。"""
-    # 各床: 号 -> 語集合
-    floor_terms = []
-    for p in procs:
-        floor_terms.append([(it["号"], _terms(it)) for it in p["items"]])
+def _terms(item: dict) -> set[str]:
+    """1号の名称/aliasesから綺麗な名詞句チャンク集合。"""
+    out: set[str] = set()
+    for s in [item.get("名称", "")] + list(item.get("aliases", [])):
+        out.update(_clean_chunks(s))
+    return out
 
+
+def _shared_concepts(ta: set[str], tb: set[str], minlen: int = 2) -> set[str]:
+    """2号のチャンク集合から共有概念(包含関係・最小minlen字)を返す。代表は短い(汎用な)方。"""
+    shared: set[str] = set()
+    for a in ta:
+        for b in tb:
+            if a == b and len(a) >= minlen:
+                shared.add(a)
+            elif a in b and len(a) >= minlen:
+                shared.add(a)
+            elif b in a and len(b) >= minlen:
+                shared.add(b)
+    return shared
+
+
+def link(procs: list[dict]) -> list[dict]:
+    """床ペアごとに、共通概念を共有する号の組を返す。"""
+    floor_terms = [[(it["号"], _terms(it)) for it in p["items"]] for p in procs]
     links: list[dict] = []
     for (ai, a), (bi, b) in combinations(enumerate(floor_terms), 2):
         for (ga, ta) in a:
             for (gb, tb) in b:
-                shared = ta & tb
-                if not shared:
-                    continue
-                rep = max(shared, key=len)  # 最長の共通語を代表に
-                links.append({"floor_a": procs[ai]["label"], "号_a": ga,
-                              "floor_b": procs[bi]["label"], "号_b": gb,
-                              "concept": rep})
+                for concept in _shared_concepts(ta, tb):
+                    links.append({"floor_a": procs[ai]["label"], "号_a": ga,
+                                  "floor_b": procs[bi]["label"], "号_b": gb,
+                                  "concept": concept})
     return links
 
 
