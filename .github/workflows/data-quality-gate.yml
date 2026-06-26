@@ -1,0 +1,76 @@
+name: data-quality-gate
+
+# 門番の一部。
+#  static-guard : 依存ツールなしの軽量ガード（命名規約・認証情報の混入）
+#  gate-test    : 実 Postgres を立て、staging マイグレーション適用後に門番テストを走らせ、
+#                 「汚いデータが確実に隔離される」ことを検証する（門番の形骸化防止）。
+
+on:
+  pull_request:
+  push:
+    branches: ["**"]
+
+jobs:
+  static-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: マイグレーション命名規約チェック
+        run: |
+          set -euo pipefail
+          fail=0
+          for f in $(find supabase -path '*/migrations/*.sql' 2>/dev/null | sort); do
+            base=$(basename "$f")
+            if ! echo "$base" | grep -Eq '^[0-9]{4}_.+\.sql$'; then
+              echo "::error file=$f::命名規約違反 (期待: NNNN_説明.sql): $base"
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: 認証情報の混入チェック
+        run: |
+          set -euo pipefail
+          # Supabase の JWT は eyJ で始まる。実鍵やパスワード付き接続文字列の混入を弾く。
+          # （"service_role" という単語自体は文書に正当に出現するため対象外）
+          if grep -RInE '(eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}|postgres(ql)?://[^ ]*:[^ ]*@)' \
+                 --include='*.sql' --include='*.md' --include='*.yml' --include='*.json' \
+                 --exclude-dir='.git' . ; then
+            echo "::error::認証情報らしき文字列が混入しています。コミットから除去してください。"
+            exit 1
+          fi
+          echo "OK: 認証情報の混入なし"
+
+  gate-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: codex
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: codex
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: staging マイグレーション適用 → 門番テスト
+        run: |
+          set -euo pipefail
+          for f in $(ls supabase/staging/migrations/*.sql | sort); do
+            echo ">> apply $(basename "$f")"
+            psql -v ON_ERROR_STOP=1 -q -f "$f"
+          done
+          for t in $(ls supabase/staging/tests/*.sql | sort); do
+            echo ">> test $(basename "$t")"
+            psql -v ON_ERROR_STOP=1 -f "$t"
+          done

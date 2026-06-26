@@ -1,49 +1,54 @@
-# Project Codex — 知識グラフ：文献↔判例↔法令 / RAG（Fork 2 / KG スレッド）
+# Project Codex — 静的リファレンスRDB
 
-ALOが自前で握る**引用グラフ**を作る。商用2サービス（リーガル＝文献→法令／ベンコム＝文献→判例）の
-強みを吸い、着地は**ALOが構築できる公開アンカー**（e-Gov法令／裁判所HTML）＋内部PDで固める。
-最終的に ③RAG「事務所ライブラリに聞く」が、文献パッセージ＋根拠判例＋根拠法令の**3レーン出典**で答える。
+「綺麗な静的データベース」を Supabase 上に構築するためのリポジトリです。
+このリポジトリは **DBの正本（source of truth）** であり、Supabase 上のデータベースは
+ここにある定義（スキーマSQL・参照データ・手順）の *投影* にすぎません。
+DBはいつでもこのリポジトリからゼロ再構築できます。
 
-> 人間ビューワー（4図書館横断検索・ジャンプ・目次/引用コピー）は別スレッド：
-> branch `claude/toc-search-rag-tLcyb` / PR #6。**互いのファイルは触らない。**
-> 本スレッドの担当範囲は [`docs/THREAD_SCOPE.md`](docs/THREAD_SCOPE.md)。
+## なぜこの構成か
 
-> このスレッドは**人間ビューワー**（4図書館横断検索・ジャンプ・目次/引用コピー）を担当。
-> 知識グラフ（文献↔判例↔法令の引用グラフ・判例の正本キー・採取・RAG）は別スレッドへフォーク済み：
-> branch `claude/kg-lit-precedent-rag` / PR #11。**互いのファイルは触らない。**
+データベースは一度作ると「一人歩き」します。誰が・いつ・どの経路で入れたのか分から
+ないデータが積み上がり、二重投入や矛盾が起きると「どちらが綺麗でどちらが汚いのか」が
+識別できなくなります。これを防ぐため、本リポジトリは次の4原則を構造で強制します。
 
----
+1. **Clean-only** — 本番には検査を通過したデータしか入らない。
+2. **環境の物理分離** — テスト用と本番用を Supabase プロジェクトレベルで分離する。
+3. **門番（ゲートキーパー）必須** — 検査を通らないデータはDBに到達できない。
+4. **DBを一人歩きさせない** — 真の正本はGit。変更はPRレビューを必ず通る。
 
-## 中核
+詳細は [`docs/data-governance/`](docs/data-governance/README.md) を参照してください。
 
-| ファイル | 役割 |
-|----------|------|
-| [`src/case_identity.py`](src/case_identity.py) | 判例の**正本キー**（和暦・事件番号・裁判所）。略記 `最大判`／leala `令和４年（ワ）`／`extract_case_refs` で raw_text から地名込み再抽出 |
-| [`src/case_deeplink.py`](src/case_deeplink.py) + [`config/case_sources.json`](config/case_sources.json) | 判例の**3層着地**（内部PD → 裁判所HTML → ベンコムオンランプ） |
-| [`scripts/harvest_precedents.py`](scripts/harvest_precedents.py) | ベンコム precedents ページ → 引用レコード |
-| [`scripts/validate_case_refs.py`](scripts/validate_case_refs.py) | 実OPACへ一括適用で被覆率/衝突を検証（`--from-raw`） |
-| [`docs/literature_precedent_graph.md`](docs/literature_precedent_graph.md) | **本設計の主資料**（§1-11） |
+## 環境（2プロジェクト構成）
 
-## クイックスタート
+| プロジェクト   | 役割                       | 書き込み可否                         |
+| -------------- | -------------------------- | ------------------------------------ |
+| `codex-staging` | プレ本番・試作・テスト       | 自由（landing は何でも可、要ラベル） |
+| `codex-prod`    | 本番・公開                 | レビュー済み昇格スクリプト経由のみ   |
 
-```bash
-npm test    # = python3 tests/test_case_lane.py（56チェック）
-
-# 実OPACへの一括適用（本番env、raw_text地名込み再抽出）
-python3 scripts/validate_case_refs.py opac_parsed/ext_opac_articles.jsonl --from-raw
+```
+codex-staging                           codex-prod
+┌───────────────────────────┐  昇格 PR  ┌────────────────────────┐
+│ schema landing (検疫区画)   │ ───────▶ │ schema prod            │
+│  └ 生データ / dirty可 / 要ラベル│ レビュー  │  └ 検査通過品のみ / 読取主体│
+│ schema staging (検証済候補)  │          │  └ 直接INSERT権限なし    │
+└───────────────────────────┘          └────────────────────────┘
+      ▲ 門番①: landing→staging              ▲ 門番②: staging→prod
+        （自動検査＋ラベル付与）                （PRレビュー＋昇格スクリプト）
 ```
 
-## 到達点（fork時点）
+## ディレクトリ
 
-- 判例の**正本キー**は ALO未整備だったので本スレが提供（`case_spine` は案件＝別物と確認済）。
-- 既存資産に接続：OPAC/CiNii の case_citations **17,259件**・`docket_raw`、D1KOS `article_cites_case`
-  レビューレーン、`opac_parse.py` の `case_ref_text`。規律一致（`claim_scope=cites` / `pending_review`）。
-- 被覆率実証：旧 case_ref_text=40% → `--from-raw`（raw_text 地名込み再抽出）=**100%**（代表サンプル）。
+```
+docs/data-governance/   ガバナンス規程（ルール・手順・チェックリスト）
+supabase/staging/       codex-staging に適用するマイグレーション
+supabase/prod/          codex-prod に適用するマイグレーション
+supabase/README.md      適用手順
+.github/                PRテンプレート・CI（門番の一部）
+```
 
-## ロードマップ
+## はじめての投入
 
-詳細・次の一手は [`docs/THREAD_SCOPE.md`](docs/THREAD_SCOPE.md)。本番フル17,259件の `--from-raw` 実走 →
-ベンコム実採取 → `docket_raw` 突合 → e-Gov法令/裁判所HTML着地 → 時点警告 → ③RAG。
-
-スキーマは [`schema/supabase_schema.sql`](schema/supabase_schema.sql)（`case_citations` / `law_citations` /
-pgvector）。全体設計は [`docs/architecture.md`](docs/architecture.md) §7。
+[`docs/data-governance/02-ingestion-procedure.md`](docs/data-governance/02-ingestion-procedure.md)
+の手順に従ってください。投入前に
+[`03-quality-gate-checklist.md`](docs/data-governance/03-quality-gate-checklist.md)
+の入力前検査チェックリストを必ず完了させます。
