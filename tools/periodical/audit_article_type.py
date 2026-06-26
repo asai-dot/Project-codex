@@ -18,13 +18,17 @@ import csv, sys, re, collections
 
 VALID = {"判例評釈","論説・論文","解説","立法・改正解説","座談会・対談","判例紹介","書評","資料","連載・コラム","その他"}
 
-# タイトル正規表現 → 期待ラベル（強いシグナルのみ。曖昧語は入れない）
+# タイトル正規表現 → 許容ラベル集合（公正版: 判決系は判例関連3種のいずれでも正解）
+# 判例評釈/判例紹介/資料 は「判決を扱う記事」の境界カテゴリで主観差が大きいため相互許容。
+# 明確な誤り(書評/座談会/立法解説等を判決系に付ける)だけを不一致とする。
+CASE_FAMILY = {"判例評釈", "判例紹介", "資料"}
 RULES = [
-    (re.compile(r"判例評釈|評釈"), "判例評釈"),
-    (re.compile(r"最(判|決)|大(判|決)|高(判|決)|地(判|決)"), "判例評釈"),
-    (re.compile(r"座談会|対談|鼎談"), "座談会・対談"),
-    (re.compile(r"書評|新刊紹介"), "書評"),
-    (re.compile(r"改正(法)?の(概要|解説|ポイント)|新法解説|立法(の)?解説"), "立法・改正解説"),
+    (re.compile(r"判批|判例批評"), {"判例評釈"}),
+    (re.compile(r"評釈"), {"判例評釈", "判例紹介"}),
+    (re.compile(r"最(判|決)|大(判|決)|高(判|決)|地(判|決)|令和[^、。]{0,12}(判|決)|平成[^、。]{0,12}(判|決)"), CASE_FAMILY),
+    (re.compile(r"座談会|対談|鼎談"), {"座談会・対談"}),
+    (re.compile(r"書評|新刊紹介"), {"書評"}),
+    (re.compile(r"改正(法)?の(概要|解説|ポイント)|新法解説|立法(の)?解説"), {"立法・改正解説"}),
 ]
 
 
@@ -59,10 +63,10 @@ def main(type_csv, join_csv=None):
         for rx, exp in RULES:
             if rx.search(t):
                 checked += 1
-                if lab == exp:
+                if lab in exp:
                     matched += 1
                 elif len(mism) < 10:
-                    mism.append((t[:40], lab, exp))
+                    mism.append((t[:40], lab, "/".join(sorted(exp))))
                 break
     rate = matched / checked if checked else None
 
