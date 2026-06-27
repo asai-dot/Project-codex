@@ -1,7 +1,8 @@
 # DD-LAWTIME-001 v0.2.4 — materialize runbook（実DB反映 手順書）
 
-> status: **DRAFT runbook（課金ゼロ・実行待ち）**。本書は「確定設計 v0.2.4 を実 Supabase に載せる時の段取り」を
-> 文書化したもの。**本書を書いた時点では DB 操作は一切していない**（Supabase 未接触・課金ゼロ）。
+> status: **PHASE D′ 適用済（2026-06-27）/ PHASE D 残（300）HOLD 中**。
+> **本番状態**: `lawtime` スキーマ・テーブル・gate view（100+200）は production に apply 済。
+> `300_serving.sql`（serving views）は未適用。DDLAWREF RESULT 2309579353234 本文 readback 後に判断。
 > 各 PHASE は **owner の明示 GO がある時だけ**実行する。GO 無しに次の PHASE へ進まない。
 >
 > - 確定設計: [`DD-LAWTIME-001_v0.2.4_placement.md`](./DD-LAWTIME-001_v0.2.4_placement.md)（RATIFIED 2026-06-25）
@@ -21,7 +22,8 @@
 | **B′. 課金ゼロ dry-run** | 母屋を read-only introspect → fixture を実物に合わせ → ローカル smoke 再実行 | **無** | read-only 許可のみ（課金 GO 不要） | local（戻す概念なし） |
 | **B. branch dry-run（任意）** | Supabase の **preview branch** を作り、そこへ 100/200/300 を apply して gate を回す | **有（branch 課金）** | **要：課金 GO** | branch 削除で戻せる |
 | **C. 受入判定** | 8 gate 空 + C-INT-1/2 + golden resolver diff を確認 | 無 | 不要（判定のみ） | — |
-| **D. 本番 apply** | 確定設計を **production** に migration 適用 | （branch 課金は無、本番は通常） | **要：本番 apply GO** | rollback SQL 要（§7） |
+| **D′. 本番 apply（DDL のみ）** | 100+200 を production に apply（inert・serving なし） | — | ✅ owner GO 2026-06-27 / **apply 済** | `DROP SCHEMA lawtime CASCADE;` |
+| **D 残. serving apply** | 300_serving.sql を production に apply | — | **要：serving GO**（RESULT 2309579353234 本文確認後） | view DROP で戻せる |
 | **E. 出口接続** | DD-LAWSUBTRANS を serving.* に張り替え | 無〜小 | **要：張り替え GO** | revert 可 |
 
 > ✅ **O1 確定（A 統一RESTRICT, owner 2026-06-25）**: `citation_temporal` / `unresolved_queue` の

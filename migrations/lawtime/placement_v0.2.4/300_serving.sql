@@ -48,7 +48,7 @@ CREATE OR REPLACE VIEW serving.lawtime_resolved_ref_current AS
           AND ct.temporal_status <> 'unchecked') AS lawtime_resolved
   FROM d1law_taikei.alo_edges e
   JOIN lawtime.citation_temporal ct ON ct.edge_id = e.edge_id
-  WHERE e.edge_type IN ('cites_statute','statute_ref','applies_statute');
+  WHERE e.edge_type IN (SELECT edge_type FROM lawtime.citation_edge_type_v20260624);
 
 -- ── integrated claim_support decision — TRUTH TABLE (blocking note #7) ─────────
 --    lawtime's CONTRIBUTION to the claim_support decision, exposed as the boolean
