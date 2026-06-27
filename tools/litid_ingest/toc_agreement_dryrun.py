@@ -221,6 +221,19 @@ def fetch_bencom_toc_db(bencom_bib_id: str) -> list:
     ]
 
 
+# ── bencom cache loader ─────────────────────────────────────────────────────
+
+def load_bencom_cache(cache_path: Path) -> dict:
+    """
+    Load pre-fetched bencom depth=1 toc_nodes from JSON cache.
+    Returns dict: bencom_bib_id -> list of node dicts.
+    Cache format: artifacts/bencom_toc_d1_cache_pilot_20260627.json
+    """
+    with open(cache_path) as f:
+        data = json.load(f)
+    return data['bencom']
+
+
 # ── main ────────────────────────────────────────────────────────────────────
 
 def main():
@@ -228,6 +241,8 @@ def main():
     parser.add_argument('--sample', type=Path,
                         default=Path('artifacts/TOC_cross_source_gold_candidates_20260623.tsv'),
                         help='Candidate TSV path')
+    parser.add_argument('--manifest', type=Path, default=None,
+                        help='Stratified sample manifest TSV (overrides --sample + sampling logic)')
     parser.add_argument('--limit', type=int, default=None,
                         help='Cap number of pairs to process')
     parser.add_argument('--pair', nargs=2, metavar=('ISBN', 'BENCOM_BIB_ID'),
@@ -236,7 +251,23 @@ def main():
                         help='Number of clean (non-collision) pairs to sample')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--output', type=Path, default=None)
+    parser.add_argument('--bencom-cache', type=Path, default=None,
+                        metavar='PATH',
+                        help='Pre-fetched bencom depth=1 JSON cache (skips DATABASE_URL)')
     args = parser.parse_args()
+
+    bencom_cache: dict | None = None
+    if args.bencom_cache:
+        bencom_cache = load_bencom_cache(args.bencom_cache)
+        print(f"Loaded bencom cache: {len(bencom_cache)} bencom_bib_ids", file=sys.stderr)
+
+    def get_bencom_nodes(bencom_bib_id: str) -> list:
+        if bencom_cache is not None:
+            nodes = bencom_cache.get(bencom_bib_id)
+            if nodes is None:
+                raise KeyError(f'bencom_bib_id not in cache: {bencom_bib_id}')
+            return nodes
+        return fetch_bencom_toc_db(bencom_bib_id)
 
     out_fields = [
         'self_bib_id', 'self_isbn', 'bencom_bib_id', 'edition_risk_flag',
@@ -253,7 +284,7 @@ def main():
     if args.pair:
         isbn, bencom_bib_id = args.pair
         self_nodes = fetch_self_toc_box(isbn)
-        bencom_nodes = fetch_bencom_toc_db(bencom_bib_id)
+        bencom_nodes = get_bencom_nodes(bencom_bib_id)
         result = compute_agreement(self_nodes, bencom_nodes)
         out.writerow({
             'self_bib_id': f'alo:book:isbn:{isbn}',
@@ -266,7 +297,15 @@ def main():
         })
         return
 
-    sample = make_sample(args.sample, clean_n=args.clean_n, seed=args.seed)
+    # Use manifest directly if provided (pre-stratified), else sample from candidate TSV
+    if args.manifest:
+        sample = []
+        with open(args.manifest) as f:
+            for row in csv.DictReader(f, delimiter='\t'):
+                sample.append(row)
+        print(f"Manifest: {len(sample)} pairs", file=sys.stderr)
+    else:
+        sample = make_sample(args.sample, clean_n=args.clean_n, seed=args.seed)
     if args.limit:
         sample = sample[:args.limit]
 
@@ -275,7 +314,7 @@ def main():
         bencom_bib_id = row['bencom_bib_id']
         try:
             self_nodes = fetch_self_toc_box(isbn)
-            bencom_nodes = fetch_bencom_toc_db(bencom_bib_id)
+            bencom_nodes = get_bencom_nodes(bencom_bib_id)
         except Exception as e:
             out.writerow({
                 'self_bib_id': row['self_bib_id'],
