@@ -5,3 +5,6 @@ __pycache__/
 artifacts/periodical/article_join_dryrun_*.csv
 artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v[0-9]*.csv
 artifacts/periodical/d1_journal_issn_authority_ALL_resolved.csv
+
+# NDL SRU raw response cache (ORCH-NDL-RECONCILE, transient)
+tools/periodical/.ndl_cache/
