@@ -1,0 +1,79 @@
+== fixture: EXISTING d1law_taikei.alo_edges (母屋, smoke only) ==
+== lawtime schema (URI identity, side-table, resolver) ==
+psql:/home/user/Project-codex/migrations/lawtime/placement_v0.2.4/100_lawtime_schema.sql:150: NOTICE:  trigger "eval_append_only" for relation "lawtime.temporal_eval_event" does not exist, skipping
+== gates (house style) ==
+== serving (exit views + claim_support truth table) ==
+== seed clean deterministic data ==
+== verify_dry_run (clean => ALL LAWTIME v0.2.4 GATES EMPTY) ==
+psql:/home/user/Project-codex/migrations/lawtime/placement_v0.2.4/verify_dry_run.sql:27: NOTICE:  lawtime gate v_gate_lawtime_citation_edge_missing_side_table_v20260624 => 0 row(s)
+psql:/home/user/Project-codex/migrations/lawtime/placement_v0.2.4/verify_dry_run.sql:27: NOTICE:  lawtime gate v_gate_lawtime_side_table_orphan_or_noncitation_v20260624 => 0 row(s)
+psql:/home/user/Project-codex/migrations/lawtime/placement_v0.2.4/verify_dry_run.sql:27: NOTICE:  lawtime gate v_gate_lawtime_resolved_revision_covers_asof_v20260624 => 0 row(s)
+psql:/home/user/Project-codex/migrations/lawtime/placement_v0.2.4/verify_dry_run.sql:27: NOTICE:  lawtime gate v_gate_lawtime_claim_support_requires_resolved_v20260624 => 0 row(s)
+psql:/home/user/Project-codex/migrations/lawtime/placement_v0.2.4/verify_dry_run.sql:27: NOTICE:  lawtime gate v_gate_lawtime_succession_no_ambiguous_overlap_v20260624 => 0 row(s)
+psql:/home/user/Project-codex/migrations/lawtime/placement_v0.2.4/verify_dry_run.sql:27: NOTICE:  lawtime gate v_gate_lawtime_work_single_fallback_law_id_v20260624 => 0 row(s)
+psql:/home/user/Project-codex/migrations/lawtime/placement_v0.2.4/verify_dry_run.sql:27: NOTICE:  lawtime gate v_gate_lawtime_statute_revision_no_ambiguous_overlap_v20260624 => 0 row(s)
+psql:/home/user/Project-codex/migrations/lawtime/placement_v0.2.4/verify_dry_run.sql:27: NOTICE:  lawtime gate v_gate_lawtime_formal_status_inconsistent_v20260624 => 0 row(s)
+psql:/home/user/Project-codex/migrations/lawtime/placement_v0.2.4/verify_dry_run.sql:27: NOTICE:  ALL LAWTIME v0.2.4 GATES EMPTY — dry-run PASS
+DO
+== golden resolver sample (should_fix #3) ==
+--- sample resolver: fn_resolve_law_reference_at(work_uri, as_of) ---
+      work_uri      |   as_of    |   resolved_revision_uri    
+--------------------+------------+----------------------------
+ alo:law:jp:minpo   | 1900-01-01 | alo:lawrev:jp:minpo:1898
+ alo:law:jp:minpo   | 2019-12-31 | alo:lawrev:jp:minpo:1898
+ alo:law:jp:minpo   | 2020-04-01 | alo:lawrev:jp:minpo:2020
+ alo:law:jp:minpo   | 2025-01-01 | alo:lawrev:jp:minpo:2020
+ alo:law:jp:shotaku | 1990-01-01 | <null>
+ alo:law:jp:shotaku | 2000-01-01 | alo:lawrev:jp:shotaku:1991
+(6 rows)
+
+== serving sanity: resolved_ref + claim_support_decision ==
+ edge_id | lawtime_resolved 
+---------+------------------
+       1 | t
+       2 | t
+       3 | f
+(3 rows)
+
+ edge_id | resolved | status_ok | caveat_ok | eval_present | lawtime_serve 
+---------+----------+-----------+-----------+--------------+---------------
+       1 | t        | t         | t         | t            | t
+       2 | t        | t         | t         | t            | t
+       3 | f        | f         | t         | f            | f
+(3 rows)
+
+== planted-violation detection ==
+BEGIN
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+COMMIT
+--- lawtime v0.2.4 gate detection (expect >0 for each planted) ---
+                   g                   | count 
+---------------------------------------+-------
+ citation_edge_missing_side_table      |     1
+ claim_support_requires_resolved       |     1
+ formal_status_inconsistent            |     1
+ resolved_revision_covers_asof         |     1
+ side_table_orphan_or_noncitation      |     1
+ statute_revision_no_ambiguous_overlap |     1
+ succession_no_ambiguous_overlap       |     1
+ work_single_fallback_law_id           |     1
+(8 rows)
+
+== guards (each MUST raise an ERROR) ==
+  OK blocked: eval append-only UPDATE -> ERROR:  lawtime.temporal_eval_event is append-only
+  OK blocked: eval append-only DELETE -> ERROR:  lawtime.temporal_eval_event is append-only
+  OK blocked: side-table two-tier CHECK (unknown branch w/ as_of_date) -> ERROR:  new row for relation "citation_temporal" violates check constraint "ck_ct_two_tier"
+  OK blocked: side-table FK to 母屋 (no such edge) -> ERROR:  insert or update on table "citation_temporal" violates foreign key constraint "citation_temporal_edge_id_fkey"
+  OK blocked: law_work URI CHECK -> ERROR:  new row for relation "law_work" violates check constraint "ck_law_work_uri"
+== STRUCTURAL SMOKE OK (v0.2.4 placement) ==
