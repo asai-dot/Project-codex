@@ -53,6 +53,33 @@ inbox/W-NNN → claim → 実行(必要ならサブエージェント並列) →
 5. **MODIFY_REQUIRED** → 設計問題なら scripts/ を直し、入力スキーマ問題なら作業票を v0.2 で再投入。
 6. **BLOCKED** → 上流不在(入力データ未生成)なら上流発注へ、人手判断不能なら owner ESCALATE。
 
+### 3.4 GO/HOLD 粒度パーサ(必須・2026-06-27 lawtime レーン教訓)
+**PASS_WITH_NOTES = 全GO ではない。** RESULT description は部分GO/部分HOLDを混在させうる。head は label 確定前に description を粒度パース:
+
+```
+description 例: "lawtime view patch/edge_type registry GO; materialize/production/claim-support HOLD"
+→ go_list:   ["lawtime view patch", "edge_type registry"]
+→ hold_list: ["materialize", "production", "claim-support"]
+```
+
+**Apply guard(自動GO不可トリガ)**: hold_list に下記いずれかが含まれたら、PASS_WITH_NOTES でも該当領域は自動 GO 禁止 → §9.3 HOLD_BOUNDARY_STOP 経由で G2/owner GO へ:
+- `production` / `materialize` / `claim-support` / `serving` / `canonical` / `accepted edge` / `DDL` / `embedding` / `global egress`
+
+go_list 側だけを反映する v0.x 作業票を head が生成。"全GO" 解釈は事故の前口上。
+
+### 3.5 RESULT 読取り3段階(Box readback)
+本文取得失敗を「未着」と誤判定しない。3状態に分ける:
+- `RESULT_NOT_FOUND`: REQUEST description に `result=` ID が無い、または file_id が存在しない
+- `RESULT_FOUND_BUT_BODY_UNREADABLE`: file_id 存在(get_file_details 成功)だが本文取得が API エラー → **再読込キュー**へ(催促しない)
+- `RESULT_READ_OK`: 本文読取り成功
+
+**催促判定の最低条件**: REQUEST description が `processed_by_gpt` を**含まない**こと。含むなら RESULT は存在する(Box の表示・検索が壊れているだけ)。
+
+### 3.6 Box の不安定さへの構造的対応
+- 検索 API 依存のキュー監視は禁止(folder list を SoT に)。
+- file_id 直叩きが Internal Server Error → メタデータ(file_details / parent / description)を SoT に、本文は再読込で。
+- description に書かれた `processed_by_gpt; result=<id>; label=<...>; <go/hold>; readback_ok` は機械可読の正本。本文不可読でも description で判断可能。
+
 ## 4. 後続タスクの hold(条件付き起動)
 **hold/ に先置き**するパターンを使い、ループを切らない。head が PASS 判定→ hold→inbox へ move でループ再開。
 
@@ -126,6 +153,7 @@ stall_whole_run_waiting_for_input
 - claim_support eligibility / reviewed=true backfill
 - jufu の global egress / serving / embedding 配信
 - 商用本文の外部送信(GPT監査含む)を新規に必要とする
+- **GPT RESULT description に上記いずれかが HOLD として明示**(部分GO/部分HOLD 混在時の自動GO禁止 — §3.4 Apply guard)
 - → **STOP** + `G2_HANDOFF_<topic>.md` 起票(改善案・必要 DDL・想定リスク・rollback)。production 反映は別 GO。
 
 ### 9.4 構造的詰まり終止 (BLOCKED_STOP — 「上流が壊れている」)
@@ -178,6 +206,8 @@ head は STOP 判定後 24h 以内に `artifacts/caselink/_LOOP_RETROSPECTIVE_<s
 - (c) **サブエージェント許可範囲**: §2 で worker に渡しすぎ/取りすぎな所はあるか。
 - (d) **STOP gate 閾値**: §9 の数値(diminishing<0.5%/blocked 3回/48h など)は妥当か、業界知見から見て。
 - (e) **head/worker 役割分担**: 設計改変が head 専管(W-508/509)で worker が分析止まりという建付けは適切か、ボトルネックを生まないか。
+- (f) **GO/HOLD 粒度パース**: §3.4 Apply guard と §9.3 (RESULT description の HOLD トリガ) は十分か。「PASS_WITH_NOTES = 全GO」の事故を防ぐ語彙集合(production/materialize/claim-support/serving/canonical/accepted edge/DDL/embedding/global egress)に過不足は無いか。
+- (g) **Box readback の信頼性**: §3.5 (RESULT 3段階) と §3.6 (description SoT) は本文不可読・検索 API 不安定下でも事故を防げるか。「to_gpt しか見ていない」「文字列検索だけで未着判定」の事故パターンを構造的に締めているか。
 
 ### 10.3 出力(GPT 監査の戻り)
 - `LOOPMETA_PASS` / `LOOPMETA_PASS_WITH_NOTES` / `LOOPMETA_MODIFY_REQUIRED` / `LOOPMETA_REJECT` / `LOOPMETA_NEED_MORE`
