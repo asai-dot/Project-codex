@@ -1,0 +1,35 @@
+symbol,romaji,instance,category,meaning,status,note
+ワ,wa,first,civil,地方裁判所 民事第一審通常訴訟,confirmed,カタカナ。刑事「わ」と同字異義(romaji衝突の代表例)
+ハ,ha,first,civil,簡易裁判所 民事第一審通常訴訟,confirmed,
+レ,re,appeal,civil,地方裁判所 民事控訴(簡裁→地裁),confirmed,
+ネ,ne,appeal,civil,高等裁判所 民事控訴,confirmed,
+オ,o,final,civil,最高裁判所 民事上告,confirmed,
+受,ju,final,civil,最高裁判所 民事上告受理申立,confirmed,漢字符号
+ツ,tsu,final,civil,高等裁判所 民事上告(簡裁系),confirmed,
+ヨ,yo,provisional,civil,民事保全(仮差押・仮処分),confirmed,
+ヲ,wo,execution,civil,民事執行(不動産執行 等),review,執行系は符号細分あり要確認
+モ,mo,misc,civil,民事雑,review,
+フ,fu,insolvency,civil,破産,confirmed,
+再,sai,insolvency,civil,民事再生,confirmed,漢字符号
+ミ,mi,insolvency,civil,会社更生,review,
+わ,wa,first,criminal,地方裁判所 刑事第一審,confirmed,ひらがな。民事「ワ」と同字異義
+う,u,appeal,criminal,高等裁判所 刑事控訴,confirmed,
+あ,a,final,criminal,最高裁判所 刑事上告,confirmed,
+ほ,ho,first,criminal,簡易裁判所 刑事第一審,review,
+行ウ,gyo-u,first,administrative,地方裁判所 行政第一審,confirmed,
+行コ,gyo-ko,appeal,administrative,高等裁判所 行政控訴,confirmed,
+行ツ,gyo-tsu,final,administrative,行政上告,review,
+行ヒ,gyo-hi,final,administrative,行政上告受理申立,review,
+行サ,gyo-sa,interlocutory,administrative,行政 抗告 等,review,
+行ケ,gyo-ke,first,administrative,知的財産 審決取消訴訟(知財高裁),confirmed,DD-CASE-001 administrative_review と接続
+行フ,gyo-fu,misc,administrative,行政雑,review,
+家,ka,first,family,家庭裁判所 家事審判,confirmed,漢字符号
+家イ,ka-i,mediation,family,家事調停,confirmed,
+家ロ,ka-ro,first,family,家事 別表第二審判 等,review,運用により細分
+タ,ta,first,family,人事訴訟,review,庁により符号差あり要確認
+労,ro,adjudication,labor,労働審判,confirmed,DD-CASE-001 case_type=adjudication と接続
+少,sho,first,juvenile,少年保護事件,review,家裁。非公開性に注意(AC-3)
+ヌ,nu,execution,civil,民事執行(債権執行 等),review,執行系細分
+ル,ru,execution,civil,民事執行,review,執行系細分
+リ,ri,execution,civil,民事執行(担保不動産競売 等),review,執行系細分
+ヰ,i,first,civil,旧法・戦前民事(大審院系),review,旧法符号。歴史資料用

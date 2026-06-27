@@ -1,0 +1,12 @@
+{
+  "recon_status": "missing_recon_sources",
+  "expected_original_rows": 41,
+  "reconstructed_rows": 32,
+  "gap": 9,
+  "candidate_missing_categories": [
+    "裁判所支部別の source 細分 (forum seed の支部展開に対応)",
+    "分割コーパス (同一機関の公表/本文/添付PDF/匿名化前の record-level 細分)",
+    "在野・学術集約の追加 source (生活保護DB 以外)"
+  ],
+  "note": "原本逐語不在のため正確な10行内訳は不明。owner/DDCASESOURCE 確認まで暫定 queue。"
+}
