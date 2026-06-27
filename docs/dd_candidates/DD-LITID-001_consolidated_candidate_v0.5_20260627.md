@@ -2,7 +2,8 @@
 
 > **id**: DD-LITID-001 / **version**: candidate v0.5（**consolidated**）/ **supersedes & absorbs**: v0.2-draft（biblio_identity_noisbn・Box 2275006797196）/ DD-LITID-001-ATTR v0.1（属性観測層・Box 2286087523073）/ DD-LITID-FP（4信号 fingerprint・Box 2287161796030）/ DD-LITID-PLAN 4route v0.1（運用計画・Box 2292468018025）
 > **owner**: 浅井 / **author**: 番頭(リモートClaude) / **date**: 2026-06-27 JST
-> **lifecycle**: candidate（**設計のみ**）。DDL/DB/既存 lit_id 移行/backfill/mint/OCR/embedding/canonical promotion/serving/Box mutation は **HOLD**。
+> **lifecycle**: **accepted**（owner 浅井 ratify 2026-06-27・設計のみ）。GPT Pro 監査 `DDLITID_PASS_WITH_NOTES`（RESULT Box 2312578962778・source_file_id 2312342128307・blocking なし）。実装 DDL/DB/既存 lit_id 移行/backfill/mint/OCR/embedding/canonical promotion/serving/Box mutation は**別ゲートで HOLD**（accepted≠deployed）。
+> **accepted notes（非blocking・実装時遵守）**: (1) 4断片は一貫統合 (2) 独立性は DD-INDEP-LINEAGE-001 を一方向 consume（§4・再定義しない） (3) 観測は append-only・採用値は観測接地（§2/§6） (4) LITLINK は別 DD 維持（§9）。
 > **version 整理**: cleaned design record（Box 2286222789037・6/15）は「DD-LITID-001 **v0.4**」を latest-pointer として記帳していたが、discrete な凍結 accepted 成果物は存在せず、実体は上記4断片に分散していた。本 v0.5 は**その4断片を単一の凍結候補に畳む**（v0.4 ポインタの不整合を解消）。
 > **depends_on（pin）**: **DD-INDEP-LINEAGE-001 v0.1**（独立性 lineage 正本・accepted・RESULT 2306834650821・content_hash a7856be1…）/ NDL SRU dataset（authority）/ 既存 control.* governance。
 > **監査系譜**: v0.2 `DESIGN_PASS_WITH_NOTES`（RESULT 2275637858392）・ATTR `DDLITID_ATTR_DESIGN_PASS_WITH_NOTES`（2286160319588）・FP/PLAN `DESIGN_PASS_WITH_NOTES`。本 v0.5 は統合再監査（gate=DDLITID）対象。
