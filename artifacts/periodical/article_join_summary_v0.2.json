@@ -1,0 +1,95 @@
+{
+  "total": 333206,
+  "joined": 301092,
+  "orphan": 32114,
+  "coverage": 0.9036,
+  "orphan_by_reason": {
+    "authority_unresolved": 32114
+  },
+  "orphan_by_journal_top20": [
+    {
+      "journal_canonical": "企業会計",
+      "orphan": 1941
+    },
+    {
+      "journal_canonical": "Profession Journal",
+      "orphan": 1917
+    },
+    {
+      "journal_canonical": "市民と法",
+      "orphan": 1852
+    },
+    {
+      "journal_canonical": "消費者法ニュース",
+      "orphan": 1574
+    },
+    {
+      "journal_canonical": "旬刊経理情報",
+      "orphan": 1489
+    },
+    {
+      "journal_canonical": "部落解放",
+      "orphan": 1471
+    },
+    {
+      "journal_canonical": "自治実務セミナー",
+      "orphan": 1268
+    },
+    {
+      "journal_canonical": "アメリカ法",
+      "orphan": 1145
+    },
+    {
+      "journal_canonical": "立法と調査",
+      "orphan": 1023
+    },
+    {
+      "journal_canonical": "海事法研究会誌",
+      "orphan": 941
+    },
+    {
+      "journal_canonical": "会計・監査ジャーナル",
+      "orphan": 827
+    },
+    {
+      "journal_canonical": "税研",
+      "orphan": 778
+    },
+    {
+      "journal_canonical": "不動産鑑定",
+      "orphan": 686
+    },
+    {
+      "journal_canonical": "月刊労委労協",
+      "orphan": 656
+    },
+    {
+      "journal_canonical": "比較法雑誌",
+      "orphan": 582
+    },
+    {
+      "journal_canonical": "法と政治",
+      "orphan": 578
+    },
+    {
+      "journal_canonical": "判例研究",
+      "orphan": 570
+    },
+    {
+      "journal_canonical": "受験新報",
+      "orphan": 553
+    },
+    {
+      "journal_canonical": "Monthly Report",
+      "orphan": 518
+    },
+    {
+      "journal_canonical": "レファレンス",
+      "orphan": 513
+    }
+  ],
+  "collision_count": 11424,
+  "authority_path": "artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v15.csv",
+  "labeled_path": "/Users/yuta/ALOBookDX/事務所内本棚DX化計画/build/d1_bunken_article_meta_20260611/labeled_v0.2.1/article_meta_labeled.jsonl",
+  "schema_version": "v0.1"
+}
