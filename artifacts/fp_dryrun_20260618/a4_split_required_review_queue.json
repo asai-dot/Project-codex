@@ -1,0 +1,39 @@
+{
+  "task": "A4_split_required_review_queue",
+  "wo_id": "WO-BIBREC-FPDRYRUN-RECFIX-20260618",
+  "note": "A3 の identity_status=split_required (20 base groups / 127 rows) を review queue として実体化。read-only SELECT のみ。biblio_item mint 0。全 bib_id は末尾の reproduction_sql で再生可能。",
+  "supabase_project": "nixfjmwxmgugiiuqfuym",
+  "executed_at_utc": "2026-06-18T01:40Z",
+  "gate": "READ_ONLY_STRICT",
+  "txn_read_only": "on",
+  "definition": "base group(title_norm|publisher_norm) が full fingerprint_v1(+page_count+pub_year+edition)でも複数 full-fp に割れ、かつ いずれかの full-fp に依然 ≥2 行が残る群。= 機械的に『統合か別物か』を確定できない群。",
+  "totals": {"groups": 20, "rows": 127},
+  "triage": {
+    "cross_source_trio_merge_leaning": {
+      "groups": 9, "approx_rows": 27,
+      "pattern": "asai ISBN行(+page_count) + asai manual行(page_count null) + bencom NOBN行(page_count null) が同一 title+publisher+pub_year。manual と bencom が full-fp 上で同値となり衝突。実体は1冊の3表現の可能性が高く merge 候補。最終判断は page_count/責任表示で確認。",
+      "examples": ["トラック運送業者のための労働実務Q&A / 労働新聞社 / 2009", "ハラスメントの事件対応の手引き / 日本加除出版 / 2016", "フローチャート印紙税 / 法令出版 / 2018", "交通事故事件の実務 / 新日本法規出版 / 2020", "仮想通貨法の仕組みと実務 / 日本加除出版 / 2018", "最新整理 働き方改革関連法と省令・ガイドラインの解説 / 日本加除出版 / 2019", "建築訴訟 / 青林書院 / 2017", "成年後見の実務 / 新日本法規出版 / 2020", "配偶者居住権と相続対策の実務 / 新日本法規出版 / 2020"]
+    },
+    "true_split_serial_or_multivolume": {
+      "groups": 11, "approx_rows": 100,
+      "pattern": "asai単独。年刊/半年刊の連刊物 or 多巻セット or 版違い。各巻/各年が別 biblio_item だが pub_year/page_count 欠落(manualタイトル中心)で機械分離不能 → 要 page_count/TOC/巻次手当て。",
+      "groups_detail": [
+        {"title": "交通事故民事裁判例集", "publisher": "ぎょうせい", "n_rows": 34, "kind": "年刊(複数年・大半 pub_year欠落)"},
+        {"title": "民事判例", "publisher": "日本評論社", "n_rows": 28, "kind": "半年刊(ISBN個別だが full-fp衝突)"},
+        {"title": "要件事実マニュアル", "publisher": "ぎょうせい", "n_rows": 10, "kind": "多巻セット(2020全5巻 + 第7版2024全5巻)"},
+        {"title": "年報知的財産法", "publisher": "日本評論社", "n_rows": 6, "kind": "年報(一部 pub_year/page_count欠落)"},
+        {"title": "大コンメンタール刑法", "publisher": "青林書院", "n_rows": 4, "kind": "多巻/版違い(1990/1999/2013)"},
+        {"title": "会社法論", "publisher": "有斐閣", "n_rows": 3, "kind": "多巻 or 重複(1991)"},
+        {"title": "労働関係訴訟", "publisher": "青林書院", "n_rows": 3, "kind": "多巻(2010 + 2021×2巻)"},
+        {"title": "模範六法", "publisher": "三省堂", "n_rows": 3, "kind": "年版(2024 + 1998×2)"},
+        {"title": "民事実務講義案", "publisher": "司法協会", "n_rows": 3, "kind": "版違い(5訂版 等, 2015)"},
+        {"title": "著作権法コンメンタール", "publisher": "国立国会図書館 (手製)", "n_rows": 3, "kind": "重複寄り(第2版2018×2 page3 同値 + 1)"},
+        {"title": "類型別労働関係訴訟の実務", "publisher": "青林書院", "n_rows": 3, "kind": "改訂版多巻(2017 + 改訂版2021×2)"}
+      ]
+    }
+  },
+  "recommendation": "cross_source_trio 9群は dedup(candidate→merge)で吸収可能(owner ratify後)。true_split 11群は page_count/巻次/TOC を手当てしてから per-volume item を起こす必要があり、A2 で残った機械分離不能群と同根。いずれも mint は HOLD。",
+  "reproduction_sql": "BEGIN; SET TRANSACTION READ ONLY; WITH base AS (SELECT br.bib_id, br.source, br.title, br.publisher, br.pub_year, nullif(br.edition,'') AS edition, nullif(regexp_replace(coalesce(br.physical,''),'[^0-9]','','g'),'')::int AS page_count, regexp_replace(lower(coalesce(br.title,'')),'[[:space:][:punct:]　・〔〕（）「」『』【】、。，．…ー－‐–—〜～]','','g') AS title_norm, regexp_replace(lower(coalesce(br.publisher,'')),'[[:space:][:punct:]　・〔〕（）「」『』【】、。，．…ー－‐–—〜～]','','g') AS pub_norm FROM biblio.bib_records br), keyed AS (SELECT *, title_norm||'|'||pub_norm AS bkey, title_norm||'|'||pub_norm||'|'||coalesce(page_count::text,'N')||'|'||coalesce(pub_year::text,'N')||'|'||coalesce(edition,'N') AS ffp FROM base WHERE title_norm <> ''), ffp_in_group AS (SELECT bkey,ffp,count(*) ffp_n FROM keyed GROUP BY bkey,ffp), grp AS (SELECT bkey,sum(ffp_n) grp_rows,count(*) distinct_ffp,max(ffp_n) max_ffp_mult FROM ffp_in_group GROUP BY bkey), ambiguous AS (SELECT bkey FROM grp WHERE grp_rows>1 AND distinct_ffp>1 AND max_ffp_mult>1) SELECT k.* FROM keyed k JOIN ambiguous a ON a.bkey=k.bkey ORDER BY k.bkey, k.bib_id; COMMIT;",
+  "mutations": 0,
+  "minted_biblio_items": 0
+}

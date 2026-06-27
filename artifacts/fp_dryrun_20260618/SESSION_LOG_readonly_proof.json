@@ -1,0 +1,32 @@
+{
+  "wo_id": "WO-BIBREC-FPDRYRUN-RECFIX-20260618",
+  "supabase_project": "nixfjmwxmgugiiuqfuym",
+  "executed_at_utc": "2026-06-18T01:00Z..01:03Z",
+  "gate": "READ_ONLY_STRICT",
+  "read_only_proof": {
+    "mechanism": "全SQLを単一トランザクション内で BEGIN; SET TRANSACTION READ ONLY; ... COMMIT; として実行。各クエリで current_setting('transaction_read_only') を SELECT し 'on' を確認。read-only トランザクション下では INSERT/UPDATE/DELETE/DDL は物理的に拒否される。",
+    "txn_read_only_observed": "on (全クエリで確認)",
+    "statements_executed": "SELECT のみ (DDL/DML/migration なし)"
+  },
+  "mutation_proof": {
+    "bib_records_rows_at_close": 10326,
+    "holdings_rows_at_close": 6524,
+    "candidates_rows_at_close": 3802,
+    "bib_toc_rows_at_close": 552544,
+    "db_mutations": 0,
+    "minted_biblio_items": 0,
+    "ddl_count": 0,
+    "backfill_count": 0
+  },
+  "section1_fact_reproduction": [
+    {"fact": 1, "claim": "source 2値のみ; asai-bookshelf 6,524 (ISBN 5,397/distinct 5,397/edition 424), bencom-library 3,802 (ISBN 6/edition 0)", "measured": "asai 6,524/5,397/5,397/424, bencom 3,802/6/6/0, sources=2", "match": true},
+    {"fact": 2, "claim": "合計 10,326 = 6,524 + 3,802; 上限超え異常ではない", "measured": "10,326 = 6,524 + 3,802", "match": true},
+    {"fact": 3, "claim": "Phase0の『NDL/CiNii由来』は誤り; 実態 asai-bookshelf/bencom-library", "measured": "distinct source = {asai-bookshelf, bencom-library} のみ。NDL/CiNii 由来の source 値なし", "match": true, "action": "B1 rev3 で訂正"},
+    {"fact": 4, "claim": "lionbolt/legal-library は Supabase 未投入", "measured": "raw走査 lionbolt=0; source列に lionbolt/legal-library なし。件数(22,844/4,051等)は DB外につき本DBでは検証不能(=未投入の裏付け)", "match": "partial(未投入は確認, 外部件数は検証不能)"},
+    {"fact": 5, "claim": "詳細TOC総ノード ≒ 1,636,301 (lionbolt 264,555 + 弁コム 709,029 + legal-library 662,717)", "measured": "DB内 弁コムTOC(bib_toc=toc_nodes=candidates.total_toc合計)=552,544(100%弁コム由来,3,802書)。lionbolt/legal-library は未投入で0。弁コム 709,029 は DB内に不在", "match": "resolved", "resolution": "709,029 は台帳v1.1 §2 行『弁コム toc 4,490(709,029項目) _separated/bengo4/with_toc.jsonl』=弁コム全カタログ4,490書のソース側ノード数。DBは部分集合3,802書/552,544ノードのみ(688書未ロード)。差156,485=未ロード688書ぶん(平均227.4ノード/書=TOC-rich)。データ破損/ロードバグではなく『ソース全体 vs ロード済み部分集合』の区別。fact#5の1,636,301は全カタログ設計目標値。LIT_SOURCE_GAP_20260618.md B2.2に記録。", "open_item": "688書がcandidate化されなかった選別理由はDBでは確定不能(落ちた書はDB不在; 判定はソースjsonl+ローダ=Mac側)。", "reported_to_owner": true},
+    {"fact": 6, "claim": "ISBN層 asai内重複ゼロ; ダブりは asai×bencom title+publisher (弁コム→holding 1,761 / 無ISBN holding→弁コム 784)", "measured": "ISBN内重複0 (A1); bencom→holding 1,761; 無ISBN holding→弁コム 784", "match": true},
+    {"fact": 7, "claim": "edition列実在; asai側 424件(6.5%)のみ充足", "measured": "edition列実在; asai 424/6,524 = 6.5%; bencom 0", "match": true},
+    {"fact": 8, "claim": "raw走査 lionbolt=0; legal…lib=86 (全て bencom-library 由来)", "measured": "lionbolt=0; raw ILIKE '%legal%lib%' = 86, 全86 が source=bencom-library", "match": true}
+  ],
+  "summary": "§1 8項目中 7項目が SELECT で完全一致。fact#5 の弁コムTOC=709,029 vs DB552,544 は調査後resolved: 709,029は台帳v1.1の弁コム全カタログ4,490書ソース値、DBは部分集合3,802書/552,544(688書未ロード)。データ破損ではなく『ソース全体 vs ロード済み部分集合』。688書未ロードの選別理由はソース/ローダ確認のopen item。"
+}

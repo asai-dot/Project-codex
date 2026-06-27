@@ -1,0 +1,45 @@
+{
+  "task": "A3_identity_status_estimate",
+  "wo_id": "WO-BIBREC-FPDRYRUN-RECFIX-20260618",
+  "supabase_project": "nixfjmwxmgugiiuqfuym",
+  "executed_at_utc": "2026-06-18T01:02Z",
+  "gate": "READ_ONLY_STRICT",
+  "txn_read_only": "on",
+  "scope": "biblio.bib_records 全 10,326 行 (asai-bookshelf 6,524 + bencom-library 3,802)",
+  "logic": "base group bkey = title_norm|publisher_norm。各 base group を full fingerprint(ffp = title|publisher|page_count|pub_year|edition) の内訳で分類。resolved = singleton group + clean-split group の distinct full-fp 数。candidate(merge) = collapse group(rows>1 かつ単一 ffp = 二重ロード塊→1 item に統合)。split_required = ambiguous group(複数 ffp かつ ある ffp が依然重複=自動で統合/分割を決められない)。",
+  "estimate_only": true,
+  "totals": {
+    "bib_records_total": 10326,
+    "rows_with_title": 10326,
+    "rows_without_title": 0,
+    "distinct_base_keys_title_pub": 7987,
+    "distinct_full_fingerprints": 9497,
+    "exact_dup_rows_collapsible": 829
+  },
+  "group_classes": {
+    "singleton_groups": 5956,
+    "collapse_groups": 777,
+    "clean_split_groups": 1234,
+    "ambiguous_groups": 20
+  },
+  "rows_by_class": {
+    "singleton_rows": 5956,
+    "collapse_rows": 1562,
+    "clean_split_rows": 2681,
+    "ambiguous_rows": 127
+  },
+  "identity_status_estimate": {
+    "resolved_items": 8637,
+    "candidate_merge_items": 777,
+    "split_required_groups": 20,
+    "split_required_rows": 127
+  },
+  "derived": {
+    "estimated_distinct_biblio_items_lower_bound": 9497,
+    "estimated_dup_rows_removable_on_merge": 829,
+    "note": "resolved 8,637 + candidate_merge 777 = 9,414 が機械的に確定/準確定。残る split_required 20グループ(127行)のみ人手判断。最終 biblio_item 推定 ≈ 9,4xx (full-fp distinct 9,497 を上限)。"
+  },
+  "hold_notice": "本見積りは SELECT 集計のみ。biblio_item は 1 件も mint していない (HOLD, owner ratify 待ち)。",
+  "mutations": 0,
+  "minted_biblio_items": 0
+}

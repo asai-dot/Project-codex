@@ -1,0 +1,33 @@
+-- rollback_silver_projection.sql — Phase 2 適用後の撤去手順（SCAFFOLD）
+-- 状態: NOT EXECUTED。trouble時に owner ratify の上で個別実行する想定。
+
+-- A) 直近 run の行だけ撤去（manifest 残す）
+--    DELETE FROM biblio.toc_nodes WHERE projection_run_id = :run_id;
+--    UPDATE biblio.toc_projection_run SET status='rolled_back' WHERE projection_run_id = :run_id;
+
+-- B) source 単位で完全撤去（lionbolt or legal-library のみ。bencom 不可）
+--    DELETE FROM biblio.toc_nodes n
+--    USING biblio.bib_records r
+--    WHERE n.book_id = r.bib_id
+--      AND r.source = :source
+--      AND :source <> 'bencom-library'                  -- 安全弁
+--      AND n.projection_run_id IS NOT NULL;             -- 既存（Phase 2.5前）は touch しない
+
+-- C) スキーマ撤去（最終手段。embedding 列の値が残っている場合は事前 BACKUP 必須）
+--    DROP FUNCTION IF EXISTS biblio.fn_project_toc_silver(text, boolean, int, text, text, text);
+--    DROP TABLE   IF EXISTS biblio.toc_projection_run;
+--    ALTER TABLE biblio.toc_nodes
+--      DROP CONSTRAINT IF EXISTS toc_nodes_embedding_status_chk,
+--      DROP CONSTRAINT IF EXISTS toc_nodes_embedding_stale_reason_chk,
+--      DROP COLUMN IF EXISTS projection_run_id,
+--      DROP COLUMN IF EXISTS embedding_generated_at,
+--      DROP COLUMN IF EXISTS embedding_model_id,
+--      DROP COLUMN IF EXISTS embedding_stale_reason,
+--      DROP COLUMN IF EXISTS embedding_status,
+--      DROP COLUMN IF EXISTS embedding_input_hash,
+--      DROP COLUMN IF EXISTS source_row_hash,
+--      DROP COLUMN IF EXISTS normalization_profile_version,
+--      DROP COLUMN IF EXISTS normalization_profile_id,
+--      DROP COLUMN IF EXISTS title_raw,
+--      DROP COLUMN IF EXISTS source_level_normalized,
+--      DROP COLUMN IF EXISTS source_level_raw;

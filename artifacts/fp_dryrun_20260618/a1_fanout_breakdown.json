@@ -1,0 +1,38 @@
+{
+  "task": "A1_fanout_breakdown",
+  "wo_id": "WO-BIBREC-FPDRYRUN-RECFIX-20260618",
+  "supabase_project": "nixfjmwxmgugiiuqfuym",
+  "executed_at_utc": "2026-06-18T01:00Z",
+  "gate": "READ_ONLY_STRICT",
+  "txn_read_only": "on",
+  "question": "10,326行のうち同一書が複数行に割れている分は、版違いか二重ロードか。",
+  "normalization": "isbn = regexp_replace([^0-9Xx],''); title/publisher = lower() + strip whitespace & punctuation (incl. full-width 　・〔〕（）「」『』【】、。，．…ー－‐–—〜～)",
+  "isbn_fanout": {
+    "groups_gt1": 6,
+    "rows_involved": 12,
+    "within_source_groups": 0,
+    "cross_source_groups": 6,
+    "max_group_size": 2,
+    "interpretation": "正規化ISBN単位の重複は6グループ・全てsource跨ぎ(asai-bookshelf×bencom-library)。source内重複は0=fact#6 (ISBN層は asai-bookshelf 内で重複ゼロ) を再確認。弁コム側ISBN付6件が全てasai側ISBNと一致。"
+  },
+  "fingerprint_fanout": {
+    "key": "title_norm | publisher_norm",
+    "groups_gt1": 2031,
+    "rows_involved": 4370,
+    "classification_rule": "グループ内で pub_year または edition が異なる=版違い候補 / 全一致=二重ロード候補",
+    "version_diff_groups": 335,
+    "double_load_groups": 1696,
+    "version_diff_within_source": 286,
+    "version_diff_cross_source": 49,
+    "double_load_within_source": 57,
+    "double_load_cross_source": 1639,
+    "group_size_distribution": {
+      "2": 1923, "3": 61, "4": 18, "5": 10, "6": 7, "7": 1,
+      "8": 2, "9": 1, "10": 2, "11": 1, "14": 1, "15": 1,
+      "23": 1, "28": 1, "34": 1
+    }
+  },
+  "verdict": "fan-out 4,370行の内訳: 二重ロード候補が支配的(1,696グループ/うち跨ぎ1,639=asai×bencom縦積みの当然のダブり, fact#6整合)。真の版違いはsource内286グループに集中(同一実蔵書の複数版)。版違いより二重ロード(ソース跨ぎ)が主因。dedupはDD-LITID identity解決に吸収可能。",
+  "mutations": 0,
+  "minted_biblio_items": 0
+}
