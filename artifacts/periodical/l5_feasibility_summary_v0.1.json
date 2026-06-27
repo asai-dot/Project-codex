@@ -1,0 +1,33 @@
+{
+  "order": "ORCH-L5-FEASIBILITY",
+  "generated_for": "DD-PERIODICAL-002 L5 接合可能性試算",
+  "total_hyoshaku": 790,
+  "court_date_extracted": 743,
+  "extraction_rate": 0.9405,
+  "hanrei_match_rate": 0.8506,
+  "match_rate_of_extracted": 0.9044,
+  "title_level_unique_rate": 0.3165,
+  "titles_with_docket": 26,
+  "titles_with_casename": 225,
+  "breakdown": {
+    "matched_unique": 250,
+    "matched_multi": 422,
+    "date_only_court_miss": 43,
+    "no_match": 28,
+    "no_extract": 47
+  },
+  "hanrei_index_rows": 212602,
+  "grade": "A",
+  "notes": [
+    "判例側 identity-keys 行数: 212602 (2ファイル合算, court_key+date_key(YYYYMMDD) で索引)。",
+    "突合キーは (court, date)。grade は『(court,date) が判例側に実在する割合』=0.8506 に基づく(=A:>80%)。",
+    "ただし title 単独での一意確定は matched_unique=250件 / 790 = 0.3165 に留まる。",
+    "matched_multi=422: 同一(court,date)に複数判例があり一意化に docket か 事件名 照合が必要。東京地等の繁忙裁判所で候補多数(>=5)が支配的。",
+    "一意化シグナル: タイトルに docket(第N号)を含むのは 26/790 と僅少。一方『○○事件』形の事件名を含むのは 225/790 と多く、判例側 事件名 との fuzzy 照合が L5 の主要な disambiguator になり得る。",
+    "date_only_court_miss=43: 判決日は実在するが court_key 正規化が一致せず(支部/審判機関の表記ゆれ)。本番は正規化辞書拡充で一部回収可。",
+    "no_extract=47: 主因は (a)公取委命令/発表/排除措置命令・審判所裁決など『判例(裁判所判決)以外』で hanrei 接合対象外、(b)『最高裁令和N年M月D日判決』等の裁判所前置・年月日漢字表記の時論エッセイ。前者は対象外として正当、後者は抽出規則追加で一部回収可。",
+    "最高裁で小法廷未特定のタイトルは大法廷/各小法廷いずれかに緩め照合しており matched_multi をやや過大計上し得る(loose-最高は matched_multi の極一部)。",
+    "read-only試算: 判例オブジェクト本体/edge への書込なし。判決内容・当事者名は出力せず(タイトルは雑誌側既存メタ)。",
+    "結論: (court,date) バケット接合は Grade A で十分実用。L5 本発注では『(court,date)で粗結合 → 事件名 fuzzy + (あれば)docket で一意化』の二段設計を推奨。"
+  ]
+}
