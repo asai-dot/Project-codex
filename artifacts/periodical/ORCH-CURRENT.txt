@@ -1,7 +1,11 @@
 # 「今ワーカーに振る発注書」ポインタ（ヘッドが随時更新）
 # ユーザーが「ワーカーちゃん起こして / 仕事ふって / 仕事回して」等と言ったら、
 # ヘッドは引数なしの ./tools/trigger_worker.sh を実行 → この先頭の発注書パスが投下される。
+# 先頭=最優先。下に並ぶものは Worker CC を別途複数立てる時の候補。
 artifacts/periodical/ORCH-L4-COVERAGE-LIFT_order_20260626.md
-# 現在: L4被覆引き上げ(orphan上位20誌)。完了済: 記事接合(L4)/L3基盤/分類パイロット。
+# 進行中の並列発注:
+# - artifacts/periodical/ORCH-SERIES-DETECT_order_20260627.md   (連載シリーズ検出, channel=series)
+# - artifacts/periodical/ORCH-ISSUE-FEATURE_order_20260627.md   (特集号メタ抽出, channel=feature)
+# 完了済: 記事接合(L4)/L3基盤/分類パイロット。
 # 進行中(別系統): 記事種別 全量29.7万件分類(Mac直接実行・watcher経由でない)。
 # 次フェーズ: 分類完走監査 → L5(評釈→判例リンク) / 初出pacsigny / OCRパイロット。
