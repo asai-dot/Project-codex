@@ -1,0 +1,113 @@
+{
+  "total_issues_with_feature": 8582,
+  "source_breakdown": {
+    "title_extract": 8582
+  },
+  "confidence_breakdown": {
+    "medium": 5673,
+    "low": 2909
+  },
+  "ambiguous_issue_count": 391,
+  "top20_features_by_articles": [
+    {
+      "feature_title": "資産税重要判例紹介",
+      "article_count": 129,
+      "issue_count": 1
+    },
+    {
+      "feature_title": "独占禁止法違反事件の動向",
+      "article_count": 125,
+      "issue_count": 29
+    },
+    {
+      "feature_title": "金融取引と時効",
+      "article_count": 114,
+      "issue_count": 2
+    },
+    {
+      "feature_title": "改正税法詳解",
+      "article_count": 110,
+      "issue_count": 12
+    },
+    {
+      "feature_title": "ダイジェスト金融商事重要判例〔平成１５年版〕",
+      "article_count": 83,
+      "issue_count": 1
+    },
+    {
+      "feature_title": "法学入門",
+      "article_count": 71,
+      "issue_count": 17
+    },
+    {
+      "feature_title": "判例回顧と展望",
+      "article_count": 68,
+      "issue_count": 11
+    },
+    {
+      "feature_title": "回顧と展望",
+      "article_count": 63,
+      "issue_count": 10
+    },
+    {
+      "feature_title": "最高裁判決",
+      "article_count": 60,
+      "issue_count": 11
+    },
+    {
+      "feature_title": "民事調停の実務",
+      "article_count": 58,
+      "issue_count": 1
+    },
+    {
+      "feature_title": "働く者の権利",
+      "article_count": 55,
+      "issue_count": 1
+    },
+    {
+      "feature_title": "借地上建物の担保取得",
+      "article_count": 55,
+      "issue_count": 1
+    },
+    {
+      "feature_title": "条文からスタート",
+      "article_count": 55,
+      "issue_count": 4
+    },
+    {
+      "feature_title": "戦後５０年特集 戦後金融判例５０選",
+      "article_count": 54,
+      "issue_count": 1
+    },
+    {
+      "feature_title": "最近の企業結合規制の動向",
+      "article_count": 49,
+      "issue_count": 11
+    },
+    {
+      "feature_title": "商法１００年 その軌跡と２１世紀への展望",
+      "article_count": 45,
+      "issue_count": 1
+    },
+    {
+      "feature_title": "民法１００年",
+      "article_count": 44,
+      "issue_count": 1
+    },
+    {
+      "feature_title": "私的整理",
+      "article_count": 43,
+      "issue_count": 1
+    },
+    {
+      "feature_title": "優越的地位濫用規制",
+      "article_count": 43,
+      "issue_count": 8
+    },
+    {
+      "feature_title": "裁判例・裁決例からみた消費税の事例研究",
+      "article_count": 38,
+      "issue_count": 1
+    }
+  ]
+}
