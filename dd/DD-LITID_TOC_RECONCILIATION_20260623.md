@@ -5,6 +5,16 @@
   **成熟した先行TOC統合設計（DD-TOCATTACH / DD-TOCADOPT / DD-TOCNODES）が既存**と判明。M0は再発明のため撤回。
 - 本書 = 既存設計の所在・対応表・M0からの差分救済（=本当に新規の貢献）・前進方針。
 - 出典: Box `from_gpt/` の各監査RESULT現物（file_id併記）。
+- **監査結果**: `DDLITID_TOC_RECONCILIATION_PASS_WITH_NOTES`（result_file_id: 2303315073194, 2026-06-23）
+  - M0 撤回: GO。N-1〜N-3 救済（既存DDへの supply/query/plan）: GO WITH BINDING NOTES。
+  - Binding note: 1,509/832/810 を `gold_count`/`verified_pair`/`same_edition` と呼ばない。
+    正規語彙 → `candidate_overlap_count`=1,509 / `high_priority_pair_count`=832 /
+    `high_priority_bencom_distinct_count`=810 / `adjudicated_gold_count`=0（独立裁定前）。
+  - candidate manifest 必須項目: 両 source record key / snapshot+hash / normalization profile /
+    match_basis / edition_risk_flag / one-to-many group_id → TSV v2 で対応済み。
+  - N-2: bookshelf_self の新規 source registration addendum を起票（→ `dd/DD-TOCATTACH_SELFOC_N2_source_query_20260627.md`）。
+  - N-3: full-scale read-only capacity dry-run 計画（manifest / reject rate / memory 等）は別 gate。
+  - HOLD: 自動 rebasing / edition identity 貸与 / ingest / DB write / embedding / 外部搬出。
 
 ## 1. 既存TOC統合アーキテクチャ（監査済み・一部本番適用済み）
 

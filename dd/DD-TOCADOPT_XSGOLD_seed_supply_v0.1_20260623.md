@@ -6,6 +6,16 @@
 - 由来: DD-LITID cohort 突合（`artifacts/TOC_cross_source_gold_candidates_20260623.tsv`, 832ペア）。
 - 前提: `dd/DD-LITID_TOC_RECONCILIATION_20260623.md`（M0撤回・既存設計帰属）。
 - 監査拘束（不変）: candidate≠confirmed / 非循環 / read-only / production・embedding・DB write は HOLD。
+- **監査結果**: `DDTOCADOPT_XSGOLD_PASS_WITH_NOTES`（result_file_id: 2303553397319, 2026-06-23）
+  - must_fix: なし。
+  - should_fix: θは reviewer≥2 Q1 adjudication 後に freeze。parent-qualified 照合の norm_title version / parser hash を必ず記録。
+  - GO: self TOC read-only dry-run / θ較正サンプル設計 / 衝突厚め優先レビュー。
+  - HOLD: 自動 crosswalk 本番解禁 / self TOC canonical 投入 / DB write / embedding。
+- **確定数カウント（非循環監査 binding note）**:
+  - `candidate_overlap_count` = 1,509（タイトル一致全件）
+  - `high_priority_pair_count` = 832（self 側 ISBN+NDL 両保持）
+  - `high_priority_bencom_distinct_count` = 810
+  - `adjudicated_gold_count` = 0（独立裁定前）
 
 ---
 
@@ -28,13 +38,13 @@ DD-TOCATTACH v0.3 監査は明言:
 | ペア数 | 832（self_bib_id 832 distinct → bencom_bib_id 810 distinct） |
 | 条件 | self(asai-bookshelf) と bencom のタイトル正規化**完全一致**、かつ **self側が ISBN+NDL 両保持** |
 | provenance_origin | self=`self_scan` / bencom=`bencom_provider`（**異源**） |
-| 衝突 | 22件の bencom が複数 self と一致（版違い疑い）＝ edition曖昧、要 disambiguation |
+| 衝突 | 18件の bencom が複数 self と一致（14件×2 + 4件×3 = 40行）＝ edition曖昧、要 disambiguation |
 | 出力 | `artifacts/TOC_cross_source_gold_candidates_20260623.tsv`（read-only） |
 
 **候補に過ぎない理由（gold ではない）**:
 - タイトル正規化一致のみ＝ TOCATTACH の "title-only = review required" に該当。
 - ISBN/NDL は **self側のみ**。bencom 側同定子は無い＝「この bencom 本は ISBN X の self 本と同一版」という**主張は未確認**。
-- 22件の self→同一bencom 衝突＝別版が同一タイトルに化けている。
+- 18件の bencom（40行）で self→同一bencom 衝突＝別版が同一タイトルに化けている。
 
 ---
 
@@ -54,7 +64,7 @@ DD-TOCATTACH v0.3 監査は明言:
 昇格規則:
   toc_agreement >= θ_high      → cross_source_gold（同一版を独立TOC2源が支持）
   toc_agreement <= θ_low       → different_edition（negative control＝別版検出。Q3 bucketへ）
-  θ_low < agreement < θ_high   → abstain → human_review（22衝突は優先）
+  θ_low < agreement < θ_high   → abstain → human_review（18衝突bencom=40行 を優先）
   （θは本供給では未確定。較正は §4）
 ```
 
@@ -77,7 +87,7 @@ DD-TOCATTACH v0.3 監査は明言:
 
 ## 4. 較正計画（θ決定・本供給では未実行）
 
-- 標本: 832から層化抽出（22衝突を厚く＋ random）。reviewer≥2、不一致は adjudication（Q1）。
+- 標本: 832から層化抽出（18衝突bencom=40行を厚く＋ random）。reviewer≥2、不一致は adjudication（Q1）。
 - 指標: toc_agreement 分布、positive/negative 分離度、誤 gold 率の95%上側上限。
 - θ_high は **誤 gold（false cross-source merge）上側 < 2%**（DD-LITID Q hard veto と整合）。
 - 出力: θ_high/θ_low freeze 案 → TOCADOPT/TOCATTACH owner 裁定へ。
@@ -86,7 +96,7 @@ DD-TOCATTACH v0.3 監査は明言:
 1. 832 を cross-source gold **候補**として TOCADOPT/TOCATTACH の gold lane に受け入れてよいか。
 2. 裁定子を「self×bencom TOC一致（NDL非依存）」とする非循環方針でよいか。
 3. self TOC(Box app/data/toc) を読む dry-run（read-only・DB write無）を許可するか。
-4. θ較正の標本設計（22衝突厚め）でよいか。
+4. θ較正の標本設計（18衝突bencom=40行厚め）でよいか。
 
 ## 6. HOLD（不変）
 - 自動 cross-source crosswalk / rebasing の本番解禁（θ freeze＋owner裁定後の別gate）。
@@ -96,5 +106,10 @@ DD-TOCATTACH v0.3 監査は明言:
 
 ## 付記: source / hash
 - 候補TSV: `artifacts/TOC_cross_source_gold_candidates_20260623.tsv`（832行＋header）。
+  - カラム（監査 binding note 対応 v2）: `self_bib_id / self_isbn / self_ndl / bencom_bib_id / bencom_self_count / edition_risk_flag / match_basis / snapshot_date / self_title`
+  - `bencom_self_count`: そのbencom_bib_idに対応するself行数（1=clean, 2-3=collision）。
+  - `edition_risk_flag`: bencom_self_count > 1 のとき 1（40行）、それ以外 0（792行）。
+  - `match_basis`: "title_normalized_exact"（全行共通）。
+  - `snapshot_date`: "2026-06-22"（全行共通）。
 - 抽出SQL: self=asai-bookshelf(isbn≠∅ & ndl≠∅) × bencom title正規化一致。snapshot 2026-06-22。
 - 全数値は集計/候補。原本・索引の外部搬出なし（external_egress=prohibited）。
