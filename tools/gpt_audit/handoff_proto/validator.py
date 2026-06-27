@@ -48,6 +48,11 @@ class Env:
         default_factory=lambda: {"internal", "public", "confidential"}
     )
     egress_allowlist: set[str] = field(default_factory=lambda: {"public_query"})
+    # lease subsystem (LEASE_SUBSYSTEM_DESIGN_v0.5 §4). None until a mutating
+    # dispatch packet is evaluated with the lease lane enabled; the full G0..L
+    # gate lives in lease.validate_mutating_dispatch. Default None keeps the
+    # operational rollout boundary closed (mutating still blocks fail-closed).
+    lease_ctx: Any = None
 
 
 @dataclass
@@ -188,9 +193,18 @@ def validate_dispatch(packet: dict[str, Any], env: Env | None = None) -> Verdict
     if assignee not in allowed:
         return block("assignee_incompatible")
 
-    # mutating ∧ no lease → blocked (§4.4 fail-closed)
-    if mutation == "mutating" and not env.lease_subsystem_available:
-        return block("lease_required_but_unavailable")
+    # mutating lane (§4.4 fail-closed; full gate in LEASE_SUBSYSTEM_DESIGN v0.5).
+    # G0: no lease subsystem → blocked. Otherwise delegate the G_schema..L gate
+    # sequence to the single lease implementation. Operational rollout stays HOLD
+    # (Env defaults leave lease_subsystem_available False).
+    if mutation == "mutating":
+        if not env.lease_subsystem_available:
+            return block("lease_required_but_unavailable")
+        from lease import validate_mutating_dispatch
+
+        reason = validate_mutating_dispatch(packet, env.lease_ctx)
+        if reason is not None:
+            return block(reason)
 
     # resource permit required ∧ no permit subsystem → blocked (§4.5 fail-closed)
     if permit_required and not env.resource_permit_subsystem_available:
