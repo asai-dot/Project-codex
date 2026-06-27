@@ -11,6 +11,12 @@
 （引数なしで各スクリプトを叩けば自動でそれを投下する）。ユーザーが新しい仕事を口頭で述べたら、
 ヘッドが ORCH-*.md 発注書を起こし、ORCH-CURRENT を更新してから投下する。
 
+**汎用オーケストレーション基板 `.claude-orch/`** がプロジェクト共通の発注経路。
+雑誌に限らず判例・法令・語彙など他オブジェクトのスレでも同じ仕組みで使える（詳細: `.claude-orch/README.md`）。
+- `./tools/trigger_worker.sh <発注書>`              → 旧仕様(legacy・後方互換、雑誌用)
+- `./tools/trigger_worker.sh <発注書> <channel>`    → 新仕様(複数チャネル並行、例 hanrei/horei/vocab)
+- 発注書ファイル名は `ORCH-*.md` 必須（暴発防止）。ブランチは `ORCH_BRANCH` env で変更可。
+
 - 「ワーカーちゃん起こして／仕事ふって／回して」→ `./tools/trigger_worker.sh [発注書]`（引数省略=ORCH-CURRENT。遠隔発注、watcherが起動）。Mac即時なら `./tools/wake_worker.sh [発注書]`
 - 「コーデックスに仕事振って」→ `./tools/wake_codex.sh <発注書>`（CONFIG確認）
 - 「ローカルちゃんに仕事振って」→ **処理できるサイズに切り分けてから** `./tools/dispatch_local.sh <チャンク>`（CONFIG確認）
