@@ -1,0 +1,313 @@
+{
+  "total_unique_cases": 10540,
+  "total_name_extractions": 22584,
+  "titles_scanned": 298824,
+  "titles_with_case_name": 20675,
+  "dropped_generic_terms": 13708,
+  "cases_with_date": 7409,
+  "cases_with_court": 6910,
+  "variant_names_median": 1.0,
+  "variant_names_mean": 1.487,
+  "variant_names_median_dated_cases": 1,
+  "variant_names_median_multicited_cases": 2,
+  "multicited_cases_count": 3319,
+  "cases_multi_variant": 2440,
+  "top20_most_cited_cases": [
+    {
+      "case_name_normalized": "ハマキョウレックス事件",
+      "court": "最高二小判",
+      "date": "平成30.6.1",
+      "n_articles": 35,
+      "n_variants": 7
+    },
+    {
+      "case_name_normalized": "建設アスベスト訴訟",
+      "court": "",
+      "date": "",
+      "n_articles": 33,
+      "n_variants": 3
+    },
+    {
+      "case_name_normalized": "ブルドックソース事件",
+      "court": "最高二小決",
+      "date": "平成19.8.7",
+      "n_articles": 29,
+      "n_variants": 8
+    },
+    {
+      "case_name_normalized": "建設アスベスト訴訟",
+      "court": "最高一小判",
+      "date": "令和3.5.17",
+      "n_articles": 28,
+      "n_variants": 10
+    },
+    {
+      "case_name_normalized": "外国国家が発行した円建て債券に係る償還等請求訴訟",
+      "court": "最高一小判",
+      "date": "平成28.6.2",
+      "n_articles": 27,
+      "n_variants": 21
+    },
+    {
+      "case_name_normalized": "伊方原発事件",
+      "court": "最高一小判",
+      "date": "平成4.10.29",
+      "n_articles": 27,
+      "n_variants": 15
+    },
+    {
+      "case_name_normalized": "大阪国際空港事件",
+      "court": "",
+      "date": "昭和56.12.16",
+      "n_articles": 27,
+      "n_variants": 5
+    },
+    {
+      "case_name_normalized": "自動車損害賠償保障法16条1項に基づいて損害賠償額の支払を請求する訴訟",
+      "court": "最高一小判",
+      "date": "平成18.3.30",
+      "n_articles": 24,
+      "n_variants": 10
+    },
+    {
+      "case_name_normalized": "関西電力事件",
+      "court": "",
+      "date": "",
+      "n_articles": 24,
+      "n_variants": 1
+    },
+    {
+      "case_name_normalized": "信用協同組合に対する金融整理管財人による業務及び財産の管理を命ずる処分と組合員が組合員代表訴訟",
+      "court": "最高一小判",
+      "date": "平成15.6.12",
+      "n_articles": 23,
+      "n_variants": 13
+    },
+    {
+      "case_name_normalized": "新国立劇場運営財団事件",
+      "court": "最高三小判",
+      "date": "平成23.4.12",
+      "n_articles": 22,
+      "n_variants": 10
+    },
+    {
+      "case_name_normalized": "共同相続人間における遺産確認の訴えと固有必要的共同訴訟",
+      "court": "最高三小判",
+      "date": "平成1.3.28",
+      "n_articles": 22,
+      "n_variants": 8
+    },
+    {
+      "case_name_normalized": "石油価格協定刑事事件",
+      "court": "最高二小判",
+      "date": "昭和59.2.24",
+      "n_articles": 22,
+      "n_variants": 7
+    },
+    {
+      "case_name_normalized": "国際自動車事件",
+      "court": "最高三小判",
+      "date": "平成29.2.28",
+      "n_articles": 22,
+      "n_variants": 4
+    },
+    {
+      "case_name_normalized": "会社事件",
+      "court": "",
+      "date": "",
+      "n_articles": 22,
+      "n_variants": 1
+    },
+    {
+      "case_name_normalized": "借地借家法32条1項の規定に基づく賃料増減請求により増減された賃料額の確認を求める訴訟",
+      "court": "最高一小判",
+      "date": "平成26.9.25",
+      "n_articles": 21,
+      "n_variants": 13
+    },
+    {
+      "case_name_normalized": "三井倉庫港運事件",
+      "court": "最高一小判",
+      "date": "平成1.12.14",
+      "n_articles": 21,
+      "n_variants": 7
+    },
+    {
+      "case_name_normalized": "日本メール・オーダー事件",
+      "court": "最高三小判",
+      "date": "昭和59.5.29",
+      "n_articles": 21,
+      "n_variants": 7
+    },
+    {
+      "case_name_normalized": "電通事件",
+      "court": "最高二小判",
+      "date": "平成12.3.24",
+      "n_articles": 21,
+      "n_variants": 7
+    },
+    {
+      "case_name_normalized": "物上保証人に対する不動産競売事件",
+      "court": "最高三小判",
+      "date": "平成9.2.25",
+      "n_articles": 21,
+      "n_variants": 6
+    }
+  ],
+  "multi_court_cases_count": 450,
+  "multi_court_cases_sample": [
+    {
+      "case_name_normalized": "名古屋自動車学校事件",
+      "court_classes": [
+        "名古屋地判",
+        "最高裁"
+      ]
+    },
+    {
+      "case_name_normalized": "社会福祉法人滋賀県社会福祉協議会事件",
+      "court_classes": [
+        "大阪高判",
+        "最高裁"
+      ]
+    },
+    {
+      "case_name_normalized": "マイナミ空港サービス事件",
+      "court_classes": [
+        "公取委",
+        "東京地判",
+        "東京高判"
+      ]
+    },
+    {
+      "case_name_normalized": "食べログ事件",
+      "court_classes": [
+        "東京地判",
+        "東京高判"
+      ]
+    },
+    {
+      "case_name_normalized": "エコリカ・キヤノン事件",
+      "court_classes": [
+        "大阪地判",
+        "大阪高判"
+      ]
+    },
+    {
+      "case_name_normalized": "サカイ引越センター事件",
+      "court_classes": [
+        "東京地立川支判",
+        "東京高判"
+      ]
+    },
+    {
+      "case_name_normalized": "東光高岳事件",
+      "court_classes": [
+        "東京地判",
+        "東京高判"
+      ]
+    },
+    {
+      "case_name_normalized": "京王プラザホテル札幌事件",
+      "court_classes": [
+        "札幌地判",
+        "札幌高判"
+      ]
+    },
+    {
+      "case_name_normalized": "アクセンチュア事件",
+      "court_classes": [
+        "東京地判",
+        "東京高判"
+      ]
+    },
+    {
+      "case_name_normalized": "ドワンゴ事件",
+      "court_classes": [
+        "京都地判",
+        "最高裁"
+      ]
+    },
+    {
+      "case_name_normalized": "JASRAC事件",
+      "court_classes": [
+        "公取委",
+        "最高裁",
+        "東京高判"
+      ]
+    },
+    {
+      "case_name_normalized": "教育施設負担金返還請求事件",
+      "court_classes": [
+        "最高裁",
+        "東京地八王子支判"
+      ]
+    },
+    {
+      "case_name_normalized": "予防訴訟",
+      "court_classes": [
+        "最高裁",
+        "東京地判"
+      ]
+    },
+    {
+      "case_name_normalized": "水俣病関西訴訟",
+      "court_classes": [
+        "大阪高判",
+        "最高裁"
+      ]
+    },
+    {
+      "case_name_normalized": "社会福祉法人紫雲会事件",
+      "court_classes": [
+        "宇都宮地判",
+        "東京高判"
+      ]
+    },
+    {
+      "case_name_normalized": "生活保護基準引下げ訴訟",
+      "court_classes": [
+        "名古屋高判",
+        "最高裁"
+      ]
+    },
+    {
+      "case_name_normalized": "地位確認等請求事件",
+      "court_classes": [
+        "東京地判",
+        "横浜地判"
+      ]
+    },
+    {
+      "case_name_normalized": "ダイレックス事件",
+      "court_classes": [
+        "公取委",
+        "東京高判"
+      ]
+    },
+    {
+      "case_name_normalized": "日本通運事件",
+      "court_classes": [
+        "大阪地判",
+        "大阪地決",
+        "東京地判",
+        "東京高判",
+        "横浜地川崎支判",
+        "秋田地決"
+      ]
+    },
+    {
+      "case_name_normalized": "アンスティチュ・フランセ日本事件",
+      "court_classes": [
+        "東京地判",
+        "東京高判"
+      ]
+    }
+  ],
+  "acceptance": {
+    "extractions_ge_1500": true,
+    "unique_cases": 10540,
+    "variant_median_ge_2_allcases": false,
+    "variant_median_ge_2_multicited": true,
+    "note": "全件母集団の中央値は long-tail(単独被引用が過半)により1。表記ゆれ統合が適用される複数記事被引用ケースでは中央値を別途報告。"
+  }
+}
