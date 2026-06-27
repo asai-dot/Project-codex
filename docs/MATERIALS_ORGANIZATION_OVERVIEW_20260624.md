@@ -20,7 +20,7 @@
 | 蔵書(本棚) | ISBN/NDL/OpenBD | 6,383冊中4,890(77%) | `biblio.books` 3,802 / `biblio.bib_records` 10,326 投入済 |
 | 目次(TOC) | OpenBD/OCR | 4,789件 | 索引化済 |
 | 法令 | e-Gov API v2 | 308〜355法令 | 取得済 |
-| 判例 | D1-Law/最高裁OPAC | 契約249,863件 | **`dynamic.cases`=0（DB未投入）** |
+| 判例 | D1-Law/最高裁OPAC | 契約249,863件(RTF約52.5GB) | **判例レイヤ未作成(DDL未適用)** — Boxに元データ有 |
 | 法律用語辞書 | EX-word解読 | 1.4MB抽出 | 取得済 |
 | 語彙 | e-Gov条文/NDLSH | 25,359ラベル | term_dict v0.3 ACTIVE |
 | 人名(著者・研究者・裁判官) | CiNii/researchmap/NDL/日弁連/KAKEN | **`authority.person` 128,081** | DB投入済・属性豊富 |
@@ -42,13 +42,13 @@
 | authority.publication | **7,348** | 弁コム+NDL判事突合中心。**CiNii63.8万は未投入** |
 | publication_author_claim | 7,125 | 人↔論文(trust_tier付)は実装済 |
 | biblio.books / authors | 3,802 / 2,200 | 書籍著者はauthority.personと別系統(要統合) |
-| dynamic.cases | **0** | 判例未投入 |
+| dynamic.cases | 1,017 | ※判例ではなくSF案件(matter)。**判例レイヤは未作成(DDL未適用)** — 詳細 `DD_case_layer_prereq_v1` |
 
 ## 4. ★最大のボトルネック（繋ぎこみが進まない理由）
 
 **人は厚い（128k、研究者73kにクリーンなNRID）が、繋ぐ相手の「論文」が薄い（publication 7,348のみ）。**
 → KAKEN/研究者が宙に浮いて見える原因は「CiNii法律論文63.8万がDBに入っていない」こと。
-→ **最優先＝CiNii論文をauthority.publicationへ投入し、NRID(13桁・完全一致)でpersonと繋ぐ**。判例投入(cases=0)はその次。
+→ **最優先＝CiNii論文をauthority.publicationへ投入し、NRID(13桁・完全一致)でpersonと繋ぐ**。判例レイヤ(未作成)の構築はその次。
 （設計: `DD_cinii_publication_ingestion_v1` ＋ dry-run雛型 `cinii_publication_dryrun_templates_v1`）
 
 ## 5. KAKENの現状（※当初サマリの訂正）
@@ -61,7 +61,7 @@
 ## 6. 未整理・残課題
 
 1. **CiNii論文のDB投入**（最優先・繋ぎこみの相手）— dry-run→Owner ratify→本投入。
-2. **判例(dynamic.cases=0)の投入** — 人↔判例(評釈)はその後。
+2. **判例レイヤの新設(DDL)＋投入** — 人↔判例は評釈経由(3ホップ)。詳細 `DD_case_layer_prereq_v1`。
 3. **biblio.authors(2,200) ↔ authority.person(128k) の統合**（書籍著者と論文著者の二重系統）。
 4. **`authority.person_identifier` ハブ新設**（識別子が person_history に散在、eradCode受け皿なし）。
 5. KAKEN旧採番の逆引き取得（seed/分野スコープ）、ISBN未回収~1,500冊、ルートフォルダcleanup。

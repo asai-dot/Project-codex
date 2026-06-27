@@ -1,8 +1,13 @@
 # DD: CiNii法律論文 → authority.publication 取込設計 v1 (2026-06-23)
 
 - status: 設計のみ（read-only 調査に基づく）。**本番書込は HOLD**、dry-run→Owner ratify ゲート後に実投入。
-- 親: `DD_author_model_resolution_v1` §8.4-8.5（繋ぎこみ最優先＝論文母数の投入）/ `KAKEN_lean_plan_v1` §4.1
-- 目的: 実測ボトルネックを解消する。**人は厚い(authority.person 128,081, 研究者73,155にNRID)が、繋ぐ相手の `authority.publication` が7,348件しか無く CiNii法律論文63.8万が未投入**。これを載せ、NRIDで `publication_author_claim` を張って人↔論文を密結合にする。
+- 親: **`DD-CINII-001`（CiNii 63万件法律論考突合スコープ v0.1, Box:2226709142195）** / `DD_author_model_resolution_v1` §8.4-8.5 / `KAKEN_lean_plan_v1` §4.1
+- 目的: 実測ボトルネックを解消する。**人は厚い(authority.person 128,081, 研究者73,155にNRID)が、繋ぐ相手の `authority.publication` が7,348件しか無く CiNii法律論文が未投入**。これを載せ、NRIDで `publication_author_claim` を張って人↔論文を密結合にする。
+
+> **⚠ スコープ整合（2026-06-26 追記）**: 既存 `DD-CINII-001`(2026-05-12) が CiNii の上位設計。重複を避けるため役割を分離する。
+> - **DD-CINII-001 が担う（本DDは再定義しない）**: 「法律論考」判定（3軸加重 R1 KAKENコード/R2 キーワード/R3 所属, score≥0.7）、**著者(person)へのbind**（NRID/researchmap/ORCID）、想定**約2〜3万件**(63.8万全部ではない)、同姓同名処理、open_issues 8件。**人(著者)側は既に投入済み**(authority.person 73,155)。
+> - **本DDが担う**: その判定を通った法律論考の **論文レコードを `authority.publication` に載せる"論文側"** と `publication_author_evidence/claim` の生成。DD-CINII-001 の射程外の部分のみ。
+> - したがって本DDの「63.8万」は母集団であり、実投入対象は DD-CINII-001 のフィルタ後（≈2〜3万件）。§5 のISSN絞りは DD-CINII-001 の3軸スコアと統合する（二重定義しない）。
 
 ---
 
