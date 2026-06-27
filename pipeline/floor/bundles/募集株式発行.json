@@ -1,0 +1,27 @@
+{
+  "手続": "募集株式発行(第三者割当)",
+  "documents": [
+    {
+      "label": "定款",
+      "article": "27",
+      "paragraph": null,
+      "file": "pipeline/floor/examples/定款_サンプル.txt",
+      "canonical_file": "pipeline/floor/kaishaho_27.canonical.json"
+    },
+    {
+      "label": "株主総会議事録",
+      "article": "199",
+      "paragraph": "1",
+      "file": "pipeline/floor/examples/議事録_第三者割当_文例33型.txt",
+      "canonical_file": "pipeline/floor/kaishaho_199_1.canonical.json"
+    },
+    {
+      "label": "変更登記申請",
+      "article": "911",
+      "paragraph": "3",
+      "file": "pipeline/floor/examples/変更登記_募集株式発行.txt",
+      "skip_floor_check": true,
+      "skip_floor_note": "変更登記は変更事項のみ記載 — 設立登記911③全号の充足は不要"
+    }
+  ]
+}
