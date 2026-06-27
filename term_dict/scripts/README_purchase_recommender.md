@@ -189,14 +189,13 @@ Supabaseソースの JSON 同等性・read-only（書込みSQLを出さない）
   - **SoT は books.json**。`bookdx.*` は一方向リードレプリカで **write-back しない**
 - **投入**: `term_dict/scripts/load_to_supabase.py`（**お手元PCで実行**）
   ```bash
-  # 形式: postgresql://bookdx_loader@db.<ref>.supabase.co:5432/postgres （パスワードは接続文字列に直書きせず秘匿管理）
-  export BOOKDX_DB_URL="postgresql://bookdx_loader@db.<ref>.supabase.co:5432/postgres"
+  export BOOKDX_DB_URL="<Supabase postgres 接続文字列>"   # role=bookdx_loader / host=db.<ref>.supabase.co:5432/postgres、認証情報は手元で設定（コミット禁止）
   python load_to_supabase.py --base "<Box path>"        # or --dry-run
   ```
 - **実行（読取りは read-only role 推奨）**:
   ```bash
   python purchase_recommender.py --source supabase \
-      --db-url "postgresql://bookdx_readonly@db.<ref>.supabase.co:5432/postgres" --print   # パスワードは秘匿管理
+      --db-url "<Supabase postgres 接続文字列（read-only role 推奨）>" --print   # role=bookdx_readonly / host=db.<ref>.supabase.co:5432/postgres
   ```
 - 本番のみ `psycopg`(v3) を遅延import（テスト/CIは不要）。
 
