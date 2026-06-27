@@ -1,0 +1,11 @@
+# 順次発火キュー（先頭が次に投下される）
+# ヘッドが管理：1本完了=watcherがconsumed/に移したら、監視cronが次を triggers/に置く
+# 並び順は 価値×軽さ で head が決定
+1 case     artifacts/periodical/ORCH-CASENAME-DICT_order_20260627.md
+2 author   artifacts/periodical/ORCH-AUTHOR-CLUSTER_order_20260627.md
+3 cite     artifacts/periodical/ORCH-CITATION-EXTRACT_order_20260627.md
+4 svalid   artifacts/periodical/ORCH-SERIES-VALIDATE_order_20260627.md
+5 fvalid   artifacts/periodical/ORCH-FEATURE-VALIDATE_order_20260627.md
+6 profile  artifacts/periodical/ORCH-DATA-PROFILE_order_20260627.md
+7 ndl      artifacts/periodical/ORCH-NDL-RECONCILE_order_20260627.md
+8 xaudit   artifacts/periodical/ORCH-PILOT-CROSS-AUDIT_order_20260627.md
