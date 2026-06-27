@@ -72,3 +72,18 @@ DD-CASEEVAL-001 accepted は合成 fixture 6行で「自己無矛盾」を確認
 
 ## Do Not
 alo_edges 反映・canonical 昇格・claim_support・NII/D1 の生本文を含めた gold 出力(正規化キーのみ)。case_eval の指標定義改変(番頭領分)。
+
+---
+## HEAD OPS 準拠(本タスク共通)
+本タスクは `docs/HEAD_OPS_CASELINK_SILVER_LOOP_20260627.md` の規律に従う。要点:
+- **サブエージェント許可**: chunked work(500-1000件単位の並列)・independent search(入力場所特定)・adversarial verify(自己refute)で `Agent` を使ってよい。HOLD境界の判断は singleton(分散しない)。allowed_paths/forbidden_actions はサブエージェントも継承。
+- **self-check**: RESULT 末尾に必須メトリクス節を出す:
+  ```
+  ## MERTRICS_JSON
+  {"records_in":N,"records_processed":N,"elapsed_sec":N,
+   "key_metrics":{...task固有...},
+   "subagent_calls":N,"halts":N,"blocked_reason":null|str}
+  ```
+- **STOP gate**: §9 のいずれかに該当したら自走停止 → head に判定依頼(部分実行でOK、強行しない)。EMERGENCY(forbidden違反/PII露出/捏造数値疑惑)は即時 blocked + owner 通知。
+- **RESULT 構造**: `WORKER_PASS|WORKER_PASS_WITH_NOTES|WORKER_BLOCKED|WORKER_FAIL`(先頭行) → 要約3行 → 主要メトリクス → 完了/未完了内訳 → 次手提案(head が hold/ から該当タスクを queue するため)。
+- **検収**: head は HEAD_OPS §3.2 の self-check 値を見て label を確定し、PASS で対応する hold/W-NNN を queue へ。
