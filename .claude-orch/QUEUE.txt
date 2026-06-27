@@ -1,6 +1,7 @@
 # 順次発火キュー（先頭が次に投下される）
-# ヘッドが管理：1本完了=watcherがconsumed/に移したら、監視cronが次を triggers/に置く
-# 並び順は 価値×軽さ で head が決定
+# ヘッドが管理：1本完了=watcherがconsumed/に移したら、自動進行cronが次を triggers/に置く
+# 並び順は 価値×軽さ で head が決定。本プロトコル: docs/periodical/HEAD-ORDER-PROTOCOL.md
+# 行頭 `# DONE_DISPATCHED ` 付きは投下済(消化判定はwatcher consumed/側)
 1 case     artifacts/periodical/ORCH-CASENAME-DICT_order_20260627.md
 2 author   artifacts/periodical/ORCH-AUTHOR-CLUSTER_order_20260627.md
 3 cite     artifacts/periodical/ORCH-CITATION-EXTRACT_order_20260627.md
@@ -9,3 +10,6 @@
 6 profile  artifacts/periodical/ORCH-DATA-PROFILE_order_20260627.md
 7 ndl      artifacts/periodical/ORCH-NDL-RECONCILE_order_20260627.md
 8 xaudit   artifacts/periodical/ORCH-PILOT-CROSS-AUDIT_order_20260627.md
+9 issueidx artifacts/periodical/ORCH-ISSUE-INDEX_order_20260627.md
+10 reprint  artifacts/periodical/ORCH-REPRINT-FIRST-PUB_order_20260627.md
+11 tsuukan  artifacts/periodical/ORCH-TSUUKAN-CROSSWALK-EXPAND_order_20260627.md
