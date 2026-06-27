@@ -1,0 +1,225 @@
+# HEAD OPS — CASELINK / シルバー精度向上ループ運用規約
+
+- 作成: 2026-06-27 / head: Claude Code (remote)
+- 適用: docs/worker_queue/inbox/W-2026062[67]-50[1-9] 系列(判例オブジェクトのシルバー精度向上)
+- 目的: **発注→実行→検収→再発注**を head が止めずに回せる規律集。ワーカー(下請けを含む)が止まらず、私(head)が機械的に検収して次手を打てるようにする。
+- 原則: ループは止まらない。ただし HOLD 境界(canonical/alo_edges/claim_support/DDL/PII)は機械的に守る。
+
+## 1. ループ全体図
+```
+inbox/W-NNN → claim → 実行(必要ならサブエージェント並列) → RESULT(構造固定)
+                                                    │
+                       head 検収(本書 §3 のチェックリスト)
+                                                    │
+   ┌────────────PASS────────────┬───────PASS_WITH_NOTES──────┬──MODIFY──┬──BLOCKED──┐
+   ▼                            ▼                            ▼          ▼          ▼
+ hold/ から次タスクを       notes を反映タスクへ          設計問題=     入力欠落=  人手判断=
+ queue(本書 §4)            (head が編集 → queue)         私が修正→     上流再発注 owner ESCALATE
+                                                          v0.x で再投入
+```
+
+## 2. サブエージェント許可方針(ワーカー向け)
+ワーカーは Claude Code 内 `Agent`(subagent_type=general-purpose 等)を以下の用途で**使ってよい**:
+- **chunked work**: 大量入力(5,475 LIC / 12,661 gold / 1,648 worksheet)を 500-1000 件単位の chunk に分割して並列処理。各 subagent は同一 forbidden_actions を継承(本書 §6)。
+- **independent search**: 入力スキーマの存在場所特定、複数候補の探索(reality_check / SILVER 関連ファイル探索)。
+- **adversarial verify**: 自分の出力を別 subagent に refute させて自己検証(gold の false_merge 候補は特に)。
+
+**サブエージェント禁止**: HOLD 境界の判断は元ワーカーが singleton で行う(分散しない)。canonical 昇格・alo_edges write・claim_support 関連の判断はサブエージェント経由でも実行しない。
+
+## 3. head 検収チェックリスト(私の役割)
+各 W-501〜505 の RESULT は以下を全て満たすこと。一つでも欠けたら label を下げる(PASS→NOTES→MODIFY→BLOCK)。
+
+### 3.1 共通(全タスク)
+- [ ] RESULT 先頭行に `WORKER_PASS|WORKER_PASS_WITH_NOTES|WORKER_BLOCKED|WORKER_FAIL` のいずれか
+- [ ] forbidden_actions 違反なし(diff 上に canonical/alo_edges/claim_support 触跡なし)
+- [ ] read-only 維持(raw source / Box / SF / DB に書込みなし)
+- [ ] PII の漏れなし(正規化キーのみ・本文/個人特定情報なし)
+- [ ] 部分実行は理由明記(BLOCKED ではない)
+
+### 3.2 タスク別 self-check
+| ID | 必須出力 | 検収値の目安 |
+|---|---|---|
+| W-501 (CASELINK L5 dry-run) | route_distribution / edge_type_counts / stance_counts / span miss <=20 | auto は masthead 由来のみ・本文由来は全 review・evaluates が論文記事で 0 |
+| W-502 (Q1 worksheet) | layered worksheet(S-A全+B/E各10+C/D全+NEG8)・decision 全空欄 | manifest の by_stratum と合致・negative_control_n=8 |
+| W-503 (Q2 worksheet) | judgment-level worksheet 40+8・collision_group 3 を含む | frame_version=caserev_q2_v0_20260627・collision 3群 reachable |
+| W-504 (D1-LIC corroborate) | L1/L2/L3 件数・multi_source_agree/conflict_review 分布・assignment 不変 assert | conflict_review > 0(false split 検出)・assignment hash 不変 |
+| W-505 (gold + baseline) | gold jsonl(12,661+ハード負例 ≥120)・baseline report | false_merge=0 を維持・per_tier_precision A≥0.99 確認 |
+
+### 3.3 検収後の私の動作
+1. RESULT を読む → §3.1/§3.2 で評価 → label 確定。
+2. `_AUDIT_LEDGER`(後日台帳統合)へ結果を1行 append: `{w_id, label, key_metrics, follow_up_task_id}`。
+3. **PASS** → §4 の対応する hold/タスクを `claim` 可能な状態へ昇格(本書 §4.1)。
+4. **PASS_WITH_NOTES** → notes を反映する v0.x 作業票を私が生成(本書 §4.2)。
+5. **MODIFY_REQUIRED** → 設計問題なら scripts/ を直し、入力スキーマ問題なら作業票を v0.2 で再投入。
+6. **BLOCKED** → 上流不在(入力データ未生成)なら上流発注へ、人手判断不能なら owner ESCALATE。
+
+### 3.4 GO/HOLD 粒度パーサ(必須・2026-06-27 lawtime レーン教訓)
+**PASS_WITH_NOTES = 全GO ではない。** RESULT description は部分GO/部分HOLDを混在させうる。head は label 確定前に description を粒度パース:
+
+```
+description 例: "lawtime view patch/edge_type registry GO; materialize/production/claim-support HOLD"
+→ go_list:   ["lawtime view patch", "edge_type registry"]
+→ hold_list: ["materialize", "production", "claim-support"]
+```
+
+**Apply guard(自動GO不可トリガ)**: hold_list に下記いずれかが含まれたら、PASS_WITH_NOTES でも該当領域は自動 GO 禁止 → §9.3 HOLD_BOUNDARY_STOP 経由で G2/owner GO へ:
+- `production` / `materialize` / `claim-support` / `serving` / `canonical` / `accepted edge` / `DDL` / `embedding` / `global egress`
+
+go_list 側だけを反映する v0.x 作業票を head が生成。"全GO" 解釈は事故の前口上。
+
+### 3.5 RESULT 読取り3段階(Box readback)
+本文取得失敗を「未着」と誤判定しない。3状態に分ける:
+- `RESULT_NOT_FOUND`: REQUEST description に `result=` ID が無い、または file_id が存在しない
+- `RESULT_FOUND_BUT_BODY_UNREADABLE`: file_id 存在(get_file_details 成功)だが本文取得が API エラー → **再読込キュー**へ(催促しない)
+- `RESULT_READ_OK`: 本文読取り成功
+
+**催促判定の最低条件**: REQUEST description が `processed_by_gpt` を**含まない**こと。含むなら RESULT は存在する(Box の表示・検索が壊れているだけ)。
+
+### 3.6 Box の不安定さへの構造的対応
+- 検索 API 依存のキュー監視は禁止(folder list を SoT に)。
+- file_id 直叩きが Internal Server Error → メタデータ(file_details / parent / description)を SoT に、本文は再読込で。
+- description に書かれた `processed_by_gpt; result=<id>; label=<...>; <go/hold>; readback_ok` は機械可読の正本。本文不可読でも description で判断可能。
+
+## 4. 後続タスクの hold(条件付き起動)
+**hold/ に先置き**するパターンを使い、ループを切らない。head が PASS 判定→ hold→inbox へ move でループ再開。
+
+### 4.1 hold で待たせる次タスク(初期セット)
+| 後続 ID | トリガ | 内容 |
+|---|---|---|
+| W-506 | W-503 PASS | Q2 worksheet の reviewer 記入を tally → judgment-level の Tier B 自動化条件抽出 |
+| W-507 | W-504 PASS | conflict_review 候補 top100 を reviewer worksheet 化(Q1配管再利用・人手裁定で false split を回収) |
+| W-508 | W-505 PASS | baseline で false_merge>0 になった case_key を抽出 → G6(cross-source conflict)強化提案を head に上げる |
+| W-509 | W-501 PASS | CASELINK L5 結果の span 取りこぼし型を case_citation_span.py の正規表現拡張案へ(head 実装、worker 検証) |
+
+### 4.2 PASS_WITH_NOTES の反映フォーマット
+notes 反映タスクは `W-{元ID}_v0.2_notes_reflect.md`(`status: queued, priority: P1, depends_on: 元task`)で head が生成。notes 各項を `exit_criteria` 行に1対1で対応させる。
+
+## 5. ループ復旧(止まったとき)
+- 24h 以上 RESULT 無し → head が `recover` 実行 → doing/ の進捗メモを読む → 続行/blocked/取消 を判断。
+- doing/ で進捗メモなし & lock 残存 → flock 解除 + 再起動指示。
+- 連続 BLOCKED 3回 → owner ESCALATE("構造的に詰まっている"判断)。
+
+## 6. forbidden_actions(全タスク共通・サブエージェント継承)
+```
+production_db_write / salesforce_write / box_write_move_rename_delete /
+raw_source_mutation / alo_edges_write / canonical_promotion /
+claim_support_eligibility / reviewed_true_backfill /
+ai_estimate_as_human_decision / pii_in_general_artifact /
+human_gate_bypass / fill_unknown_with_generalities /
+stall_whole_run_waiting_for_input
+```
+サブエージェントは元タスクの allowed_paths を超えて読まない/書かない。判定(accept/reject/canonical確定)は singleton で。
+
+## 7. ログ&計測(ループ健全性)
+- 各 RESULT に **必須メトリクス節**(MERTRICS_JSON ブロック):
+  ```json
+  {"records_in": <N>, "records_processed": <N>, "elapsed_sec": <N>,
+   "key_metrics": { ... task固有 ... },
+   "subagent_calls": <N>, "halts": <N>, "blocked_reason": <str|null>}
+  ```
+- head は週次で `_AUDIT_LEDGER` から throughput / PASS率 / BLOCKED率 / 再発注率 を算出。
+- PASS率 < 0.6 が続けば指示書(本書)の defect として head が修正。
+
+## 8. owner の手番(最小)
+- PR ready/merge(自走runner を起動可能にする)
+- ESCALATE のときだけ意思決定
+- 監査 RESULT が returned したときの ratify
+
+それ以外は head と worker でループを回す。
+
+## 9. ループ終止条件(STOP gate) — 暴走防止
+ループは無限に回さない。下記いずれかを満たした時点で**そのレーンを止めて G2 production gate へ手渡す**。head が判定し、owner に1行報告(ratify要否は文脈次第)。
+
+### 9.1 成功終止 (SUCCESS_STOP — 「シルバー磨きの目的達成」)
+全て満たしたらシルバー精度向上ループは**成功終止**:
+- [ ] **baseline 確立** (W-505 PASS): NII∩D1 12,661 + ハード負例 ≥120 で `false_merge_rate=0` 維持 / `Tier A precision ≥0.99` (95%CI 下限) 実測。
+- [ ] **L2 confidence 実数化** (W-504 PASS): D1-LIC 5,475 で `multi_source_agree` 件数 / `conflict_review` 候補が出ている。assignment 不変も確認。
+- [ ] **judgment-level gold 第一陣** (W-503+W-506 PASS): Q2 worksheet 40件以上が reviewer 判定済。Tier B 自動化の minimum gold 確保。
+- [ ] **conflict→裁定済** (W-507 PASS): conflict_review top100 のうち ≥80% が accept/reject の terminal 状態。残りは defer/needs_more に分類済。
+- [ ] **CASELINK L5 精度** (W-501+W-509 PASS): evaluates precision (実 corpus 計測) ≥0.95、span 取りこぼし型 ≤20 件が span 正規表現に反映済。
+- → **STOP** + `HANDOFF_TO_G2.md` を head が作成(canonical mint・DDL設計・alo_edges accepted への引継ぎ)。
+
+### 9.2 収穫逓減終止 (DIMINISHING_RETURNS_STOP — 「磨いても出ない」)
+2連続バッチで以下のどれかなら当該レーン停止(別タスクへ振替):
+- 同一指標の改善が **<0.5%** 連続2回(例: Tier A precision が 0.991→0.992→0.992)。
+- 新規 conflict_review 検出数が前バッチの **<10%**(同じ false split パターンが繰り返し検出されるだけ)。
+- 新規 span miss 型が **0**(取りこぼしが既知パターンに収束した)。
+- → **STOP** + 残作業を「人手裁定 backlog」として頻度報告のみに格下げ(自動レーンを閉じる)。
+
+### 9.3 HOLD境界到達 (HOLD_BOUNDARY_STOP — 「ここから先は別ゲート」)
+次の改善案が以下のいずれかを要求し始めたら、当該タスクを止めて G2/owner GO 経路へ:
+- production DDL(stance列追加 / cases拡張 / alo_forum_registry 投入 など)
+- canonical case mint / alo_edges accepted promotion
+- claim_support eligibility / reviewed=true backfill
+- jufu の global egress / serving / embedding 配信
+- 商用本文の外部送信(GPT監査含む)を新規に必要とする
+- **GPT RESULT description に上記いずれかが HOLD として明示**(部分GO/部分HOLD 混在時の自動GO禁止 — §3.4 Apply guard)
+- → **STOP** + `G2_HANDOFF_<topic>.md` 起票(改善案・必要 DDL・想定リスク・rollback)。production 反映は別 GO。
+
+### 9.4 構造的詰まり終止 (BLOCKED_STOP — 「上流が壊れている」)
+- 同一 blocked_reason が **3回**繰り返したら自動再発注を停止。
+- doing/ で 48h 進捗ゼロが **2 task** 連続。
+- subagent 起動が halts > processed の比で逆転(暴走)。
+- → **STOP** + owner ESCALATE(構造改修判断: 上流 SILVER / corpus 取得 / 規約改訂)。
+
+### 9.5 緊急終止 (EMERGENCY_STOP — 「事故」)
+即時停止:
+- forbidden_actions 違反検出(canonical/alo_edges/claim_support 書込 / PII 露出 / raw 改変)。
+- RESULT が捏造された数値を含む疑い(検収で再現できない)。
+- 監査 RESULT が `REJECT` を返した。
+- → **STOP** + 該当 doing/ を blocked/ に強制移動 + 原因究明レポート + owner ESCALATE。
+
+### 9.6 健全性メトリクス(終止判定の入力)
+head は毎ループ末に `artifacts/caselink/_loop_health.json` を更新:
+```json
+{"cycle": <N>, "tasks_done": <N>, "pass_rate": <0-1>, "blocked_rate": <0-1>,
+ "tier_a_precision": <0-1>, "false_merge_rate": <0-1>,
+ "conflict_review_open": <N>, "span_miss_new_types": <N>,
+ "diminishing_returns_signal": <bool>, "hold_boundary_hit": [<str>]}
+```
+これが §9.1〜9.4 の判定根拠になる。STOP 判断は head が単独で実行(owner には事後報告)。EMERGENCY_STOP のみ即時 owner 通知。
+
+### 9.7 ループ再開条件(止めた後)
+止めたレーンは原則再開しない。再開するには:
+- SUCCESS_STOP 後の G2 で新 baseline が確定し、追加磨きが要件化された場合のみ。
+- HOLD_BOUNDARY_STOP 後の owner GO で HOLD が解除された場合のみ。
+- DIMINISHING_RETURNS 後は「人手裁定 backlog」モードで運用(自動レーンは閉じたまま)。
+
+**ループの目的はシルバーを磨くことであって、磨き続けること自体ではない。** 上記いずれかで止まったら、次の階(G2)に渡す。
+
+## 10. ループ閉幕後のメタ監査(GPT 目付け役・必須)
+§9 のどれで止まっても **最後の作業として「ループ自体」を GPT Pro に監査依頼する**。head/worker の交互作用の質をメタに見てもらい、次のループ(別ドメインで同じ枠組みを使う / 同一ドメインで再開)の改善方向を確定する。
+
+### 10.1 何を見てもらうか(入力)
+head は STOP 判定後 24h 以内に `artifacts/caselink/_LOOP_RETROSPECTIVE_<stop_kind>_<date>.md` を作成し、to_gpt/ に投函(self-contained・本文同梱・前回 NEED_MORE の教訓):
+1. **STOP 種別と判定根拠** (§9 のどれ・健全性メトリクスの該当値)
+2. **タスク台帳**: W-501〜N の RESULT label / 検収結果 / 所要 cycle / subagent使用回数 / 主要メトリクス推移
+3. **hold→queue 遷移ログ**: いつ・どの判断で hold を解いたか、待ち時間
+4. **詰まり履歴**: BLOCKED ${cause, recover, 結末}
+5. **規律違反候補**: forbidden_actions の境界踏み込みがあったか(false alarm 含む)
+6. **健全性メトリクス全推移**: `_loop_health.json` の cycle ごとスナップショット
+7. **head 自己評価**: 検収の厳しさ・hold 解放の早さ・設計改変の頻度
+
+### 10.2 GPT に聞く論点(必ず5点・他は free response)
+- (a) **検収基準の適否**: §3.2 self-check は厳しすぎ/甘すぎ/抜けがあるか。
+- (b) **hold→queue 遷移**: §4 の release_when 条件は早すぎ/遅すぎ/曖昧か。
+- (c) **サブエージェント許可範囲**: §2 で worker に渡しすぎ/取りすぎな所はあるか。
+- (d) **STOP gate 閾値**: §9 の数値(diminishing<0.5%/blocked 3回/48h など)は妥当か、業界知見から見て。
+- (e) **head/worker 役割分担**: 設計改変が head 専管(W-508/509)で worker が分析止まりという建付けは適切か、ボトルネックを生まないか。
+- (f) **GO/HOLD 粒度パース**: §3.4 Apply guard と §9.3 (RESULT description の HOLD トリガ) は十分か。「PASS_WITH_NOTES = 全GO」の事故を防ぐ語彙集合(production/materialize/claim-support/serving/canonical/accepted edge/DDL/embedding/global egress)に過不足は無いか。
+- (g) **Box readback の信頼性**: §3.5 (RESULT 3段階) と §3.6 (description SoT) は本文不可読・検索 API 不安定下でも事故を防げるか。「to_gpt しか見ていない」「文字列検索だけで未着判定」の事故パターンを構造的に締めているか。
+
+### 10.3 出力(GPT 監査の戻り)
+- `LOOPMETA_PASS` / `LOOPMETA_PASS_WITH_NOTES` / `LOOPMETA_MODIFY_REQUIRED` / `LOOPMETA_REJECT` / `LOOPMETA_NEED_MORE`
+- notes → HEAD_OPS v0.2 で反映 → 次ループ開始前に新規定で再起動。
+- **同一規律を 2 回連続で MODIFY 指摘されたら**、その規律は構造的欠陥として head が PR 化(設計改変)。
+
+### 10.4 実行作業票(後続 hold)
+W-20260627-510 (`hold/`) が「STOP 判定+RETROSPECTIVE作成+to_gpt 投函」を担う。release_when = `§9 のいずれかの STOP が発火した時点`(head が release)。
+
+### 10.5 ループ間学習(メタの蓄積)
+- 各ループ閉幕の RETROSPECTIVE と GPT RESULT は `docs/_loop_retrospectives/` に時系列で積む。
+- 3回ループを回したら、共通の改善パターンを抽出して **HEAD_OPS v1.0(汎化版)** へ。雑誌オブジェクトでも同じ枠組みが使えるよう抽象化する。
+- これが「ループの回し方」自体の学習ループ(メタループ)。
+
+**ループは2階建て**: シルバー磨き(内側ループ) + ループ運営改善(外側=メタループ)。内側は §9 で止め、外側は §10 で振り返る。
