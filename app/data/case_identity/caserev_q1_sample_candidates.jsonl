@@ -1,0 +1,12 @@
+{"ref_id":"Q1-0001","law_name":"民法","article":"709条","d1kos_node":"kos:fuhokoui","article_side_root":"民事","taxonomy_root":"民事","flags":["p1_top_root_aligned"]}
+{"ref_id":"Q1-0002","law_name":"会社法","article":"423条","d1kos_node":"kos:torishimariyaku-sekinin","article_side_root":"商事","taxonomy_root":"商事","flags":["p1_top_root_aligned"]}
+{"ref_id":"Q1-0003","law_name":"刑法","article":"199条","d1kos_node":"kos:satsujin","article_side_root":"刑事","taxonomy_root":"刑事","flags":["p1_top_root_aligned"]}
+{"ref_id":"Q1-0004","law_name":"労働基準法","article":"32条","d1kos_node":"kos:roudou-jikan","article_side_root":"労働","taxonomy_root":"労働","flags":["p1_top_root_aligned"]}
+{"ref_id":"Q1-0005","law_name":"行政事件訴訟法","article":"9条","d1kos_node":"kos:genkoku-tekikaku","article_side_root":"行政","taxonomy_root":"行政","flags":["p1_top_root_aligned"]}
+{"ref_id":"Q1-0006","law_name":"民事訴訟法","article":"47条","d1kos_node":"kos:dokuritsu-tojisha-sanka","article_side_root":"民事手続","taxonomy_root":"医事","flags":["cross_root"]}
+{"ref_id":"Q1-0007","law_name":"独占禁止法","article":"3条","d1kos_node":"kos:futo-torihiki","article_side_root":"経済","taxonomy_root":"知財","flags":["cross_root"]}
+{"ref_id":"Q1-0008","law_name":"(民訴)刑訴47条","article":"47条","d1kos_node":"kos:kiroku-etsuran","article_side_root":"刑事手続","taxonomy_root":"刑事手続","flags":["multi_law_token"]}
+{"ref_id":"Q1-0009","law_name":"金商法","article":"157条","d1kos_node":"kos:fusei-torihiki","article_side_root":"商事","taxonomy_root":"商事","flags":["suffix"]}
+{"ref_id":"Q1-0010","law_name":"借地借家法","article":"28条","d1kos_node":"kos:prov:shakuchi-koushin","article_side_root":"不動産","taxonomy_root":"不動産","flags":["provisional_kos"]}
+{"ref_id":"Q1-0011","law_name":"特許法","article":"100条","d1kos_node":"kos:prov:sashitome","article_side_root":"知財","taxonomy_root":"知財","flags":["provisional_kos"]}
+{"ref_id":"Q1-0012","law_name":"消費者契約法","article":"4条","d1kos_node":"kos:torikeshi","article_side_root":"消費者","taxonomy_root":"消費者","flags":["p1_top_root_aligned"]}
