@@ -24,38 +24,54 @@ INTERVAL="${1:-60}"
 mkdir -p "$TRIGGERS_DIR" "$CONSUMED_DIR"
 echo "[worker_watch] $TRIGGERS_DIR/*.trigger と $LEGACY_TRIGGER を監視 (${INTERVAL}s 周期, $(date))"
 
+LOCKS_DIR="$HOME/.claude-orch-watcher-locks"
+mkdir -p "$LOCKS_DIR"
+
 consume_and_run() {
   local trigger_path="$1"   # 作業ツリー上のパス
-  local origin_form="$2"    # git管理上のパス(旧仕様時はgit対象、新仕様時はファイルパス)
+  local origin_form="$2"    # git管理上のパス
   local content="$(git show "origin/$DEFAULT_BRANCH:$origin_form" 2>/dev/null || cat "$trigger_path" 2>/dev/null)"
   local order="$(echo "$content" | head -1 | tr -d '[:space:]')"
   local branch="$(echo "$content" | grep -i '^branch:' | head -1 | awk -F: '{print $2}' | tr -d '[:space:]')"
   [ -z "$branch" ] && branch="$DEFAULT_BRANCH"
 
-  echo "[worker_watch] トリガ検出: order=$order branch=$branch ($(date))"
   case "$order" in
     *ORCH-*.md|*orch-*.md) ;;
     *) echo "[worker_watch] 不正なorder($order) — 無視。ORCH-*.md のみ許可。"; return 1;;
   esac
 
-  # ★再発防止: 競合/未マージ状態を必ず解除し origin に揃えてから処理
+  # ★★ storm再発防止の本丸 ★★
+  # トリガ内容のハッシュをローカルlockに記録。同じハッシュは絶対に二度起動しない。
+  # 消費push失敗でトリガがoriginに残り続けても、stormにはならない。
+  local sig; sig="$(printf '%s' "$content" | shasum -a 1 | awk '{print $1}')"
+  local lock_key; lock_key="$(printf '%s' "$origin_form" | tr '/' '_')"
+  local lockfile="$LOCKS_DIR/${lock_key}.${sig}"
+  if [ -f "$lockfile" ]; then
+    return 0   # このトリガ内容では既に起動済み。静かに無視。
+  fi
+
+  echo "[worker_watch] トリガ検出: order=$order branch=$branch ($(date))"
+
+  # 競合/未マージ状態を必ず解除し origin に揃えてから処理
   git merge --abort 2>/dev/null; git rebase --abort 2>/dev/null
   git fetch origin "$branch" -q 2>/dev/null || true
   git checkout "$branch" -q 2>/dev/null || true
   git reset -q --hard "origin/$branch" 2>/dev/null || true
-  git clean -fdq -- "$TRIGGERS_DIR" "$CONSUMED_DIR" 2>/dev/null || true
+
+  # wake前にlockを取る(wake成功/失敗・push成功/失敗いずれでも二度目を防ぐ)
+  date -u +%Y-%m-%dT%H:%M:%SZ > "$lockfile"
 
   bash ./tools/wake_worker.sh "$order" || { echo "[worker_watch] wake失敗"; return 1; }
 
-  # トリガを consumed/ へ移動して消費（多重起動防止）
+  # トリガ消費push。失敗しても lock があるので storm にならない
   local ts; ts="$(date +%Y%m%d-%H%M%S)"
   local fname; fname="$(basename "$origin_form")"
   if git cat-file -e "HEAD:$origin_form" 2>/dev/null; then
-    git mv -k "$origin_form" "$CONSUMED_DIR/${ts}_${fname}" 2>/dev/null
+    git mv -k "$origin_form" "$CONSUMED_DIR/${ts}_${fname}" 2>/dev/null || git rm -q "$origin_form" 2>/dev/null
     git commit -q -m "worker_watch: $order 起動につきトリガ消費" 2>/dev/null
     git fetch origin "$branch" -q 2>/dev/null
     git rebase "origin/$branch" -q 2>/dev/null || git rebase --abort 2>/dev/null
-    git push -q origin "$branch" 2>/dev/null || echo "[worker_watch] 消費push失敗(次周期で再試行)"
+    git push -q origin "$branch" 2>/dev/null || echo "[worker_watch] 消費push失敗(lockで二度起動防止済)"
   fi
 }
 
