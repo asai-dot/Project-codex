@@ -1,0 +1,316 @@
+{
+  "schema_version": "v0.1",
+  "labeled_path": "/Users/yuta/ALOBookDX/事務所内本棚DX化計画/build/d1_bunken_article_meta_20260611/labeled_v0.2.1/article_meta_labeled.jsonl",
+  "total_records": 333206,
+  "records_with_author": 309099,
+  "author_mentions": 382371,
+  "total_unique_authors": 58610,
+  "authors_with_ge10_articles": 7416,
+  "ambiguity_count": 809,
+  "ambiguity_definition": "normalized_name length <= 2 chars (likely shared surname / multiple persons)",
+  "cluster_merges": 0,
+  "collision_count": 0,
+  "clustering_policy": "正規化(NFKC + itaiji旧字統一 + 内部空白除去 + 括弧内除去)による厳密一致クラスタのみ採用。編集距離+共著ネットワークによる fuzzy マージは評価したが無効化 (ENABLE_FUZZY_MERGE=False)。理由: 日本語人名は3字前後が大半で編集距離1の別人ペアが多数 (森本滋⇔森田章, 山本和彦⇔山本龍彦 等)、prolific論者は座談会等で多数と共著するため共著ゲートも弱く、別人誤マージで article_count を汚染するため。",
+  "author_id_scheme": "author:{normalized_slug}#{sha1(normalized_name)[:6]}",
+  "top20_by_article_count": [
+    {
+      "author_id": "author:長谷川俊明#2a7c13",
+      "normalized_name": "長谷川俊明",
+      "article_count": 1154,
+      "journals_appeared": [
+        "国際商事法務",
+        "JCAジャーナル",
+        "金融法務事情",
+        "銀行法務",
+        "NBL",
+        "ビジネス法務",
+        "銀行法務21",
+        "発明"
+      ]
+    },
+    {
+      "author_id": "author:升田純#0d88ed",
+      "normalized_name": "升田純",
+      "article_count": 878,
+      "journals_appeared": [
+        "判例時報",
+        "市民と法",
+        "NBL",
+        "月刊登記情報",
+        "月報司法書士",
+        "金融法務事情",
+        "Law & Technology",
+        "月刊民事法情報"
+      ]
+    },
+    {
+      "author_id": "author:酒井克彦#4d1129",
+      "normalized_name": "酒井克彦",
+      "article_count": 806,
+      "journals_appeared": [
+        "月刊税務事例",
+        "税理",
+        "税務弘報",
+        "会社法務A2Z",
+        "税経通信",
+        "Profession Journal",
+        "中央ロー・ジャーナル",
+        "国士館法学"
+      ]
+    },
+    {
+      "author_id": "author:弥永真生#8b51bd",
+      "normalized_name": "弥永真生",
+      "article_count": 802,
+      "journals_appeared": [
+        "ジュリスト",
+        "旬刊商事法務",
+        "法学セミナー",
+        "会計・監査ジャーナル",
+        "税経通信",
+        "筑波ロー・ジャーナル",
+        "金融・商事判例",
+        "筑波法政"
+      ]
+    },
+    {
+      "author_id": "author:山本和彦#0d11a7",
+      "normalized_name": "山本和彦",
+      "article_count": 599,
+      "journals_appeared": [
+        "ジュリスト",
+        "NBL",
+        "判例タイムズ",
+        "金融法務事情",
+        "季刊事業再生と債権管理",
+        "判例評論",
+        "金融・商事判例",
+        "法学セミナー"
+      ]
+    },
+    {
+      "author_id": "author:山野目章夫#8043b9",
+      "normalized_name": "山野目章夫",
+      "article_count": 589,
+      "journals_appeared": [
+        "NBL",
+        "法学セミナー",
+        "ジュリスト",
+        "月刊登記情報",
+        "判例タイムズ",
+        "金融法務事情",
+        "法律時報",
+        "民法判例百選"
+      ]
+    },
+    {
+      "author_id": "author:加藤新太郎#ca47dc",
+      "normalized_name": "加藤新太郎",
+      "article_count": 570,
+      "journals_appeared": [
+        "NBL",
+        "判例タイムズ",
+        "月報司法書士",
+        "会社法務A2Z",
+        "ジュリスト",
+        "金融・商事判例",
+        "市民と法",
+        "月刊登記情報"
+      ]
+    },
+    {
+      "author_id": "author:中川淳#1c793a",
+      "normalized_name": "中川淳",
+      "article_count": 497,
+      "journals_appeared": [
+        "戸籍時報",
+        "法令ニュース",
+        "法律のひろば",
+        "判例評論",
+        "民事研修",
+        "法律時報",
+        "判例タイムズ",
+        "ケース研究"
+      ]
+    },
+    {
+      "author_id": "author:小林秀之#cd015c",
+      "normalized_name": "小林秀之",
+      "article_count": 476,
+      "journals_appeared": [
+        "法学セミナー",
+        "判例タイムズ",
+        "受験新報",
+        "判例評論",
+        "アメリカ法",
+        "ジュリスト",
+        "金融法務事情",
+        "NBL"
+      ]
+    },
+    {
+      "author_id": "author:林仲宣#4ab790",
+      "normalized_name": "林仲宣",
+      "article_count": 454,
+      "journals_appeared": [
+        "税務弘報",
+        "税理",
+        "法律のひろば",
+        "税経通信",
+        "税法学",
+        "シュトイエル",
+        "法の支配",
+        "都市問題研究"
+      ]
+    },
+    {
+      "author_id": "author:品川芳宣#d69bc6",
+      "normalized_name": "品川芳宣",
+      "article_count": 448,
+      "journals_appeared": [
+        "税研",
+        "TKC税研情報",
+        "税理",
+        "旬刊商事法務",
+        "月刊税務事例",
+        "税経通信",
+        "税務弘報",
+        "ジュリスト"
+      ]
+    },
+    {
+      "author_id": "author:伊藤眞#9a172a",
+      "normalized_name": "伊藤眞",
+      "article_count": 444,
+      "journals_appeared": [
+        "ジュリスト",
+        "金融法務事情",
+        "NBL",
+        "判例タイムズ",
+        "法学教室",
+        "判例評論",
+        "金融・商事判例",
+        "季刊事業再生と債権管理"
+      ]
+    },
+    {
+      "author_id": "author:西尾信一#eb3be5",
+      "normalized_name": "西尾信一",
+      "article_count": 443,
+      "journals_appeared": [
+        "手形研究",
+        "銀行法務21",
+        "金融法務事情",
+        "判例タイムズ",
+        "判例評論",
+        "民商法雑誌",
+        "ジュリスト",
+        "三重大学法経論叢"
+      ]
+    },
+    {
+      "author_id": "author:森本滋#a33876",
+      "normalized_name": "森本滋",
+      "article_count": 430,
+      "journals_appeared": [
+        "旬刊商事法務",
+        "ジュリスト",
+        "民商法雑誌",
+        "金融法務事情",
+        "法学教室",
+        "判例評論",
+        "法学論叢(京都大学)",
+        "法曹"
+      ]
+    },
+    {
+      "author_id": "author:道垣内弘人#eec934",
+      "normalized_name": "道垣内弘人",
+      "article_count": 428,
+      "journals_appeared": [
+        "ジュリスト",
+        "法学教室",
+        "金融法務事情",
+        "NBL",
+        "法学協会雑誌",
+        "民法判例百選",
+        "法律時報",
+        "判例タイムズ"
+      ]
+    },
+    {
+      "author_id": "author:塩崎勤#706ea6",
+      "normalized_name": "塩崎勤",
+      "article_count": 425,
+      "journals_appeared": [
+        "月刊民事法情報",
+        "登記インターネット",
+        "判例タイムズ",
+        "金融法務事情",
+        "ジュリスト",
+        "最高裁判所判例解説――民事篇<昭和",
+        "法曹",
+        "季刊実務民事法"
+      ]
+    },
+    {
+      "author_id": "author:河上正二#b58f4b",
+      "normalized_name": "河上正二",
+      "article_count": 423,
+      "journals_appeared": [
+        "法学セミナー",
+        "ジュリスト",
+        "法学教室",
+        "NBL",
+        "民法判例百選",
+        "判例評論",
+        "法律時報",
+        "消費者法ニュース"
+      ]
+    },
+    {
+      "author_id": "author:浅井弘章#9ad9d2",
+      "normalized_name": "浅井弘章",
+      "article_count": 412,
+      "journals_appeared": [
+        "銀行法務",
+        "銀行法務21",
+        "金融法務事情",
+        "金融・商事判例",
+        "ビジネス法務",
+        "損害保険研究",
+        "月刊登記情報",
+        "NBL"
+      ]
+    },
+    {
+      "author_id": "author:村重慶一#8325c0",
+      "normalized_name": "村重慶一",
+      "article_count": 399,
+      "journals_appeared": [
+        "戸籍時報",
+        "判例タイムズ",
+        "月刊税務事例",
+        "民事研修",
+        "ジュリスト",
+        "ケース研究",
+        "家族法判例百選<第",
+        "季刊実務民事法"
+      ]
+    },
+    {
+      "author_id": "author:香川保一#f086e0",
+      "normalized_name": "香川保一",
+      "article_count": 398,
+      "journals_appeared": [
+        "登記インターネット",
+        "登記研究",
+        "月刊登記先例解説集",
+        "月刊民事法情報",
+        "月刊登記情報",
+        "金融法務事情",
+        "月刊債権管理"
+      ]
+    }
+  ]
+}
