@@ -71,7 +71,9 @@
 
 ## 4. これで何が一発になるか
 
-- **誌スコープ件数**: `SELECT count(*) FROM cinii_pub_flat WHERE is_legal_journal`（dry-run対象＝未測定の数字がSQLで出る）
+- **誌スコープ件数**: `SELECT count(*) FROM cinii_pub_flat WHERE is_legal_journal`（dry-run対象がSQLで出る）
+  - **スコープ二重性（2026-06-27 実測で確定）**: 「誌レベル(法律誌に載る全記事)」＝数十万オーダー（過大。法律誌の紀要・非法学記事を含む）vs「内容レベル(DD-CINII-001の3軸=法律論考判定)」＝**約2〜3万件**。**dry-run実投入対象は内容レベル≈2〜3万**が妥当。`is_legal_journal` は前者(誌絞り)なので、DD-CINII-001の3軸スコアと合わせて二段で絞る。
+  - 補足: 既存集計(`cinii_batch/issn_summary.tsv`=175誌)からは誌レベルの概数しか出ず、`legal_journal_issn_filter.jsonl` はBoxテキスト抽出不可(500)で**正確な誌数・件数はjsonl直パースが必要**。この `cinii_pub_flat` を作れば正確値が初めて確定する。
 - **NRID突合**: `cinii_author_flat.nrid_primary = authority.person_history.history_value`（B表とJOIN一回）
 - **eradCode供給**: `cinii_author_flat.erad_from_nrid` / `kaken_researcher_id` をそのまま person_identifier へ
 - **重複検知**: crid一意・nrid_count分布で汚染可視化
