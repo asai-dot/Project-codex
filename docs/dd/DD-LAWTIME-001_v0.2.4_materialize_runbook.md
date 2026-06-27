@@ -68,7 +68,7 @@ apply は必ずこの順。**100 の前に母屋が無いと FK が張れない*
 
 ```
 （母屋 d1law_taikei.alo_edges：既存・触らない）
-  └─ 100_lawtime_schema.sql      … 作業棟 + FK(edge_id) ON DELETE CASCADE
+  └─ 100_lawtime_schema.sql      … 作業棟 + FK(edge_id) ON DELETE RESTRICT（O1=A）
        └─ 200_gates.sql          … gate view（100 のオブジェクトに依存）
             └─ 300_serving.sql   … 出口 view（100/200 に依存）
 ```

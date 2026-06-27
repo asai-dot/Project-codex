@@ -15,7 +15,7 @@ WITH e_cit AS (
   RETURNING edge_id
 ), e_non AS (
   INSERT INTO d1law_taikei.alo_edges(src_uri,edge_type,dst_uri,source_system)
-  VALUES ('alo:doc:jp:bad#p2','references','alo:term:jp:foo','smoke')
+  VALUES ('alo:doc:jp:bad#p2','classified_under','alo:term:jp:foo','smoke')
   RETURNING edge_id
 )
 -- G-INT-1 fires because e_cit (a citation edge) gets NO side-table row below.
