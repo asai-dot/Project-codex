@@ -1,11 +1,13 @@
 # 「今ワーカーに振る発注書」ポインタ（ヘッドが随時更新）
-# ユーザーが「ワーカーちゃん起こして / 仕事ふって / 仕事回して」等と言ったら、
-# ヘッドは引数なしの ./tools/trigger_worker.sh を実行 → この先頭の発注書パスが投下される。
-# 先頭=最優先。下に並ぶものは Worker CC を別途複数立てる時の候補。
+# 引数なしの ./tools/trigger_worker.sh で先頭の発注書が投下される。
+# 先頭=最優先、下=並列追加発注の候補（trigger_worker.sh <発注書> <channel> で個別投下）
 artifacts/periodical/ORCH-L4-COVERAGE-LIFT_order_20260626.md
-# 進行中の並列発注:
-# - artifacts/periodical/ORCH-SERIES-DETECT_order_20260627.md   (連載シリーズ検出, channel=series)
-# - artifacts/periodical/ORCH-ISSUE-FEATURE_order_20260627.md   (特集号メタ抽出, channel=feature)
-# 完了済: 記事接合(L4)/L3基盤/分類パイロット。
-# 進行中(別系統): 記事種別 全量29.7万件分類(Mac直接実行・watcher経由でない)。
-# 次フェーズ: 分類完走監査 → L5(評釈→判例リンク) / 初出pacsigny / OCRパイロット。
+# 並列発注候補(8本・全てL4/全量分類と非衝突):
+# - ORCH-AUTHOR-CLUSTER         (channel=author)    著者名正規化＆クラスタリング
+# - ORCH-CITATION-EXTRACT       (channel=cite)      タイトルから法令/判例引用抽出
+# - ORCH-SERIES-VALIDATE        (channel=svalid)    連載検出のサンプリング検査
+# - ORCH-FEATURE-VALIDATE       (channel=fvalid)    特集抽出のサンプリング検査
+# - ORCH-CASENAME-DICT          (channel=case)      事件名辞書(L5主要鍵)
+# - ORCH-PILOT-CROSS-AUDIT      (channel=xaudit)    分類パイロットの誌偏り検証
+# - ORCH-DATA-PROFILE           (channel=profile)   全体統計プロファイル
+# - ORCH-NDL-RECONCILE          (channel=ndl)       NDL最新書誌との整合
