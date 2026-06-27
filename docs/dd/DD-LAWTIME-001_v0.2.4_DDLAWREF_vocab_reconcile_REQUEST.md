@@ -4,7 +4,13 @@
 > 発信: DD-LAWTIME-001 v0.2.4（lawtime 配置・ratify 済）
 > 種別: **decision_requested**（blocking note #5 の実体）。lawtime からの**照会のみ** — lawtime は edge_type を発明・拡張しない。
 > 日付: 2026-06-25 ／ 課金ゼロ（本 REQUEST 作成は read-only 調査に基づく）
-> 共有: **2026-06-25 Box `gpt_ometsuke/to_gpt` に送付済**（file_id `2309304297318`）。**DDLAWREF/GPT お目付け役の RESULT 待ち**。
+> 共有: **2026-06-25 Box `gpt_ometsuke/to_gpt` に送付済**（file_id `2309304297318`）。直接 RESULT 未着（2026-06-27 時点）。
+> ✅ **部分 RESULT**: DDLAWREF v0.1 設計監査 RESULT（Box from_gpt `2305640889317`、2026-06-26）にて Q1/Q2 が回答済。
+>    → Q1（edge_type値）: `cites_statute`,`delegates_to`,`references`,`implements`（§3.3 lawtime 共有4種）
+>    → Q2（alo_edges）: `alo_edges` で正しい（§2.1）
+>    → Q3（dst_uri）: 未言及 — 直接 RESULT 待ち
+>    → Q4（投入時期）: production HOLD 継続
+>    詳細: `docs/dd/DD-LAWTIME-001_v0.2.4_DDLAWREF_vocab_reconcile_RESULT.md`
 
 ---
 

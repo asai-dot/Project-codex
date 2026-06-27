@@ -9,31 +9,41 @@
 -- ----------------------------------------------------------------------------
 -- Citation-edge predicate (the lawtime-relevant subset of d1law_taikei.alo_edges).
 -- ⚠️ edge_type vocabulary is owned by DDLAWREF, NOT by lawtime. lawtime does NOT
---    invent or expand edge_type. The set below is the v0.2.3 statute-citation
---    predicate, carried forward verbatim; it MUST be reconciled with the DDLAWREF
---    taxonomy before production (blocking note #5 / decision_requested edge_type).
---      => ('cites_statute','statute_ref','applies_statute')
+--    invent or expand edge_type.
+--
+-- ✅ VOCABULARY CONFIRMED — DDLAWREF v0.1 RESULT (Box from_gpt, file_id 2305640889317,
+--    2026-06-26, label DDLAWREF_PASS_WITH_NOTES):
+--    Full DDLAWREF v0.1 set: cites_statute / delegates_to / references / implements /
+--    reads_as / authority_basis / cites_administrative_guidance.
+--    §3.3 explicitly names lawtime's shared subset as:
+--      cites_statute, references, delegates_to, implements
+--    Excluded from lawtime citation_temporal scope:
+--      reads_as (読替え専用; temporal semantics deferred — Q3 pending)
+--      authority_basis (not in §3.3 shared set)
+--      cites_administrative_guidance (admin guidance, not statute proper)
+--    Q3 (dst_uri URI convention) not addressed in DDLAWREF v0.1 RESULT;
+--    direct vocab REQUEST (file_id 2309304297318) RESULT still awaited for Q3/Q4.
+--    See docs/dd/DD-LAWTIME-001_v0.2.4_DDLAWREF_vocab_reconcile_RESULT.md.
 --
 -- 🔁 SINGLE SWAP POINT: the set lives in ONE place — the view
 --    lawtime.citation_edge_type_v20260624 below — and the gates reference it by
---    subquery. When DDLAWREF reconciles the real statute-citation vocabulary,
---    edit ONLY that view (one place), not each gate.
---    B′ read-only dry-run (2026-06-25) confirmed the live 母屋 holds ONLY
---    edge_type 'classified_under' (0 statute-citation edges) — so this predicate
---    matches NOTHING in production today and is pending DDLAWREF.
---    See docs/dd/DD-LAWTIME-001_v0.2.4_DDLAWREF_vocab_reconcile_REQUEST.md.
+--    subquery. B′ read-only dry-run (2026-06-25) confirmed the live 母屋 holds ONLY
+--    edge_type 'classified_under' (0 statute-citation edges) — gate is vacuously
+--    empty in production until DDLAWREF loads citation edges.
 -- ============================================================================
 
 BEGIN;
 
 -- ── Citation-edge predicate: THE single source of truth (see header). ────────
---    Mirrors the DDLAWREF-owned statute-citation edge_type set. Placeholder until
---    reconciled. Returns the allowed edge_type values; gates IN/NOT IN this set.
+--    Mirrors the DDLAWREF-owned statute-citation edge_type set (lawtime shared
+--    subset per DDLAWREF v0.1 RESULT §3.3, 2026-06-26).
+--    Returns the allowed edge_type values; gates IN/NOT IN this set.
 CREATE OR REPLACE VIEW lawtime.citation_edge_type_v20260624 AS
   SELECT edge_type FROM (VALUES
     ('cites_statute'),
-    ('statute_ref'),
-    ('applies_statute')
+    ('delegates_to'),
+    ('references'),
+    ('implements')
   ) AS t(edge_type);
 
 -- ── INTEGRATION (C-option): every statute-citation edge has exactly one temporal
