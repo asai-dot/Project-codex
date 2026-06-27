@@ -1,0 +1,2 @@
+artifacts/periodical/ORCH-ISSUE-FEATURE_order_20260627.md
+branch: claude/magazine-object-analysis-seg9cr
