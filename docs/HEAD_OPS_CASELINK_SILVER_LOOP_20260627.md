@@ -158,3 +158,38 @@ head は毎ループ末に `artifacts/caselink/_loop_health.json` を更新:
 - DIMINISHING_RETURNS 後は「人手裁定 backlog」モードで運用(自動レーンは閉じたまま)。
 
 **ループの目的はシルバーを磨くことであって、磨き続けること自体ではない。** 上記いずれかで止まったら、次の階(G2)に渡す。
+
+## 10. ループ閉幕後のメタ監査(GPT 目付け役・必須)
+§9 のどれで止まっても **最後の作業として「ループ自体」を GPT Pro に監査依頼する**。head/worker の交互作用の質をメタに見てもらい、次のループ(別ドメインで同じ枠組みを使う / 同一ドメインで再開)の改善方向を確定する。
+
+### 10.1 何を見てもらうか(入力)
+head は STOP 判定後 24h 以内に `artifacts/caselink/_LOOP_RETROSPECTIVE_<stop_kind>_<date>.md` を作成し、to_gpt/ に投函(self-contained・本文同梱・前回 NEED_MORE の教訓):
+1. **STOP 種別と判定根拠** (§9 のどれ・健全性メトリクスの該当値)
+2. **タスク台帳**: W-501〜N の RESULT label / 検収結果 / 所要 cycle / subagent使用回数 / 主要メトリクス推移
+3. **hold→queue 遷移ログ**: いつ・どの判断で hold を解いたか、待ち時間
+4. **詰まり履歴**: BLOCKED ${cause, recover, 結末}
+5. **規律違反候補**: forbidden_actions の境界踏み込みがあったか(false alarm 含む)
+6. **健全性メトリクス全推移**: `_loop_health.json` の cycle ごとスナップショット
+7. **head 自己評価**: 検収の厳しさ・hold 解放の早さ・設計改変の頻度
+
+### 10.2 GPT に聞く論点(必ず5点・他は free response)
+- (a) **検収基準の適否**: §3.2 self-check は厳しすぎ/甘すぎ/抜けがあるか。
+- (b) **hold→queue 遷移**: §4 の release_when 条件は早すぎ/遅すぎ/曖昧か。
+- (c) **サブエージェント許可範囲**: §2 で worker に渡しすぎ/取りすぎな所はあるか。
+- (d) **STOP gate 閾値**: §9 の数値(diminishing<0.5%/blocked 3回/48h など)は妥当か、業界知見から見て。
+- (e) **head/worker 役割分担**: 設計改変が head 専管(W-508/509)で worker が分析止まりという建付けは適切か、ボトルネックを生まないか。
+
+### 10.3 出力(GPT 監査の戻り)
+- `LOOPMETA_PASS` / `LOOPMETA_PASS_WITH_NOTES` / `LOOPMETA_MODIFY_REQUIRED` / `LOOPMETA_REJECT` / `LOOPMETA_NEED_MORE`
+- notes → HEAD_OPS v0.2 で反映 → 次ループ開始前に新規定で再起動。
+- **同一規律を 2 回連続で MODIFY 指摘されたら**、その規律は構造的欠陥として head が PR 化(設計改変)。
+
+### 10.4 実行作業票(後続 hold)
+W-20260627-510 (`hold/`) が「STOP 判定+RETROSPECTIVE作成+to_gpt 投函」を担う。release_when = `§9 のいずれかの STOP が発火した時点`(head が release)。
+
+### 10.5 ループ間学習(メタの蓄積)
+- 各ループ閉幕の RETROSPECTIVE と GPT RESULT は `docs/_loop_retrospectives/` に時系列で積む。
+- 3回ループを回したら、共通の改善パターンを抽出して **HEAD_OPS v1.0(汎化版)** へ。雑誌オブジェクトでも同じ枠組みが使えるよう抽象化する。
+- これが「ループの回し方」自体の学習ループ(メタループ)。
+
+**ループは2階建て**: シルバー磨き(内側ループ) + ループ運営改善(外側=メタループ)。内側は §9 で止め、外側は §10 で振り返る。
