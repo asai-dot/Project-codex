@@ -29,6 +29,10 @@
 - Cloud Web からの間接起動: `.worker_trigger` を push → Mac 常駐 `tools/worker_watch.sh` が自動起動。
 - **【厳守】共有ブランチへ `git push --force`/`-f` は禁止。** 必ず `git pull --rebase` 後に通常 push。
   force-push は他AIのコミットを消す（実際に ORCH-CURRENT 機能が一度消失した）。競合時は rebase で解消する。
+- **【厳守】ワーカーCC起動前に `/login` を完了しておく。** 未ログインだと `Not logged in` で即死し、
+  watcher が消費push失敗で60秒毎に乱launchする storm が起きる（実害あり、2026-06-27 発生）。
+  watcher の storm防止 lock は導入済み（同内容トリガで二度起動しない）が、根本予防は事前ログイン。
+- 急ぐ時は手動 `./tools/wake_worker.sh` が最も安全（watcher経由よりリスクが小さい）。
 
 ## データ所在
 データの所在は AI_READY atlas を最初に見る: `docs/alo/AI_READY_DATA_LOCATOR_LATEST.md`
