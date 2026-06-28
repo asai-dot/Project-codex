@@ -1,0 +1,60 @@
+# budget_policy.yml — daily/batch/token 制限。budget_unknown は fail closed。
+version: "v0.1"
+
+daily_limits:
+  L4_deep_reasoning_runs: 3
+  L5_independent_audit_runs: 5
+  opus_runs: 3
+  gpt_pro_runs: 5
+
+batch_limits:
+  L0_items: unlimited
+  L1_items: 20
+  L2_items: 5
+  L3_items: 1
+  L4_items: 1
+  L5_items: 1
+
+token_policy:
+  L1:
+    max_input_files: 20
+    max_output: json_only
+  L2:
+    max_input_files: 5
+    max_output: digest_only
+  L3:
+    max_input_files: 3
+    require_packet: true
+  L4:
+    max_input_files: 5
+    require_explicit_question: true
+  L5:
+    max_input_files: 5
+    require_evidence_packet: true
+
+fail_closed_if:
+  - budget_unknown
+  - model_price_unknown
+  - data_zone_unknown
+  - mutation_power_unknown
+
+router_quality_gate_v0_1:
+  pass_if:
+    - "全queue_itemにtask_type/cog_level/risk_level/mutation_power/data_zoneが付く"
+    - "UNKNOWNはTRIAGE_NEEDEDで止まる"
+    - "L0はLLMへ送られない"
+    - "L4/L5はmax_items=1"
+    - "mutation_power=canonical_writeはworker不可"
+    - "processed_markはcontroller/headのみ"
+    - "author_familyとauditor_familyが違う"
+    - "client_privileged/credentialsはcheap external model不可"
+    - "final_RESULTには元REQUEST hashとcandidate hashが残る"
+  fail_if:
+    - "Claudeがqueue全体を見る"
+    - "Opus/GPT Proが単純抽出をする"
+    - "Haiku/Flashがcanonical判断をする"
+    - "Codexが法的評価をする"
+    - "CopilotがBox正本の確定判断をする"
+    - "GeminiがSalesforce主データの変更判断をする"
+    - "workerがprocessed化する"
+    - "同族モデルが独立監査を名乗る"

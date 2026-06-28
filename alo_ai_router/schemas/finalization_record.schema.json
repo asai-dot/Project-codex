@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "finalization_record v0.1",
+  "description": "head/controller のみが書く確定レコード。",
+  "type": "object",
+  "required": ["decision_id", "request_id", "decision_type", "label", "finalized_by", "finalized_at", "request_sha256", "candidate_sha256"],
+  "properties": {
+    "decision_id": {"type": "string"},
+    "request_id": {"type": "string"},
+    "run_id": {"type": ["string", "null"]},
+    "decision_type": {"enum": ["adopt", "modify_and_adopt", "reject", "hold", "canonical_promote", "external_publish"]},
+    "label": {"type": "string"},
+    "finalized_by": {"type": "string"},
+    "finalized_at": {"type": "string"},
+    "processed_mark_applied": {"type": "boolean"},
+    "canonical_write_applied": {"type": "boolean"},
+    "request_sha256": {"type": "string"},
+    "candidate_sha256": {"type": "string"},
+    "rollback_plan": {"type": ["string", "null"]},
+    "notes": {"type": "string"}
+  }
+}

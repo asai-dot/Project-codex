@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "audit_result_candidate v0.1",
+  "description": "L5独立監査のcandidate。final RESULTにはcontroller/headがpromoteする。",
+  "type": "object",
+  "required": ["audit_id", "request_id", "auditor_family", "author_family", "label", "blocking_issues", "non_blocking_notes", "overapproval_risks", "missing_evidence", "required_operational_diffs", "next_cycle_canary"],
+  "properties": {
+    "audit_id": {"type": "string"},
+    "request_id": {"type": "string"},
+    "auditor_family": {"type": "string"},
+    "auditor_model": {"type": "string"},
+    "author_family": {"type": "string"},
+    "label": {"enum": ["PASS", "PASS_WITH_NOTES", "MODIFY_REQUIRED", "FAIL", "NEED_MORE"]},
+    "blocking_issues": {"type": "array", "items": {"type": "string"}},
+    "non_blocking_notes": {"type": "array", "items": {"type": "string"}},
+    "overapproval_risks": {"type": "array", "items": {"type": "string"}},
+    "missing_evidence": {"type": "array", "items": {"type": "string"}},
+    "required_operational_diffs": {"type": "array", "items": {"type": "string"}},
+    "next_cycle_canary": {"type": "string"},
+    "evidence_packet_sha256": {"type": "string"}
+  }
+}

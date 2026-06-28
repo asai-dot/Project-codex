@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "queue_item v0.4",
+  "type": "object",
+  "required": [
+    "request_id", "title", "source", "status",
+    "classification", "data", "lineage", "model_route",
+    "authority", "limits", "outputs"
+  ],
+  "properties": {
+    "request_id": {"type": "string"},
+    "title": {"type": "string"},
+    "source": {"type": "string"},
+    "gate": {"type": ["string", "null"]},
+    "status": {"enum": ["queued", "routed", "running", "finalized", "blocked", "triage_needed"]},
+    "priority": {"enum": ["P0", "P1", "P2", "P3"]},
+    "weight": {"enum": ["S", "M", "L", "XL"]},
+    "classification": {
+      "type": "object",
+      "required": ["task_type", "cog_level", "risk_level", "context_need", "evidence_state"],
+      "properties": {
+        "task_type": {"type": "string"},
+        "cog_level": {"enum": ["L0_DETERMINISTIC", "L1_CHEAP_EXTRACTION", "L2_LIGHT_SUMMARY", "L3_NORMAL_WORK", "L4_DEEP_REASONING", "L5_INDEPENDENT_AUDIT", "L6_HUMAN_FINAL"]},
+        "reason": {"type": "string"},
+        "risk_level": {"enum": ["low", "medium", "high", "critical"]},
+        "context_need": {"enum": ["bounded", "expanded"]},
+        "evidence_state": {"enum": ["packet_required", "packet_provided", "not_required"]}
+      }
+    },
+    "data": {
+      "type": "object",
+      "required": ["data_zone", "allowed_model_families"],
+      "properties": {
+        "data_zone": {"type": "string"},
+        "client_confidential": {"type": "boolean"},
+        "credential_or_password": {"type": "boolean"},
+        "allowed_model_families": {"type": "array", "items": {"type": "string"}},
+        "disallowed_model_families": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "author_family": {"type": ["string", "null"]},
+        "author_model": {"type": ["string", "null"]},
+        "prior_reviewer_family": {"type": ["string", "null"]},
+        "auditor_must_differ_from_author": {"type": "boolean"}
+      }
+    },
+    "model_route": {
+      "type": "object",
+      "required": ["primary_role", "finalizer"],
+      "properties": {
+        "primary_role": {"type": "string"},
+        "primary_model": {"type": ["string", "null"]},
+        "fallback_role": {"type": ["string", "null"]},
+        "fallback_model": {"type": ["string", "null"]},
+        "fallback_allowed_only_if_author_family_not_anthropic": {"type": "boolean"},
+        "finalizer": {"type": "string"}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "required": ["requested_mutation_power", "granted_mutation_power"],
+      "properties": {
+        "requested_mutation_power": {"enum": ["none", "draft_write", "final_write", "processed_mark", "canonical_write"]},
+        "granted_mutation_power": {"enum": ["none", "draft_write", "final_write", "processed_mark", "canonical_write"]},
+        "worker_can_finalize": {"type": "boolean"},
+        "processed_by_controller_only": {"type": "boolean"},
+        "canonical_write_allowed": {"type": "boolean"}
+      }
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "max_items_per_run": {"type": "integer"},
+        "max_allowed_inputs": {"type": "integer"},
+        "allow_packet_extra_search": {"type": "boolean"},
+        "external_timeout_seconds": {"type": "integer"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "required": ["expected"],
+      "properties": {
+        "expected": {"type": "array", "items": {"type": "string"}},
+        "forbidden": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+# data_policy.yml — data_zone別の外部モデル許可マトリクス
+# 「安いモデルに投げる」前に、そのデータをそのモデル・その環境へ出してよいかを判定する。
+# UNKNOWNなdata_zoneは fail closed（外部送信禁止）。
+
+version: "v0.1"
+
+zones:
+  internal_design:
+    description: "DD/設計/ORCHドキュメント・派生メタ。組織内設計情報。"
+    external_send_allowed: true
+    allowed_families: [anthropic, openai, google]
+    disallowed_families: []
+    notes: "雑誌オブジェクトの大半はこのzone。"
+
+  public_bibliographic:
+    description: "NDL/CiNiiの公開書誌、ISSN/NCID、公開判例ID。"
+    external_send_allowed: true
+    allowed_families: [anthropic, openai, google, alibaba_local]
+    disallowed_families: []
+
+  derived_metadata:
+    description: "雑誌オブジェクトの派生CSV/JSON(著者名・特集タイトル・タイトル抽出等)。"
+    external_send_allowed: true
+    allowed_families: [anthropic, openai, google, alibaba_local]
+    disallowed_families: []
+
+  scan_raw:
+    description: "scan_data/DVD由来 生スキャン・OCR元データ。第三者著作物。"
+    external_send_allowed: false
+    allowed_families: [alibaba_local]
+    disallowed_families: [anthropic, openai, google, microsoft]
+    notes: "ライセンス確認済(自所物)だが、外部API送信は別途owner GO要。ローカル処理のみ。"
+
+  signy_first_pub:
+    description: "SIGNY/pacsigny 論考メタ。初出ソース。"
+    external_send_allowed: false
+    allowed_families: [alibaba_local]
+    disallowed_families: [anthropic, openai, google]
+    notes: "HIGH-HOLDレーン。owner GO済だが、本格外部送信は別GO。"
+
+  legal_thought_raw:
+    description: "法学論考レーン。HIGH-HOLD。"
+    external_send_allowed: false
+    allowed_families: [alibaba_local]
+    disallowed_families: [anthropic, openai, google]
+
+  client_privileged:
+    description: "依頼者情報・事件情報・調書・案件メモ。"
+    external_send_allowed: false
+    allowed_families: []
+    disallowed_families: [anthropic, openai, google, microsoft, alibaba_local]
+    notes: "外部送信全面禁止。所内human判断のみ。"
+
+  credentials:
+    description: "API key/password/access token/秘密鍵。"
+    external_send_allowed: false
+    allowed_families: []
+    disallowed_families: [anthropic, openai, google, microsoft, alibaba_local]
+    notes: "如何なるLLMにも送信禁止。"
+
+  passwords:
+    description: "credentials のサブセット(明示)。"
+    external_send_allowed: false
+    allowed_families: []
+    disallowed_families: [anthropic, openai, google, microsoft, alibaba_local]
+
+unknown_zone_policy:
+  external_send_allowed: false
+  reason: "data_zone不明は fail closed。triageでzone確定するまで処理しない。"

@@ -1,5 +1,10 @@
 # CLAUDE.md — このリポジトリで動く全 Claude Code が従う規約
 
+## 実行権限ルーター（正本: alo_ai_router/）
+全AIは ALO-MODEL-ROUTER v0.1 に従う。task_type/cog_level/risk_level/mutation_power/data_zone/author_family で
+何を書けるかが機械的に決まる。worker は draft_write 上限。processed化/canonical_write は head/controller のみ。
+UNKNOWN は fail closed。詳細: `alo_ai_router/README.md`, `alo_ai_router/FREEZE_NOTE_v0.1.md`
+
 ## AIチーム組織とルーティング（必読・正本: docs/alo/AGENT_ORG_AND_ROUTING.md）
 
 構造: **ヘッド**（設計・決定・ルーティング・受入検査）→ **ハンド3種**（ワーカーちゃん=Worker Claude Code /

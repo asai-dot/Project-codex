@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "route_decision v0.1",
+  "type": "object",
+  "required": ["route_id", "request_id", "model_role", "hard_denies_passed", "route_reason", "created_at"],
+  "properties": {
+    "route_id": {"type": "string"},
+    "request_id": {"type": "string"},
+    "model_role": {"type": "string"},
+    "selected_model": {"type": ["string", "null"]},
+    "selected_family": {"type": ["string", "null"]},
+    "fallback_model": {"type": ["string", "null"]},
+    "auditor_model": {"type": ["string", "null"]},
+    "finalizer": {"type": "string"},
+    "route_reason": {"type": "string"},
+    "hard_denies_passed": {"type": "integer", "minimum": 0},
+    "hard_denies_failed_ids": {"type": "array", "items": {"type": "string"}},
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

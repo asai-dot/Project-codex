@@ -1,0 +1,110 @@
+# model_registry.yml — role → 現行モデルID対応（モデル名はここだけ・腐ったら差し替え）
+# 本ファイルだけが特定モデル名(claude-opus-4-8 等)を知る。router本体はrole名で動く。
+
+version: "v0.1"
+last_updated: "2026-06-27"
+
+roles:
+  cheap_extractor:
+    candidates:
+      - id: gemini-2.5-flash-lite
+        family: google
+      - id: claude-haiku-4-5
+        family: anthropic
+      - id: gpt-5.4-nano
+        family: openai
+    requirements:
+      json_mode: preferred
+      low_cost: true
+      no_final_write: true
+
+  summary_worker:
+    candidates:
+      - id: claude-haiku-4-5
+        family: anthropic
+      - id: gemini-2.5-flash
+        family: google
+      - id: gpt-5.4-mini
+        family: openai
+    requirements:
+      handles_markdown: true
+      low_cost: true
+      no_final_write: true
+
+  normal_worker:
+    candidates:
+      - id: claude-sonnet-4-6
+        family: anthropic
+      - id: gpt-5.4
+        family: openai
+      - id: codex
+        family: openai
+        coding_only: true
+    requirements:
+      handles_markdown: true
+      handles_code_or_design: true
+      bounded_context: true
+      no_final_write: true
+
+  deep_reasoner:
+    candidates:
+      - id: gpt-5.5-pro
+        family: openai
+      - id: claude-opus-4-8
+        family: anthropic
+    requirements:
+      high_reasoning: true
+      long_context: true
+      output_candidate_only: true
+
+  independent_auditor:
+    selection_policy: different_family_from_author
+    candidates:
+      - id: gpt-5.5-pro
+        family: openai
+      - id: claude-opus-4-8
+        family: anthropic
+      - id: gemini-2.5-pro
+        family: google
+    requirements:
+      different_family_from_author: true
+      evidence_packet_required: true
+      no_processed_mark: true
+
+  finalizer:
+    executor: controller_or_human
+    model: null
+    requirements:
+      decision_log_required: true
+
+# 用途別の追加役割（雑誌オブジェクトでローカル分類等に使う）
+specialty_roles:
+  local_bulk_classifier:
+    candidates:
+      - id: qwen3:30b
+        family: alibaba_local
+        runtime: ollama
+    requirements:
+      runs_local: true
+      no_external_api: true
+      low_cost: true
+      no_final_write: true
+    notes: "ローカルちゃん。30万件級の軽量分類向け。qwen2.5は全件その他に倒れる既知問題で除外。"
+
+  office_document_helper:
+    candidates:
+      - id: copilot-m365
+        family: microsoft
+    requirements:
+      runs_in_m365: true
+      no_canonical_write: true
+    notes: "Word/Excel事務補助。canonical裁判官にしない。"
+
+  workspace_helper:
+    candidates:
+      - id: gemini-in-workspace
+        family: google
+    requirements:
+      runs_in_google_workspace: true
+      no_canonical_write: true
+    notes: "Workspace内検索・要約係。Salesforce主データ変更判断はさせない。"

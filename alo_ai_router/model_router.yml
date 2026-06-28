@@ -1,0 +1,258 @@
+# ALO-MODEL-ROUTER v0.1 — 7階層 + hard_denies + rules
+# 役割: task_type/cog_level/risk_level/mutation_power/data_zone/author_family から
+#       executor と mutation_power を機械的に決定する。
+# モデル名は書かない（model_registry.yml で role→model 解決）。
+
+version: "v0.1"
+
+levels:
+  L0_DETERMINISTIC:
+    meaning: "LLM不要。スクリプト・DB・正規表現・hash・schemaで処理"
+    executor: script
+    final_write_allowed: false
+  L1_CHEAP_EXTRACTION:
+    meaning: "判断不要の抽出・整形・単純分類"
+    executor: cheap_extractor
+    final_write_allowed: false
+  L2_LIGHT_SUMMARY:
+    meaning: "軽い理解。圧縮・タグ案・チェックリスト"
+    executor: summary_worker
+    final_write_allowed: false
+  L3_NORMAL_WORK:
+    meaning: "通常の実務作業。DD草案・bounded patch・RESULT候補"
+    executor: bounded_worker
+    max_items_per_run: 1
+    final_write_allowed: false
+  L4_DEEP_REASONING:
+    meaning: "設計判断・矛盾解消・canonical境界・法的評価"
+    executor: deep_reasoner
+    max_items_per_run: 1
+    output_only:
+      - decision_candidate
+      - split_plan
+      - risk_register
+      - hold_list
+    final_write_allowed: false
+  L5_INDEPENDENT_AUDIT:
+    meaning: "別系統モデルによる異議申立て・赤入れ・メタ監査"
+    executor: cross_family_auditor
+    max_items_per_run: 1
+    evidence_packet_required: true
+    final_write_allowed: false
+  L6_HUMAN_FINAL:
+    meaning: "head / controller / 人間による最終確定・processed化"
+    executor: [head, controller, human]
+    model: null
+    final_write_allowed: true
+
+default:
+  if_unknown:
+    action: do_not_process
+    output: TRIAGE_NEEDED
+    reason: "Unknown tasks must fail closed."
+
+hard_denies:
+  - id: HD1_worker_cannot_processed
+    when:
+      mutation_power: [processed_mark, canonical_write, production_db_write]
+    deny_if_executor:
+      - cheap_extractor
+      - summary_worker
+      - bounded_worker
+      - deep_reasoner
+      - cross_family_auditor
+  - id: HD2_no_same_family_audit
+    when:
+      task_type: [audit, red_team, metaaudit, result_review]
+    deny_if:
+      author_family_equals_auditor_family: true
+  - id: HD3_no_llm_for_l0
+    when:
+      cog_level: L0_DETERMINISTIC
+    deny_if:
+      model_not_null: true
+  - id: HD4_no_cheap_model_for_canonical
+    when:
+      task_type: [canonical_boundary, db_schema_decision, accepted_decision, legal_strategy]
+    deny_if_model_role:
+      - cheap_extractor
+      - summary_worker
+  - id: HD5_no_secret_zone_to_external_cheap
+    when:
+      data_zone: [credentials, passwords, client_privileged]
+    deny_if_model_role:
+      - cheap_extractor
+      - external_unapproved_model
+
+rules:
+  - id: R0_deterministic
+    when:
+      task_type: [hash, count, diff, schema_validation, status_scan, exact_duplicate_detection]
+    assign:
+      cog_level: L0_DETERMINISTIC
+      executor: script
+      model: null
+      mutation_power: none
+
+  - id: R1_cheap_extraction
+    when:
+      task_type: [metadata_extraction, filename_normalization, frontmatter_generation, simple_labeling]
+      risk_level: [low]
+    assign:
+      cog_level: L1_CHEAP_EXTRACTION
+      executor: cheap_extractor
+      model_role: cheap_extractor
+      mutation_power: draft_write
+    limits:
+      max_batch_items: 20
+      no_finalization: true
+
+  - id: R2_light_summary
+    when:
+      task_type: [summary, tagging, checklist_generation, request_compression]
+      risk_level: [low, medium]
+    assign:
+      cog_level: L2_LIGHT_SUMMARY
+      executor: summary_worker
+      model_role: summary_worker
+      mutation_power: draft_write
+    limits:
+      max_batch_items: 5
+      no_finalization: true
+
+  - id: R3_normal_work
+    when:
+      task_type: [dd_draft, result_candidate, bounded_code_patch, bounded_audit]
+      risk_level: [medium]
+    assign:
+      cog_level: L3_NORMAL_WORK
+      executor: bounded_worker
+      model_role: normal_worker
+      mutation_power: draft_write
+    limits:
+      max_batch_items: 1
+      require_run_packet: true
+      no_processed_mark: true
+
+  - id: R4_deep_reasoning
+    when:
+      task_type: [architecture_decision, canonical_boundary, db_schema_decision, conflict_resolution, legal_strategy, xl_split_plan]
+      risk_level: [high, critical]
+    assign:
+      cog_level: L4_DEEP_REASONING
+      executor: deep_reasoner
+      model_role: deep_reasoner
+      mutation_power: draft_write
+    limits:
+      max_batch_items: 1
+      output_only: [decision_candidate, split_plan, risk_register, hold_list]
+      no_finalization: true
+
+  - id: R5_independent_audit
+    when:
+      task_type: [audit, red_team, metaaudit, result_review]
+    assign:
+      cog_level: L5_INDEPENDENT_AUDIT
+      executor: cross_family_auditor
+      model_role: independent_auditor
+      selection_policy: different_family_from_author
+      mutation_power: draft_write
+    limits:
+      max_batch_items: 1
+      require_evidence_packet: true
+      no_processed_mark: true
+
+  - id: R6_finalization
+    when:
+      task_type: [processed_mark, canonical_promotion, production_db_write, accepted_decision, external_publication]
+    assign:
+      cog_level: L6_HUMAN_FINAL
+      executor: [head, human, controller]
+      model: null
+    limits:
+      llm_can_recommend: true
+      llm_can_execute: false
+
+mutation_power_v0_1:
+  none:
+    meaning: "読むだけ。候補も書かない"
+    allowed_executors: [script, worker, auditor]
+  draft_write:
+    meaning: "runs/ または drafts/ に候補を書く"
+    allowed_executors: [bounded_worker, deep_reasoner, cross_family_auditor]
+  final_write:
+    meaning: "from_gpt/ 等に final RESULT を置く"
+    allowed_executors: [controller, head]
+  processed_mark:
+    meaning: "REQUEST に processed 印を付ける、または processed/ へ移動する"
+    allowed_executors: [controller, head]
+  canonical_write:
+    meaning: "正本・DB・accepted・canonical へ反映する"
+    allowed_executors: [human, head, approved_controller]
+    requires: [decision_log, rollback_plan, evidence_hash, explicit_go]
+
+escalation_rules:
+  to_L3:
+    when:
+      - "REQUEST本文の意味理解が必要"
+      - "判断理由が必要"
+      - "複数文書の関係を見る必要"
+      - "単純抽出結果に矛盾"
+  to_L4:
+    when:
+      - "canonical / accepted / production DB に触れる"
+      - "既存DDと矛盾"
+      - "法的評価あり"
+      - "不可逆処理の可能性"
+      - "同じREQUESTが2回 retry"
+      - "workerがNEED_MOREを出したが資料は揃っている"
+      - "境界問題が発生"
+  to_L5:
+    when:
+      - "作成者と別系統の異議申立てが必要"
+      - "PASS判定だが重大HOLDが近い"
+      - "誤承認コストが高い"
+      - "worker loop自体の運用差分がある"
+      - "Claude作成物を確定したい"
+      - "GPT作成物を確定したい"
+  to_L6:
+    when:
+      - "processed化"
+      - "canonical promotion"
+      - "DB write"
+      - "accepted decision"
+      - "外部提出"
+      - "依頼者影響"
+      - "金銭・期限・権利義務に影響"
+
+downgrade_rules:
+  from_L5_to_L3:
+    when:
+      - "監査ではなく形式検査だった"
+      - "author_familyが存在しない単純作業"
+      - "異議申立てではなく候補作成"
+  from_L4_to_L3:
+    when:
+      - "問題が分割済み"
+      - "問いが作業票に落ちている"
+      - "参照ファイルが3つ以下"
+      - "禁止事項が明確"
+      - "最終判断不要"
+  from_L3_to_L2:
+    when:
+      - "要約だけ"
+      - "構造化だけ"
+      - "判断不要"
+      - "既存rubricに機械的に当てるだけ"
+  from_L2_to_L0:
+    when:
+      - "regex/hash/schemaで済む"
+      - "自由文生成不要"
+      - "合否判定が決定的"
+
+audit_family_rule:
+  pass_if:
+    - author_family != auditor_family
+  fail_if:
+    - author_family == auditor_family
+    - auditor_read_only_summary_only == true

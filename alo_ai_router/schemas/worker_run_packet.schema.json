@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "worker_run_packet v0.1",
+  "description": "head/controller がworkerに渡す1件分の作業packet。max_items=1を強制。",
+  "type": "object",
+  "required": ["packet_id", "request_id", "executor_role", "mutation_power", "inputs", "constraints", "expected_outputs"],
+  "properties": {
+    "packet_id": {"type": "string"},
+    "request_id": {"type": "string"},
+    "executor_role": {"enum": ["script", "cheap_extractor", "summary_worker", "bounded_worker", "deep_reasoner", "cross_family_auditor", "local_bulk_classifier"]},
+    "executor_model": {"type": ["string", "null"]},
+    "mutation_power": {"enum": ["none", "draft_write"]},
+    "max_items": {"type": "integer", "maximum": 1},
+    "inputs": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": {"type": "string"},
+          "sha256": {"type": "string"},
+          "role": {"type": "string"}
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "required": ["allow_packet_extra_search", "no_finalization", "no_processed_mark", "external_timeout_seconds"],
+      "properties": {
+        "allow_packet_extra_search": {"type": "boolean"},
+        "no_finalization": {"type": "boolean"},
+        "no_processed_mark": {"type": "boolean"},
+        "external_timeout_seconds": {"type": "integer"},
+        "data_zone": {"type": "string"},
+        "no_external_send": {"type": "boolean"}
+      }
+    },
+    "expected_outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "type"],
+        "properties": {
+          "path": {"type": "string"},
+          "type": {"enum": ["RESULT_CANDIDATE", "AUDIT_RESULT_CANDIDATE", "DECISION_CANDIDATE", "DD_DRAFT", "PATCH", "TEST", "DIGEST", "JSON_EXTRACT", "RUN_SUMMARY"]}
+        }
+      }
+    },
+    "forbidden_outputs": {"type": "array", "items": {"type": "string"}}
+  }
+}
