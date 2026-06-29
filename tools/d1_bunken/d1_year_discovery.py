@@ -50,9 +50,9 @@ def nfkc(s):
 
 def etc_journal(raw):
     """掲載誌等フィールドから誌名本体を切り出す（巻号・年号を除去）。"""
-    s = nfkc(raw).lstrip("『「（(")
+    s = nfkc(raw).lstrip("『「（(|｜ ")   # RTF列区切り | も除去
     s = re.split(r"\d", s, 1)[0]
-    return s.strip(" 　,，、。.・（(「『")
+    return s.strip(" 　,，、。.・（(「『|｜")
 
 def load_existing_journals(labeled_path):
     """ラベル済みJSONLから既存 canonical 誌名セットを読む。"""
