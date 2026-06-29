@@ -110,21 +110,60 @@ def sleepj():
     else:
         time.sleep(random.uniform(30, 55))
 
+def _enable_date_condition(page):
+    """発行年月日条件を追加してフィールドを有効化する。"""
+    page.get_by_text("検索条件を追加").first.click()
+    page.wait_for_timeout(1500)
+    neutralize(page)
+    # ドロップダウン内の「発行年月日」を JS で探してクリック
+    # （ページ上に同名ラベルが既に存在するため get_by_text.first だと誤クリックする）
+    clicked = page.evaluate("""
+        () => {
+            const candidates = Array.from(document.querySelectorAll(
+                'li, a, button, [role="option"], [role="menuitem"], .dh-search-condition__item'
+            )).filter(e => {
+                const t = (e.innerText || e.textContent || '').trim();
+                return t === '発行年月日' && e.offsetParent !== null;
+            });
+            if (candidates.length > 0) { candidates[0].click(); return true; }
+            return false;
+        }
+    """)
+    if not clicked:
+        page.get_by_text("発行年月日", exact=True).last.click()
+    page.wait_for_timeout(1200)
+
+def _fill_date_fields(page, year):
+    """発行年月日フィールドに年の開始〜終了を入力する。disabled なら JS で強制セット。"""
+    fields = {
+        "bunSearchFromPublishY": str(year), "bunSearchFromPublishM": "1",  "bunSearchFromPublishD": "1",
+        "bunSearchToPublishY":   str(year), "bunSearchToPublishM":   "12", "bunSearchToPublishD":   "31",
+    }
+    # まず有効化を待つ
+    try:
+        page.locator("input[name='bunSearchFromPublishY']").wait_for(state="enabled", timeout=8000)
+    except Exception:
+        pass
+    for name, val in fields.items():
+        loc = page.locator(f"input[name='{name}']")
+        try:
+            loc.fill(val)
+        except Exception:
+            page.evaluate(
+                f"() => {{ const el=document.querySelector(\"input[name='{name}']\"); "
+                f"if(el){{ el.removeAttribute('disabled'); el.value='{val}'; "
+                f"el.dispatchEvent(new Event('input',{{bubbles:true}})); "
+                f"el.dispatchEvent(new Event('change',{{bubbles:true}})); }} }}"
+            )
+
 def search_by_year(page, year):
     """発行年月日フィルタで year 年の全件を検索し、総件数を返す。"""
     page.goto("https://mis-hs.d1-law.com/d1bun/bunsearch",
               wait_until="networkidle", timeout=45000)
     settle(page)
 
-    page.get_by_text("検索条件を追加").first.click(); page.wait_for_timeout(900)
-    page.get_by_text("発行年月日", exact=True).first.click(); page.wait_for_timeout(700)
-
-    page.locator("input[name='bunSearchFromPublishY']").fill(str(year))
-    page.locator("input[name='bunSearchFromPublishM']").fill("1")
-    page.locator("input[name='bunSearchFromPublishD']").fill("1")
-    page.locator("input[name='bunSearchToPublishY']").fill(str(year))
-    page.locator("input[name='bunSearchToPublishM']").fill("12")
-    page.locator("input[name='bunSearchToPublishD']").fill("31")
+    _enable_date_condition(page)
+    _fill_date_fields(page, year)
 
     page.get_by_text("検索", exact=True).first.click()
     settle(page)
