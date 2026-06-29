@@ -76,6 +76,9 @@ consume_and_run() {
 }
 
 while true; do
+  # storm 防止: トリガ有無に関わらず毎周期 blocked ゾンビを回収する
+  [ -x ./tools/worker_guard.sh ] && ./tools/worker_guard.sh reap 2>/dev/null || true
+
   git fetch origin "$DEFAULT_BRANCH" -q 2>/dev/null || true
 
   # 旧仕様トリガ (1ファイルのみ)

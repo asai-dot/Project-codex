@@ -37,6 +37,17 @@ fi
 PROMPT="git pull origin ${BRANCH} してから、発注書 ${ORDER} を読んで指示どおり実行し、成果物を commit して push して。発注書に read-only / dry-run / 受入基準 / 出力スキーマ の指定があれば厳守。出力ファイル名は発注書の指定に従い、P##系の番号は使わない。"
 
 echo "[wake_worker] order = $ORDER"
+
+# ★ storm サーキットブレーカー: 起動前に blocked ゾンビを回収し、同時起動数を縛る。
+#   生存ワーカーが上限(MAX_LIVE 既定1)に達していたら起動を拒否する。
+#   どうしても重ねたい時は MAX_LIVE=2 ./tools/wake_worker.sh ... のように上書き。
+if [ -x ./tools/worker_guard.sh ]; then
+  if ! ./tools/worker_guard.sh check; then
+    echo "[wake_worker] 起動中止(guardが拒否)。既存ワーカーが居ます。" >&2
+    exit 5
+  fi
+fi
+
 echo "[wake_worker] launching worker (--bg, bypassPermissions) ..."
 claude --bg --permission-mode bypassPermissions "$PROMPT"
 echo "[wake_worker] 起動完了。'claude agents' で確認 / 'claude logs <id>' でログ。"
