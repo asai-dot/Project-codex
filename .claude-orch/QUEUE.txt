@@ -13,6 +13,7 @@
 9 issueidx artifacts/periodical/ORCH-ISSUE-INDEX_order_20260627.md
 10 reprint  artifacts/periodical/ORCH-REPRINT-FIRST-PUB_order_20260627.md
 11 tsuukan  artifacts/periodical/ORCH-TSUUKAN-CROSSWALK-EXPAND_order_20260627.md
+12 ocringest artifacts/periodical/ORCH-HIGHHOLD-INGEST_order_20260624.md
 # === キュー進行中の停止判断（HEAD-ORDER-PROTOCOL §7参照） ===
 # 各タスク: EXIT-A 認定 or EXIT-B POSTMORTEM どちらかで終了
 # 雑誌オブジェクト全体: EXIT-C の6条件が揃ったら第1期完了→別オブジェクトへ移行
