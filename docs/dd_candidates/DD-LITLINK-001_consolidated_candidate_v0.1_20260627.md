@@ -2,7 +2,8 @@
 
 > **id**: DD-LITLINK-001 / **version**: candidate v0.1（**consolidated freeze candidate**・初の凍結候補）/ **formalizes**: cleaned design record `02_LIT_DESIGN_RECORD_CLEANED_20260615`（Box 2286222789037）§6 文献link・§7 CaseBundle 扱い（latest-pointer の DD-LITLINK-001 を単一凍結候補に確定）
 > **owner**: 浅井 / **author**: 番頭(リモートClaude) / **date**: 2026-06-27 JST
-> **lifecycle**: candidate（**設計のみ**）。DDL/DB/mint/OCR/embedding/edge promotion/alo_edges export 本番反映/Box mutation は **HOLD**。
+> **lifecycle**: **accepted**（owner 浅井 ratify 2026-06-27・設計のみ）。GPT Pro 監査 `DDLITLINK_PASS_WITH_NOTES`（RESULT Box 2315090716649・source_file_id 2312912301080・blocking なし）。実装 DDL/DB/mint/OCR/embedding/edge promotion/alo_edges export 本番反映/Box mutation は**別ゲートで HOLD**（accepted≠deployed）。
+> **accepted notes（非blocking・affirmation）**: (1) signal→candidate→accepted edge の3層分離は妥当 (2) LITID への identity 委譲は妥当 (3) XDOC OWNERSHIP_NO_REDEF と整合 (4) INDEP leaf binding は同一供給元 signal の二重カウント防止として妥当 (5) CaseBundle では evidence でなく supporting_analysis/counter_analysis/research_lead 止まりで妥当。
 > **depends_on（pin）**: **DD-LITID-001 v0.5**（source/asset 同定の正本・accepted・content_hash 4b8f4a57…・RESULT 2312578962778）/ **DD-INDEP-LINEAGE-001 v0.1**（独立性 lineage 正本・accepted・content_hash a7856be1…・RESULT 2306834650821）。
 > **consumed by**: DD-XDOC-001 v0.9（§8 OWNERSHIP_NO_REDEF が lit_link を所有境界の一種として参照・本 DD は定義を供給）。
 > **責務境界**: 本 DD は「文献が**何を参照するか**（link/edge）」のみ所有。「**どの本が同じ本か**（identity）」は DD-LITID-001 が正本（再定義しない）。
