@@ -134,26 +134,26 @@ def _enable_date_condition(page):
     page.wait_for_timeout(1200)
 
 def _fill_date_fields(page, year):
-    """発行年月日フィールドに年の開始〜終了を入力する。disabled なら JS で強制セット。"""
-    fields = {
-        "bunSearchFromPublishY": str(year), "bunSearchFromPublishM": "1",  "bunSearchFromPublishD": "1",
-        "bunSearchToPublishY":   str(year), "bunSearchToPublishM":   "12", "bunSearchToPublishD":   "31",
-    }
-    # まず有効化を待つ
+    """発行年月日フィールドに年の開始〜終了を入力する。Tab でピッカーを閉じながら進む。"""
+    pairs = [
+        ("bunSearchFromPublishY", str(year)), ("bunSearchFromPublishM", "1"),  ("bunSearchFromPublishD", "1"),
+        ("bunSearchToPublishY",   str(year)), ("bunSearchToPublishM",   "12"), ("bunSearchToPublishD",   "31"),
+    ]
     try:
         page.locator("input[name='bunSearchFromPublishY']").wait_for(state="enabled", timeout=8000)
     except Exception:
         pass
-    for name, val in fields.items():
+    for name, val in pairs:
         loc = page.locator(f"input[name='{name}']")
         try:
+            loc.click()
             loc.fill(val)
+            page.keyboard.press("Tab")   # ピッカードロップダウンを閉じてフォーカスを移す
+            page.wait_for_timeout(150)
         except Exception:
             page.evaluate(
                 f"() => {{ const el=document.querySelector(\"input[name='{name}']\"); "
-                f"if(el){{ el.removeAttribute('disabled'); el.value='{val}'; "
-                f"el.dispatchEvent(new Event('input',{{bubbles:true}})); "
-                f"el.dispatchEvent(new Event('change',{{bubbles:true}})); }} }}"
+                f"if(el){{ el.removeAttribute('disabled'); el.value='{val}'; }} }}"
             )
 
 def search_by_year(page, year):
@@ -165,19 +165,33 @@ def search_by_year(page, year):
     _enable_date_condition(page)
     _fill_date_fields(page, year)
 
-    # 日付ピッカー（.dh-date__exe）が開いていたら閉じる
-    page.keyboard.press("Escape")
-    page.wait_for_timeout(600)
-    neutralize(page)
+    # フィールド値を確認（デバッグ）
+    vals = page.evaluate("""() => ({
+        fromY: document.querySelector("input[name='bunSearchFromPublishY']")?.value,
+        fromM: document.querySelector("input[name='bunSearchFromPublishM']")?.value,
+        fromD: document.querySelector("input[name='bunSearchFromPublishD']")?.value,
+        toY:   document.querySelector("input[name='bunSearchToPublishY']")?.value,
+        toM:   document.querySelector("input[name='bunSearchToPublishM']")?.value,
+        toD:   document.querySelector("input[name='bunSearchToPublishD']")?.value,
+    })""")
+    print(f"  [debug] date fields: {vals}")
 
-    # 検索ボタンをクリック（ピッカー残留に備え force=True + JS フォールバック）
-    try:
-        page.get_by_text("検索", exact=True).first.click(force=True, timeout=10000)
-    except Exception:
-        page.evaluate(
-            "() => { const el = document.querySelector('.dh-btn-with-icon__text'); "
-            "if (el) el.closest('button, a, [role=\"button\"]').click(); }"
-        )
+    neutralize(page)
+    page.wait_for_timeout(400)
+
+    # 検索ボタン: 親 <button> を JS で直接 click（div テキストでなく button 要素を叩く）
+    page.evaluate("""
+        () => {
+            const divs = Array.from(document.querySelectorAll('.dh-btn-with-icon__text, [class*="btn"]'));
+            for (const d of divs) {
+                if ((d.innerText || d.textContent || '').trim() === '検索') {
+                    const btn = d.closest('button') || d.closest('[role="button"]') || d;
+                    btn.click();
+                    return;
+                }
+            }
+        }
+    """)
     settle(page)
 
     body = page.text_content("body") or ""
