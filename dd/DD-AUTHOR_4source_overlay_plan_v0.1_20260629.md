@@ -1,6 +1,8 @@
-# DD-AUTHOR — 4-source overlay load + dedup 実装計画 v0.1
+# DD-AUTHOR — 4-source overlay load + dedup 実装計画 v0.2
 
-**Status:** DRAFT / plan for review  **Date:** 2026-06-29
+**Status:** DRAFT / decisions locked by owner 2026-06-29  **Date:** 2026-06-29
+
+> v0.2 更新: オーナー回答で論点確定。D1=authority.*拡張 / スコープ=全部(人物+articles+books+serials) / D1-Law著者ソース=「文献編一覧RTF」 / name_reading も補完(さぼらない) / pacsigny の person_data staging は Box 未同期(収穫機ローカルのみ)＝Boxから取込不可。
 **Spec of record:** `ALO_文献著者スキーマ仕様書_v1.0`（Box `00＿設計資料/`）
 **Governance:** INGEST_SPEC v0.2（§7-A manifest gate / §7-D candidate≠confirmed / §7-E GO・HOLD）、DD-LITID append-only 原則
 
@@ -19,14 +21,16 @@
 
 ---
 
-## 2. 決定事項（推奨デフォルト。▲＝要確認）
+## 2. 決定事項（オーナー確定済 ✅ / 既定 △）
 
-| # | 論点 | 推奨 | 理由 / トレードオフ |
+| # | 論点 | 決定 | 補足 |
 |---|------|------|------|
-| D1 ▲ | スキーマ方針 | **authority.* を仕様に寄せて拡張**（text person_id 維持＋source別属性テーブル追加） | 128K人と publication_author_claim 等のFKを再キーイングせずに、仕様の「source別並列・劣化なし」を実現。完全な alo_persons(bigserial) 新規は理想だが大規模移行になる |
-| D2 ▲ | 既存 stg_person_overlay | **新規設計するが互換に保ち、実行前に必ず突合** | pacsigny 一式が本リポジトリに無く未読。二重構築回避のため、実装着手前に当該ファイルをリポ取込 or 参照 |
-| D3 | スコープ | **人物/著者のみ** | alo_persons + source別属性 + external_ids + resolution_log + work_authors(スタブ)。alo_articles/books/serials（D1-Law 449k 等）は別タスク |
-| D4 | 実行境界 | **設計＋staging＋dry-run 成果物まで**（candidate） | 本番DB書込/canonical昇格は §7-E HOLD のまま。現行ガバナンス整合 |
+| D1 ✅ | スキーマ方針 | **authority.* を仕様に寄せて拡張**（text person_id 維持＋source別属性テーブル追加） | 128K人と claim FK を再キーイングせずに「source別並列・劣化なし」を実現 |
+| D2 ✅ | 既存 stg_person_overlay | **任せる／先にリポジトリ取込可** → ただし **person_data staging は Box 未同期**（収穫機ローカルのみ）。Box `data/pacsigny/iteration/` 実体は D1-Law taxonomy ロード＋cinii/opac パケット。**person_data_append_only_staging_load_v1_* は取込不可** | 突合は DD-KAKEN-RM 進捗記録（schema `stg_person_overlay`/25表/append-only/検証0エラー）を仕様として参照。実ファイルが要るならオーナーが Box 同期 |
+| D3 ✅ | スコープ | **全部**（人物＋alo_articles＋alo_books＋alo_serials＋work_authors） | 大規模プログラム。フェーズ分割で着手（§4） |
+| D4 △ | 実行境界 | **設計＋staging＋dry-run 候補まで**（既定。未明示回答） | 本番DB書込/canonical昇格は §7-E HOLD。scratch schema 実ロードに進める場合は一声 |
+| D5 ✅ | D1-Law著者ソース | **「文献編一覧」RTFエクスポート**（Box: ジュリスト/金融・商事判例/判例タイムズ/判例時報 各誌, 各~0.5–0.7MB） | これが D1-Law 文献編（著者⇄著作）のリッチ原本。RTF→構造化パーサが要 |
+| D6 ✅ | name_reading | **補完する**（NDL読み仮名等で人物正規化の質を上げる） | specialties/affiliations 前段の人物同定品質に効く |
 
 ---
 
@@ -81,6 +85,15 @@
 ### Phase E — ゲート昇格（HOLD）
 - append-only staging への COPY dry-run（D2の既存計画と整合）→ 監査（GPT audit loop）→ owner ratification → canonical 昇格。**本計画では設計/ dry-run まで**。
 
+### Phase B+ — name_reading 補完（D6）
+- 人物正規化品質のため `name_reading`（読み仮名）を NDL 典拠 / researchmap / CiNii kana から補完し `alo_persons.name_reading` 相当へ。dedup の `name_reading_match` 基準にも効く。source別・劣化なしで保持。
+
+### Phase F — 文献コンテナ（D3 全部スコープ。著者と並行する大規模レーン）
+- **alo_serials**: ISSN マスタ（文献編RTF / staging_periodical から）。
+- **alo_books**: 既 biblio.books / bib_records / NDL から（edition_number 抽出は仕様 §8、既 A3 edition 成果を流用）。
+- **alo_articles**: **D1-Law 文献編RTF（D5）→ パース**（著者・誌名・巻号・事項索引・分類）。449,677件規模。`work_authors` で著者⇄記事を結線し、人物次元（A–E）と重畳。
+- 規模が桁違いのため、サンプル誌（例: ジュリスト1誌）で RTF パーサと article/work_authors 投入を検証→横展開。
+
 ---
 
 ## 5. 再利用する既存資産（再構築しない）
@@ -97,13 +110,10 @@
 
 ---
 
-## 7. 未確定・ユーザ確認事項
-1. **D1 スキーマ方針**: authority.*拡張（推奨）か、alo_persons 完全新規か。
-2. **D2 既存staging**: 既存 stg_person_overlay を土台にするか／新規か。→ pacsigny `person_data_append_only_staging_load_v1_*` をリポジトリに取り込めるか（私が読めるように）。
-3. **D3 スコープ**: 人物のみ（推奨）か、articles/books も含む全構築か。
-4. **D4 実行境界**: dry-run候補まで（推奨）か、scratch schema 実ロードまでか。
-5. **D1-Law 著者データの所在**: D1-Law 文献編（著者⇄著作）の取込元はどこか（Box path / 既存テーブル）。authority.publication は7,348件のみ＝D1著者は未ロードと推定。
-6. **NDL読み仮名**: name_reading 充足の要否（specialties/affiliations の前に人物正規化の質に効く）。
+## 7. 残・確認事項（v0.2）
+- **D4 のみ未確定**: dry-run候補まで（既定で進行）か、scratch schema へ実ロードまで許可するか。返答なければ既定（dry-run候補・昇格HOLD）で進める。
+- **pacsigny person_data staging**: Box 未同期で取込不可。実ファイル突合が必要ならオーナーが Box へ同期。なければ DD-KAKEN-RM 進捗記録を仕様として整合（重複回避は維持）。
+- 他（D1/D2/D3/D5/D6）は確定。
 
 ## 8. 検証（dry-run）
 - Phase B パーサは小サンプル（各source数十NRID）で TSV を生成し、source列・evidence_source・カラム充足を確認。
