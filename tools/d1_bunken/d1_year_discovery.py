@@ -165,7 +165,19 @@ def search_by_year(page, year):
     _enable_date_condition(page)
     _fill_date_fields(page, year)
 
-    page.get_by_text("検索", exact=True).first.click()
+    # 日付ピッカー（.dh-date__exe）が開いていたら閉じる
+    page.keyboard.press("Escape")
+    page.wait_for_timeout(600)
+    neutralize(page)
+
+    # 検索ボタンをクリック（ピッカー残留に備え force=True + JS フォールバック）
+    try:
+        page.get_by_text("検索", exact=True).first.click(force=True, timeout=10000)
+    except Exception:
+        page.evaluate(
+            "() => { const el = document.querySelector('.dh-btn-with-icon__text'); "
+            "if (el) el.closest('button, a, [role=\"button\"]').click(); }"
+        )
     settle(page)
 
     body = page.text_content("body") or ""
