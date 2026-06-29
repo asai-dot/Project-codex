@@ -4,83 +4,83 @@ alo:book:isbn:9784313511606	9784313511606	NOBN_20160518_若手法律家のため
 alo:book:isbn:9784313511767	9784313511767	NOBN_20160518_若手法律家のための法律相談入門_01	1	collision_priority	79	11	4	86	0.046512	0.046512	v1.0	82d383e64927a7de	
 alo:book:isbn:9784417015185	9784417015185	NOBN_20160530_独占禁止法の法律相談_01	1	collision_priority							v1.0		ERROR:no_box_file
 alo:book:isbn:9784417016472	9784417016472	NOBN_20171120_建築訴訟_01	1	collision_priority	140	10	4	145	0.027586	0.027586	v1.0	6247baab6d55d09b	
-alo:book:isbn:9784417016847	9784417016847	NOBN_20160530_独占禁止法の法律相談_01	1	collision_priority							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784417018209	9784417018209	NOBN_20211130_倒産法_01	1	collision_priority							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784492533680	9784492533680	NOBN_20150828_事業担当者のための逆引きビジネス法務ハンドブック_01	1	collision_priority							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784417016847	9784417016847	NOBN_20160530_独占禁止法の法律相談_01	1	collision_priority	494	8	6	416	0.014423	0.014423	v1.0	91e4a3bcfc397cf1	
+alo:book:isbn:9784417018209	9784417018209	NOBN_20211130_倒産法_01	1	collision_priority	8	12	5	15	0.333333	0.333333	v1.0	425425693b77d030	
+alo:book:isbn:9784492533680	9784492533680	NOBN_20150828_事業担当者のための逆引きビジネス法務ハンドブック_01	1	collision_priority	5	13	0	18	0.0	0.0	v1.0	a2e3ab42ef7d2928	
 alo:book:isbn:9784492533987	9784492533987	NOBN_20150828_事業担当者のための逆引きビジネス法務ハンドブック_01	1	collision_priority	157	13	4	157	0.025478	0.025478	v1.0	9ea2d7336f0feadd	
 alo:book:isbn:9784492534397	9784492534397	NOBN_20150828_事業担当者のための逆引きビジネス法務ハンドブック_01	1	collision_priority							v1.0		ERROR:no_box_file
 alo:book:isbn:9784502314612	9784502314612	NOBN_20190902_海外子会社リーガルリスク管理の実務_01	1	collision_priority	171	6	2	173	0.011561	0.011561	v1.0	2c0f9df939eddae1	
-alo:book:isbn:9784502516016	9784502516016	NOBN_20190902_海外子会社リーガルリスク管理の実務_01	1	collision_priority							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784502516016	9784502516016	NOBN_20190902_海外子会社リーガルリスク管理の実務_01	1	collision_priority	85	6	2	89	0.022472	0.022472	v1.0	3f0898d20371c48e	
 alo:book:isbn:9784502951909	9784502951909	NOBN_20100917_知的財産法入門_01	1	collision_priority							v1.0		ERROR:no_box_file
 alo:book:isbn:9784532111083	9784532111083	NOBN_20201201_倒産法入門_01	1	collision_priority							v1.0		ERROR:no_box_file
-alo:book:isbn:9784535511088	9784535511088	NOBN_20220331_初歩からはじめる物権法_01	1	collision_priority							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535516595	9784535516595	NOBN_20170929_契約法_01	1	collision_priority							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535518629	9784535518629	NOBN_20120425_判例特別刑法_01	1	collision_priority							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784535511088	9784535511088	NOBN_20220331_初歩からはじめる物権法_01	1	collision_priority	205	19	17	191	0.089005	0.089005	v1.0	322e70680b86ee73	
+alo:book:isbn:9784535516595	9784535516595	NOBN_20170929_契約法_01	1	collision_priority	197	6	3	189	0.015873	0.015873	v1.0	d21d9abf8fd2f04d	
+alo:book:isbn:9784535518629	9784535518629	NOBN_20120425_判例特別刑法_01	1	collision_priority	420	18	7	281	0.024911	0.024911	v1.0	9c9aebe4bb6d7932	
 alo:book:isbn:9784535522879	9784535522879	NOBN_20180220_刑事法廷弁護技術_01	1	collision_priority	15	20	15	20	0.75	0.75	v1.0	080928ad94274767	
-alo:book:isbn:9784535525573	9784535525573	NOBN_20120425_判例特別刑法_01	1	collision_priority							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535527966	9784535527966	NOBN_20180220_刑事法廷弁護技術_01	1	collision_priority							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535806634	9784535806634	NOBN_20170929_契約法_01	1	collision_priority							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784535525573	9784535525573	NOBN_20120425_判例特別刑法_01	1	collision_priority	54	18	0	72	0.0	0.0	v1.0	6d506c5b0b6e8cca	
+alo:book:isbn:9784535527966	9784535527966	NOBN_20180220_刑事法廷弁護技術_01	1	collision_priority	16	20	16	20	0.8	0.8	v1.0	3c9f6f8be2212ff2	
+alo:book:isbn:9784535806634	9784535806634	NOBN_20170929_契約法_01	1	collision_priority	22	6	1	27	0.037037	0.037037	v1.0	f94fcdfc6c36081c	
 alo:book:isbn:9784535806870	9784535806870	NOBN_20201218_担保物権法_01	1	collision_priority	5	14	0	19	0.0	0.0	v1.0	35d92839278d264f	
 alo:book:isbn:9784641137769	9784641137769	NOBN_20201218_担保物権法_01	1	collision_priority	16	14	0	30	0.0	0.0	v1.0	cc216713f356660a	
 alo:book:isbn:9784641150539	9784641150539	NOBN_20211130_倒産法_01	1	collision_priority	22	12	0	34	0.0	0.0	v1.0	d4ff81124ba8fe73	
-alo:book:isbn:9784766421637	9784766421637	NOBN_20140920_災害復興法学_01	1	collision_priority							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784766421637	9784766421637	NOBN_20140920_災害復興法学_01	1	collision_priority	106	9	7	90	0.077778	0.077778	v1.0	d3f7e0fc305cf165	
 alo:book:isbn:9784766429183	9784766429183	NOBN_20140920_災害復興法学_01	1	collision_priority	26	9	0	35	0.0	0.0	v1.0	10aca5d397099f36	
-alo:book:isbn:9784797211634	9784797211634	NOBN_20201218_担保物権法_01	1	collision_priority							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784797211634	9784797211634	NOBN_20201218_担保物権法_01	1	collision_priority	211	14	3	197	0.015228	0.015228	v1.0	1725bd0ab9762fec	
 alo:book:isbn:9784817842480	9784817842480	NOBN_20150914_デジタル証拠の法律実務_QA_01	1	collision_priority	68	15	13	70	0.185714	0.185714	v1.0	ad2310572670867a	
-alo:book:isbn:9784817842824	9784817842824	NOBN_20160129_信託の理論と実務入門_01	1	collision_priority							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784817842824	9784817842824	NOBN_20160129_信託の理論と実務入門_01	1	collision_priority	455	10	7	414	0.016908	0.016908	v1.0	8d4e9f37d06a8bc3	
 alo:book:isbn:9784817845757	9784817845757	NOBN_20190701_広告法律相談125問_01	1	collision_priority	173	16	1	188	0.005319	0.005319	v1.0	24dddc66e85b8766	
 alo:book:isbn:9784817846730	9784817846730	NOBN_20160129_信託の理論と実務入門_01	1	collision_priority	127	10	2	135	0.014815	0.014815	v1.0	3b8ed9afc275e8f4	
-alo:book:isbn:9784817848109	9784817848109	NOBN_20190701_広告法律相談125問_01	1	collision_priority							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784817848109	9784817848109	NOBN_20190701_広告法律相談125問_01	1	collision_priority	422	16	10	422	0.023697	0.023697	v1.0	92ef0d66a03a80f5	
 alo:book:isbn:9784817849045	9784817849045	NOBN_20150914_デジタル証拠の法律実務_QA_01	1	collision_priority	83	15	1	97	0.010309	0.010309	v1.0	288f3b4e0e51de61	
-alo:book:isbn:9784817849168	9784817849168	NOBN_20190701_広告法律相談125問_01	1	collision_priority							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784817849168	9784817849168	NOBN_20190701_広告法律相談125問_01	1	collision_priority	41	16	0	57	0.0	0.0	v1.0	4df75318d2de7d45	
 alo:book:isbn:9784865565263	9784865565263	NOBN_20171120_建築訴訟_01	1	collision_priority	26	10	0	36	0.0	0.0	v1.0	ac6f69eb99f26779	
-alo:book:isbn:9784897617060	9784897617060	NOBN_20180702_実務に即した労災認定の考え方と申請のポイント_01	1	collision_priority							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784897617060	9784897617060	NOBN_20180702_実務に即した労災認定の考え方と申請のポイント_01	1	collision_priority	61	14	7	68	0.102941	0.102941	v1.0	9f9596bfb79d10c8	
 alo:book:isbn:9784897619057	9784897619057	NOBN_20180702_実務に即した労災認定の考え方と申請のポイント_01	1	collision_priority	74	14	5	83	0.060241	0.060241	v1.0	8e82a33453f608f2	
 alo:book:manual:title_4471	9784532113506	NOBN_20201201_倒産法入門_01	1	collision_priority							v1.0		ERROR:no_box_file
 alo:book:manual:title_4557	9784535514751	NOBN_20220331_初歩からはじめる物権法_01	1	collision_priority							v1.0		ERROR:no_box_file
 alo:book:manual:title_6307	9784641243422	NOBN_20100917_知的財産法入門_01	1	collision_priority	15	12	0	12			v1.0	72d8cb3ff72f2bbe	empty_after_filter
 alo:book:isbn:9784771035997	9784771035997	NOBN_20220310_アジア労働法入門_01	0	clean_random	21	24	4	41	0.097561	0.097561	v1.0	3159025c55de0fc0	
-alo:book:manual:title_5060	9784803724912	NOBN_20190215_取調べハンドブック_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:manual:title_5060	9784803724912	NOBN_20190215_取調べハンドブック_01	0	clean_random	9	7	2	14	0.142857	0.142857	v1.0	871dc99a5b932a19	
 alo:book:isbn:9784502364013	9784502364013	NOBN_20201014_金融機関のための気候変動リスク管理_01	0	clean_random	211	7	3	215	0.013953	0.013953	v1.0	a98aa94fd970387e	
 alo:book:isbn:9784539729649	9784539729649	NOBN_20230511_MAを成功に導く_中小企業のPMI実践マニュアル_01	0	clean_random	18	9	5	22	0.227273	0.227273	v1.0	8a466ff6bf69a6b8	
 alo:book:isbn:9784817847539	9784817847539	NOBN_20221101_QA_傷害・医療保険に関する法律と実務_01	0	clean_random	223	10	2	225	0.008889	0.008889	v1.0	fa5213e7b7d92994	
 alo:book:isbn:9784788285781	9784788285781	NOBN_20190528_不動産取引における_心理的瑕疵・環境瑕疵_対応のポイント_01	0	clean_random	130	5	3	114	0.026316	0.026316	v1.0	ede028e693fe1167	
 alo:book:isbn:9784502233210	9784502233210	NOBN_20170901_ステージ別ベンチャー企業の労務戦略_01	0	clean_random	111	8	6	104	0.057692	0.057692	v1.0	42f8439251e47385	
-alo:book:isbn:9784909712035	9784909712035	NOBN_20181029_詳説_個人情報保護法_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784909712035	9784909712035	NOBN_20181029_詳説_個人情報保護法_01	0	clean_random	224	7	2	227	0.008811	0.008811	v1.0	7d978ea510646d71	
 alo:book:manual:title_3008	9784788293632	NOBN_20240614_QA_未分割遺産の税務_01	0	clean_random							v1.0		ERROR:no_box_file
 alo:book:isbn:9784817842787	9784817842787	NOBN_20151216_一般社団法人・財団法人制度と登記の実務_01	0	clean_random	121	11	6	117	0.051282	0.051282	v1.0	e313aacdf03f028b	
-alo:book:isbn:9784539729403	9784539729403	NOBN_20221220_事例分析による_税賠事故リスク回避マニュアル_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784539729403	9784539729403	NOBN_20221220_事例分析による_税賠事故リスク回避マニュアル_01	0	clean_random	157	9	6	159	0.037736	0.037736	v1.0	7f05901244d54a29	
 alo:book:isbn:9784260048064	9784260048064	NOBN_20220215_トラブルを未然に防ぐカルテの書き方_01	0	clean_random	91	14	12	93	0.129032	0.129032	v1.0	5777d1e8697ec378	
 alo:book:manual:title_3588	9784863263406	NOBN_20230121_労働判例から経営を学ぶ15講_01	0	clean_random							v1.0		ERROR:no_box_file
 alo:book:isbn:9784788282124	9784788282124	NOBN_20170201_不動産明渡・引渡事件処理マニュアル_01	0	clean_random	219	10	3	190	0.015789	0.015789	v1.0	390c7ab681189fac	
 alo:book:isbn:9784502514616	9784502514616	NOBN_20241108_幼保事業者の重大事故・不適切保育対応_01	0	clean_random	104	10	4	109	0.036697	0.036697	v1.0	f537ba5191207ab8	
 alo:book:isbn:9784326403363	9784326403363	NOBN_20170901_ファッションロー_01	0	clean_random	51	12	9	46	0.195652	0.195652	v1.0	e0b081cb12b73791	
-alo:book:isbn:9784641038905	9784641038905	NOBN_19980501_現代仲裁法の論点_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784539729632	9784539729632	NOBN_20230303_はじめての法人税_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784641038905	9784641038905	NOBN_19980501_現代仲裁法の論点_01	0	clean_random	61	15	13	63	0.206349	0.206349	v1.0	1bec6a77f051373f	
+alo:book:isbn:9784539729632	9784539729632	NOBN_20230303_はじめての法人税_01	0	clean_random	16	19	16	19	0.842105	0.842105	v1.0	df3ff7aafb41b80e	
 alo:book:isbn:9784502304118	9784502304118	NOBN_20190528_会社を伸ばす株主還元_01	0	clean_random	96	12	10	80	0.125	0.125	v1.0	c15e005fc8978b76	
-alo:book:isbn:9784817841995	9784817841995	NOBN_20141128_供託実務事例集_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784817841995	9784817841995	NOBN_20141128_供託実務事例集_01	0	clean_random	451	38	36	385	0.093506	0.093506	v1.0	b230aaa8e821c124	
 alo:book:isbn:9784589042231	9784589042231	NOBN_20220715_原理で学ぶ社会保障法_01	0	clean_random	12	7	0	19	0.0	0.0	v1.0	9c9ebc89fd8b903f	
 alo:book:isbn:9784817844484	9784817844484	NOBN_20171214_先例から読み解く!土地の表示に関する登記の実務_01	0	clean_random	2	14	2	14	0.142857	0.142857	v1.0	ca26f9504f9bd653	
 alo:book:isbn:9784326404261	9784326404261	NOBN_20230801_人事データ保護法入門_01	0	clean_random	54	14	11	51	0.215686	0.215686	v1.0	504b0cb88a0519e7	
-alo:book:isbn:9784417018629	9784417018629	NOBN_20230810_宗教法人の法律相談_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784502386213	9784502386213	NOBN_20210720_秘密保持契約・予備的合意書・覚書の法務と書式_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784417018629	9784417018629	NOBN_20230810_宗教法人の法律相談_01	0	clean_random	294	14	12	239	0.050209	0.050209	v1.0	7ff10ebd217d7657	
+alo:book:isbn:9784502386213	9784502386213	NOBN_20210720_秘密保持契約・予備的合意書・覚書の法務と書式_01	0	clean_random	105	9	7	107	0.065421	0.065421	v1.0	4c2720b586526604	
 alo:book:isbn:9784589043801	9784589043801	NOBN_20250515_違法・不当な行政からの権利救済_01	0	clean_random	11	9	0	20	0.0	0.0	v1.0	45625814cd3346f1	
-alo:book:isbn:9784335357770	9784335357770	NOBN_20190107_AI・HRテック対応_人事労務情報管理の法律実務_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784335357770	9784335357770	NOBN_20190107_AI・HRテック対応_人事労務情報管理の法律実務_01	0	clean_random	229	17	13	216	0.060185	0.060185	v1.0	3025691b6a08e235	
 alo:book:isbn:9784897616650	9784897616650	NOBN_20170726_改正外国人技能実習制度の実務_01	0	clean_random	18	5	3	20	0.15	0.15	v1.0	06747d97f607168a	
-alo:book:isbn:9784539727645	9784539727645	NOBN_20200821_外国人雇用_はじめの一歩_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784313314146	9784313314146	NOBN_20170216_若手法律家のための和解のコツ_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784539727645	9784539727645	NOBN_20200821_外国人雇用_はじめの一歩_01	0	clean_random	13	9	2	20	0.1	0.1	v1.0	a6d0f3b42c7ab951	
+alo:book:isbn:9784313314146	9784313314146	NOBN_20170216_若手法律家のための和解のコツ_01	0	clean_random	77	11	8	80	0.1	0.1	v1.0	300cdfa6fc5f8760	
 alo:book:isbn:9784417018674	9784417018674	NOBN_20231210_企業における裁判に負けないための契約条項の実務_01	0	clean_random	9	10	0	19	0.0	0.0	v1.0	073301fb5c719bcb	
-alo:book:isbn:9784502502217	9784502502217	NOBN_20240523_MAコンサルタントに必要な法務スキル_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784502502217	9784502502217	NOBN_20240523_MAコンサルタントに必要な法務スキル_01	0	clean_random	389	11	9	391	0.023018	0.023018	v1.0	6431a594ad20b520	
 alo:book:isbn:9784641018389	9784641018389	NOBN_20160305_旅券法逐条解説_01	0	clean_random	1	5	0	6	0.0	0.0	v1.0	fa03ff1a38c49064	
 alo:book:isbn:9784539729946	9784539729946	NOBN_20230820_小さな会社のたたみ方がサクッとわかる本_01	0	clean_random	140	10	5	144	0.034722	0.034722	v1.0	1872964ce6163cc5	
 alo:book:isbn:9784384049213	9784384049213	NOBN_20230930_事業者必携_最新_特定商取引法・景品表示法・個人情報保護法の法律入門_01	0	clean_random	7	11	7	11	0.636364	0.636364	v1.0	675a6d69cfc697fc	
 alo:book:isbn:9784788282117	9784788282117	NOBN_20170201_説明義務の理論と実際_01	0	clean_random	38	11	9	40	0.225	0.225	v1.0	3ce512260adcd259	
-alo:book:isbn:9784502247712	9784502247712	NOBN_20180227_独占禁止法と損害賠償・差止請求_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784502247712	9784502247712	NOBN_20180227_独占禁止法と損害賠償・差止請求_01	0	clean_random	419	9	7	400	0.0175	0.0175	v1.0	6fec0a5095e7cd31	
 alo:book:isbn:9784502245510	9784502245510	NOBN_20180427_新・センスのよい法律文章の書き方_01	0	clean_random	91	11	9	93	0.096774	0.096774	v1.0	a535e79b5ddead35	
 alo:book:isbn:9784535522909	9784535522909	NOBN_20200923_検証・自動車運転死傷行為等処罰法_01	0	clean_random	2	9	2	9	0.222222	0.222222	v1.0	2b72fbfab1427423	
-alo:book:isbn:9784502157110	9784502157110	NOBN_20150915_独占禁止法の手続と実務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784788288331	9784788288331	NOBN_20210401_農地の承継・相続相談対応マニュアル_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784817847089	9784817847089	NOBN_20210301_信託法からみた民事信託の手引き_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784502157110	9784502157110	NOBN_20150915_独占禁止法の手続と実務_01	0	clean_random	539	10	8	493	0.016227	0.016227	v1.0	723f691423b1a480	
+alo:book:isbn:9784788288331	9784788288331	NOBN_20210401_農地の承継・相続相談対応マニュアル_01	0	clean_random	165	5	3	164	0.018293	0.018293	v1.0	0815649f37346650	
+alo:book:isbn:9784817847089	9784817847089	NOBN_20210301_信託法からみた民事信託の手引き_01	0	clean_random	132	12	10	134	0.074627	0.074627	v1.0	675f8f1e498070c1	
 alo:book:isbn:9784502501913	9784502501913	NOBN_20240912_ディープテック・スタートアップの知財・契約戦略_01	0	clean_random	192	11	6	197	0.030457	0.030457	v1.0	e4513a03de258b4c	
 alo:book:isbn:9784502409110	9784502409110	NOBN_20220125_医療機器ビジネスの法律実務_01	0	clean_random	73	14	12	75	0.16	0.16	v1.0	adb20dbd95237354	
 alo:book:isbn:9784589042033	9784589042033	NOBN_20220415_比較から読み解く日本国憲法_01	0	clean_random	174	11	5	180	0.027778	0.027778	v1.0	2854eace76a11431	
@@ -116,76 +116,76 @@ alo:book:manual:title_4073	9784004302124	NOBN_20211129_子どもと学校_01	0	c
 alo:book:isbn:9784641136472	9784641136472	NOBN_20130701_典型担保法の諸相_01	0	clean_random	18	9	4	23	0.173913	0.173913	v1.0	fa2f3d255a4967ce	
 alo:book:isbn:9784417016557	9784417016557	NOBN_20150606_遺産分割のための相続分算定方法_01	0	clean_random	205	13	7	210	0.033333	0.033333	v1.0	50bdecdf81bfaae1	
 alo:book:isbn:9784641046870	9784641046870	NOBN_20201224_分野別_国際条約ハンドブック_01	0	clean_random	10	13	0	23	0.0	0.0	v1.0	38efc4116f6e17e6	
-alo:book:isbn:9784788289420	9784788289420	NOBN_20211102_抗告・異議申立ての実務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784539728215	9784539728215	NOBN_20211102_税理士が押さえておきたい_地主・不動産オーナーの相続発生後_関与の勘所_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784641243026	9784641243026	NOBN_20171208_独禁法事例集_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784130361484	9784130361484	NOBN_20160425_英米民事訴訟法_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784322121346	9784322121346	NOBN_20120730_一問一答_改正資産流動化法_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784906929757	9784906929757	NOBN_20180901_逮捕勾留プラクティス_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784788289420	9784788289420	NOBN_20211102_抗告・異議申立ての実務_01	0	clean_random	377	13	11	316	0.03481	0.03481	v1.0	213985799086b71a	
+alo:book:isbn:9784539728215	9784539728215	NOBN_20211102_税理士が押さえておきたい_地主・不動産オーナーの相続発生後_関与の勘所_01	0	clean_random	158	14	12	160	0.075	0.075	v1.0	230c7571fda014e5	
+alo:book:isbn:9784641243026	9784641243026	NOBN_20171208_独禁法事例集_01	0	clean_random	3	122	0	125	0.0	0.0	v1.0	240523f0d9e5508e	
+alo:book:isbn:9784130361484	9784130361484	NOBN_20160425_英米民事訴訟法_01	0	clean_random	16	18	7	27	0.259259	0.259259	v1.0	222ee215939847c0	
+alo:book:isbn:9784322121346	9784322121346	NOBN_20120730_一問一答_改正資産流動化法_01	0	clean_random	1	21	1	21	0.047619	0.047619	v1.0	c87f8e66bc3fc3f2	
+alo:book:isbn:9784906929757	9784906929757	NOBN_20180901_逮捕勾留プラクティス_01	0	clean_random	108	10	7	111	0.063063	0.063063	v1.0	e20cf0618aa3d542	
 alo:book:manual:title_3575	9784788291287	NOBN_20230201_DV・児童虐待事件処理マニュアル_01	0	clean_random							v1.0		ERROR:no_box_file
-alo:book:isbn:9784897619415	9784897619415	NOBN_20230925_離職防止に向けた働き方改革の実践ガイド_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784766421125	9784766421125	NOBN_20140405_イギリス取引法入門_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784502435713	9784502435713	NOBN_20220901_XR・メタバースの知財法務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784384049107	9784384049107	NOBN_20230228_すぐに役立つ_入門図解_最新_法人税のしくみと法人税申告書の書き方_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784788286917	9784788286917	NOBN_20200301_実務家が陥りやすい_借地借家の落とし穴_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784539728765	9784539728765	NOBN_20220121_IPOの労務監査_標準手順書_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784817840820	9784817840820	NOBN_20130501_現代取引社会における継続的契約の法理と判例_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784502501210	9784502501210	NOBN_20240528_Cookieポリシー作成のポイント_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784788288959	9784788288959	NOBN_20210601_目的別_相続対策_選択ガイドブック_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784788284951	9784788284951	NOBN_20190101_介護・医療現場が知っておくべき_認知症高齢者への対応と法律問題_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784326403950	9784326403950	NOBN_20210801_会社法入門20講_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784641138940	9784641138940	NOBN_20220608_継続的契約の規範_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784589041838	9784589041838	NOBN_20211201_法学における論理学の使用法_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784817845436	9784817845436	NOBN_20190301_国家賠償法実務ハンドブック_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784324109489	9784324109489	NOBN_20210401_実務が変わる!_QA民事裁判手続IT化_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784897619415	9784897619415	NOBN_20230925_離職防止に向けた働き方改革の実践ガイド_01	0	clean_random	44	10	7	47	0.148936	0.148936	v1.0	c91a719988518f98	
+alo:book:isbn:9784766421125	9784766421125	NOBN_20140405_イギリス取引法入門_01	0	clean_random	167	33	25	175	0.142857	0.142857	v1.0	687dc27676a2b60a	
+alo:book:isbn:9784502435713	9784502435713	NOBN_20220901_XR・メタバースの知財法務_01	0	clean_random	128	14	11	123	0.089431	0.089431	v1.0	a12e68bf79a0716c	
+alo:book:isbn:9784384049107	9784384049107	NOBN_20230228_すぐに役立つ_入門図解_最新_法人税のしくみと法人税申告書の書き方_01	0	clean_random	5	9	0	14	0.0	0.0	v1.0	27c9a5b72edb6986	
+alo:book:isbn:9784788286917	9784788286917	NOBN_20200301_実務家が陥りやすい_借地借家の落とし穴_01	0	clean_random	112	11	9	98	0.091837	0.091837	v1.0	caa3d87422accb5e	
+alo:book:isbn:9784539728765	9784539728765	NOBN_20220121_IPOの労務監査_標準手順書_01	0	clean_random	54	5	2	56	0.035714	0.035714	v1.0	9b534e2b337b07bd	
+alo:book:isbn:9784817840820	9784817840820	NOBN_20130501_現代取引社会における継続的契約の法理と判例_01	0	clean_random	68	11	8	69	0.115942	0.115942	v1.0	28bb44e4fdc1667a	
+alo:book:isbn:9784502501210	9784502501210	NOBN_20240528_Cookieポリシー作成のポイント_01	0	clean_random	130	10	8	129	0.062016	0.062016	v1.0	30670a6a89e0711f	
+alo:book:isbn:9784788288959	9784788288959	NOBN_20210601_目的別_相続対策_選択ガイドブック_01	0	clean_random	61	11	9	63	0.142857	0.142857	v1.0	0d83c2f5cfc0550e	
+alo:book:isbn:9784788284951	9784788284951	NOBN_20190101_介護・医療現場が知っておくべき_認知症高齢者への対応と法律問題_01	0	clean_random	1	11	1	11	0.090909	0.090909	v1.0	2ca3081264d5b930	
+alo:book:isbn:9784326403950	9784326403950	NOBN_20210801_会社法入門20講_01	0	clean_random	162	24	19	133	0.142857	0.142857	v1.0	029949d58dd26db0	
+alo:book:isbn:9784641138940	9784641138940	NOBN_20220608_継続的契約の規範_01	0	clean_random	6	8	3	11	0.272727	0.272727	v1.0	d8339af7a4579a25	
+alo:book:isbn:9784589041838	9784589041838	NOBN_20211201_法学における論理学の使用法_01	0	clean_random	46	15	14	47	0.297872	0.297872	v1.0	a4df95b2f3d9b5ef	
+alo:book:isbn:9784817845436	9784817845436	NOBN_20190301_国家賠償法実務ハンドブック_01	0	clean_random	144	10	6	148	0.040541	0.040541	v1.0	3fbc16eda9fb425e	
+alo:book:isbn:9784324109489	9784324109489	NOBN_20210401_実務が変わる!_QA民事裁判手続IT化_01	0	clean_random	63	14	12	65	0.184615	0.184615	v1.0	bb07da819b86ec6a	
 alo:book:manual:title_5951	9784803701401	NOBN_20120220_警察官のための剣道_01	0	clean_random							v1.0		ERROR:no_box_file
-alo:book:isbn:9784877987756	9784877987756	NOBN_20210330_こんなときどうする刑事弁護の知恵袋_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784817844767	9784817844767	NOBN_20180524_相続法改正のポイントと実務への影響_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784313511699	9784313511699	NOBN_20190704_実践!!_業務委託契約書審査の実務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784502525018	9784502525018	NOBN_20241210_業務プロセスとつながる_IT統制とIT監査_現場の教科書_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784539726266	9784539726266	NOBN_20180920_民泊3タイプ_開設・契約・運営とトラブル対策_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784260053198	9784260053198	NOBN_20230901_職場のメンタルヘルスケア入門_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535526426	9784535526426	NOBN_20220330_犯罪学におけるコントロールモデルの展開と犯罪原因論の課題_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784589041647	9784589041647	NOBN_20210715_18歳からはじめる知的財産法_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784817846501	9784817846501	NOBN_20200701_地下アイドルの法律相談_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535528208	9784535528208	NOBN_20250130_法学教育の四半世紀_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784502457418	9784502457418	NOBN_20230411_基礎からわかる「ビジネスと人権」の法務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784539729748	9784539729748	NOBN_20230603_介護離職をさせない組織づくりと職務・役割等級人事制度_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784539728734	9784539728734	NOBN_20220121_知的財産権の税務と周辺実務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784897612768	9784897612768	NOBN_20060408_労働裁判における和解の実際_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784417017950	9784417017950	NOBN_20200815_情報コンテンツ利用の法務QA_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784865564372	9784865564372	NOBN_20210426_農業法務のすべて_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535525184	9784535525184	NOBN_20200930_沖縄憲法史考_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784766423792	9784766423792	NOBN_20161031_未遂犯と実行の着手_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784384047370	9784384047370	NOBN_20170110_すぐに役立つ_図解とQAでわかる_賃貸トラブル解決マニュアル_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784788284760	9784788284760	NOBN_20181101_非公開株式評価実務マニュアル_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784641184510	9784641184510	NOBN_20201020_司法・犯罪心理学_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784384046427	9784384046427	NOBN_20150510_すぐに役立つ_図解とQAでわかる_不動産をめぐる税金の知識と疑問解決マニュアル111_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784788292352	9784788292352	NOBN_20230828_遺言無効紛争事件実務マニュアル_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784502448218	9784502448218	NOBN_20221215_プライバシーガバナンスの教科書_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784539727522	9784539727522	NOBN_20200602_弁護士が独立を思い立ったら最初に読む本_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784817842367	9784817842367	NOBN_20150622_財産管理の理論と実務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784539729250	9784539729250	NOBN_20230121_クラウド会計を活用した_電子帳簿保存法対応の実務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784641138384	9784641138384	NOBN_20201005_会社更生法・特別清算法_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784788293687	9784788293687	NOBN_20240625_法人形態・事業展開からみた_公益法人等の収益事業判断393事例_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:manual:title_3694	9784863263345	NOBN_20221026_協同労働入門_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784766427981	9784766427981	NOBN_20220225_民事訴訟における後訴遮断理論の再構成_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784502299612	9784502299612	NOBN_20190411_企業評価論入門_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784641048287	9784641048287	NOBN_20201221_ミャンマーのビジネス法務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535525207	9784535525207	NOBN_20210520_新ケースでわかる民事訴訟法_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535540149	9784535540149	NOBN_20220820_概説_教育経済学_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784788289222	9784788289222	NOBN_20210901_ヒアリングシートを活用した_遺産分割相談_聴取事項のチェックポイント_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784502400117	9784502400117	NOBN_20210902_2021年改訂コーポレートガバナンス・コードの実務対応_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784788289048	9784788289048	NOBN_20210701_消費税_適用判断の原則と例外_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784817847621	9784817847621	NOBN_20211001_行為類型別_詐害行為取消訴訟の実務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784130311908	9784130311908	NOBN_20170929_要説_中国法_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784788284876	9784788284876	NOBN_20181201_株式会社との対比でみる_合同会社の法務・登記・税務_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535523807	9784535523807	NOBN_20191220_刑事政策学_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784906929856	9784906929856	NOBN_20201001_捜索差押等プラクティス_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784766429398	9784766429398	NOBN_20240130_保証・人的担保の論点と解釈_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784417017868	9784417017868	NOBN_20200331_保証の法律相談_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784384049473	9784384049473	NOBN_20240920_事業者必携_入門図解_法人税・消費税のしくみと申告書の書き方_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784535526013	9784535526013	NOBN_20211225_比較政治学方法論批判_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784384046342	9784384046342	NOBN_20150110_すぐに役立つ_図解とQAで納得_損害賠償・慰謝料をめぐる法律とトラブル解決法165_01	0	clean_random							v1.0		ERROR:fetch_failed:
-alo:book:isbn:9784539728055	9784539728055	NOBN_20210105_歯科医院の法務・税務と経営戦略_01	0	clean_random							v1.0		ERROR:fetch_failed:
+alo:book:isbn:9784877987756	9784877987756	NOBN_20210330_こんなときどうする刑事弁護の知恵袋_01	0	clean_random	78	19	11	86	0.127907	0.127907	v1.0	2d9060941ef6caa9	
+alo:book:isbn:9784817844767	9784817844767	NOBN_20180524_相続法改正のポイントと実務への影響_01	0	clean_random	52	9	7	54	0.12963	0.12963	v1.0	98254dcf44ed32d7	
+alo:book:isbn:9784313511699	9784313511699	NOBN_20190704_実践!!_業務委託契約書審査の実務_01	0	clean_random	61	10	3	66	0.045455	0.045455	v1.0	23a05befb788a68b	
+alo:book:isbn:9784502525018	9784502525018	NOBN_20241210_業務プロセスとつながる_IT統制とIT監査_現場の教科書_01	0	clean_random	68	15	13	70	0.185714	0.185714	v1.0	5e9baacb48a3c8ec	
+alo:book:isbn:9784539726266	9784539726266	NOBN_20180920_民泊3タイプ_開設・契約・運営とトラブル対策_01	0	clean_random	7	9	5	11	0.454545	0.454545	v1.0	710bee424769d8c4	
+alo:book:isbn:9784260053198	9784260053198	NOBN_20230901_職場のメンタルヘルスケア入門_01	0	clean_random	126	20	18	128	0.140625	0.140625	v1.0	ccaf24fe3a2f667d	
+alo:book:isbn:9784535526426	9784535526426	NOBN_20220330_犯罪学におけるコントロールモデルの展開と犯罪原因論の課題_01	0	clean_random	14	10	5	19	0.263158	0.263158	v1.0	cd7584b5413f9a91	
+alo:book:isbn:9784589041647	9784589041647	NOBN_20210715_18歳からはじめる知的財産法_01	0	clean_random	112	6	5	113	0.044248	0.044248	v1.0	dd941a341f17eabe	
+alo:book:isbn:9784817846501	9784817846501	NOBN_20200701_地下アイドルの法律相談_01	0	clean_random	71	13	11	73	0.150685	0.150685	v1.0	79ac2f934c639f9d	
+alo:book:isbn:9784535528208	9784535528208	NOBN_20250130_法学教育の四半世紀_01	0	clean_random	23	14	7	30	0.233333	0.233333	v1.0	e42a8d067afb89b4	
+alo:book:isbn:9784502457418	9784502457418	NOBN_20230411_基礎からわかる「ビジネスと人権」の法務_01	0	clean_random	166	8	6	155	0.03871	0.03871	v1.0	d83ca1fbab6c155a	
+alo:book:isbn:9784539729748	9784539729748	NOBN_20230603_介護離職をさせない組織づくりと職務・役割等級人事制度_01	0	clean_random	164	12	5	171	0.02924	0.02924	v1.0	ac9edb5228c58a54	
+alo:book:isbn:9784539728734	9784539728734	NOBN_20220121_知的財産権の税務と周辺実務_01	0	clean_random	146	13	6	153	0.039216	0.039216	v1.0	d86a47a2140a279b	
+alo:book:isbn:9784897612768	9784897612768	NOBN_20060408_労働裁判における和解の実際_01	0	clean_random	129	6	4	90	0.044444	0.044444	v1.0	9b2cc13b630f54fa	
+alo:book:isbn:9784417017950	9784417017950	NOBN_20200815_情報コンテンツ利用の法務QA_01	0	clean_random	97	9	7	99	0.070707	0.070707	v1.0	9c1bca35fc641b97	
+alo:book:isbn:9784865564372	9784865564372	NOBN_20210426_農業法務のすべて_01	0	clean_random	510	18	16	487	0.032854	0.032854	v1.0	4020fe8d5d59e91a	
+alo:book:isbn:9784535525184	9784535525184	NOBN_20200930_沖縄憲法史考_01	0	clean_random	1	9	0	10	0.0	0.0	v1.0	23196d425592fc05	
+alo:book:isbn:9784766423792	9784766423792	NOBN_20161031_未遂犯と実行の着手_01	0	clean_random	103	13	11	99	0.111111	0.111111	v1.0	21918c8ecad6a5a4	
+alo:book:isbn:9784384047370	9784384047370	NOBN_20170110_すぐに役立つ_図解とQAでわかる_賃貸トラブル解決マニュアル_01	0	clean_random	185	14	12	187	0.064171	0.064171	v1.0	df1073ec6b2efa9b	
+alo:book:isbn:9784788284760	9784788284760	NOBN_20181101_非公開株式評価実務マニュアル_01	0	clean_random	2	17	2	17	0.117647	0.117647	v1.0	16e872d3513260eb	
+alo:book:isbn:9784641184510	9784641184510	NOBN_20201020_司法・犯罪心理学_01	0	clean_random	21	10	2	29	0.068966	0.068966	v1.0	9420fb002778b3c6	
+alo:book:isbn:9784384046427	9784384046427	NOBN_20150510_すぐに役立つ_図解とQAでわかる_不動産をめぐる税金の知識と疑問解決マニュアル111_01	0	clean_random	189	13	11	191	0.057592	0.057592	v1.0	5e0e8c42876461c6	
+alo:book:isbn:9784788292352	9784788292352	NOBN_20230828_遺言無効紛争事件実務マニュアル_01	0	clean_random	150	11	9	138	0.065217	0.065217	v1.0	e3b6783c55116df5	
+alo:book:isbn:9784502448218	9784502448218	NOBN_20221215_プライバシーガバナンスの教科書_01	0	clean_random	127	11	9	125	0.072	0.072	v1.0	5f1687287ea24b7d	
+alo:book:isbn:9784539727522	9784539727522	NOBN_20200602_弁護士が独立を思い立ったら最初に読む本_01	0	clean_random	196	10	7	189	0.037037	0.037037	v1.0	07e0ea77a949fcf3	
+alo:book:isbn:9784817842367	9784817842367	NOBN_20150622_財産管理の理論と実務_01	0	clean_random	24	9	0	33	0.0	0.0	v1.0	70d1c9581341b840	
+alo:book:isbn:9784539729250	9784539729250	NOBN_20230121_クラウド会計を活用した_電子帳簿保存法対応の実務_01	0	clean_random	3	7	3	7	0.428571	0.428571	v1.0	929575bd6e9769c5	
+alo:book:isbn:9784641138384	9784641138384	NOBN_20201005_会社更生法・特別清算法_01	0	clean_random	23	12	2	33	0.060606	0.060606	v1.0	f5b37e43255ef689	
+alo:book:isbn:9784788293687	9784788293687	NOBN_20240625_法人形態・事業展開からみた_公益法人等の収益事業判断393事例_01	0	clean_random	158	12	9	154	0.058442	0.058442	v1.0	32b8edda2f3ef652	
+alo:book:manual:title_3694	9784863263345	NOBN_20221026_協同労働入門_01	0	clean_random	8	7	4	7	0.571429	0.571429	v1.0	80b64ce6e302f1d7	
+alo:book:isbn:9784766427981	9784766427981	NOBN_20220225_民事訴訟における後訴遮断理論の再構成_01	0	clean_random	6	13	0	19	0.0	0.0	v1.0	6ca4ee8cea3990f1	
+alo:book:isbn:9784502299612	9784502299612	NOBN_20190411_企業評価論入門_01	0	clean_random	236	9	7	238	0.029412	0.029412	v1.0	5fd6cae16a2057a8	
+alo:book:isbn:9784641048287	9784641048287	NOBN_20201221_ミャンマーのビジネス法務_01	0	clean_random	8	11	4	15	0.266667	0.266667	v1.0	1faa6607c641b758	
+alo:book:isbn:9784535525207	9784535525207	NOBN_20210520_新ケースでわかる民事訴訟法_01	0	clean_random	27	33	27	33	0.818182	0.818182	v1.0	1cc0464cbc9d2c6a	
+alo:book:isbn:9784535540149	9784535540149	NOBN_20220820_概説_教育経済学_01	0	clean_random	183	19	17	185	0.091892	0.091892	v1.0	68a52e51dcff5db7	
+alo:book:isbn:9784788289222	9784788289222	NOBN_20210901_ヒアリングシートを活用した_遺産分割相談_聴取事項のチェックポイント_01	0	clean_random	249	12	9	220	0.040909	0.040909	v1.0	2d8393771c78878f	
+alo:book:isbn:9784502400117	9784502400117	NOBN_20210902_2021年改訂コーポレートガバナンス・コードの実務対応_01	0	clean_random	117	13	11	119	0.092437	0.092437	v1.0	2150dea2c0c0d3b6	
+alo:book:isbn:9784788289048	9784788289048	NOBN_20210701_消費税_適用判断の原則と例外_01	0	clean_random	159	15	13	149	0.087248	0.087248	v1.0	af19c9cda22c41a7	
+alo:book:isbn:9784817847621	9784817847621	NOBN_20211001_行為類型別_詐害行為取消訴訟の実務_01	0	clean_random	229	7	4	177	0.022599	0.022599	v1.0	390a6a9e6b9ecd13	
+alo:book:isbn:9784130311908	9784130311908	NOBN_20170929_要説_中国法_01	0	clean_random	24	13	1	36	0.027778	0.027778	v1.0	00f8553fc0346028	
+alo:book:isbn:9784788284876	9784788284876	NOBN_20181201_株式会社との対比でみる_合同会社の法務・登記・税務_01	0	clean_random	111	7	5	112	0.044643	0.044643	v1.0	e4b88a30304d5a55	
+alo:book:isbn:9784535523807	9784535523807	NOBN_20191220_刑事政策学_01	0	clean_random	37	10	5	42	0.119048	0.119048	v1.0	ec880dbd6a09fce4	
+alo:book:isbn:9784906929856	9784906929856	NOBN_20201001_捜索差押等プラクティス_01	0	clean_random	93	9	7	91	0.076923	0.076923	v1.0	1f0da22dfc3c0dce	
+alo:book:isbn:9784766429398	9784766429398	NOBN_20240130_保証・人的担保の論点と解釈_01	0	clean_random	59	21	13	67	0.19403	0.19403	v1.0	af77a769c33a81a0	
+alo:book:isbn:9784417017868	9784417017868	NOBN_20200331_保証の法律相談_01	0	clean_random	9	16	0	25	0.0	0.0	v1.0	7469ddbdd85a4b30	
+alo:book:isbn:9784384049473	9784384049473	NOBN_20240920_事業者必携_入門図解_法人税・消費税のしくみと申告書の書き方_01	0	clean_random	6	10	6	10	0.6	0.6	v1.0	3978313dda84125d	
+alo:book:isbn:9784535526013	9784535526013	NOBN_20211225_比較政治学方法論批判_01	0	clean_random	1	11	0	12	0.0	0.0	v1.0	56e1732be22fb4b1	
+alo:book:isbn:9784384046342	9784384046342	NOBN_20150110_すぐに役立つ_図解とQAで納得_損害賠償・慰謝料をめぐる法律とトラブル解決法165_01	0	clean_random	221	12	10	223	0.044843	0.044843	v1.0	3311e0662ed155ff	
+alo:book:isbn:9784539728055	9784539728055	NOBN_20210105_歯科医院の法務・税務と経営戦略_01	0	clean_random	108	7	5	110	0.045455	0.045455	v1.0	af5d43198056fb7e	
 alo:book:manual:title_3672	9784803707250	NOBN_20221110_注釈風俗営業法_01	0	clean_random							v1.0		ERROR:no_box_file
