@@ -7,6 +7,14 @@
 > Codex hand=PASS / GPTお目付け=PASS_WITH_NOTES / head=ACCEPT。検収詳細 → `HEAD_VERIFY_canary1313_MFclosure_20260619.md`。
 > **full batch / production は HOLD 継続・owner lift 待ち**（前提条件: pending-L3 resolver DD・v4 provenance 付与・scratch_scope_only フラグ・scratch PASS を batch 認可に流用しない）。
 
+> **更新（2026-06-26・catch-up 検収）**: 06-20〜06-22 にループ先行。head 遡及検収 → `HEAD_VERIFY_fullroot_catchup_20260626.md`。
+> - **pending-L3 resolver runbook v0.2 = `DD-D1TAXO-002-RUNBOOK-001`**: GPT監査 PASS_WITH_NOTES → **ACCEPTED_WITH_NOTES（HF-FR-1 satisfied）**。
+>   v0.1 の「30% 比率BLOCK」撤回（pending L3 は遍在: median 29.5%/9-of-21≥30%）→ per-root 比率は resolver 優先度シグナル、安全は exclusion gate。既存 DD-D1TAXO-002 に anchor。
+> - **full-root scratch execution packet v0.1**: GPT監査 **PASS_WITH_NOTES（設計GO・実行HOLD）**。must_fix 6件 → `D1TAXO_FULLROOT_SCRATCH_EXECUTION_PACKET_v0.1.1_20260626.md` に反映。
+> - 数値接地: terms 49,733 / pending 10,823（grounded）, labels 149,199=×3 / relations 38,910=terms−pending（derived）, 戸籍法 362/81 が canary1 一致。
+> - **2本目 rich canary（単一root scratch 実行）は単体未実行**＝全root rollup＋SF-FR closures に吸収。1313 超の新規 scratch 構造ロードは未走（HOLD と整合）。
+> - **HOLD 継続**: full-root scratch 実行 / full batch / production DDL・load / bridge collapse / canonical / claim-support / embedding / MCP。**owner lift 未**。
+
 ## 監査結果（2本・本日）
 
 ### ① D1LAW_FULL_TAXONOMY_RDB_CONTRACT（GPT-5.5 Pro）
