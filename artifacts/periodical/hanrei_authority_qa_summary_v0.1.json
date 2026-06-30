@@ -1,0 +1,13 @@
+{
+  "authority_rows": 212602,
+  "corrections_total": 1063,
+  "by_issue": {
+    "DUP_HANREI_ID": 600,
+    "DUP_IDENTITY_KEY": 444,
+    "BAD_DATE": 4,
+    "COURT_KEY_MANGLED": 15
+  },
+  "method": "read-only決定論的検査(重複/日付妥当性/court先頭漢数字化け)。修正は判例pipeline(Mac producer/owner GO)",
+  "L5_connection": "court_key化けは評釈court(一宮簡判)と判例DB(1宮簡)の不一致=L5 court_missの一因。authority修正でL5被覆も改善",
+  "no_payload": "判決本文/当事者名は読まず、識別キーの整合のみ。read-only"
+}
