@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-004
+  trigger: handoff_review
+  summary: 本セッションの作業記録 DD を作成（docs/alo/SESSION-RECORD_DD-ORCH-CONTINUITY-001_20260630.md）＋ Box handoffs に記録
+  reason: head が1枚読めば storm鎮圧〜航海日誌一気通貫の全容と現在地を継げるように（owner 指示）
+  related_orch: DD-ORCH-CONTINUITY-001 | related_commit: (本コミット) | owner_pending: no
+
 - digest_id: HOL-20260630-003
   trigger: handoff_review
   summary: ORCH検収ゲートを実行スクリプト化（tools/head_owner_log_gate.py）。7 reject code + alias lint を機械判定
