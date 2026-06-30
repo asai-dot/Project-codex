@@ -101,7 +101,15 @@ def settle(page, t=20000):
         page.wait_for_load_state("networkidle", timeout=t)
     except Exception:
         pass
-    page.wait_for_timeout(1000)
+    # D1 は SPA で JS レンダリングが遅い。body に何か出るまで最大 t ms 待つ
+    try:
+        page.wait_for_function(
+            "() => (document.body.innerText || '').trim().length > 50",
+            timeout=t,
+        )
+    except Exception:
+        pass
+    page.wait_for_timeout(800)
     neutralize(page)
 
 def sleepj():
@@ -235,10 +243,20 @@ def do_search_keyword(page, keyword):
 
     page.wait_for_timeout(500)
     click_search(page)
-    settle(page)
+
+    # 検索結果が描画されるまで待つ（「N件」か「0件」が出るまで）
+    try:
+        page.wait_for_function(
+            r"() => /\d+\s*件/.test(document.body.innerText || '')",
+            timeout=20000,
+        )
+    except Exception:
+        pass
+    page.wait_for_timeout(800)
+    neutralize(page)
 
     url = page.url
-    body = page.text_content("body") or ""
+    body = page.evaluate("() => document.body.innerText") or ""
 
     # セッション切れ検出（ログインページへのリダイレクト）
     if "login" in url.lower() or "ログイン" in body[:300] or "サインイン" in body[:300]:
