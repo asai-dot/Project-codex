@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-012
+  trigger: handoff_review
+  summary: CASENAME-DICT(L5主鍵)をhead検証 → PASS_WITH_NOTES。(court,date)キーで同日別事件を過併合
+  reason: ハマキョウレックス+長澤運輸/新国立劇場+INAX 等が同日同裁判所ゆえ1事件に誤併合。v0.2で固有名stem分割を推奨
+  related_orch: ORCH-CASENAME-DICT | related_commit: (本コミット) | owner_pending: yes(v0.2 着手可否)
+
 - digest_id: HOL-20260630-011
   trigger: handoff_review
   summary: NDL-RECONCILE を head 直接検証 → PASS_WITH_NOTES。承継144件・per-row高精度だがクラスタ6件機関誤併合
