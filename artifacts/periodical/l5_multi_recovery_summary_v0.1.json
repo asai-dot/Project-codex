@@ -1,0 +1,20 @@
+{
+  "task": "L5 multi_unresolved 回収(read-only・bootstrap+docket)",
+  "multi_total": 2303,
+  "recovered": 131,
+  "recovery_rate_pct": 5.7,
+  "method": {
+    "map_bootstrap": 131,
+    "title_docket": 0
+  },
+  "tier": {
+    "T1_distinctive": 10,
+    "T2": 4,
+    "T3_generic_review": 117
+  },
+  "high_conf_T1T2": 14,
+  "finding": "bootstrapは効くがmap(615)とmultiの通称重複が限定的で131止まり。docket抽出は記事タイトルに事件番号殆ど無く0件=行き止まり",
+  "wall": "read-only string の限界。残2172は判例百選通称索引/記事本文/人手判断が要",
+  "v03_discipline": "generic guard+tiering維持。確定はT1+T2 14件のみ",
+  "HOLD": "edge化/canonical昇格はowner GO"
+}
