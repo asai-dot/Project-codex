@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-005
+  trigger: handoff_review
+  summary: SERIES-VALIDATE を head 直接 read-only 検証 → 精度99.33%(60目視59/60)・偽候補69件。PASS(本採用推奨)
+  reason: 既存の静的データ(10,243系列)を非破壊で精度確定＝手戻りゼロの精度向上。owner GO で本採用＋偽候補demote
+  related_orch: ORCH-SERIES-VALIDATE | related_commit: (本コミット) | owner_pending: yes(本採用/demote 判断)
+
 - digest_id: HOL-20260630-004
   trigger: handoff_review
   summary: 本セッションの作業記録 DD を作成（docs/alo/SESSION-RECORD_DD-ORCH-CONTINUITY-001_20260630.md）＋ Box handoffs に記録

@@ -1,0 +1,23 @@
+{
+  "total_series": 10243,
+  "articles_in_series": 73373,
+  "avg_len": 7.16,
+  "method": "head read-only heuristic validation: 構造ラベル/部マーカー/極短titleを偽系列候補として除外",
+  "false_candidate_series": 69,
+  "false_candidate_pct": 0.67,
+  "precision_est_pct": 99.33,
+  "random_sample60_manual": "59/60 true (唯一の偽='警察学論集::下'=部マーカー型・flag済)",
+  "gate_threshold_pct": 90,
+  "gate_pass": true,
+  "len_dist": {
+    "2": 5034,
+    "3-4": 2304,
+    "5-9": 1480,
+    "10+": 1425
+  },
+  "caveat": [
+    "head単独のヒューリスティック判定(完全な人手ground-truthでない)",
+    "len2系列(49%)は特定タイトルなら真の2部構成・汎用なら偽",
+    "偽候補の一部は正規化由来の断片title(例 '8の' '中の')"
+  ]
+}
