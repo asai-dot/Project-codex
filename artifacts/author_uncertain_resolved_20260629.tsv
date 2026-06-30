@@ -1,0 +1,32 @@
+pid	title	year	publisher	canonical_name	catalog_author_raw	name_match_type	resolved_verdict	evidence_basis	confidence
+publication:bencom:0f75cc439a21c83e	類型別 慰謝料算定の実務Ⅰ	2024	青林書院	平田 厚	平田厚	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:0f75cc439a21c83e	類型別 慰謝料算定の実務Ⅰ	2024	青林書院	平田, 厚	平田厚	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:129f1ddedb2ed959	環境法の考えかたⅠ	2017	慶應義塾大学出版会	六車, 明	六車 明	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:129f1ddedb2ed959	環境法の考えかたⅠ	2017	慶應義塾大学出版会	六車明	六車 明	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:138bfedecc880474	環境法の考えかたⅡ	2017	慶應義塾大学出版会	六車, 明	六車 明	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:138bfedecc880474	環境法の考えかたⅡ	2017	慶應義塾大学出版会	六車明	六車 明	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:1c6d224e1172f23e	行政法II	2024	日本評論社	Okada, Masanori	岡田正則	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:22f8f0ba0505f04e	契約法を考える	2024	日本評論社	Yamashiro, Kazuma	山城一真	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:2375b5abd339d559	民法改正と売買における契約不適合給付	2020	法律文化社	古谷, 貴之	古谷貴之	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:326ff521e3006ba3	弁護士・臨床心理士の両視点にみる 面会交流	2023	新日本法規出版	小林 哲平	小林哲平	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:341c4fa78765707c	会社法のファイナンスとM&A	2017	法律文化社	Hatada, Komei	畠田公明	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:50e4352015fe9d2b	国際契約の英文法	2023	日本評論社	中村, 秀雄	中村秀雄	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:5e85769f022b4c70	契約における「交渉力」格差の意義	2023	法律文化社	Yanagi, Keiko	柳景子	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:65c32e1c4bde0262	＜災害と法＞ ど～する防災【水害編】	2019	信山社	Muranaka, Yosuke	村中洋介	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:661ef3a1cd7cfbdd	家族法改正を読む	2019	慶應義塾大学出版会	松尾, 弘	松尾 弘	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:66afe14e53cf6c1c	＜災害と法＞ ど～する防災【風害編】	2020	信山社	Muranaka, Yosuke	村中洋介	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:6933d6761d2f9510	＜災害と法＞ ど～する防災【火山災害編】	2022	信山社	Muranaka, Yosuke	村中洋介	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:6a4509c912085748	土地空間の近代法的把握	2025	日本評論社	牛尾, 洋也	牛尾洋也	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:79af96da36b803ca	そのときど～する？ 災害避難支援	2023	信山社	Muranaka, Yosuke	村中洋介	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:7bcc9ccea413fd44	債権法入門	2021	法律文化社	Ikuta, Toshiyasu	生田敏康	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:7d64001f2abc34d5	物権的期待権の譲渡担保化 中小企業の資金融資を中心として	2021	日本評論社	Matsuda, Yoshihisa	松田佳久	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:7f06c215ecd7e1c1	比較政治学方法論批判	2021	日本評論社	大木, 啓介	大木啓介	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:83254510e2b65101	改訂版 元厚生労働事務官が解説する 職場のうつと労災認定の仕組み	2019	日本法令	高橋 健	高橋健	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:8bf46699cd9c0b0e	優越的地位の濫用の法理と実務	2023	民事法研究会	酒井 紀子	酒井紀子	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:a3d6940c7a52e378	入門 国際法	2024	法律文化社	大森, 正仁	大森正仁	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:bbaf7ff06f33eee7	末弘厳太郎の法学理論	2022	日本評論社	川角, 由和	川角由和	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:ceb99b4b88d37404	＜災害と法＞ ど～する防災【地震・津波編】	2020	信山社	Muranaka, Yosuke	村中洋介	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:d44c9535d289aeb9	＜災害と法＞ ど～する防災【土砂災害編】	2020	信山社	Muranaka, Yosuke	村中洋介	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:da4335f54fdf4027	3訂版 元厚生労働事務官が解説する 労災保険実務講座	2024	日本法令	高橋 健	高橋健	kanji_exact	yes	bencom_catalog_author + exact name match	high
+publication:bencom:f4a4a0015bbe3a6c	民法入門ノート	2019	法律文化社	Watanabe, Tsutomu	渡邊力	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high
+publication:bencom:f90367234c1ce8f0	政治学読本〔新版〕	2022	法律文化社	Hirosawa, Takayuki	廣澤孝之	romaji_transliteration	yes	bencom_catalog_author + verified romaji↔kanji	high

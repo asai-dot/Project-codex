@@ -1,0 +1,17 @@
+bib_id	title	pub_year	ndl_bib_id	bib_id_isbn	bib_id_check_digit	isbn_correct	isbn_correct_check_digit	correct_bib_id	error_type	priority
+alo:book:isbn:9784896285847	ここがポイント!改正特商法・割販法	2010	000010679439	9784896285847	7	9784896285840	0	alo:book:isbn:9784896285840	check_digit_error_in_bib_id	Q1_gold_seed
+alo:book:isbn:9784595411178	この時代を生きるための独自性のつくり方			9784595411178	8	9784595411175	5	alo:book:isbn:9784595411175	check_digit_error_in_bib_id	standard
+alo:book:isbn:9784845009264	パワハラの法律実務	2022		9784845009264	4	9784845009268	8	alo:book:isbn:9784845009268	check_digit_error_in_bib_id	standard
+alo:book:isbn:9784651042988	事例から刑法を考える			9784651042988	8	9784651042985	5	alo:book:isbn:9784651042985	check_digit_error_in_bib_id	standard
+alo:book:isbn:9784417076380	企業のための労働契約の法律相談			9784417076380	0	9784417076384	4	alo:book:isbn:9784417076384	check_digit_error_in_bib_id	standard
+alo:book:isbn:9784533524040	判例でみる:音楽著作権訴訟の論点80講			9784533524040	0	9784533524042	2	alo:book:isbn:9784533524042	check_digit_error_in_bib_id	standard
+alo:book:isbn:9784802625653	弁護士心得帖			9784802625653	3	9784802625654	4	alo:book:isbn:9784802625654	check_digit_error_in_bib_id	standard
+alo:book:isbn:9784474033670	弁護士業務の勘所			9784474033670	0	9784474033672	2	alo:book:isbn:9784474033672	check_digit_error_in_bib_id	standard
+alo:book:isbn:9784474029319	弁護士独立のすすめ			9784474029319	9	9784474029316	6	alo:book:isbn:9784474029316	check_digit_error_in_bib_id	standard
+alo:book:isbn:9784785717174	新下請法マニュアル	2009	000010663263	9784785717174	4	9784785717179	9	alo:book:isbn:9784785717179	check_digit_error_in_bib_id	Q1_gold_seed
+alo:book:isbn:9784474019467	新会社法対策セミナー DVD	2005	000008047125	9784474019467	7	9784474019461	1	alo:book:isbn:9784474019461	check_digit_error_in_bib_id	Q1_gold_seed
+alo:book:isbn:9784844027575	書式:借地非訟の実務			9784844027575	5	9784844027577	7	alo:book:isbn:9784844027577	check_digit_error_in_bib_id	standard
+alo:book:isbn:9784788203995	民事意思能力と裁判判断の基準	2002	000003641403	9784788203995	5	9784788203990	0	alo:book:isbn:9784788203990	check_digit_error_in_bib_id	Q1_gold_seed
+alo:book:isbn:9784474018427	法律事務所事務職員マニュアル	2004	000007442751	9784474018427	7	9784474018426	6	alo:book:isbn:9784474018426	check_digit_error_in_bib_id	Q1_gold_seed
+alo:book:isbn:9784466886541	相続登記の全実務 相続・遺贈と家事審判・調停 新版			9784466886541	1	9784466886545	5	alo:book:isbn:9784466886545	check_digit_error_in_bib_id	standard
+alo:book:isbn:9784887134616	資料で読み解く国際法	2002	000003691840	9784887134616	6	9784887134614	4	alo:book:isbn:9784887134614	check_digit_error_in_bib_id	Q1_gold_seed
