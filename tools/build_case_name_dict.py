@@ -219,6 +219,32 @@ for k, g in groups.items():
     fg["courts"].update(g["courts"]); fg["dates"].update(g["dates"])
     fg["aids"] |= g["aids"]; fg["hy"] = fg["hy"] or g["hy"]
 
+# ----- v0.2: 過併合疑いフラグ -----
+# (date,court_class) キーは同日同裁判所の別事件を1 case に併合しうる。
+# variant に「非重複の別固有事件名」が >=2 ある場合は過併合疑い→ L5 が単一判決へ自動解決しない注意フラグ。
+# 注: 文字列のみでは「当事者別名(ブルドックソース/スティールパートナーズ=同一事件)」と
+#     「別事件(ハマキョウレックス/長澤運輸)」を区別不能。確実な分割は判例DB当事者照合(別タスク)。
+_PROPER = re.compile(r"(.+?)(事件|訴訟|決定)$")
+_DOCKET = re.compile(r"(請求|申立|命令|差止|禁止|確認|抗告|許可|棄却|却下|無効|取消|処分|代表|管理)")
+def distinct_proper_cases(variants):
+    stems = []
+    for v in variants:
+        v = v.strip()
+        m = _PROPER.match(v)
+        if not m:
+            continue
+        s = m.group(1)
+        if _DOCKET.search(s) or len(s) < 3:
+            continue
+        stems.append(s)
+    stems = sorted(set(stems), key=len)
+    keep = []
+    for x in stems:
+        if any((x in y or y in x) for y in keep):
+            continue
+        keep.append(x)
+    return len(keep)
+
 # ----- 出力 -----
 rows = []
 for key, g in final.items():
@@ -229,21 +255,25 @@ for key, g in final.items():
     # multi-court 集計用: 代表名 -> court_class 集合
     for c in g["courts"]:
         name_to_courtclasses[best].add(court_class(c))
+    ndc = distinct_proper_cases(variants)
     rows.append({
         "case_name_normalized": best, "court": court, "date": date,
         "variant_names": variants, "article_ids": sorted(g["aids"]),
         "n_articles": len(g["aids"]), "n_variants": len(variants),
         "is_hanrei_hyoshaku": g["hy"],
+        "distinct_case_names": ndc,
+        "is_possibly_overmerged": ndc >= 2,
     })
 rows.sort(key=lambda x:(-x["n_articles"], -x["n_variants"], x["case_name_normalized"]))
 
 with open(OUT_CSV,"w",encoding="utf-8",newline="") as f:
     w=csv.writer(f)
-    w.writerow(["case_name_normalized","court","date","variant_names","article_ids","n_articles","is_hanrei_hyoshaku"])
+    w.writerow(["case_name_normalized","court","date","variant_names","article_ids","n_articles","is_hanrei_hyoshaku","distinct_case_names","is_possibly_overmerged"])
     for r in rows:
         w.writerow([r["case_name_normalized"],r["court"],r["date"],
                     "|".join(r["variant_names"]),"|".join(r["article_ids"]),
-                    r["n_articles"],"1" if r["is_hanrei_hyoshaku"] else "0"])
+                    r["n_articles"],"1" if r["is_hanrei_hyoshaku"] else "0",
+                    r["distinct_case_names"],"true" if r["is_possibly_overmerged"] else "false"])
 
 nv=[r["n_variants"] for r in rows]
 multi_court=[{"case_name_normalized":n,"court_classes":sorted(cc)} for n,cc in name_to_courtclasses.items() if len(cc)>=2]
