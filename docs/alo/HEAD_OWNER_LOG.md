@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-018
+  trigger: handoff_review
+  summary: L5群(過併合判定/edge化34/通称マップ141)を1本のDD-L5-DISAMBIGUATIONにまとめGPT Pro独立監査へ投函(to_gpt queued)
+  reason: owner指示。source_hash fd16988…。判定/edgeのfalse linkage/被覆拡大/L5主鍵昇格可否を5点監査依頼
+  related_orch: DD-L5-DISAMBIGUATION | related_commit: (本コミット) | owner_pending: yes(GPT再監査の帰り便→反映)
+
 - digest_id: HOL-20260630-017
   trigger: handoff_review
   summary: L5 edge化34件(owner GO・file artifact)＋通称↔正式名マップ141ペア導出(判例DB)。単発199バケット=609評釈が確定接続候補
