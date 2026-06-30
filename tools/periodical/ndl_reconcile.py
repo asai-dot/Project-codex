@@ -308,6 +308,22 @@ def main():
             clusters.append(sorted(comp))
     clusters.sort(key=lambda c: (-len(c), c[0]))
 
+    # v0.2: 機関分割クラスタを承継から除外。
+    # 大学の親紀要が複数の学部誌に分割されると連結成分で全学部誌が1クラスタに誤併合される
+    # (改題承継でなく同一機関の別系統)。同一機関名を>=3 含むクラスタは succession から外す。
+    _INST = re.compile(r"(.{2,12}?(?:大学|大學|学院))")
+    def _institution_of(name):
+        m = _INST.search(name)
+        return m.group(1) if m else None
+    def _is_institutional_grouping(cluster):
+        ins = [i for i in (_institution_of(x) for x in cluster) if i]
+        if not ins:
+            return False
+        from collections import Counter as _C
+        return _C(ins).most_common(1)[0][1] >= 3
+    institutional_clusters = [c for c in clusters if _is_institutional_grouping(c)]
+    clusters = [c for c in clusters if not _is_institutional_grouping(c)]
+
     summary = {
         "source": "NDL Search SRU (dpid=iss-ndl-opac, recordSchema=dcndl)",
         "input": "d1_journal_issn_authority_ALL_resolved_v14.csv",
@@ -322,6 +338,8 @@ def main():
         "succession_events_detected": succession_events,
         "succession_clusters_count": len(clusters),
         "succession_clusters": clusters,
+        "excluded_institutional_clusters_count": len(institutional_clusters),
+        "excluded_institutional_clusters": institutional_clusters,
     }
     with open(OUT_JSON, "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
