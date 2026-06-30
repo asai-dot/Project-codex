@@ -48,6 +48,27 @@ head は以下の順で見る:
 全PASS → 認定書 `ORCH-AUDIT-<TASK>_verdict_<date>.md` を head が書いて push。
 1つでもFAIL → `ORCH-<TASK>_v0.2_order_<date>.md` を head が起こして再発注。
 
+## 6.5 HEAD_OWNER_LOG 照合（航海日誌・DD-ORCH-CONTINUITY-001 v0.3 RATIFIED）
+
+発注の意図継続のため、ORCH と worker RESULT に下記 field を必須化（正本語彙6つ・旧称 alias 禁止）:
+
+- **ORCH 発注書**: `required_log_commit` / `required_digest_id` / `required_standing_ids`（active な `global_required` standing は全件含む）
+- **worker RESULT**: `read_log_commit` / `read_digest_id` / `read_standing_ids`（「読みました」の自然言語は不可）
+
+head は検収時に7 reject code で機械判定（該当で差戻し）:
+
+| 条件 | code |
+|---|---|
+| `read_digest_id != required_digest_id` | `REJECT_STALE_DIGEST` |
+| `read_digest_id` が null/未記載 | `REJECT_MISSING_DIGEST` |
+| `git merge-base --is-ancestor <required_log_commit> <read_log_commit>` が false | `REJECT_STALE_LOG_COMMIT` |
+| `required_standing_ids ⊄ read_standing_ids` | `REJECT_STANDING_UNREAD` |
+| ORCH が active な `global_required` を網羅しない | `REJECT_REQUIRED_STANDING_OMITTED` |
+| `active_standing_count > 20` | `REJECT_STANDING_OVERFLOW` |
+| 会話履歴の長文 inline 検出（保守的 heuristic 可）| `REJECT_INLINE_HISTORY` |
+
+正本ログ: `docs/alo/HEAD_OWNER_LOG.md`。詳細設計: `docs/alo/DD-ORCH-CONTINUITY-001_head_owner_log_v0.3_20260630.md`。
+
 ## 7. 止め時の設計(Termination criteria) — 必読
 
 ループは「永遠に回す」のではなく、**3種のEXIT条件**で必ず止める。

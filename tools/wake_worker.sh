@@ -34,7 +34,7 @@ if [ ! -f "$ORDER" ]; then
   echo "発注書が見つからない: $ORDER" >&2; exit 3
 fi
 
-PROMPT="git pull origin ${BRANCH} してから、発注書 ${ORDER} を読んで指示どおり実行し、成果物を commit して push して。発注書に read-only / dry-run / 受入基準 / 出力スキーマ の指定があれば厳守。出力ファイル名は発注書の指定に従い、P##系の番号は使わない。"
+PROMPT="git pull origin ${BRANCH} してから、まず docs/alo/HEAD_OWNER_LOG.md の STANDING(active) と直近 digest を読み、発注書 ${ORDER} が要求する required_standing_ids を確認すること。次に発注書を読んで指示どおり実行し、成果物を commit して push。RESULT には read_log_commit / read_digest_id / read_standing_ids を必ず記載する(自然言語の『読みました』は不可)。発注書に read-only / dry-run / 受入基準 / 出力スキーマ の指定があれば厳守。出力ファイル名は発注書の指定に従い、P##系の番号は使わない。"
 
 echo "[wake_worker] order = $ORDER"
 

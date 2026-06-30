@@ -47,3 +47,10 @@ move/delete/DB書込/外部公開は別途 exact owner GO。
 ## ゲート
 canonical 昇格・DB投入・accepted edge 化・外部公開・生payload取込は owner(asai@asai-lo.com) GO 必須。
 external_share_allowed=false は不変。
+
+## 着手前チェック（航海日誌 HEAD_OWNER_LOG・正本: docs/alo/DD-ORCH-CONTINUITY-001 v0.3 RATIFIED）
+発注を実行する前に **`docs/alo/HEAD_OWNER_LOG.md` の STANDING(active) ＋直近 digest を読み**、発注の意図と恒久制約を把握する。
+- ORCH 発注書は `required_log_commit / required_digest_id / required_standing_ids` を持つ（active な `global_required` standing は全件含む）。
+- worker RESULT には `read_log_commit / read_digest_id / read_standing_ids` を必ず記載する（自然言語の「読みました」は証拠にならない）。
+- head は ORCH 検収時に7 reject code で機械判定（digest不一致/未記載/古commit/standing未読/入れ忘れ/standing過多/長文inline）。詳細は DD §3.5/§3.6。
+- HEAD_OWNER_LOG 正本ブランチ = head infra 集約ブランチ（現状 `claude/magazine-object-analysis-seg9cr`）。head は3トリガ（方針決定/発注・検収/owner判断待ち）で digest を追記し push。
