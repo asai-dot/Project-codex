@@ -103,6 +103,24 @@ def make_series_id(journal: str, name: str) -> str:
     return f"series:{journal_slug(journal)}#{h}"
 
 
+# v0.2: 偽系列の主因（各号定型欄・部マーカー・正規化断片）を系列名から除外する。
+# 根拠: ORCH-AUDIT-SERIES-VALIDATE_verdict_20260630（精度99.33%・偽候補69件のクラス）。
+_JUNK_PARTMARK = set("上 中 下 前 後 一 二 三 四 五 続 完 補 別".split())
+_JUNK_GENERIC = set(
+    "特集 資料 論説 各論 解説 判例 コラム 随想 雑記帳 巻頭言 はしがき はじめに おわりに "
+    "目次 編集後記 序 序文 凡例 あとがき 補遺 訂正 お知らせ 民法 商法 憲法 刑法 報告 討論 寄稿".split())
+
+
+def is_junk_series_name(name: str) -> bool:
+    """連載でなく各号の定型欄/部マーカー/正規化断片の系列名を弾く（v0.2 再発防止）。"""
+    n = (name or "").strip()
+    if n in _JUNK_PARTMARK or n in _JUNK_GENERIC:
+        return True
+    if len(n) <= 2:               # 極短・断片(例 '中の' '8の' '下')
+        return True
+    return False
+
+
 def extract_signals(title: str):
     """タイトルから候補シグナルを抽出。
     戻り値: (best, all_signals) — best=(name, seq, sig_type, strength) or None。
@@ -202,6 +220,7 @@ def main(argv=None):
     seen_articles: set[str] = set()
     n_rows = 0
     n_signal = 0
+    n_junk = 0
 
     with inp.open(newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -216,8 +235,11 @@ def main(argv=None):
             best, all_sigs = extract_signals(title)
             if not best:
                 continue
-            n_signal += 1
             name, seq, sig_type, strength = best
+            if is_junk_series_name(name):   # v0.2: 各号定型欄/部マーカー/断片は系列化しない
+                n_junk += 1
+                continue
+            n_signal += 1
             groups[(journal, name)].append({
                 "article_id": aid,
                 "journal_canonical": journal,
@@ -331,7 +353,7 @@ def main(argv=None):
         json.dump(summary, f, ensure_ascii=False, indent=2)
 
     # コンソール要約
-    print(f"[OK] input_rows={n_rows} rows_with_signal={n_signal}")
+    print(f"[OK] input_rows={n_rows} rows_with_signal={n_signal} junk_excluded(v0.2)={n_junk}")
     print(f"[OK] total_series={total_series} articles_in_series={articles_in_series} "
           f"avg_len={avg_len}")
     print(f"[OK] series_len>=3={len_ge3} median_conf={median_conf}")

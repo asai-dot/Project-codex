@@ -43,11 +43,17 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-006
+  trigger: handoff_review
+  summary: owner GO で SERIES-DETECT v0.1 本採用＋detect_series.py を patch(junk系列除外)→v0.2再生成 10243→10174(-69)
+  reason: 偽候補69件を生成パッチで恒久除去(demote+再発防止を同時達成)。実データ再生成で-69完全一致を検証
+  related_orch: ORCH-ACCEPT-SERIES-DETECT_v0.2 | related_commit: (本コミット) | owner_pending: no
+
 - digest_id: HOL-20260630-005
   trigger: handoff_review
   summary: SERIES-VALIDATE を head 直接 read-only 検証 → 精度99.33%(60目視59/60)・偽候補69件。PASS(本採用推奨)
   reason: 既存の静的データ(10,243系列)を非破壊で精度確定＝手戻りゼロの精度向上。owner GO で本採用＋偽候補demote
-  related_orch: ORCH-SERIES-VALIDATE | related_commit: (本コミット) | owner_pending: yes(本採用/demote 判断)
+  related_orch: ORCH-SERIES-VALIDATE | related_commit: 0892ffa | owner_pending: no(2026-06-30 GO済→HOL-006)
 
 - digest_id: HOL-20260630-004
   trigger: handoff_review

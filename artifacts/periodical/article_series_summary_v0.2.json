@@ -1,0 +1,95 @@
+{
+  "total_series": 10174,
+  "articles_in_series": 72921,
+  "avg_series_length": 7.17,
+  "top10_longest_series": [
+    {
+      "series_id": "series:判例評論#0a21ee61",
+      "journal_canonical": "判例評論",
+      "title_normalized": "最新判例批評",
+      "length": 2319,
+      "confidence": 1.0
+    },
+    {
+      "series_id": "series:ジュリスト#d5504e2d",
+      "journal_canonical": "ジュリスト",
+      "title_normalized": "労働判例研究",
+      "length": 849,
+      "confidence": 1.0
+    },
+    {
+      "series_id": "series:法曹#0a49802a",
+      "journal_canonical": "法曹",
+      "title_normalized": "最高裁判所判例解説民事関係",
+      "length": 585,
+      "confidence": 1.0
+    },
+    {
+      "series_id": "series:旬刊商事法務#e2baf913",
+      "journal_canonical": "旬刊商事法務",
+      "title_normalized": "商事法判例研究",
+      "length": 497,
+      "confidence": 1.0
+    },
+    {
+      "series_id": "series:ジュリスト#8da17daf",
+      "journal_canonical": "ジュリスト",
+      "title_normalized": "租税判例研究",
+      "length": 424,
+      "confidence": 1.0
+    },
+    {
+      "series_id": "series:判例タイムズ#25735b61",
+      "journal_canonical": "判例タイムズ",
+      "title_normalized": "銀行実務と民事裁判",
+      "length": 421,
+      "confidence": 1.0
+    },
+    {
+      "series_id": "series:法学研究(慶応義塾大学)#0c994e3b",
+      "journal_canonical": "法学研究(慶応義塾大学)",
+      "title_normalized": "判例研究商法",
+      "length": 408,
+      "confidence": 1.0
+    },
+    {
+      "series_id": "series:ジュリスト#2f7bfce6",
+      "journal_canonical": "ジュリスト",
+      "title_normalized": "商事判例研究",
+      "length": 395,
+      "confidence": 1.0
+    },
+    {
+      "series_id": "series:法律時報#88dab531",
+      "journal_canonical": "法律時報",
+      "title_normalized": "労働判例研究",
+      "length": 354,
+      "confidence": 1.0
+    },
+    {
+      "series_id": "series:ジュリスト#89d58cdf",
+      "journal_canonical": "ジュリスト",
+      "title_normalized": "渉外判例研究",
+      "length": 353,
+      "confidence": 1.0
+    }
+  ],
+  "_audit": {
+    "input_rows": 302130,
+    "rows_with_signal": 90351,
+    "series_len_ge3": 5171,
+    "median_series_confidence": 0.75,
+    "min_len_threshold": 2,
+    "sig_type_distribution": {
+      "bracket_label_num": 3118,
+      "paren_num": 3850,
+      "part": 3123,
+      "kaisuu": 83
+    },
+    "acceptance": {
+      "series_len_ge3_>=50": true,
+      "no_article_collision": true,
+      "median_conf_>=0.6": true
+    }
+  }
+}
