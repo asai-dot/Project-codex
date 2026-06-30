@@ -37,10 +37,10 @@ REPO = os.path.dirname(os.path.dirname(HERE))
 # 入力タイトル CSV は .gitignore 済みのローカルデータ。main checkout 側を read-only 参照。
 DATA_REPO = os.environ.get("CITATION_DATA_REPO", "/Users/yuta/Project-codex")
 JOIN = f"{DATA_REPO}/artifacts/periodical/article_join_dryrun_v0.1.csv"
-LAW_DICT = f"{REPO}/artifacts/periodical/citation_law_dict_v0.1.yaml"
-OUT_LAW = f"{REPO}/artifacts/periodical/title_law_citation_v0.1.csv"
-OUT_CASE = f"{REPO}/artifacts/periodical/title_case_citation_v0.1.csv"
-OUT_JSON = f"{REPO}/artifacts/periodical/title_citation_summary_v0.1.json"
+LAW_DICT = f"{REPO}/artifacts/periodical/citation_law_dict_v0.2.yaml"
+OUT_LAW = f"{REPO}/artifacts/periodical/title_law_citation_v0.2.csv"
+OUT_CASE = f"{REPO}/artifacts/periodical/title_case_citation_v0.2.csv"
+OUT_JSON = f"{REPO}/artifacts/periodical/title_citation_summary_v0.2.json"
 
 ERA_BASE = {"令和": 2018, "平成": 1988, "昭和": 1925, "大正": 1911, "明治": 1867}
 KANJI_NUM = {"一": "1", "二": "2", "三": "3", "1": "1", "2": "2", "3": "3"}
