@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260701-004
+  trigger: policy_decision
+  summary: L5主鍵の1:N構造化を設計(DD-L5-LITIGATION-001): 通称→事件(litigation)→判決の二層。機械精査でCONFLICT77を審級昇順で判別
+  reason: 通称→判例は1:1でなく1:N(訴訟チェーン)。litigation_chain44(機械確定)/通称衝突33(held)。flat mapの誤りを解く。code=worktree-casename-dict 1cf849a
+  related_orch: DD-L5-LITIGATION-001 | related_commit: (本コミット, data=1cf849a) | owner_pending: yes(GPT監査 or 次設計)
+
 - digest_id: HOL-20260701-003
   trigger: handoff_review
   summary: GPT監査2件帰り: L5 v0.3=DESIGN_PASS_WITH_NOTES(7点CLOSED)、PERIODICAL-003 v0.1=MODIFY_REQUIRED→v0.2再投函
