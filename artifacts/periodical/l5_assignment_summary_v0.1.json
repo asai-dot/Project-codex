@@ -1,0 +1,15 @@
+{
+  "task": "L5 stage2 assignment (read-only): SPLIT候補のvariantを判例側事件名へ照合し判例ID確定提案",
+  "split_candidate_buckets": 247,
+  "buckets_with_confirmed_assignment": 24,
+  "confirmed_variant_to_hanrei_id": 24,
+  "method": "variant(正式事件名を含む)を同(court,date)の判例側『事件名』へ完全/包含一致→判例ID/事件番号へ確定",
+  "precision": "確定割当は高精度(ハマキョウレックス→28262467, レペタ→27803181 等、形式名一致のみ採用)",
+  "coverage": "24/247=10%(通称のみのバケットは候補docket併記で人手/owner確定用)。被覆向上は通称↔正式名マップ(知識資源)要",
+  "caveats": [
+    "read-only: edge書込なし・当事者名非出力・提案CSVのみ",
+    "通称(ハマキョウレックス)単独はvariantに正式名が無いと未割当→候補事件番号を併記",
+    "edge化(評釈→判例ID accepted)は owner GO 必須(T2ゲート)"
+  ],
+  "next": "(任意)通称↔正式名辞書 or タイトルdocket抽出で被覆拡大。確定24件はowner ratifyでedge化可能"
+}
