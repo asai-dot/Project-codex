@@ -1,0 +1,19 @@
+{
+  "task": "L5 v0.3 — GPT Pro DESIGN_MODIFY_REQUIRED の Must-Fix 7点反映(read-only)",
+  "must_fix_applied": {
+    "MF1_status_3分": "signal/candidate/confirmed に弱体化: confirmed_split 8(distinct名一致), split_signal 516, single_docket_visible 247(=1は当事者別名と断定せず), unresolved 323",
+    "MF2_court空欄除外": "court_blank 30 を confirmed系/edgeから物理除外",
+    "MF3_generic_title_guard": "判例DB内の事件名頻度>=10 を generic と判定し guard",
+    "MF4_edge_item_evidence": "l5_accepted_edges_v0.3.jsonl に title/span/formal名/freq/事件番号 を item-level 同梱",
+    "MF5_edge_owner_review": "l5_edge_owner_review_v0.3.csv (全85件 owner_decision列)",
+    "MF6_map_tiering": "T1=32 T2=583 T3=922 REJECT=38",
+    "MF7_canonical設計": "判例ID/docket/court/date を canonical target、CASENAMEは alias/fingerprint/resolver input(DD §7改訂)"
+  },
+  "edge_tiers": {
+    "T1_distinctive": 23,
+    "T2_distinctive_multi": 10,
+    "T3_generic_review": 52
+  },
+  "honest_note": "ハマキョウレックス→『地位確認等請求事件』はgeneric名のためT3(要review)。確定はT1の23edge/615 map(T1+T2)に限定",
+  "HOLD": "production load/accepted-canonical昇格/CASENAME単独主鍵化/generic自動accepted/141一括alias化 は全てHOLD(owner GO)"
+}
