@@ -157,6 +157,8 @@ def main():
             "source": source,
             "article_count": top_cnt,
             "confidence": confidence,
+            # v0.2: <=3字の feature は分野名断片の可能性(特集名でない)。下流の誤用防止フラグ。
+            "is_field_fragment": "true" if len((top_feat or "").strip()) <= 3 else "false",
         })
         if len(ranked) > 1:
             audit_ambiguous.append({
@@ -171,7 +173,7 @@ def main():
 
     os.makedirs(PERIODICAL, exist_ok=True)
     with open(OUT_CSV, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=["issue_id", "feature_title", "source", "article_count", "confidence"])
+        w = csv.DictWriter(f, fieldnames=["issue_id", "feature_title", "source", "article_count", "confidence", "is_field_fragment"])
         w.writeheader()
         for rec in records:
             w.writerow(rec)
