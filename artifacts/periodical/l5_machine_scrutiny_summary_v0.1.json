@@ -1,0 +1,18 @@
+{
+  "task": "L5 review queue 機械精査 + T1 edge_role事前判定(read-only)",
+  "t1_edge_role": {
+    "annotates_likely": 20,
+    "uncertain": 3,
+    "note": "タイトルに評釈markerと対象名→評釈対象。owner精査は3件に圧縮"
+  },
+  "queue_scrutiny_1537": {
+    "machine_confirmed": 19,
+    "machine_candidate": 511,
+    "CONFLICT_needs_human": 253,
+    "needs_review": 754,
+    "human_required": 1007,
+    "machine_handled": 530
+  },
+  "key_finding": "CONFLICT253=同通称→複数判例ID。有名事件は訴訟チェーン(地裁→高裁→最高裁/併合)で通称→判例が1:N。機械では判決一意化不能→人手必須(date/edge_role単位の解決)",
+  "HOLD": "accepted/DB投入はowner ratify後"
+}
