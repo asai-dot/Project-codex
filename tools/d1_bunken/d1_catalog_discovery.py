@@ -63,7 +63,7 @@ def clean_journal(raw):
     s = s.lstrip("『「（(|｜ 　")
     s = re.split(r"\d", s, 1)[0]
     s = s.strip(" 　,，、。.・（(「『|｜")
-    return s
+    return s.strip()  # タブ・改行など残余空白を除去（D1ファセット: "NBL\t1,234" 形式対策）
 
 def load_existing_journals(labeled_path):
     """ラベル済みJSONLから既存 canonical セットを読む。"""
