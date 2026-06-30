@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-016
+  trigger: handoff_review
+  summary: L5照合 第二段(read-only確定提案): SPLIT候補247のvariant(正式事件名)→判例ID 高精度照合24件確定
+  reason: ハマキョウレックス→28262467/レペタ→27803181 等。形式名一致のみ高精度採用。通称単独は候補docket併記。code=worktree-casename-dict 76c1d0b
+  related_orch: L5-disambiguation stage2 | related_commit: (本コミット, code=76c1d0b) | owner_pending: yes(被覆拡大は通称↔正式名マップ・edge化はT2 owner GO)
+
 - digest_id: HOL-20260630-015
   trigger: handoff_review
   summary: L5判例DB照合パイロット(read-only): CASENAME過併合1124を判例_identity_keys(212,604行事件番号)で照合
