@@ -1,3 +1,64 @@
+---
+request_id: 20260701_DD-PERIODICAL-003_v0.2
+decision_id: DD-PERIODICAL-003
+request_type: 設計再監査 / blocking_addressed 確認 (DESIGN gate)
+gate: DESIGN
+topic: OCR/抽出 精度監査規格 v0.2 — DESIGN_MODIFY_REQUIRED の Must-Fix 5点反映確認
+作成日: 2026-07-01
+監査対象: docs/alo/DD-PERIODICAL-003_ocr_extraction_precision_audit_v0.1_20260701.md
+source_hash: sha256:56a147d20c61fcb2e25e1d8875e3629a6623bc943f99717aa245dfd894f22aec
+target_mode: inline_embedded
+result_expected_filename: 20260701_DD-PERIODICAL-003_v0.2_RESULT.md
+status: queued
+supersedes: 20260701_DD-PERIODICAL-003_v0.1 (DESIGN_MODIFY_REQUIRED)
+prior_verdict: DESIGN_MODIFY_REQUIRED
+review_scope:
+  include: [MF-1 edge role gate, MF-2 critical-token conf, MF-3 reject拡張, MF-4 evidence card/laundering防止, MF-5 held dashboard]
+  exclude: [DD-PERIODICAL-002 scan governance, OCRエンジン選定, 判例本体スキーマ, 本番DDL]
+regression_anchors:
+  - "DD-PERIODICAL-002(OCR=HIGH-HOLD/P3被覆より精度) と矛盾不可"
+  - "DD-BOOKQ-001(PDF品質スコア)=上流。本DBは補完(重複でない)"
+  - "全工程 read-only 設計。OCR実行/DB write/edge accepted/canonical/serving は owner GO"
+decision_requested: MF-1〜5 が閉じたか / DESIGN_PASS_WITH_NOTES 可否
+---
+
+# GPT Pro お目付け役 再監査依頼: DD-PERIODICAL-003 v0.2
+
+## 0. これは何か（再監査）
+
+前回 `DESIGN_MODIFY_REQUIRED`（核心指摘=target正でも edge意味誤りの false link を塞げていない）の Must-Fix 5点反映版。
+起案=検証が同 Claude family のため独立監査依頼。残る load-bearing 欠陥を厳しく。
+
+## 1. Must-Fix 反映状況（正は source_hash の現物 §10）
+
+| # | Must-Fix | v0.2 反映 |
+|---|---|---|
+| 1 | **edge role gate** | edge_role(評釈対象/引用/比較/脚注/反対説/背景)を区別。**accepted は 評釈対象 のみ**(タイトル/見出し/評釈対象欄/冒頭/強文脈根拠)。target正・意味誤を排除 |
+| 2 | critical-token conf | `span_conf>=0.90 AND critical_token_min_conf>=th`。事件名固有部/docket/court/date/条番号の最小conf。span平均で1字誤読を隠さない |
+| 3 | reject拡張 | +6: EDGE_ROLE_UNSUPPORTED/DOCKET_ABSENT_OR_MISMATCH/SOURCE_SPAN_UNTRACEABLE/NORMALIZATION_COLLISION/AUTHORITY_SNAPSHOT_STALE/MULTI_SOURCE_CONFLICT |
+| 4 | evidence card＋laundering防止 | raw_ocr/normalized/match_basis/fuzzy_used/critical_token_conf/corroboration/edge_role_basis/span_hash/bbox/engine/authority_snapshot。**fuzzy_used=true は厳密一致へ昇格不可**→T3 held |
+| 5 | held dashboard | reason/issue/ocr_engine/page_quality/edge_type/ageing/accepted_vs_held_by_source/high_value_held_queue で分解 |
+
+prior art: DD-BOOKQ-001(PDF品質=上流)を参照、本DBは下流の辺精度監査として補完。
+
+## 2. 確定済み前提
+
+全工程 read-only 設計。OCR実行/本文DB/edge accepted/canonical/serving は owner GO（対象外）。DD-PERIODICAL-002(P3/HIGH-HOLD)と矛盾しない。
+
+## 3. 求める判定
+
+1. MF-1〜5 が設計レベルで閉じたか（DESIGN_PASS_WITH_NOTES 可否）。
+2. edge role gate＋critical-token＋reject拡張で「target正・意味誤/1字誤読/normalization laundering」の false link 経路が塞がったか。残る抜けは。
+
+## 4. 1行目の書式指定
+
+RESULT 1行目 = `DESIGN_<LABEL>`。本文先頭付近に `request_id: 20260701_DD-PERIODICAL-003_v0.2` を含めること。
+
+---
+
+## APPENDIX — 監査対象 DD v0.2 全文
+
+<!-- 以下は docs/alo/DD-PERIODICAL-003_ocr_extraction_precision_audit_v0.1_20260701.md(v0.2本文) の全文（source_hash 一致） -->
 # DD-PERIODICAL-003 v0.2 — OCR/抽出 精度監査規格（誤OCR を accepted edge にしない）
 
 - decision_id: DD-PERIODICAL-003

@@ -43,6 +43,18 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260701-003
+  trigger: handoff_review
+  summary: GPT監査2件帰り: L5 v0.3=DESIGN_PASS_WITH_NOTES(7点CLOSED)、PERIODICAL-003 v0.1=MODIFY_REQUIRED→v0.2再投函
+  reason: PERIODICAL-003核心指摘=target正でもedge意味誤り(評釈対象でなく引用/脚注)のfalse link。MF-1 edge role gate等5点反映。L5はreview packet化がGO(DB投入HOLD)
+  related_orch: DD-PERIODICAL-003 v0.2 / DD-L5 v0.3 | related_commit: (本コミット) | owner_pending: yes(PERIODICAL-003 v0.2帰り便 / L5 review packet)
+
+- digest_id: HOL-20260701-002
+  trigger: handoff_review
+  summary: L5-DISAMBIGUATION v0.3 GPT=DESIGN_PASS_WITH_NOTES。Must-Fix7点全CLOSED。T1 23/map T1+T2 615がreview packet候補
+  reason: 'accepted edge'表示はDB前に避ける(edge_candidate_tier/edge_status二軸)。T3 922自動accepted禁止。DB load/canonical昇格はHOLD
+  related_orch: DD-L5-DISAMBIGUATION v0.3 | related_commit: 結果file_id 2318727879847 | owner_pending: yes(owner review packet→ratify→DB投入)
+
 - digest_id: HOL-20260701-001
   trigger: policy_decision
   summary: head本務に回帰=OCR抽出精度監査規格をDD化(DD-PERIODICAL-003)。誤OCR=edge_falselinkを号ISSN衝突検査の一般化で封じる
