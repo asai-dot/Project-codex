@@ -49,7 +49,7 @@ DEFAULT_OUT_JSON = "artifacts/periodical/author_index_summary_v0.1.json"
 
 HEADERS = [
     "author_id", "normalized_name", "variant_names", "article_count",
-    "journals_appeared", "representative_titles",
+    "journals_appeared", "representative_titles", "is_ambiguous",
 ]
 
 # 複数著者・役割の区切り。半角/全角カンマは欧文姓名 (Surname，Given) を壊すので分割しない。
@@ -344,6 +344,8 @@ def main() -> int:
             "article_count": c["article_count"],
             "journals_appeared": journals_appeared,
             "representative_titles": c["titles"][:5],
+            # v0.2: 正規化名 <=2字 は同名異人の混在可能性が高い。下流が単一人物として扱わないための注意フラグ。
+            "is_ambiguous": len(normalized_name) <= 2,
         })
 
     rows.sort(key=lambda r: (-r["article_count"], r["normalized_name"]))
@@ -362,6 +364,7 @@ def main() -> int:
                 r["article_count"],
                 "|".join(r["journals_appeared"]),
                 "|".join(r["representative_titles"]),
+                "true" if r["is_ambiguous"] else "false",
             ])
 
     # --- ambiguity: 短すぎる名 (姓のみ等, 別人の可能性大) を曖昧と判定 ---
