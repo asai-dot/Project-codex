@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-009
+  trigger: handoff_review
+  summary: AUTHOR-CLUSTER を head 直接検証 → PASS(高精度)。旧字統合214件正しい/誤併合は≤2字名0.90%に限局
+  reason: fuzzy無効の保守設計は妥当(別人誤マージ回避)。推奨=≤2字809clusterにis_ambiguousフラグ。SERIES同様クリーン
+  related_orch: ORCH-AUTHOR-CLUSTER | related_commit: (本コミット) | owner_pending: yes(本採用/ambiguityフラグ)
+
 - digest_id: HOL-20260630-008
   trigger: handoff_review
   summary: CITATION-EXTRACT v0.2 実装(owner GO)。保険法ファミリー辞書追加で部分文字列FP修正→保険法833→489(-344)正タグ昇格
