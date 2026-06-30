@@ -1,0 +1,15 @@
+{
+  "task": "通称↔正式名マップ(L5被覆拡大・read-only)",
+  "source": "判例_identity_keys から単発バケットの一意一致で導出",
+  "single_buckets": 5821,
+  "unique_confirmed": 199,
+  "nickname_formal_pairs": 141,
+  "articles_connectable": 609,
+  "breakdown": {
+    "unique": 199,
+    "multi_need_name": 520,
+    "no_hanrei": 5102
+  },
+  "note": "判例百選等の外部通称索引は不在のため判例DB直接導出。被覆拡大はnormalization拡充/反復で可。本マップは高精度seed",
+  "gate": "edge化(評釈→判例ID accepted)はT2 owner GO"
+}
