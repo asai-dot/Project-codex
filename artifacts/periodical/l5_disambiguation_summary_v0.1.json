@@ -1,0 +1,20 @@
+{
+  "task": "L5 disambiguation pilot (判例DB当事者照合・read-only)",
+  "input": [
+    "case_name_dict_v0.2.csv (is_possibly_overmerged=true 1124件)",
+    "判例_identity_keys_*.csv (212,604行・事件番号/court_key/date_key)"
+  ],
+  "method": "過併合バケットの(court,date)で判例DBの distinct 事件番号数を数え、>=2=真の別事件(SPLIT)/1=当事者別名(MERGE)/0=未照合",
+  "over_merged_total": 1124,
+  "SPLIT_confirmed": 246,
+  "MERGE_party_alias": 71,
+  "unresolved_no_hanrei": 807,
+  "caveats": [
+    "court空欄バケットは同日全判決とマッチし docket数が過大(例 大阪国際空港=12)。一段目の『>=2判決が存在』までの確定。",
+    "確実な分割(どの通称→どの事件番号)には二段目: 判例側『事件名(正式)』への名称照合 or タイトルdocket抽出が必要。",
+    "unresolved 71.8% は (a)court/date正規化未一致(支部/審判機関), (b)下級審/古い/非訟で判例DB未収載。正規化辞書拡充で一部回収可。",
+    "read-only: 判例本体/edgeへの書込なし。事件番号件数のみ使用、当事者名は出力しない。"
+  ],
+  "value": "判例権威で『真の別事件 vs 当事者別名』を機械確定可能と実証。71件は即un-flag可、246件は分割候補(二段目で確定)。",
+  "next": "二段目(名称→事件名/docket照合)でSPLIT候補を判例IDへ確定接続=L5主鍵の本実装(owner GO・edge化は要承認)"
+}
