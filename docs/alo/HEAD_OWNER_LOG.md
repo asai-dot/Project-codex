@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-011
+  trigger: handoff_review
+  summary: NDL-RECONCILE を head 直接検証 → PASS_WITH_NOTES。承継144件・per-row高精度だがクラスタ6件機関誤併合
+  reason: 同一大学の別部局誌を1承継チェーンに誤結合(明治学院/静岡大等26誌)。v0.2で推移結合制限を推奨
+  related_orch: ORCH-NDL-RECONCILE | related_commit: (本コミット) | owner_pending: yes(v0.2 着手可否)
+
 - digest_id: HOL-20260630-010
   trigger: handoff_review
   summary: AUTHOR-CLUSTER 本採用＋is_ambiguousフラグ実装(owner GO)。author_index_v0.2で≤2字809件にtrue付与
