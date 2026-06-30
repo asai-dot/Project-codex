@@ -34,6 +34,12 @@
 - head 単独ヒューリスティック（title 長・出現号数で品質点検）。完全 ground-truth ではない。
 - low confidence 2,909件は抽出側が既に不確実と申告（精度ではなく確信度の問題）。
 
-## 5. HOLD
+## 5. 実装結果（owner GO 2026-06-30・wt-cite-extract `346b731`）
 
-本採用昇格・フラグ実装・DB/canonical 反映は owner GO 必須。
+- **特集号メタ v0.1 を本採用**（高精度・junk 0.4%・97.1%単発特集）。
+- `extract_issue_feature.py` に `is_field_fragment` 列追加（≤3字 feature=分野名断片候補）。
+  `issue_feature_v0.2.csv`: **38件を true**（誤用防止フラグ）。
+
+## 6. HOLD
+
+DB/canonical 反映は owner GO 必須。本記録は本採用・フラグ付与まで。

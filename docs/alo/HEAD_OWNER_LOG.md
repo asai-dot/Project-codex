@@ -43,11 +43,17 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-014
+  trigger: handoff_review
+  summary: GO順3実装(owner GO): CASENAME v0.2(過併合flag1124,a0fa2ca)/NDL v0.2(機関分割除外111→105,c0709e3)/ISSUE本採用+field_fragment flag38(346b731)
+  reason: CASENAMEは文字列で確実分割不能ゆえAUTHOR同様フラグ化(誤分割回避)。NDLは機関分割除外。ISSUEクリーン本採用。HOL-011/012/013解消
+  related_orch: CASENAME/NDL/ISSUE v0.2 | related_commit: (本コミット, code=a0fa2ca/c0709e3/346b731) | owner_pending: no
+
 - digest_id: HOL-20260630-013
   trigger: handoff_review
   summary: ISSUE-FEATURE(特集号メタ8582号)をhead検証 → PASS(高精度)。junk title0.4%・97.1%が単発特集
-  reason: 汎用ラベル混入0・恒例年次特集は正当・曖昧と低confidenceを自己フラグ。SERIES/AUTHOR同様クリーン。本採用はowner GO
-  related_orch: ORCH-ISSUE-FEATURE | related_commit: (本コミット) | owner_pending: yes(本採用)
+  reason: 汎用ラベル混入0・恒例年次特集は正当・曖昧と低confidenceを自己フラグ。SERIES/AUTHOR同様クリーン
+  related_orch: ORCH-ISSUE-FEATURE | related_commit: 4ca0ffa | owner_pending: no(GO済→HOL-014)
 
 - digest_id: HOL-20260630-012
   trigger: handoff_review

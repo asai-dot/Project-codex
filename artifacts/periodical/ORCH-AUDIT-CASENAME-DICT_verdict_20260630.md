@@ -52,6 +52,14 @@
 - head 単独ヒューリスティック。過併合 1,124 は上限（略称ゆれを含む）、明確な別事件併合は下限で数百。
 - variant の大半（median=1）はクリーン。欠陥は (court,date) 共有の少数に集中。
 
-## 6. HOLD
+## 6. v0.2 実装結果（owner GO 2026-06-30・worktree-casename-dict `a0fa2ca`）
 
-本採用昇格・v0.2 実装・DB/canonical 反映は owner GO 必須。
+過併合の確実な分割は文字列だけでは不能（当事者別名 ブルドックソース/スティールパートナーズ＝同一事件 と
+別事件 ハマキョウレックス/長澤運輸 が文字列上区別不能）。→ **誤分割せず過併合をフラグ化**（AUTHOR is_ambiguous 同様）:
+- `build_case_name_dict.py` に `distinct_case_names` / `is_possibly_overmerged` 列追加。
+- `case_name_dict_v0.2.csv`: **1,124件（10.7%）を `is_possibly_overmerged=true`** → L5 は該当 case を単一判決へ自動解決しない。
+- 確実な分割は判例DB当事者照合（外部権威・別タスク）。本v0.2は誤用防止フラグまで（リグレッション無し）。
+
+## 7. HOLD
+
+DB/canonical 反映・判例DB照合による実分割は owner GO 必須。本v0.2は注意フラグの付与まで。
