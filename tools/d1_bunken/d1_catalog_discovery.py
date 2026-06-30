@@ -244,7 +244,7 @@ def do_search_keyword(page, keyword):
     return total
 
 # ---------- コア ----------
-def sweep_facets(page, keywords):
+def sweep_facets(page, keywords, save_html=None):
     """
     キーワードリストを順に検索し、各検索の掲載誌ファセットを集積する。
     新規誌が出なくなったら早期終了。
@@ -274,6 +274,14 @@ def sweep_facets(page, keywords):
 
         # ファセットから誌名抽出
         found = extract_facet_journals(page)
+        if not found:
+            print("  [warn] 掲載誌ファセットが空（セクション未検出、またはサイドバー非表示）")
+            if save_html:
+                try:
+                    Path(save_html).write_text(page.content(), encoding="utf-8")
+                    print(f"  [debug] HTML を保存しました → {save_html}")
+                except Exception as e:
+                    print(f"  [debug] HTML 保存失敗: {e}")
         new_count = len(found - all_journals)
         all_journals |= found
         print(f"  ファセット取得: {len(found)} 件 / 新規: {new_count} 件 / 累計: {len(all_journals)}")
@@ -294,9 +302,9 @@ def compute_diff(found_all, labeled_path):
 
 def write_results(found, unknown):
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    (OUT_DIR / "catalog_journals.txt").write_text(
-        "\n".join(sorted(found)), encoding="utf-8"
-    )
+    sorted_found = "\n".join(sorted(found))
+    (OUT_DIR / "catalog_journals.txt").write_text(sorted_found, encoding="utf-8")
+    (OUT_DIR / "all_found_journals.txt").write_text(sorted_found, encoding="utf-8")
     (OUT_DIR / "unknown_journals.txt").write_text(
         "\n".join(sorted(unknown)), encoding="utf-8"
     )
@@ -317,6 +325,8 @@ def main():
     ap.add_argument("--sweep",     action="store_true", help="複数キーワードでスイープ（本番）")
     ap.add_argument("--diff-only", action="store_true", help="catalog_journals.txt から差分だけ再計算")
     ap.add_argument("--labeled",   default=str(LABELED))
+    ap.add_argument("--save-html", metavar="PATH",
+                    help="ファセット空のときに結果ページHTMLをここへ保存（デバッグ用）")
     args = ap.parse_args()
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -353,7 +363,7 @@ def main():
             pass
         pg = ctx.new_page()
 
-        all_found = sweep_facets(pg, keywords)
+        all_found = sweep_facets(pg, keywords, save_html=args.save_html)
         b.close()
 
     unknown, _ = compute_diff(all_found, args.labeled)

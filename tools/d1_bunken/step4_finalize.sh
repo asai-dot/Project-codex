@@ -9,9 +9,9 @@ META="$BUILD/article_meta_all.jsonl"
 LABELED="$BUILD/labeled_v0.2.1/article_meta_labeled.jsonl"
 PARSER="${D1_PARSER:-$HOME_/ALOBookDX/事務所内本棚DX化計画/scripts/d1_bunken_parse_all.py}"
 REPO="${ALO_REPO:-$HOME_/Project-codex}"
-SWEEPLOG="${D1_SWEEPLOG:-$HOME_/d1_full_sweep.log}"
+SWEEPLOG="${D1_SWEEPLOG:-/tmp/d1_year_discovery_acquire.log}"
 CONTRACT="${D1_CONTRACT:-449677}"
-BASELINE="${D1_BASELINE:-333206}"
+BASELINE="${D1_BASELINE:-358157}"
 
 echo "===== STEP4 (1/4) 再パース ====="
 cd "$HOME_" && python3 -u "$PARSER"
@@ -21,7 +21,14 @@ cd "$REPO"
 python3 tools/d1_bunken/label_journals_v0.2.1.py "$META"
 
 echo "===== STEP4 (3/4) 0件トリアージ ====="
-python3 tools/d1_bunken/triage_sweep_log.py "$SWEEPLOG" --tsv /tmp/d1_triage.tsv | tail -40
+# discovery acquire log（### 誌名 / 総件数=0 形式）の場合は直接 awk で抽出
+if grep -q "^### " "$SWEEPLOG" 2>/dev/null; then
+  echo "--- 取得0件の誌（D1非収録 or 表記差）---"
+  awk '/^### /{j=substr($0,5)} /総件数=0/{print j}' "$SWEEPLOG"
+  echo ""
+else
+  python3 tools/d1_bunken/triage_sweep_log.py "$SWEEPLOG" --tsv /tmp/d1_triage.tsv | tail -40
+fi
 
 echo "===== STEP4 (4/4) カバレッジ差分 ====="
 python3 - "$BUILD" "$LABELED" "$CONTRACT" "$BASELINE" <<'PY'
@@ -49,4 +56,4 @@ print(f"カバレッジ       : {bpct:.1f}% → {pct:.1f}%   (+{pct-bpct:.1f}pt)
 print(f"canonical 誌数   : {len(canon):,}")
 print(f"残り             : {contract-uniq:,} 件 ({100-pct:.1f}%)")
 PY
-echo "===== STEP4 完了。RESULT を done/W-20260626-010_RESULT.md に転記して alo-worker complete ====="
+echo "===== STEP4 完了。RESULT を done/W-20260629-001_RESULT.md に転記して alo-worker complete ====="
