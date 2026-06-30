@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-017
+  trigger: handoff_review
+  summary: L5 edge化34件(owner GO・file artifact)＋通称↔正式名マップ141ペア導出(判例DB)。単発199バケット=609評釈が確定接続候補
+  reason: edge化はDB投入せずcanonical file(可逆)・本番投入は投入先確定後canary→batch。マップは判例百選不在のため判例DB直接導出。code=worktree-casename-dict 385649f/fae6097
+  related_orch: L5 edge化+通称マップ | related_commit: (本コミット, code=385649f/fae6097) | owner_pending: yes(edge本番DB投入の投入先・マップ被覆拡大の反復)
+
 - digest_id: HOL-20260630-016
   trigger: handoff_review
   summary: L5照合 第二段(read-only確定提案): SPLIT候補247のvariant(正式事件名)→判例ID 高精度照合24件確定
