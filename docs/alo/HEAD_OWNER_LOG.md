@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260701-001
+  trigger: policy_decision
+  summary: head本務に回帰=OCR抽出精度監査規格をDD化(DD-PERIODICAL-003)。誤OCR=edge_falselinkを号ISSN衝突検査の一般化で封じる
+  reason: 私の判例百選縛り→ad-hoc OCR(HIGH-HOLD踏越)を是正。OCR-conf閾値/named reject code/低conf held/tieringを規格化(read-only)
+  related_orch: DD-PERIODICAL-003 | related_commit: (本コミット) | owner_pending: yes(GPT監査 or owner ratify)
+
 - digest_id: HOL-20260630-020
   trigger: handoff_review
   summary: GPT Pro L5監査=DESIGN_MODIFY_REQUIRED→Must-Fix7点反映でv0.3(status弱体化/court空欄除外/generic guard/edge証跡/owner-review/map tiering/canonical設計)。再投函
