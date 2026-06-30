@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-007
+  trigger: handoff_review
+  summary: CITATION-EXTRACT を head 直接検証。判例引用=PASS(和暦↔西暦整合100%/79936行)、法令引用=PASS_WITH_NOTES
+  reason: 法令に部分文字列FP(保険法タグの64%が労災/健康保険法=別法令)。v0.2で境界ガード＋保険法ファミリー辞書追加を推奨
+  related_orch: ORCH-CITATION-EXTRACT | related_commit: (本コミット) | owner_pending: yes(v0.2 着手可否)
+
 - digest_id: HOL-20260630-006
   trigger: handoff_review
   summary: owner GO で SERIES-DETECT v0.1 本採用＋detect_series.py を patch(junk系列除外)→v0.2再生成 10243→10174(-69)
