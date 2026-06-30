@@ -43,11 +43,17 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-010
+  trigger: handoff_review
+  summary: AUTHOR-CLUSTER 本採用＋is_ambiguousフラグ実装(owner GO)。author_index_v0.2で≤2字809件にtrue付与
+  reason: 同名異人の誤用防止フラグ。code=worktree-author-cluster 2570418。保守設計(fuzzy無効)維持
+  related_orch: ORCH-AUTHOR-CLUSTER v0.2 | related_commit: (本コミット, code=2570418) | owner_pending: no
+
 - digest_id: HOL-20260630-009
   trigger: handoff_review
   summary: AUTHOR-CLUSTER を head 直接検証 → PASS(高精度)。旧字統合214件正しい/誤併合は≤2字名0.90%に限局
   reason: fuzzy無効の保守設計は妥当(別人誤マージ回避)。推奨=≤2字809clusterにis_ambiguousフラグ。SERIES同様クリーン
-  related_orch: ORCH-AUTHOR-CLUSTER | related_commit: (本コミット) | owner_pending: yes(本採用/ambiguityフラグ)
+  related_orch: ORCH-AUTHOR-CLUSTER | related_commit: 88079c2 | owner_pending: no(GO済→HOL-010)
 
 - digest_id: HOL-20260630-008
   trigger: handoff_review
