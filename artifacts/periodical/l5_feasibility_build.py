@@ -53,6 +53,9 @@ KANJI_NUM = {"一": "1", "二": "2", "三": "3", "1": "1", "2": "2", "3": "3"}
 
 def normalize_court(raw):
     s = z2h(raw).strip()
+    # 末尾の判決種別(判=判決/決=決定/命令/審)を除去。判例DB court_key は裁判所名のみ(東京地判→東京地)。
+    # これが無いと下級審の court が全て不一致になり L5 接合が大量に取りこぼされる(court_miss 3653)。
+    s = re.sub(r"(判決|決定|命令|判|決|審)$", "", s)
     s = s.replace("第", "")
     if "最" in s and ("大法廷" in s or s.endswith("大")):
         return ["大法廷", "最高大法廷"]

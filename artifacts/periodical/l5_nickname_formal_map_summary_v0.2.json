@@ -1,0 +1,18 @@
+{
+  "task": "通称→判例ID マップ v0.2(court正規化修正・name matching)",
+  "named_cases_total": 8511,
+  "named_with_date_court": 5431,
+  "map_confirmed": 1575,
+  "prev_v0.1": 199,
+  "articles_bundled": 3479,
+  "breakdown": {
+    "matched_unique": 1491,
+    "matched_by_name": 84,
+    "multi_unresolved": 2266,
+    "court_miss": 558,
+    "no_date_in_db": 1032
+  },
+  "fix": "court末尾判/決除去でcourt_miss 3653→558。名のある判例8511に対し被覆を大幅拡大",
+  "next": "multi_unresolved 2266はマップ自己bootstrap+docket抽出で更に回収可",
+  "gate": "edge化はT2 owner GO"
+}
