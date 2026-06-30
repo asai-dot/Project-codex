@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260701-006
+  trigger: handoff_review
+  summary: 判例authority整合性QA(read-only)=高レバ低手戻りタスク発見。212602行に修正候補1063(dup ID600/dup identity444/bad date4/court化け15)
+  reason: 全判決joinとL5の根。court化け(四日市→4日市)は評釈とのcourt_miss一因=authority修正でL5被覆も改善。決定論的確定誤りのみ。修正は判例pipeline owner GO
+  related_orch: 判例authority QA | related_commit: (本コミット, data=39783df) | owner_pending: yes(判例pipelineへの修正反映可否)
+
 - digest_id: HOL-20260701-005
   trigger: policy_decision
   summary: 通称衝突33の分離を二段設計(L5_collision_separation): 段1=formal事件名subject差でread-only分離12/段2=同subjectは当事者署名(owner権威)要21
