@@ -11,7 +11,7 @@ owner_sanction:
     by: owner（浅井）
     note: D1文献編メタ取得は owner 承認済みの正規取得パイプライン（追加のみ・冪等・レート制御内蔵・単一書き手）。本タスクに限り既定 forbidden `external_api_bulk_call` を上書きし、discovery スイープ + downloader 実行を許可する。他の既定 forbidden（DB write/canonical/削除/schema 等）は引き続き有効。
 request: docs/worker_queue/done/W-20260626-010_RESULT.md
-goal: 896誌スイープ後も残る 91,520件（20.4%）の未取得記事の誌名を発掘し、新規誌を完取得する。年別検索スイープで D1 に収録されている全誌名を抽出 → 既存ラベル済みJSONLと差分 → 未知誌を downloader で取得 → 再パース＋ラベル → カバレッジ差分報告。
+goal: 896誌スイープ後も残る 91,520件（20.4%）の未取得記事の誌名を発掘し、新規誌を完取得する。検索結果サイドバー「掲載誌」ファセットをキーワードスイープで収集 → 既存ラベル済みJSONLと差分 → 未知誌を downloader で取得 → 再パース＋ラベル → カバレッジ差分報告。
 mode: acquisition
 requires_systems:
   - mac_local
@@ -43,7 +43,7 @@ forbidden_actions:
   - concurrent_download
   - box_write_move_rename_delete
 exit_criteria:
-  - year_discovery スイープ（2015–2024）が完走し /tmp/d1_discovery/unknown_journals.txt を生成した
+  - catalog_discovery スイープ（15キーワード）が完走し /tmp/d1_discovery/unknown_journals.txt を生成した
   - 未知誌を downloader で冪等に取得した（全頁=0 指定）
   - 0件で返る誌（D1非収録/表記差）は /tmp/d1_year_discovery_acquire.log に列挙した
   - 再パース→label_journals_v0.2.1.py を1回実行し unique_articles と canonical誌数を更新した
@@ -66,47 +66,45 @@ result_expected_filename: W-20260629-001_RESULT.md
 
 W-20260626-010（完了）で 896誌の全件スイープを実施し 358,157件/79.6% を達成。
 残り **91,520件（20.4%）** は 896誌リストに含まれない誌（被引用ゼロ誌・長尾誌）。
-これらを年別検索で発掘し取得する。
+
+**年別RTF取得は不採用**: 発行年月日フィールドが薄く（1年あたり35件程度）、
+カタログ探索手段として機能しないことが判明。
+
+**新方針**: 検索結果サイドバーの「掲載誌」ファセットをキーワードスイープで収集。
+RTFダウンロード不要で D1 収録誌名を網羅的に取得できる。
 
 ## 方針
 
-- D1の発行年月日フィルタで年ごとに検索 → 先頭＋末尾N頁のRTFを取得 → `【掲載誌等】` を抽出
+- `d1_catalog_discovery.py --sweep` で民法・刑法・商法・紀要 等 15キーワードを順次検索
+- 各検索結果の左サイドバー「掲載誌」ファセットから誌名を全件回収
 - 既存ラベル済みJSONLとの差分で「未知誌」を特定
 - 未知誌を既存downloader で取得（追加のみ・冪等・単一書き手）
 
-## STEP 1 — 動作テスト（1頁確認）
+## STEP 1 — 動作テスト（空検索でファセット確認）
+
+```bash
+cd ~/Project-codex && git pull
+python3 tools/d1_bunken/d1_catalog_discovery.py --facet
+```
+
+誌名が1件以上出力されれば OK。
+
+## STEP 2 — 本番スイープ（15キーワード）
 
 ```bash
 cd ~/Project-codex
-python3 tools/d1_bunken/d1_year_discovery.py --probe 2024
-```
-
-正常に誌名が出力されれば OK。`striprtf` が無い場合はインストール:
-
-```bash
-pip3 install striprtf
-```
-
-## STEP 2 — 全年スイープ（2015–2024、先頭5頁＋末尾5頁/年）
-
-```bash
-cd ~/Project-codex
-nohup python3 -u tools/d1_bunken/d1_year_discovery.py \
-  --sweep --from 2015 --to 2024 --pages 5 \
-  > /tmp/d1_year_discovery.log 2>&1 &
+nohup python3 -u tools/d1_bunken/d1_catalog_discovery.py --sweep \
+  > /tmp/d1_catalog_discovery.log 2>&1 &
 echo "PID=$!"
 ```
 
-進捗確認: `tail -f /tmp/d1_year_discovery.log`
+進捗確認: `tail -f /tmp/d1_catalog_discovery.log`
 
 完走後に確認:
 ```bash
 wc -l /tmp/d1_discovery/unknown_journals.txt
-cat /tmp/d1_discovery/unknown_journals.txt | head -30
+head -30 /tmp/d1_discovery/unknown_journals.txt
 ```
-
-途中で止まった場合はそのまま再実行（RTFは冪等スキップ）。
-範囲を広げたい場合: `--from 2000 --to 2024 --pages 8`
 
 ## STEP 3 — 未知誌を downloader で取得
 
