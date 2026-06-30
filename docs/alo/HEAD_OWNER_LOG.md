@@ -39,6 +39,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-003
+  trigger: handoff_review
+  summary: ORCH検収ゲートを実行スクリプト化（tools/head_owner_log_gate.py）。7 reject code + alias lint を機械判定
+  reason: protocol のチェック表を完全自動化（owner GO）。自己検証9ケース全 PASS
+  related_orch: DD-ORCH-CONTINUITY-001 v0.3 | related_commit: (本コミット) | owner_pending: no
+
 - digest_id: HOL-20260630-002
   trigger: handoff_review
   summary: head が data limit で停止 → 代理 head が git+監査レーン+claude agents から状態復元（F1 を実演）
