@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260701-005
+  trigger: policy_decision
+  summary: 通称衝突33の分離を二段設計(L5_collision_separation): 段1=formal事件名subject差でread-only分離12/段2=同subjectは当事者署名(owner権威)要21
+  reason: 武富士(租税/不法行為)等は法分野で分離、日産自動車(労働×3)等は当事者でしか分けられず判決本文/curated索引=owner領域。LITIGATION-001はGPT監査中
+  related_orch: L5_collision_separation v0.1 | related_commit: (本コミット) | owner_pending: yes(段2の当事者署名権威取込)
+
 - digest_id: HOL-20260701-004
   trigger: policy_decision
   summary: L5主鍵の1:N構造化を設計(DD-L5-LITIGATION-001): 通称→事件(litigation)→判決の二層。機械精査でCONFLICT77を審級昇順で判別
