@@ -36,7 +36,6 @@ OVERLAYS = ".dh-backgroud-wrapper,.dh-background-wrapper,.dh-loading,.dh-overlay
 
 # 幅広キーワードスイープ用（法律・民事・刑事・労働・税・知財・行政・憲法・商法・紀要系）
 SWEEP_KEYWORDS = [
-    "",          # 空検索（全件）を最初に試す
     "民法",
     "刑法",
     "商法",
@@ -189,7 +188,7 @@ def extract_facet_journals(page):
                 t = t.trim();
                 if (!t) t = (c.innerText || c.textContent || '').trim();
                 // 数字のみ・短すぎ・既出は除外
-                if (!t || t.length < 2 || /^[\d,\s]+$/.test(t) || t === '掲載誌') continue;
+                if (!t || t.length < 2 || /^[\\d,\\s]+$/.test(t) || t === '掲載誌') continue;
                 // 件数表記を除去
                 t = t.replace(/\\s*[（(]\\s*\\d[\\d,]*\\s*[）)]/g, '').trim();
                 if (!t || seen.has(t)) continue;
@@ -238,9 +237,20 @@ def do_search_keyword(page, keyword):
     click_search(page)
     settle(page)
 
+    url = page.url
     body = page.text_content("body") or ""
+
+    # セッション切れ検出（ログインページへのリダイレクト）
+    if "login" in url.lower() or "ログイン" in body[:300] or "サインイン" in body[:300]:
+        print(f"  [error] セッション切れ（ログインページにリダイレクト）: {url}")
+        print(f"  [hint]  ~/.gemini/antigravity/scratch/d1_state.json を更新してください")
+        return 0
+
     m = re.search(r"([0-9,]+)\s*件", body)
     total = int(m.group(1).replace(",", "")) if m else 0
+    if total == 0:
+        print(f"  [debug] URL: {url}")
+        print(f"  [debug] body(先頭300): {body[:300].strip()!r}")
     return total
 
 # ---------- コア ----------
@@ -342,7 +352,8 @@ def main():
         write_results(found, unknown)
         return
 
-    keywords = [""] if args.facet else SWEEP_KEYWORDS
+    # --facet は "民法" 1キーワードで動作確認（空検索はD1フォームが実行しない場合がある）
+    keywords = ["民法"] if args.facet else SWEEP_KEYWORDS
 
     with sync_playwright() as p:
         b = p.chromium.launch(
