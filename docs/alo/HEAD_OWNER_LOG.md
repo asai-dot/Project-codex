@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-019
+  trigger: handoff_review
+  summary: owner指摘『名のある判例50倍あるやろ』が正鵠→court正規化バグ(末尾判/決)発見・修正。L5被覆激増(マップ199→1575/edge34→66/unresolved807→323)
+  reason: normalize_courtが東京地判→東京地に正規化せず下級審全不一致(court_miss3653→558)。GPT監査は旧数字をhold→v0.2で再投函。code=worktree-casename-dict c4aa073
+  related_orch: DD-L5-DISAMBIGUATION v0.2 | related_commit: (本コミット, code=c4aa073) | owner_pending: yes(GPT v0.2監査帰り便)
+
 - digest_id: HOL-20260630-018
   trigger: handoff_review
   summary: L5群(過併合判定/edge化34/通称マップ141)を1本のDD-L5-DISAMBIGUATIONにまとめGPT Pro独立監査へ投函(to_gpt queued)
