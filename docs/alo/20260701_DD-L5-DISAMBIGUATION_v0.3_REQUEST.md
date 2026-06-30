@@ -1,3 +1,67 @@
+---
+request_id: 20260701_DD-L5-DISAMBIGUATION_v0.3
+decision_id: DD-L5-DISAMBIGUATION
+request_type: 設計再監査 / blocking_addressed 確認 (DESIGN gate)
+gate: DESIGN
+topic: 評釈→判例ID 接合(L5主鍵) v0.3 — DESIGN_MODIFY_REQUIRED の Must-Fix 7点反映確認
+作成日: 2026-07-01
+監査対象: docs/alo/DD-L5-DISAMBIGUATION_v0.1_20260701.md
+source_hash: sha256:ae1a587d2b6259978d4469242238b2751e00d58febcda7d3db7edd2c95d20a9d
+target_mode: inline_embedded
+result_expected_filename: 20260701_DD-L5-DISAMBIGUATION_v0.3_RESULT.md
+status: queued
+supersedes: 20260701_DD-L5-DISAMBIGUATION_v0.2 / v0.1 (DESIGN_MODIFY_REQUIRED)
+prior_verdict: DESIGN_MODIFY_REQUIRED
+review_scope:
+  include: [Must-Fix 7点の閉鎖確認, status弱体化の妥当性, generic guard, edge証跡, map tiering, canonical設計#7]
+  exclude: [CASENAME v0.1抽出器再設計, 判例本体スキーマ, 本番DB投入手順]
+regression_anchors:
+  - "ORCH-CASENAME-DICT(PASS_WITH_NOTES) / ORCH-L5-FEASIBILITY(Grade A)。矛盾不可"
+  - "全工程 read-only。accepted edge は file artifact・production load 未実施。canonical昇格/DB投入は owner GO"
+decision_requested: Must-Fix 7点が閉じたか / DESIGN_PASS_WITH_NOTES 可否
+---
+
+# GPT Pro お目付け役 再監査依頼: DD-L5-DISAMBIGUATION v0.3
+
+## 0. これは何か（再監査）
+
+前回 `DESIGN_MODIFY_REQUIRED` の Must-Fix 7点を反映した v0.3。判定名の過強・generic title 誤接続・証跡不足の
+指摘を受け、status を弱体化し、generic guard・tiering・item-level 証跡・canonical 設計改訂を入れた。
+**起案=検証が同 Claude family** のため独立監査依頼。迎合せず、残る load-bearing 欠陥を厳しく指摘してほしい。
+
+## 1. Must-Fix 反映状況（自己申告・正は source_hash の現物 §7）
+
+| # | Must-Fix | v0.3 反映 |
+|---|---|---|
+| 1 | status 弱体化 | confirmed_split **8**（distinct固有名一致のみ）/ split_signal 516 / single_docket_visible 247（=1は当事者別名と断定せず）/ unresolved 323。「≥2→確定」「=1→MERGE」撤回 |
+| 2 | court空欄除外 | court_blank 30 を confirmed系・edge から物理除外 |
+| 3 | generic title guard | 判例DB内 事件名頻度≥10 を generic 判定（地位確認等請求事件 等）|
+| 4 | edge item-level 証跡 | l5_accepted_edges_v0.3.jsonl（title/formal名/freq/事件番号/判例ID 同梱）|
+| 5 | edge 全件 owner review | l5_edge_owner_review_v0.3.csv（85件・owner_decision列）|
+| 6 | map tiering | T1 32 / T2 583 / T3 922 / REJECT 38 |
+| 7 | canonical 設計 | canonical target = 判例ID/docket/court/date、CASENAME は alias/fingerprint/resolver input |
+
+**確定の正直な範囲**: edge T1_distinctive **23** / map T1+T2 **615** が高/中信頼。generic名経由は T3=要 owner review。
+
+## 2. 確定済み前提（監査の枠）
+
+全工程 read-only。accepted edge は file artifact（production load 未実施）。canonical 昇格・DB投入は owner GO（対象外）。
+
+## 3. 求める判定（この3点）
+
+1. **Must-Fix 7点が設計レベルで閉じたか**（DESIGN_PASS_WITH_NOTES 可否）。
+2. status の弱体化（confirmed を distinct固有名一致のみに限定、=1 を断定しない）は十分保守的か。over-claim が残っていないか。
+3. canonical 設計#7（判例ID主鍵・CASENAME alias化）は L5 昇格の前提として妥当か。残る load-bearing 欠陥は。
+
+## 4. 1行目の書式指定
+
+RESULT 1行目 = `DESIGN_<LABEL>`。本文先頭付近に `request_id: 20260701_DD-L5-DISAMBIGUATION_v0.3` を含めること。
+
+---
+
+## APPENDIX — 監査対象 DD v0.3 全文
+
+<!-- 以下は docs/alo/DD-L5-DISAMBIGUATION_v0.1_20260701.md(v0.3本文) の全文（source_hash 一致） -->
 # DD-L5-DISAMBIGUATION v0.3 — 評釈→判例ID 接合(L5主鍵)の判例DB当事者照合
 
 - decision_id: DD-L5-DISAMBIGUATION

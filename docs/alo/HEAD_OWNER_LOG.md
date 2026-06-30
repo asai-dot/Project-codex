@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-020
+  trigger: handoff_review
+  summary: GPT Pro L5監査=DESIGN_MODIFY_REQUIRED→Must-Fix7点反映でv0.3(status弱体化/court空欄除外/generic guard/edge証跡/owner-review/map tiering/canonical設計)。再投函
+  reason: 『=1→当事者別名』『≥2→確定』が過強の指摘が正鵠。confirmed8のみ・edge T1=23/map T1+T2=615に正直化。canonical target=判例IDでCASENAMEはalias。code=worktree-casename-dict a4a64aa
+  related_orch: DD-L5-DISAMBIGUATION v0.3 | related_commit: (本コミット, code=a4a64aa) | owner_pending: yes(GPT v0.3再監査)
+
 - digest_id: HOL-20260630-019
   trigger: handoff_review
   summary: owner指摘『名のある判例50倍あるやろ』が正鵠→court正規化バグ(末尾判/決)発見・修正。L5被覆激増(マップ199→1575/edge34→66/unresolved807→323)
