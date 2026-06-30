@@ -43,11 +43,17 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-008
+  trigger: handoff_review
+  summary: CITATION-EXTRACT v0.2 実装(owner GO)。保険法ファミリー辞書追加で部分文字列FP修正→保険法833→489(-344)正タグ昇格
+  reason: 誤タグを正タグに昇格=精度・被覆同時改善。code は wt-cite-extract dd84c6e、判例側は不変
+  related_orch: ORCH-CITATION-EXTRACT v0.2 | related_commit: (本コミット, code=dd84c6e) | owner_pending: no
+
 - digest_id: HOL-20260630-007
   trigger: handoff_review
   summary: CITATION-EXTRACT を head 直接検証。判例引用=PASS(和暦↔西暦整合100%/79936行)、法令引用=PASS_WITH_NOTES
-  reason: 法令に部分文字列FP(保険法タグの64%が労災/健康保険法=別法令)。v0.2で境界ガード＋保険法ファミリー辞書追加を推奨
-  related_orch: ORCH-CITATION-EXTRACT | related_commit: (本コミット) | owner_pending: yes(v0.2 着手可否)
+  reason: 法令に部分文字列FP(保険法タグの64%が労災/健康保険法=別法令)。v0.2で保険法ファミリー辞書追加を推奨
+  related_orch: ORCH-CITATION-EXTRACT | related_commit: 0aa0379 | owner_pending: no(GO済→HOL-008)
 
 - digest_id: HOL-20260630-006
   trigger: handoff_review
