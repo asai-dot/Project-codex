@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-013
+  trigger: handoff_review
+  summary: ISSUE-FEATURE(特集号メタ8582号)をhead検証 → PASS(高精度)。junk title0.4%・97.1%が単発特集
+  reason: 汎用ラベル混入0・恒例年次特集は正当・曖昧と低confidenceを自己フラグ。SERIES/AUTHOR同様クリーン。本採用はowner GO
+  related_orch: ORCH-ISSUE-FEATURE | related_commit: (本コミット) | owner_pending: yes(本採用)
+
 - digest_id: HOL-20260630-012
   trigger: handoff_review
   summary: CASENAME-DICT(L5主鍵)をhead検証 → PASS_WITH_NOTES。(court,date)キーで同日別事件を過併合
