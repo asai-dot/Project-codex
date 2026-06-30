@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260630-015
+  trigger: handoff_review
+  summary: L5判例DB照合パイロット(read-only): CASENAME過併合1124を判例_identity_keys(212,604行事件番号)で照合
+  reason: SPLIT_confirmed246(>=2事件番号=真の別事件)/MERGE71(当事者別名)/unresolved807。判例権威で真偽機械確定を実証。code=worktree-casename-dict 2fd173b
+  related_orch: L5-disambiguation(判例DB照合) | related_commit: (本コミット, code=2fd173b) | owner_pending: yes(二段目=名称→事件番号確定・edge化要承認)
+
 - digest_id: HOL-20260630-014
   trigger: handoff_review
   summary: GO順3実装(owner GO): CASENAME v0.2(過併合flag1124,a0fa2ca)/NDL v0.2(機関分割除外111→105,c0709e3)/ISSUE本採用+field_fragment flag38(346b731)
