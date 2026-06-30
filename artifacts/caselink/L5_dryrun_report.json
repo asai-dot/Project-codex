@@ -1,0 +1,46 @@
+{
+  "source": "magazine pilot 判例評釈 subset (origin/claude/magazine-object-analysis-seg9cr:artifacts/periodical/article_type_local_pilot_v0.1.csv, type=判例評釈) × title from artifacts/periodical/article_join_dryrun_v0.1.csv (D1-bunken 文献編 由来, body_text=標題 proxy)",
+  "engine": "scripts/case_link_corpus_dryrun.py (case_citation_span/case_link_extract/case_link_map) — branch同梱, test_case_citation_span.py green",
+  "pilot_total_rows": 2000,
+  "pilot_commentary_subset": 790,
+  "joined_to_title": 790,
+  "join_rate": 1.0,
+  "dryrun_as_is": {
+    "articles": 790,
+    "edges_emitted": 8,
+    "articles_with_any_edge": 6,
+    "edge_type_counts": {"compares": 8},
+    "route_distribution": {"review": 8},
+    "stance_counts": {"neutral": 8}
+  },
+  "citation_recall_analysis": {
+    "titles_with_era_token_被評釈判決らしき": 773,
+    "titles_with_era_pct": 0.978,
+    "CITATION_RE_hit": 6,
+    "CITATION_RE_recall_vs_era_titles": 0.0078,
+    "citation_surface_format_breakdown": {
+      "A_元号年月日(CITATION_RE想定)": 6,
+      "B_元号．．全角ドット区切り(令和５．１１．２７形式)": 722,
+      "C_元号のみ/その他": 45
+    }
+  },
+  "sensitivity_input_only_date_normalization_engine_unchanged": {
+    "transform": "body_text内の '令和Y．M．D'(全角ドット) を '令和Y年M月D日' に正規化してから未改変engineに投入",
+    "articles_with_any_edge": 728,
+    "articles_with_edge_pct": 0.922,
+    "edges_emitted": 772,
+    "route_distribution": {"review": 772},
+    "stance_counts": {"neutral": 771, "contrasting": 1},
+    "interpretation": "被評釈判決データは標題に~98%存在。as-is 0.8% → 正規化後 92.2%。律速はデータ欠落でなく CITATION_RE の日付書式被覆(全角ドット区切り未対応)。"
+  },
+  "precision_N100": "NOT RUN — as-isでは抽出エッジが6件のみで標本化不能。正解(被評釈判決)突合は span書式修正後に別タスク推奨。",
+  "span_takeloss_memo_top": {
+    "dominant_miss_format": "（令和Y．M．D最高N小判）= 全角ドット区切り日付 + 小法廷略記(最高二小判等) + 年月日漢字なし",
+    "count": 722,
+    "secondary": "C_元号のみ/その他 45件（日付欠落 or 別書式）",
+    "owner": "番頭(case_citation_span CITATION_RE)領分 — 本タスクでは報告のみ・改変せず",
+    "recommended_fix": "CITATION_RE に (a)全角/半角ドット区切り日付 令和\\d+．\\d+．\\d+ (b)最高[一二三四五]小判/小法廷 接尾辞 を追加 → 本corpusで recall ~92%見込み"
+  },
+  "HOLD_respected": ["no stance列DDL", "no alo_edges実write", "no canonical昇格", "no accepted edge化", "magazine上流read-only", "case_*/case_vocab設計改変なし"],
+  "deliverables": ["artifacts/caselink/caselink_L5_input.jsonl (790)", "artifacts/caselink/L5_dryrun_report.json", "_claude_dispatch/from_worker/20260625_caselink_L5_dryrun_RESULT.md"]
+}
