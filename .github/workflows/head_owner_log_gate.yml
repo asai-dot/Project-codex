@@ -1,0 +1,31 @@
+name: head_owner_log_gate
+
+# HEAD_OWNER_LOG 検収ゲート(DD-ORCH-CONTINUITY-001 v0.3)の自己検証。
+# magazine ブランチ専用の最小ワークフロー(既存 ci.yml は本ブランチに無いため独立化)。
+# 実 git の祖先判定を使うので fetch-depth: 0 で全履歴を取得する。
+
+on:
+  push:
+    paths:
+      - "tools/head_owner_log_gate.py"
+      - "tools/test_head_owner_log_gate.sh"
+      - "docs/alo/HEAD_OWNER_LOG.md"
+      - ".github/workflows/head_owner_log_gate.yml"
+  pull_request:
+    paths:
+      - "tools/head_owner_log_gate.py"
+      - "tools/test_head_owner_log_gate.sh"
+      - "docs/alo/HEAD_OWNER_LOG.md"
+
+jobs:
+  gate-selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # HEAD~1 / merge-base 判定に全履歴が要る
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: head_owner_log_gate 自己検証(ACCEPT + 7 reject + alias lint)
+        run: bash tools/test_head_owner_log_gate.sh

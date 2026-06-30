@@ -35,6 +35,10 @@
   rule: DD 監査は Box gpt_ometsuke/to_gpt 経由。PASS_WITH_NOTES 以上 → owner ratify → accepted → main commit → 実装
   applies_to: design audits | enforcement: task_scoped | status: active | last_confirmed: 2026-06-30 | owner_ratified: yes
 
+- standing_id: HOS-007
+  rule: ループは EXIT-A(成功)/B(収穫逓減)/C(完了)/D(緊急停止)で必ず止める。各発注書冒頭にどの EXIT か明示
+  applies_to: orchestration loops | enforcement: task_scoped | status: active | last_confirmed: 2026-06-30 | owner_ratified: yes
+
 ---
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
@@ -43,19 +47,19 @@
   trigger: handoff_review
   summary: ORCH検収ゲートを実行スクリプト化（tools/head_owner_log_gate.py）。7 reject code + alias lint を機械判定
   reason: protocol のチェック表を完全自動化（owner GO）。自己検証9ケース全 PASS
-  related_orch: DD-ORCH-CONTINUITY-001 v0.3 | related_commit: (本コミット) | owner_pending: no
+  related_orch: DD-ORCH-CONTINUITY-001 v0.3 | related_commit: be6eb2c | owner_pending: no
 
 - digest_id: HOL-20260630-002
   trigger: handoff_review
   summary: head が data limit で停止 → 代理 head が git+監査レーン+claude agents から状態復元（F1 を実演）
   reason: HEAD_OWNER_LOG 未実装だったため手動フォールバックで復旧。本 seed 作成の直接動機
-  related_orch: (なし) | related_commit: (本コミット) | owner_pending: no
+  related_orch: (なし) | related_commit: 80fdc47 | owner_pending: no
 
 - digest_id: HOL-20260630-001
   trigger: handoff_review
   summary: DD-ORCH-CONTINUITY-001 v0.3 が GPT Pro で DESIGN_PASS_WITH_NOTES → owner ratify → 実装GO
   reason: v0.2 の祖先方向バグ＋field統一＋enforcement scope を v0.3 で閉鎖
-  related_orch: RATIFY_DD-ORCH-CONTINUITY-001_v0.3_20260630.md | related_commit: (本コミット) | owner_pending: no
+  related_orch: RATIFY_DD-ORCH-CONTINUITY-001_v0.3_20260630.md | related_commit: 80fdc47 | owner_pending: no
 
 - digest_id: HOL-20260629-002
   trigger: policy_decision
@@ -68,6 +72,30 @@
   summary: worker storm 対策は wake_worker の cap ゲートのみ採用、reap デーモンは塩漬け
   reason: 常駐はコスト過大（owner 決定）
   related_orch: - | related_commit: 08aa69e | owner_pending: no
+
+- digest_id: HOL-20260628-001
+  trigger: policy_decision
+  summary: ALO-MODEL-ROUTER v0.1 — 実行権限ルーターを ALO 基底に固定（雑誌スレで先行運用）
+  reason: 実行権限を一元化（正本 alo_ai_router/）
+  related_orch: ALO-MODEL-ROUTER | related_commit: dde3708 | owner_pending: no
+
+- digest_id: HOL-20260627-003
+  trigger: policy_decision
+  summary: storm 3度目事故（login即死＋消費push失敗ループ）→ worker_watch にトリガ内容 SHA1 lock 導入
+  reason: 同一内容トリガは二度起動しない＝push 失敗でも storm にならない
+  related_orch: - | related_commit: 5630fca | owner_pending: no
+
+- digest_id: HOL-20260627-002
+  trigger: policy_decision
+  summary: 止め時を明文化（EXIT-A 成功 / B 収穫逓減 / C 完了 / D 緊急停止）でループ無限化防止
+  reason: 再発注ループが永遠に回る事故の防止（HOS-007 の根拠）
+  related_orch: - | related_commit: 8398f5b | owner_pending: no
+
+- digest_id: HOL-20260627-001
+  trigger: handoff_review
+  summary: ORCH-L4-COVERAGE-LIFT 完了 — orphan 誌接合救済 +1,496 / tsuukan_unavailable 0化
+  reason: L4 接合被覆 99.28% → 99.6%+ 引き上げ（受入検査 PASS）
+  related_orch: ORCH-L4-COVERAGE-LIFT | related_commit: 7f50299 | owner_pending: no
 
 ---
 
