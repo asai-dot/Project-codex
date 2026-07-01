@@ -1,0 +1,16 @@
+# CASELINK corpus dry-run  source=artifacts/caselink/caselink_L5_input.jsonl
+{
+  "articles": 707,
+  "edges_emitted": 5,
+  "dropped_or_unresolved": 0,
+  "edge_type_counts": {
+    "compares": 5
+  },
+  "route_distribution": {
+    "review": 5
+  },
+  "stance_counts": {
+    "neutral": 5
+  },
+  "note": "auto=構造由来(masthead/vendor_explicit) のみ。review=本文由来(vendor_implicit)。実 precision は gold 突合が要る(Mac CC)。本 dry-run は分布のみ。"
+}

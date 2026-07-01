@@ -63,4 +63,29 @@ else
   echo "$(date '+%F %T') ERROR: 'claude' CLI が PATH に無い。Claude Code を入れるか PATH を通す。" >>"$LOG"
 fi
 
+# ---- 成果を自動 commit & push（worker 自身は commit しないため run_worker が引き取る）----
+#   2026-06-30 追加: これが無いと worker 成果(done/RESULT・registry・artifacts 等)が未コミットのまま
+#   working tree に滞留し、`git push` しても "Everything up-to-date"(新コミット無し)になり origin に行かない事故になる。
+#   安全弁:
+#     - 変更が無ければ skip（冪等・空サイクルで空コミットを作らない）
+#     - push は通常 push（非 force）。非ff/conflict 時は force せず WARN を残し head の手動解決に委ねる
+#       （headless が履歴を上書きしない＝不可逆事故を作らない）
+if [ -n "$(git status --porcelain)" ]; then
+  git add -A
+  if git commit -q -m "autorun(worker): cycle $(date '+%F %T') task=${TASK}
+
+Co-Authored-By: ALO Worker (claude-code headless) <noreply@anthropic.com>" >>"$LOG" 2>&1; then
+    echo "$(date '+%F %T') committed worker output" >>"$LOG"
+    if git push origin "$BRANCH" >>"$LOG" 2>&1; then
+      echo "$(date '+%F %T') pushed -> origin/$BRANCH" >>"$LOG"
+    else
+      echo "$(date '+%F %T') WARN: push 失敗(非ff/conflictの疑い)。force せず head の手動解決に委ねる。" >>"$LOG"
+    fi
+  else
+    echo "$(date '+%F %T') commit 失敗(変更検出後)" >>"$LOG"
+  fi
+else
+  echo "$(date '+%F %T') 成果変更なし → commit/push skip" >>"$LOG"
+fi
+
 echo "$(date '+%F %T') === cycle end ===" >>"$LOG"
