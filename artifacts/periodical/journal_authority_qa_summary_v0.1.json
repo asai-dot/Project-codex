@@ -1,0 +1,8 @@
+{
+  "rows": 931,
+  "citation_fragment": 169,
+  "truncated_paren": 179,
+  "dup_issn": 22,
+  "no_issn_key": 415,
+  "note": "NAME_OVERFRAG/PREFIX_SPLIT=0(既に正規化済). citation_fragment=高信頼garbage. truncated_paren=百選系末尾切れ(join有効)."
+}
