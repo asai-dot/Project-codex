@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260701-007
+  trigger: 発注・検収
+  summary: 2大join根authorityのQA→WO化→段1投下完了。判例(ORCH hanrei)+journal(ORCH journal)。journal記事加重カバレッジ=ISSN77.3%+NCID19.9%=97.2%(行44.6%無ISSNは誤解)
+  reason: 判例authority修正候補1063/journal370。両WOとも段1=read-only dry-run投下・段2実反映はowner GO。watcher未常駐なら手動wake_worker(要/login)。手戻り少・全join土台
+  related_orch: ORCH-HANREI-AUTHORITY-FIX / ORCH-JOURNAL-AUTHORITY-FIX | related_commit: WO fbc09d0, data 09318b0 | owner_pending: watcher起動 or 手動launch, 段2 GO
+
 - digest_id: HOL-20260701-006
   trigger: handoff_review
   summary: 判例authority整合性QA(read-only)=高レバ低手戻りタスク発見。212602行に修正候補1063(dup ID600/dup identity444/bad date4/court化け15)
