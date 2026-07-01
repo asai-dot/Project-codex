@@ -1,0 +1,11 @@
+journal,articles,resolution,key_type,key_value,note
+月刊債権管理,682,RECOVER_FROM_V3,issn,1348-8953,v3_ratifiedに解決値あり・v14で欠落(回帰)→復元。外部照合不要
+TKC税研時報,103,EXTERNAL_LOOKUP,,,CiNii/NDL SRUで読取専用照合→提案(producer段2・要検証)
+建築関係法令の研究,44,EXTERNAL_LOOKUP,,,CiNii/NDL SRUで読取専用照合→提案(producer段2・要検証)
+立命館大学法学部ニューズレター,37,EXTERNAL_LOOKUP,,,CiNii/NDL SRUで読取専用照合→提案(producer段2・要検証)
+保安と外勤,30,EXTERNAL_LOOKUP,,,CiNii/NDL SRUで読取専用照合→提案(producer段2・要検証)
+明治大学法科大学院ジェンダー法センター年報,21,EXTERNAL_LOOKUP,,,CiNii/NDL SRUで読取専用照合→提案(producer段2・要検証)
+訟務月報,14,EXTERNAL_LOOKUP,,,CiNii/NDL SRUで読取専用照合→提案(producer段2・要検証)
+永世中立,4,EXTERNAL_LOOKUP,,,CiNii/NDL SRUで読取専用照合→提案(producer段2・要検証)
+軍事民論,3,RECOVER_FROM_V3,ncid,AN00020468,v3_ratifiedに解決値あり・v14で欠落(回帰)→復元。外部照合不要
+東洋法学会会報,2,EXTERNAL_LOOKUP,,,CiNii/NDL SRUで読取専用照合→提案(producer段2・要検証)
