@@ -1,0 +1,12 @@
+{
+  "total_articles": 302130,
+  "journals": 931,
+  "article_weighted_coverage": {
+    "issn_pct": 77.3,
+    "ncid_pct": 19.9,
+    "any_id_pct": 97.2,
+    "no_id_pct": 2.8
+  },
+  "finding": "行数44.6%無ISSNは誤解を招く。記事加重ではISSN77.3%+NCID19.9%=97.2%がjoin可能。ID皆無は2.8%(8367記事)のみ",
+  "note": "大手誌(判例評論等)はISSN空でもNCID(CiNii)保有。残2.8%は先に誌名正規化→CiNii/NDL補完(段2 owner GO)"
+}
