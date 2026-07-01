@@ -38,6 +38,31 @@ def run_tests() -> int:
     c4 = find_body_citations("制度の沿革を述べる。")
     check("引用が無い本文は空", c4 == [])
 
+    # --- span 検出: 標題書式(全角ドット区切り日付 + 接尾裁判所略称/小法廷略記) ---
+    # 実データ(magazine pilot 評釈標題)の主流書式。旧 _ERA(\d+年月日漢字)では取りこぼしていた。
+    c5 = find_body_citations("…相違の不合理性（令和５．７．２０最高一小判）＜労働判例研究１４７５＞")
+    check("全角ドット日付+小法廷略記(接尾)を小法廷込みで1件検出",
+          len(c5) == 1 and c5[0]["citation"] == "令和５．７．２０最高一小判")
+
+    c6 = find_body_citations("…退職慰労金減額と取締役会の裁量（令和５．１．１６釧路地帯広支判）＜商事判例研究＞")
+    check("全角ドット日付+地裁支部略称(接尾)を検出",
+          len(c6) == 1 and c6[0]["citation"] == "令和５．１．１６釧路地帯広支判")
+
+    c7 = find_body_citations("…金員支払債務を負う場合（令和元．１２．２４最高三小判）＜最高裁時の判例＞")
+    check("元年(『元』)+全角ドット日付+小法廷略記を検出",
+          len(c7) == 1 and c7[0]["citation"] == "令和元．１２．２４最高三小判")
+
+    c8 = find_body_citations("…優越的地位濫用規制と準拠法指定との関係（令和元．９．４東京地判）＜商事判例研究＞")
+    check("元年+全角ドット日付+地判(接尾)を検出",
+          len(c8) == 1 and c8[0]["citation"] == "令和元．９．４東京地判")
+
+    c9 = find_body_citations("…抵当不動産の賃借人は賃料債権を差し押さえる前に（令和５．１１．２７最高二小判）")
+    check("全角ドット日付(年月日漢字なし)主流書式を検出",
+          len(c9) == 1 and c9[0]["citation"] == "令和５．１１．２７最高二小判")
+
+    c10 = find_body_citations("純粋な事業沿革のみを述べ判例引用を欠く標題（ＡＢＣ事件）")
+    check("ドット区切りでも引用面を欠く標題は空", c10 == [])
+
     # --- masthead ---
     check("masthead 構造引用を取得", masthead_citation({"masthead_citation": "令和3年(ワ)第123号"}) == "令和3年(ワ)第123号")
     check("masthead 無しは None", masthead_citation({"body_text": "x"}) is None)
@@ -52,6 +77,16 @@ def run_tests() -> int:
           edges[1]["edge_type"] == "compares" and edges[1]["stance"] == "supporting" and edges[1]["route"] == "review")
     check("連結: 反対→compares/contrasting/review",
           edges[2]["edge_type"] == "compares" and edges[2]["stance"] == "contrasting" and edges[2]["route"] == "review")
+
+    # --- end-to-end: 全角ドット標題が実際に edge を生む(span検出だけでなく解決まで) ---
+    # 回帰防止: span は拾えても resolve_citation が fuzzy 認定できないと unresolved で edge 不発になる。
+    rec_dot = {"article_type": "commentary",
+               "body_text": "抵当不動産の賃借人は賃料債権を差し押さえる前に（令和５．１１．２７最高二小判）＜商事判例研究＞"}
+    edges_dot = [e for e in map_article(extract_mentions(build_article(rec_dot)))
+                 if e.get("edge_type") and e["route"] != "drop"]
+    check("全角ドット標題が edge を1件生成(解決まで貫通)", len(edges_dot) == 1)
+    check("全角ドット標題の edge は compares/review",
+          bool(edges_dot) and edges_dot[0]["edge_type"] == "compares" and edges_dot[0]["route"] == "review")
 
     # --- corpus dry-run ---
     rep = run(SAMPLE)

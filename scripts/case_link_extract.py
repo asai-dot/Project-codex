@@ -24,8 +24,17 @@ ROLE_CUES = (
     ("contrasting", ("これに対し", "反対", "対比", "異なり", "に対して", "cf")),
     ("supporting",  ("同旨", "同趣旨", "参照", "同様", "accord")),
 )
-# 元号/和暦 日付の存在(部分引用=fuzzy の判定に使う)
-_DATE_RE = re.compile(r"(令和|平成|昭和|大正|明治)\s*\d+\s*年|\d+\s*年\s*\d+\s*月\s*\d+\s*日")
+# 元号/和暦 日付の存在(部分引用=fuzzy の判定に使う)。
+# case_citation_span.CITATION_RE と同じ書式被覆を持たせる(数字=半角/全角、年=「元」可、
+# 区切り=年月日漢字 または 全角/半角ドット 令和Y．M．D)。さもないと span を拾っても
+# 解決器が fuzzy 認定できず unresolved_citation で edge が出ない(実データ corpus の主流書式)。
+_DDIG = r"[0-9０-９]"
+_DYEAR = r"(?:元|" + _DDIG + r"+)"
+_DATE_RE = re.compile(
+    r"(?:令和|平成|昭和|大正|明治)\s*" + _DYEAR
+    + r"\s*(?:年|[.．]" + _DDIG + r"+[.．]" + _DDIG + r"+)"
+    + r"|" + _DDIG + r"+\s*年\s*" + _DDIG + r"+\s*月\s*" + _DDIG + r"+\s*日"
+)
 
 
 def classify_role(source: str, cue: str = "") -> str:
@@ -76,11 +85,15 @@ def _selfcheck() -> int:
     a = {"article_type": "commentary",
          "masthead": {"citation": "令和3年(ワ)第123号"},
          "body": [{"citation": "最判平成20年3月10日", "cue": "同旨"},
-                  {"citation": "東京地裁", "cue": "これに対し"}]}
+                  {"citation": "東京地裁", "cue": "これに対し"},
+                  {"citation": "令和５．１１．２７最高二小判", "cue": "参照"},
+                  {"citation": "令和元．１２．２４最高三小判", "cue": ""}]}
     ms = extract_mentions(a)
     ok = (ms[0]["role"] == "primary" and ms[0]["resolved"] == "deterministic"
           and ms[1]["role"] == "supporting" and ms[1]["resolved"] == "fuzzy"
-          and ms[2]["role"] == "contrasting" and ms[2]["resolved"] is None)
+          and ms[2]["role"] == "contrasting" and ms[2]["resolved"] is None
+          # 全角ドット日付(令和Y．M．D)・元年も date-only=fuzzy として解決できる
+          and ms[3]["resolved"] == "fuzzy" and ms[4]["resolved"] == "fuzzy")
     print("OK" if ok else "DRIFT", "case_link_extract 決定部")
     return 0 if ok else 1
 
