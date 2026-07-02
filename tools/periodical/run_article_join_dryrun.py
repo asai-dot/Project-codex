@@ -3,7 +3,7 @@
 run_article_join_dryrun.py — ORCH-ARTICLE-JOIN dry-run executor (L4, read-only)
 
 Inputs
-  --authority   artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v14.csv
+  --authority   artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v15.csv
   --labeled     build/labeled_v0.2.1/article_meta_labeled.jsonl
                 (Mac側: /Users/yuta/ALOBookDX/事務所内本棚DX化計画/build/d1_bunken_article_meta_20260611/labeled_v0.2.1/)
   --out-csv     artifacts/periodical/article_join_dryrun_v0.1.csv
@@ -31,12 +31,27 @@ import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 
-DEFAULT_AUTHORITY = "artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v14.csv"
+DEFAULT_AUTHORITY = "artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v15.csv"
 DEFAULT_LABELED = "/Users/yuta/ALOBookDX/事務所内本棚DX化計画/build/d1_bunken_article_meta_20260611/labeled_v0.2.1/article_meta_labeled.jsonl"
 DEFAULT_OUT_CSV = "artifacts/periodical/article_join_dryrun_v0.1.csv"
 DEFAULT_OUT_JSON = "artifacts/periodical/article_join_summary_v0.1.json"
 
 BESSATSU_NCID = "BN01263667"
+
+# collision_split された canonical を、掲載誌等の先頭表記で実在誌へ振り分ける（ORCH-L4-COVERAGE-LIFT）。
+# キー=元 canonical, 値=(掲載誌等prefix, 振り分け先 canonical) のリスト（先勝ち）。
+# 振り分け先は authority に解決済みで存在すること。既存マージは一切変更せず orphan のみ救済する。
+SPLIT_MAP = {
+    "商事法務": [
+        ("旬刊商事法務", "旬刊商事法務"),
+        ("国際商事法務", "国際商事法務"),
+        ("資料版商事法務", "資料版商事法務"),
+    ],
+    "タイム": [
+        ("判例タイムズ", "判例タイムズ"),
+    ],
+}
+
 HEADERS = [
     "article_id", "issue_id", "journal_canonical", "key_type", "key_value",
     "tsuukan_or_ym", "pub_year", "vol", "issue_no", "page_start",
@@ -215,6 +230,13 @@ def main():
             year, month = parse_pub_ym(pub_date)
             page_start = parse_page_start(keishi)
 
+            # collision_split canonical の掲載誌先頭表記による実在誌への振り分け（orphan救済のみ）
+            if jc_raw in SPLIT_MAP:
+                for prefix, target in SPLIT_MAP[jc_raw]:
+                    if keishi.startswith(prefix):
+                        jc_raw = target
+                        break
+
             bj_no = extract_bessatsu_no(keishi)
             auth = authority.get(jc_raw)
 
@@ -249,15 +271,26 @@ def main():
                 orphan_by_journal[jc_raw] += 1
             elif auth["key_type"] == "isbn_per_issue" or auth["status"] in {"seed_isbn_per_issue", "seed_bessatsu_jurist"}:
                 book_key = extract_book_key(keishi)
-                if not book_key:
-                    orphan_reason = "tsuukan_unavailable"
-                    orphan_by_journal[jc_raw] += 1
-                else:
+                if book_key:
                     key_type_out = "isbn_per_issue"
                     key_value_out = book_key
                     tsuukan_or_ym = book_key
                     issue_id = f"isbn:{book_key}"
                     join_status = "joined"
+                else:
+                    # 『…』書誌が無い isbn_per_issue/別冊系: 誌自身の号数を per-issue キーに用いる
+                    # (例: 季刊・民事法研究21 / 商法研究24 / 現代刑事法4-1)。号が取れなければ orphan。
+                    num_seg = parse_journal_number_segment(keishi, jc_raw)
+                    series_no, _v, _i, _rule = derive_tsuukan_or_ym(num_seg, year, month)
+                    if series_no:
+                        key_type_out = "isbn_per_issue"
+                        key_value_out = f"{jc_raw}#{series_no}"
+                        tsuukan_or_ym = series_no
+                        issue_id = f"isbn:{jc_raw}#{series_no}"
+                        join_status = "joined"
+                    else:
+                        orphan_reason = "tsuukan_unavailable"
+                        orphan_by_journal[jc_raw] += 1
             else:
                 num_seg = parse_journal_number_segment(keishi, jc_raw)
                 tsuukan_or_ym, vol, issue_no, rule = derive_tsuukan_or_ym(num_seg, year, month)

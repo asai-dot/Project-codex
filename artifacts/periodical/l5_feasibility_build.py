@@ -6,8 +6,9 @@
   1. artifacts/periodical/article_join_dryrun_v0.1.csv         (article_id, title, ...)
   2. artifacts/periodical/article_type_local_pilot_v0.1.csv    (type=判例評釈 サブセット)
   3. 判例オブジェクト側 identity keys (Mac build 配下, read-only SELECT 相当):
-       /Users/yuta/alo-ai/work/d1law_dl/_parsed_hanrei/判例_identity_keys_20260605.csv
-       /Users/yuta/alo-ai/work/d1law_dl/_parsed_hanrei/判例_identity_keys_backfill6yr_20260617.csv
+       /Users/yuta/alo-ai/work/d1law_dl/_parsed_hanrei/判例_identity_keys_dedup_canonical_20260702.csv
+     (ORCH-AUTHORITY-WIRING 20260702: 旧 20260605+backfill6yr_20260617 の2ファイルを、dedup 済
+      canonical(court_key 正規化=court化け復元込み)へ配線。court_miss 改善のみ・悪化ゼロを実測確認。)
      列: 判例ID, court_key, date_key(YYYYMMDD), docket_key, identity_key, 裁判所名, 判決年月日, 事件番号, 事件名
 
 出力:
@@ -29,8 +30,7 @@ REPO = "/Users/yuta/Project-codex"
 PILOT = f"{REPO}/artifacts/periodical/article_type_local_pilot_v0.1.csv"
 JOIN = f"{REPO}/artifacts/periodical/article_join_dryrun_v0.1.csv"
 HANREI_FILES = [
-    "/Users/yuta/alo-ai/work/d1law_dl/_parsed_hanrei/判例_identity_keys_20260605.csv",
-    "/Users/yuta/alo-ai/work/d1law_dl/_parsed_hanrei/判例_identity_keys_backfill6yr_20260617.csv",
+    "/Users/yuta/alo-ai/work/d1law_dl/_parsed_hanrei/判例_identity_keys_dedup_canonical_20260702.csv",
 ]
 OUT_CSV = f"{REPO}/artifacts/periodical/l5_feasibility_v0.1.csv"
 OUT_JSON = f"{REPO}/artifacts/periodical/l5_feasibility_summary_v0.1.json"
