@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260702-009
+  trigger: 検収・締め
+  summary: authority反映のL5 payoff実測=court_match674不変(差0). court化け復元のL5効果≒0(簡裁は評釈対象外)、dedup614は非破壊実証
+  reason: 当初の「court化け→L5改善」期待は空振りと正直訂正. 真の価値はauthority整合性(判例ID重複600→0等・件数集計/引用join/docket lookupで効く). 配線WOは「正しいauthorityを下流へ」が目的
+  related_orch: ORCH-AUTHORITY-WIRING(producer待ち) | related_commit: payoff=bfa6477 / v15=bd28b62 / 判例dedup=d1law_dl file | owner_pending: producer配線実行のみ. held(DISTINCT6/存在しない日2/極小2誌/増刊ISSN共有=正当)は正しく保留
+
 - digest_id: HOL-20260702-008
   trigger: 検収・canonical反映
   summary: 2大authority canonical昇格完了(owner GO). 判例212,602→211,988(dedup614+court化け15復元) / journal 931→924(NORMALIZE341+MERGE7+税理ISSN)
