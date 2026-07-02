@@ -43,6 +43,12 @@
 
 ## B. SESSION DIGESTS（新しい順・直近~30件 / 1件5行）
 
+- digest_id: HOL-20260702-008
+  trigger: 検収・canonical反映
+  summary: 2大authority canonical昇格完了(owner GO). 判例212,602→211,988(dedup614+court化け15復元) / journal 931→924(NORMALIZE341+MERGE7+税理ISSN)
+  reason: workerが発注書の算術ミス(1038=DUP_HANREI/IDENTITY二重計上)を停止・訂正=614削除が正(残identity_key重複6=DISTINCT held完全一致で裏取り). 236実判決の過削除を回避. 元d1law2ファイル/v14保全=rollback可
+  related_orch: ORCH-AUTHORITY-APPLY | related_commit: journal v15=b741d2a(casename) / 判例dedup=d1law_dl/判例_identity_keys_dedup_canonical_20260702.csv(gitでなくファイル) | owner_pending: consumer配線(L5等)をv15/dedupへ=producer次段
+
 - digest_id: HOL-20260701-007
   trigger: 発注・検収
   summary: 2大join根authorityのQA→WO化→段1投下完了。判例(ORCH hanrei)+journal(ORCH journal)。journal記事加重カバレッジ=ISSN77.3%+NCID19.9%=97.2%(行44.6%無ISSNは誤解)
