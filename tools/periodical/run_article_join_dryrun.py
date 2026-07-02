@@ -3,7 +3,7 @@
 run_article_join_dryrun.py — ORCH-ARTICLE-JOIN dry-run executor (L4, read-only)
 
 Inputs
-  --authority   artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v14.csv
+  --authority   artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v15.csv
   --labeled     build/labeled_v0.2.1/article_meta_labeled.jsonl
                 (Mac側: /Users/yuta/ALOBookDX/事務所内本棚DX化計画/build/d1_bunken_article_meta_20260611/labeled_v0.2.1/)
   --out-csv     artifacts/periodical/article_join_dryrun_v0.1.csv
@@ -31,7 +31,7 @@ import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 
-DEFAULT_AUTHORITY = "artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v14.csv"
+DEFAULT_AUTHORITY = "artifacts/periodical/d1_journal_issn_authority_ALL_resolved_v15.csv"
 DEFAULT_LABELED = "/Users/yuta/ALOBookDX/事務所内本棚DX化計画/build/d1_bunken_article_meta_20260611/labeled_v0.2.1/article_meta_labeled.jsonl"
 DEFAULT_OUT_CSV = "artifacts/periodical/article_join_dryrun_v0.1.csv"
 DEFAULT_OUT_JSON = "artifacts/periodical/article_join_summary_v0.1.json"
